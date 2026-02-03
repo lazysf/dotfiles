@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = ["grep"],
+  decision = "forbidden",
+  justification = "高速な ripgrep (rg) を標準とするため、grep は使用禁止にする。",
+  match = [
+    "grep -R TODO .",
+    "grep -n \"foo\" README.md",
+  ],
+  not_match = [
+    "rg -n \"foo\" README.md",
+    "rg -g \"*.md\" TODO",
+  ],
+)

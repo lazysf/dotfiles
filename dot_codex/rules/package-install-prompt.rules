@@ -1,0 +1,14 @@
+prefix_rule(
+  pattern = [["npm", "pip"], "install"],
+  decision = "prompt",
+  justification = "依存追加は影響が大きいため都度確認する。",
+  match = [
+    "npm install",
+    "npm install lodash",
+    "pip install requests",
+  ],
+  not_match = [
+    "npm run build",
+    "python -m pip --version",
+  ],
+)

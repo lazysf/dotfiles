@@ -1,0 +1,14 @@
+prefix_rule(
+  pattern = [["docker", "kubectl", "terraform"]],
+  decision = "prompt",
+  justification = "コンテナやインフラ操作は影響範囲が大きいため都度確認する。",
+  match = [
+    "docker ps",
+    "docker build -t app .",
+    "kubectl get pods",
+    "terraform plan",
+  ],
+  not_match = [
+    "rg -n \"terraform\" README.md",
+  ],
+)

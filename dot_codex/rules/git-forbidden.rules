@@ -1,0 +1,12 @@
+prefix_rule(
+  pattern = ["git", "push", ["-f", "--force", "--force-with-lease"]],
+  decision = "forbidden",
+  justification = "強制 push は履歴を書き換えるため禁止する。",
+  match = [
+    "git push -f",
+    "git push --force",
+    "git push -f origin main",
+    "git push --force-with-lease",
+    "git push --force-with-lease origin main",
+  ],
+)

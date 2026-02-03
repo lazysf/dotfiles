@@ -1,0 +1,49 @@
+# -----------------------------------------
+# Permissions
+# -----------------------------------------
+umask 022
+
+# -----------------------------------------
+# Locale
+# -----------------------------------------
+export LANG="ja_JP.UTF-8"
+
+# -----------------------------------------
+# Editors
+# -----------------------------------------
+export EDITOR="nvim"
+export CVSEDITOR="${EDITOR}"
+export SVN_EDITOR="${EDITOR}"
+export GIT_EDITOR="${EDITOR}"
+
+# -----------------------------------------
+# 1Password SSH Agent (optional)
+# -----------------------------------------
+_1P_AGENT_SOCK="${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+if [[ -S "${_1P_AGENT_SOCK}" ]]; then
+  export SSH_AUTH_SOCK="${_1P_AGENT_SOCK}"
+fi
+unset _1P_AGENT_SOCK
+
+# -----------------------------------------
+# Rust (optional)
+# -----------------------------------------
+if [[ -f "${HOME}/.cargo/env" ]]; then
+  . "${HOME}/.cargo/env"
+fi
+
+# uv (optional)
+_uv_bin="${HOME}/.local/bin"
+if [[ -d "${_uv_bin}" ]]; then
+  export PATH="${_uv_bin}:${PATH}"
+fi
+unset _uv_bin
+
+# uutils-coreutils (optional)
+if command -v brew >/dev/null 2>&1; then
+  _uutils_uubin="$(brew --prefix uutils-coreutils 2>/dev/null)/libexec/uubin"
+  if [[ -d "${_uutils_uubin}" ]]; then
+    export PATH="${_uutils_uubin}:${PATH}"
+  fi
+  unset _uutils_uubin
+fi

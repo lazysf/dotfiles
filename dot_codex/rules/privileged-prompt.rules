@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = [["sudo", "launchctl"]],
+  decision = "prompt",
+  justification = "権限やシステム設定に影響するため都度確認する。",
+  match = [
+    "sudo rm -rf /tmp/test",
+    "sudo systemsetup -getcomputersleep",
+    "launchctl list",
+  ],
+  not_match = [
+    "git status",
+  ],
+)

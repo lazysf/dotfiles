@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = [["curl", "wget"]],
+  decision = "prompt",
+  justification = "外部通信を伴うため都度確認する。",
+  match = [
+    "curl https://example.com",
+    "curl -I https://example.com",
+    "wget https://example.com/file.tar.gz",
+  ],
+  not_match = [
+    "rg -n \"example\" README.md",
+  ],
+)
