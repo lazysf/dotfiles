@@ -1,0 +1,31 @@
+return {
+  'WhoIsSethDaniel/mason-tool-installer.nvim',
+  event = 'VeryLazy',
+  dependencies = {
+    'mason-org/mason.nvim',
+  },
+  opts = {
+    ensure_installed = {
+      'dockerfile-language-server',
+      'hadolint',
+      'bash-language-server',
+      'biome',
+      'golangci-lint',
+      'gopls',
+      'json-lsp',
+      'marksman',
+      'markdownlint',
+      'prettier',
+      'ruff',
+      'rust-analyzer',
+      'sqlfluff',
+      'sqls',
+      'shellcheck',
+      'selene',
+      'shfmt',
+      'stylua',
+      'taplo',
+      'yamllint',
+    },
+  },
+}

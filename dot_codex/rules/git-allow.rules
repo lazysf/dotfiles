@@ -1,0 +1,21 @@
+prefix_rule(
+  pattern = ["git", ["add", "commit", "push", "status"]],
+  decision = "allow",
+  justification = "日常的で安全な git 操作（add/commit/push/status）のみ許可する。",
+  match = [
+    "git add .",
+    "git add README.md",
+    "git add --patch",
+    "git add -p",
+    "git commit -m \"chore: update\"",
+    "git commit",
+    "git push",
+    "git push origin main",
+    "git status",
+  ],
+  not_match = [
+    "git checkout -b feature/foo",
+    "git rebase -i HEAD~3",
+    "git branch -a",
+  ],
+)

@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = [["ssh", "scp", "rsync"]],
+  decision = "prompt",
+  justification = "リモート接続や転送は影響範囲が大きいため都度確認する。",
+  match = [
+    "ssh user@example.com",
+    "scp file.txt user@example.com:/tmp/",
+    "rsync -av ./src/ user@example.com:/tmp/src/",
+  ],
+  not_match = [
+    "git status",
+  ],
+)

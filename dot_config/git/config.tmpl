@@ -1,0 +1,31 @@
+[include]
+  path = ~/.config/git/config.local
+{{- if eq .chezmoi.os "darwin" }}
+{{- if and (ne (lookPath "op") "") (exec "op" "whoami") }}
+[user]
+  name  = {{ onepasswordRead "op://Personal/GitHub/login" | quote }}
+  email = {{ onepasswordRead  "op://Personal/GitHub/qjzdqsz76dxnng7mnug25hbrda"| quote }}
+  signingkey = {{ onepasswordRead "op://Personal/GitHub Signing Key/public key"| quote }}
+[gpg "ssh"]
+  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[gpg]
+  format = ssh
+[commit]
+  gpgsign = true
+{{- end }}
+{{- end }}
+[ghq]
+  root = ~/projects
+[init]
+  defaultBranch = main
+[fetch]
+  prune = true
+[status]
+  showUntrackedFiles = all
+[core]
+  autocrlf = input
+  filemode = false
+  ignorecase = false
+  quotepath = false
+[merge]
+  conflictStyle = diff3

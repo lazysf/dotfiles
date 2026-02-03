@@ -1,0 +1,15 @@
+# -----------------------------------------
+# Homebrew
+# -----------------------------------------
+if [[ -x "/opt/homebrew/bin/brew" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"  # Apple Silicon
+elif [[ -x "/usr/local/bin/brew" ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"     # Intel
+fi
+
+# -----------------------------------------
+# OrbStack (optional)
+# -----------------------------------------
+if [[ -f "${HOME}/.orbstack/shell/init.zsh" ]]; then
+  . "${HOME}/.orbstack/shell/init.zsh"
+fi
