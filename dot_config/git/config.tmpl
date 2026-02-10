@@ -1,7 +1,8 @@
 [include]
   path = ~/.config/git/config.local
 {{- if eq .chezmoi.os "darwin" }}
-{{- if and (ne (lookPath "op") "") (exec "op" "whoami") }}
+{{- if ne (lookPath "op") "" }}
+{{- $opWhoami := output "op" "whoami" -}}
 [user]
   name  = {{ onepasswordRead "op://Personal/GitHub/login" | quote }}
   email = {{ onepasswordRead  "op://Personal/GitHub/qjzdqsz76dxnng7mnug25hbrda"| quote }}
