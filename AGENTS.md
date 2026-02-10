@@ -19,7 +19,7 @@
 ## 使い方（要点）
 
 - 初回セットアップ:
-  - `chezmoi init --apply git@github.com:lazysf/dotfiles.git`
+  - `chezmoi init --apply https://github.com/lazysf/dotfiles.git`
 - 既にソースディレクトリがこのリポジトリの場合:
   - `chezmoi apply`
 - 変更の確認:
@@ -29,10 +29,19 @@
 
 ```text
 .
+├── AGENTS.md
+├── Documents/
+│   └── PowerShell/
+│       └── Microsoft.PowerShell_profile.ps1
 ├── .chezmoiignore
 ├── .pre-commit-config.yaml
 ├── dot_codex/          # ~/.codex (Codex config/skills)
+│   ├── AGENTS.md
+│   ├── config.toml
+│   ├── rules/
+│   └── skills/
 ├── dot_config/         # ~/.config
+│   ├── chezmoi/
 │   ├── gh/
 │   ├── git/
 │   ├── lazygit/
@@ -42,7 +51,7 @@
 │   ├── yazi/
 │   └── zsh/
 ├── dot_ssh/            # ~/.ssh
-│   └── private_config  # ~/.ssh/config (private)
+│   └── private_config.tmpl  # ~/.ssh/config (private template)
 ├── dot_zshenv          # ~/.zshenv
 ├── LICENSE
 └── README.md
@@ -50,5 +59,6 @@
 
 ## メモ
 
-- `dot_ssh/private_config` はプライベートな設定を想定。
+- `dot_ssh/private_config.tmpl` はプライベートな設定を想定。
+- macOSで`op`が存在する場合、`dot_config/git/config.tmpl` は `op whoami` 成功を前提に展開される。未サインイン時は `chezmoi apply` が失敗する。
 - 詳細は `README.md` を参照。
