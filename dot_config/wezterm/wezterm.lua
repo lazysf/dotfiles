@@ -1,11 +1,41 @@
 local wezterm = require('wezterm')
 local config = wezterm.config_builder()
 
+-- OS detection
+local target = wezterm.target_triple or ''
+local is_windows = target:find('windows') ~= nil
+local is_macos = target:find('darwin') ~= nil
+
+-- macOS-first defaults
+local primary_font = 'JetBrainsMono Nerd Font'
+local sans_font = 'Hiragino Sans'
+local emoji_font = 'Apple Color Emoji'
+local font_size = 16
+local line_height = 1.06
+local fullscreen_mods = 'CMD'
+local resize_mods = 'META'
+local default_shell = os.getenv('SHELL') or '/bin/zsh'
+local default_prog = { default_shell, '-l' }
+
+-- Windows overrides
+if is_windows then
+  sans_font = 'Yu Gothic UI'
+  emoji_font = 'Segoe UI Emoji'
+  font_size = 12
+  line_height = 1.03
+  fullscreen_mods = 'ALT'
+  resize_mods = 'ALT'
+  default_prog = { 'pwsh.exe', '-NoLogo' }
+end
+
 -- Auto Reload
 config.automatically_reload_config = true
 
 -- Audio
 config.audible_bell = 'SystemBeep'
+
+-- Shell
+config.default_prog = default_prog
 
 -- Color
 config.color_scheme = 'Tokyo Night'
@@ -13,7 +43,9 @@ config.color_scheme = 'Tokyo Night'
 -- Window
 config.initial_rows = 40
 config.initial_cols = 120
-config.macos_window_background_blur = 20
+if is_macos then
+  config.macos_window_background_blur = 20
+end
 config.window_background_opacity = 0.8
 config.text_background_opacity = 0.95
 config.inactive_pane_hsb = {
@@ -41,12 +73,13 @@ config.use_fancy_tab_bar = false
 
 -- Font
 config.font = wezterm.font_with_fallback({
-  'JetBrainsMono Nerd Font',
-  'Hiragino Sans',
-  'Apple Color Emoji',
+  primary_font,
+  sans_font,
+  emoji_font,
 })
-config.font_size = 16
-config.line_height = 1.10
+config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
+config.font_size = font_size
+config.line_height = line_height
 config.use_ime = true
 
 -- Cursor
@@ -59,8 +92,7 @@ config.freetype_render_target = 'HorizontalLcd'
 
 -- Key bindings
 config.keys = {
-  -- macOS-style shortcut (kept intentionally)
-  { key = 'Enter', mods = 'CMD', action = wezterm.action.ToggleFullScreen },
+  { key = 'Enter', mods = fullscreen_mods, action = wezterm.action.ToggleFullScreen },
 
   -- Enter "pane mode" (a key-table) to operate on layout: split/move/resize + tab ops
   -- Press Ctrl-; to enter, then use the keys defined in `config.key_tables.pane`
@@ -86,15 +118,11 @@ config.key_tables = {
     -- Close pane (confirm)
     { key = 'w', action = wezterm.action.CloseCurrentPane({ confirm = true }) },
 
-    -- Resize pane (fine): H/J/K/L
-    -- { key = 'H', action = wezterm.action.AdjustPaneSize({ 'Left', 5 }) },
-    -- { key = 'J', action = wezterm.action.AdjustPaneSize({ 'Down', 5 }) },
-    -- { key = 'K', action = wezterm.action.AdjustPaneSize({ 'Up', 5 }) },
-    -- { key = 'L', action = wezterm.action.AdjustPaneSize({ 'Right', 5 }) },
-    { key = 'h', mods = 'META', action = wezterm.action.AdjustPaneSize({ 'Left', 5 }) },
-    { key = 'j', mods = 'META', action = wezterm.action.AdjustPaneSize({ 'Down', 5 }) },
-    { key = 'k', mods = 'META', action = wezterm.action.AdjustPaneSize({ 'Up', 5 }) },
-    { key = 'l', mods = 'META', action = wezterm.action.AdjustPaneSize({ 'Right', 5 }) },
+    -- Resize pane (fine): h/j/k/l
+    { key = 'h', mods = resize_mods, action = wezterm.action.AdjustPaneSize({ 'Left', 5 }) },
+    { key = 'j', mods = resize_mods, action = wezterm.action.AdjustPaneSize({ 'Down', 5 }) },
+    { key = 'k', mods = resize_mods, action = wezterm.action.AdjustPaneSize({ 'Up', 5 }) },
+    { key = 'l', mods = resize_mods, action = wezterm.action.AdjustPaneSize({ 'Right', 5 }) },
 
     -- Tab operations (while in pane mode)
     { key = 't', action = wezterm.action.SpawnTab('CurrentPaneDomain') },
