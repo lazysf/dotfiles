@@ -38,12 +38,3 @@ if [[ -d "${_uv_bin}" ]]; then
   export PATH="${_uv_bin}:${PATH}"
 fi
 unset _uv_bin
-
-# uutils-coreutils (optional)
-if command -v brew >/dev/null 2>&1; then
-  _uutils_uubin="$(brew --prefix uutils-coreutils 2>/dev/null)/libexec/uubin"
-  if [[ -d "${_uutils_uubin}" ]]; then
-    export PATH="${_uutils_uubin}:${PATH}"
-  fi
-  unset _uutils_uubin
-fi
