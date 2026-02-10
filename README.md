@@ -4,19 +4,27 @@ Dotfiles managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Requirements
 
+### Target OS
+
 - macOS (primary target; other OSes are untested)
-- chezmoi installed and available in `PATH`
-- git (used by `chezmoi init` and repo updates)
+
+### Required tools
+
+- `chezmoi` installed and available in `PATH`
+- `git` (used by `chezmoi init` and repo updates)
+
+### Optional tools
+
 - 1Password CLI (`op`) if you use template secrets (`onepasswordRead`)
-- Run `op signin` before `chezmoi apply` when using `op`
-- prek only if you want to run pre-commit hooks (`.pre-commit-config.yaml`)
+  - If `op` is installed on macOS, run `op signin` before `chezmoi apply` (`dot_config/git/config.tmpl` requires `op whoami`)
+- `prek` only if you want to run pre-commit hooks (`.pre-commit-config.yaml`)
 
 ## Quick start
 
 Initialize from the repo:
 
 ```sh
-chezmoi init --apply git@github.com:lazysf/dotfiles.git
+chezmoi init --apply https://github.com/lazysf/dotfiles.git
 ```
 
 If this repo is already your chezmoi source directory:
@@ -35,10 +43,19 @@ chezmoi diff
 
 ```text
 .
+├── AGENTS.md
+├── Documents/
+│   └── PowerShell/
+│       └── Microsoft.PowerShell_profile.ps1
 ├── .chezmoiignore
 ├── .pre-commit-config.yaml
 ├── dot_codex/          # ~/.codex (Codex config/skills)
+│   ├── AGENTS.md
+│   ├── config.toml
+│   ├── rules/
+│   └── skills/
 ├── dot_config/         # ~/.config
+│   ├── chezmoi/
 │   ├── gh/
 │   ├── git/
 │   ├── lazygit/
@@ -48,7 +65,7 @@ chezmoi diff
 │   ├── yazi/
 │   └── zsh/
 ├── dot_ssh/            # ~/.ssh
-│   └── private_config  # ~/.ssh/config (private)
+│   └── private_config.tmpl  # ~/.ssh/config (private template)
 ├── dot_zshenv          # ~/.zshenv
 ├── LICENSE
 └── README.md
