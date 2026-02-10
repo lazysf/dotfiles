@@ -1,8 +1,8 @@
 [include]
   path = ~/.config/git/config.local
-{{- if eq .chezmoi.os "darwin" }}
-{{- if ne (lookPath "op") "" }}
-{{- $opWhoami := output "op" "whoami" -}}
+{{ if eq .chezmoi.os "darwin" -}}
+{{ if ne (lookPath "op") "" -}}
+{{ $opWhoami := output "op" "whoami" -}}
 [user]
   name  = {{ onepasswordRead "op://Personal/GitHub/login" | quote }}
   email = {{ onepasswordRead  "op://Personal/GitHub/qjzdqsz76dxnng7mnug25hbrda"| quote }}
@@ -13,8 +13,8 @@
   format = ssh
 [commit]
   gpgsign = true
-{{- end }}
-{{- end }}
+{{ end -}}
+{{ end -}}
 [ghq]
   root = ~/projects
 [init]
