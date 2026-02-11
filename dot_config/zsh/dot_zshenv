@@ -24,17 +24,3 @@ if [[ -S "${_1P_AGENT_SOCK}" ]]; then
   export SSH_AUTH_SOCK="${_1P_AGENT_SOCK}"
 fi
 unset _1P_AGENT_SOCK
-
-# -----------------------------------------
-# Rust (optional)
-# -----------------------------------------
-if [[ -f "${HOME}/.cargo/env" ]]; then
-  . "${HOME}/.cargo/env"
-fi
-
-# uv (optional)
-_uv_bin="${HOME}/.local/bin"
-if [[ -d "${_uv_bin}" ]]; then
-  export PATH="${_uv_bin}:${PATH}"
-fi
-unset _uv_bin

@@ -1,0 +1,45 @@
+[tools]
+# runtimes
+go = "latest"
+node = "latest"
+python = "latest"
+rust = "latest"
+
+# tooling
+prek = "latest"
+uv = "latest"
+
+# lsp servers
+lua-language-server = "latest"
+marksman = "latest"
+rust-analyzer = "latest"
+taplo = "latest"
+"go:github.com/sqls-server/sqls" = "latest"
+"go:golang.org/x/tools/gopls" = "latest"
+"npm:bash-language-server" = "latest"
+"npm:dockerfile-language-server-nodejs" = "latest"
+"npm:pyright" = "latest"
+"npm:typescript" = "latest"
+"npm:typescript-language-server" = "latest"
+"npm:vscode-langservers-extracted" = "latest"
+"npm:yaml-language-server" = "latest"
+
+# formatters
+biome = "latest"
+dprint = "latest"
+ruff = "latest"
+"cargo:stylua" = "latest"
+"go:mvdan.cc/sh/v3/cmd/shfmt" = "latest"
+"npm:prettier" = "latest"
+"pipx:sqlfluff" = "latest"
+
+# linters
+"golangci-lint" = "latest"
+"hadolint" = "latest"
+"markdownlint-cli2" = "latest"
+"shellcheck" = "latest"
+"cargo:selene" = "latest"
+"pipx:yamllint" = "latest"
+
+[settings]
+python.uv_venv_auto = "create|source"
