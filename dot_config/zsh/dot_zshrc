@@ -28,6 +28,13 @@ if [[ -z "${HOMEBREW_PREFIX:-}" ]]; then
 fi
 
 # -----------------------------------------
+# mise
+# -----------------------------------------
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+# -----------------------------------------
 # Completion and correction
 # -----------------------------------------
 
@@ -88,19 +95,6 @@ fi
 # -----------------------------------------
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
-fi
-
-# -----------------------------------------
-# Node.js (nvm)
-# -----------------------------------------
-export NVM_DIR="$HOME/.nvm"
-
-if [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]]; then
-  . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"        # Load nvm
-fi
-
-if [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]]; then
-  . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # Load nvm completions
 fi
 
 # -----------------------------------------
