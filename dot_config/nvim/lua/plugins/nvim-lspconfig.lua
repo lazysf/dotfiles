@@ -37,9 +37,6 @@ return {
       capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
     end
 
-    vim.g.lsp_on_attach = on_attach
-    vim.g.lsp_capabilities = capabilities
-
     vim.diagnostic.config({
       signs = true,
       underline = true,
@@ -58,5 +55,38 @@ return {
         })
       end,
     })
+
+    local servers = {
+      'dockerls',
+      'gopls',
+      'jsonls',
+      'bashls',
+      'lua_ls',
+      'marksman',
+      'pyright',
+      'rust_analyzer',
+      'sqls',
+      'yamlls',
+      'taplo',
+      'ts_ls',
+    }
+
+    local function server_opts(server_name)
+      local ok, conf = pcall(require, 'lsp.' .. server_name)
+      if ok then
+        return conf
+      end
+      return {}
+    end
+
+    for _, server_name in ipairs(servers) do
+      local server_conf = server_opts(server_name)
+      server_conf.on_attach = on_attach
+      server_conf.capabilities = capabilities
+
+      local base = vim.lsp.config[server_name] or {}
+      vim.lsp.config[server_name] = vim.tbl_deep_extend('force', base, server_conf)
+      vim.lsp.enable(server_name)
+    end
   end,
 }

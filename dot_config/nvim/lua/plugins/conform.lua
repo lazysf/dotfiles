@@ -68,6 +68,7 @@ return {
     },
     formatters_by_ft = {
       bash = { 'shfmt' },
+      dockerfile = { 'dprint' },
       go = { 'gofmt' },
       javascript = { 'biome' },
       javascriptreact = { 'biome' },
