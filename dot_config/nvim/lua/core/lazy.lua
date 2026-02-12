@@ -1,5 +1,5 @@
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
+if vim.fn.isdirectory(lazypath) == 0 then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system({
     'git',
