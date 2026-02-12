@@ -94,6 +94,14 @@ if (Get-Command eza -ErrorAction SilentlyContinue) {
   function la {
     eza --icons --git -la @args
   }
+
+  function ll {
+    eza --icons --git -l @args
+  }
+
+  function lt {
+    eza --icons --git --tree @args
+  }
 }
 
 function reload {
