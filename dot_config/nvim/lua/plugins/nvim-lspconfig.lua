@@ -46,15 +46,34 @@ return {
       float = { border = 'rounded' },
     })
 
-    vim.api.nvim_create_autocmd('CursorHold', {
-      group = vim.api.nvim_create_augroup('LspDiagnosticsOnHover', { clear = true }),
-      callback = function()
-        vim.diagnostic.open_float(nil, {
-          focusable = false,
-          scope = 'cursor',
-        })
+    vim.keymap.set(
+      'n',
+      '[d',
+      function()
+        vim.diagnostic.jump({ count = -1, float = false })
       end,
-    })
+      { silent = true, desc = 'Go to previous diagnostic' }
+    )
+    vim.keymap.set(
+      'n',
+      ']d',
+      function()
+        vim.diagnostic.jump({ count = 1, float = false })
+      end,
+      { silent = true, desc = 'Go to next diagnostic' }
+    )
+    vim.keymap.set('n', '<leader>e', function()
+      vim.diagnostic.open_float(nil, {
+        focusable = false,
+        scope = 'cursor',
+      })
+    end, { silent = true, desc = 'Open diagnostic float' })
+    vim.keymap.set(
+      'n',
+      '<leader>q',
+      vim.diagnostic.setloclist,
+      { silent = true, desc = 'Open diagnostics location list' }
+    )
 
     local servers = {
       'dockerls',
@@ -72,8 +91,8 @@ return {
     }
 
     local function server_opts(server_name)
-      local ok, conf = pcall(require, 'lsp.' .. server_name)
-      if ok then
+      local conf_ok, conf = pcall(require, 'lsp.' .. server_name)
+      if conf_ok then
         return conf
       end
       return {}
