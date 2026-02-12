@@ -10,3 +10,7 @@ notification_method = "bel"
 
 [features]
 shell_snapshot = true
+{{- if eq .chezmoi.os "windows" }}
+elevated_windows_sandbox = true
+experimental_windows_sandbox = true
+{{- end }}
