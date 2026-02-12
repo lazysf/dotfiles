@@ -66,7 +66,15 @@ return {
     }
 
     local group = vim.api.nvim_create_augroup('Linting', { clear = true })
-    vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+    vim.api.nvim_create_autocmd('BufReadPost', {
+      group = group,
+      callback = function()
+        vim.defer_fn(function()
+          lint.try_lint()
+        end, 800)
+      end,
+    })
+    vim.api.nvim_create_autocmd('BufWritePost', {
       group = group,
       callback = function()
         lint.try_lint()
