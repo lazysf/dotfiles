@@ -34,10 +34,10 @@ ruff = "latest"
 "pipx:sqlfluff" = "latest"
 
 # linters
-"golangci-lint" = "latest"
-"hadolint" = "latest"
-"markdownlint-cli2" = "latest"
-"shellcheck" = "latest"
+golangci-lint = "latest"
+hadolint = "latest"
+markdownlint-cli2 = "latest"
+shellcheck = "latest"
 "cargo:selene" = "latest"
 "pipx:yamllint" = "latest"
 
