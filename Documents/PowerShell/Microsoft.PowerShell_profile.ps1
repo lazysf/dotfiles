@@ -21,15 +21,7 @@ $env:YAZI_FILE_ONE = Join-Path $HOME "scoop/apps/git/current/usr/bin/file.exe"
 $env:YAZI_CONFIG_HOME = Join-Path $HOME ".config/yazi"
 
 # -----------------------------
-# PATH (optional)
-# -----------------------------
-$uvBin = Join-Path $HOME ".local/bin"
-if (Test-Path -LiteralPath $uvBin) {
-  $env:PATH = "$uvBin;$env:PATH"
-}
-
-# -----------------------------
-# History / completion
+# PSReadLine options (history / completion)
 # -----------------------------
 if (Get-Module -ListAvailable -Name PSReadLine) {
   Set-PSReadLineOption -HistoryNoDuplicates
@@ -50,10 +42,16 @@ $keepAliases = @(
   "cd",
   "cls",
   "cp",
+  "dir",
   "echo",
+  "ls",
+  "man",
   "mv",
   "pwd",
-  "rm"
+  "rm",
+  "sleep",
+  "sort",
+  "tee"
 )
 
 Get-Alias | ForEach-Object {
@@ -69,14 +67,20 @@ Get-Alias | ForEach-Object {
 }
 
 # -----------------------------
-# starship
+# Tool activation (mise)
 # -----------------------------
 if (Get-Command mise -ErrorAction SilentlyContinue) {
+  # Apply mise-managed PATH/env settings to this pwsh session.
   (& mise activate pwsh) | Out-String | Invoke-Expression
 }
 
-if (Get-Command starship -ErrorAction SilentlyContinue) {
-  Invoke-Expression (& starship init powershell)
+# -----------------------------
+# Prompt (starship)
+# -----------------------------
+$starship = Get-Command -Name starship -CommandType Application -ErrorAction SilentlyContinue
+if ($starship) {
+  # Initialize starship prompt only when executable is available.
+  Invoke-Expression (& $starship.Source init powershell)
 }
 
 # -----------------------------
@@ -102,7 +106,7 @@ if (Get-Command nvim -ErrorAction SilentlyContinue) {
 }
 
 # -----------------------------
-# yazi
+# yazi wrapper
 # -----------------------------
 if (Get-Command yazi -ErrorAction SilentlyContinue) {
   function y {
@@ -142,6 +146,7 @@ if ((Get-Command ghq -ErrorAction SilentlyContinue) -and (Get-Command fzf -Error
     }
   }
 
+  # Ctrl+g runs ghq-fzf via PSReadLine key binding.
   if (Get-Module -ListAvailable -Name PSReadLine) {
     Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock {
       ghq-fzf
