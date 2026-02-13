@@ -6,5 +6,7 @@ AGENTS.md
 LICENSE
 README.md
 {{- if ne .chezmoi.os "windows" }}
+Documents
+Documents/PowerShell
 Documents/PowerShell/Microsoft.PowerShell_profile.ps1
 {{- end }}
