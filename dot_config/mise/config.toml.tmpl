@@ -9,29 +9,15 @@ rust = "latest"
 prek = "latest"
 uv = "latest"
 
-# lsp servers
-lua-language-server = "latest"
-marksman = "latest"
-rust-analyzer = "latest"
-taplo = "latest"
-"go:github.com/sqls-server/sqls" = "latest"
-"go:golang.org/x/tools/gopls" = "latest"
-"npm:bash-language-server" = "latest"
-"npm:dockerfile-language-server-nodejs" = "latest"
-"npm:pyright" = "latest"
-"npm:typescript" = "latest"
-"npm:typescript-language-server" = "latest"
-"npm:vscode-langservers-extracted" = "latest"
-"npm:yaml-language-server" = "latest"
-
 # formatters
-biome = "latest"
+biome = "latest" # formatter + linter
 dprint = "latest"
-ruff = "latest"
+ruff = "latest" # formatter + linter
 shfmt = "latest"
+taplo = "latest" # formatter + linter
 "cargo:stylua" = "latest"
 "npm:prettier" = "latest"
-"pipx:sqlfluff" = "latest"
+"pipx:sqlfluff" = "latest" # formatter + linter
 
 # linters
 golangci-lint = "latest"
