@@ -27,7 +27,13 @@ Initialize from the repo:
 chezmoi init --apply https://github.com/lazysf/dotfiles.git
 ```
 
-If this repo is already your chezmoi source directory:
+If your source state is tracked by chezmoi and you want to pull latest changes:
+
+```sh
+chezmoi update
+```
+
+If this repo is already your local chezmoi source directory and you updated it manually:
 
 ```sh
 chezmoi apply
@@ -37,36 +43,4 @@ Preview changes before applying:
 
 ```sh
 chezmoi diff
-```
-
-## Repository structure
-
-```text
-.
-├── AGENTS.md
-├── Documents/
-│   └── PowerShell/
-│       └── Microsoft.PowerShell_profile.ps1
-├── .chezmoiignore
-├── .pre-commit-config.yaml
-├── dot_codex/          # ~/.codex (Codex config/skills)
-│   ├── AGENTS.md
-│   ├── config.toml
-│   ├── rules/
-│   └── skills/
-├── dot_config/         # ~/.config
-│   ├── chezmoi/
-│   ├── gh/
-│   ├── git/
-│   ├── lazygit/
-│   ├── nvim/
-│   ├── starship.toml
-│   ├── wezterm/
-│   ├── yazi/
-│   └── zsh/
-├── dot_ssh/            # ~/.ssh
-│   └── private_config.tmpl  # ~/.ssh/config (private template)
-├── dot_zshenv          # ~/.zshenv
-├── LICENSE
-└── README.md
 ```
