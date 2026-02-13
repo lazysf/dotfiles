@@ -20,7 +20,9 @@
 
 - 初回セットアップ:
   - `chezmoi init --apply https://github.com/lazysf/dotfiles.git`
-- 既にソースディレクトリがこのリポジトリの場合:
+- chezmoi 管理下のソース状態を最新化して適用する場合:
+  - `chezmoi update`
+- 既にソースディレクトリがこのリポジトリで、手動更新済みの場合:
   - `chezmoi apply`
 - 変更の確認:
   - `chezmoi diff`
