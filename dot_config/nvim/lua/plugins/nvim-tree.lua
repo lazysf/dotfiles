@@ -2,8 +2,7 @@ return {
   {
     'nvim-tree/nvim-tree.lua',
     keys = {
-      { '<leader>n', '<cmd>NvimTreeToggle<CR>', mode = 'n', desc = 'Toggle file explorer' },
-      { '<leader>m', '<cmd>NvimTreeFocus<CR>', mode = 'n', desc = 'Focus file explorer' },
+      { '<leader>e', '<cmd>NvimTreeToggle<CR>', mode = 'n', desc = 'Toggle file explorer' },
     },
     opts = {
       disable_netrw = true,
