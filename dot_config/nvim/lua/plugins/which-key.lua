@@ -1,7 +1,26 @@
 return {
   'folke/which-key.nvim',
   event = 'VeryLazy',
-  opts = {},
+  opts = function()
+    local centered_width = vim.g.centered_window_width or 80
+
+    return {
+      win = {
+        border = 'rounded',
+        col = 0.5,
+        row = 0.5,
+        no_overlap = false,
+        width = {
+          max = centered_width,
+        },
+      },
+      layout = {
+        width = {
+          max = centered_width,
+        },
+      },
+    }
+  end,
   keys = {
     {
       '<leader>?',
