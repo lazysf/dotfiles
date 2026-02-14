@@ -6,7 +6,6 @@ return {
       require('dapui').setup()
     end,
   },
-  { 'nvim-neotest/nvim-nio', lazy = true },
   {
     'theHamsta/nvim-dap-virtual-text',
     lazy = true,
@@ -16,7 +15,7 @@ return {
   },
   {
     'jay-babu/mason-nvim-dap.nvim',
-    lazy = false,
+    lazy = true,
     opts = {
       ensure_installed = {
         'python',
@@ -29,22 +28,32 @@ return {
   },
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
-    lazy = false,
+    event = 'VeryLazy',
+    cmd = {
+      'MasonToolsInstall',
+      'MasonToolsInstallSync',
+      'MasonToolsUpdate',
+      'MasonToolsUpdateSync',
+      'MasonToolsClean',
+    },
     opts = {
       ensure_installed = {
         'js-debug-adapter',
         'bash-debug-adapter',
       },
+      auto_update = true,
       run_on_start = true,
-      start_delay = 0,
+      start_delay = 5000,
+      debounce_hours = 24,
     },
   },
   {
     'mxsdev/nvim-dap-vscode-js',
-    lazy = false,
+    lazy = true,
   },
   {
     'mfussenegger/nvim-dap',
+    lazy = true,
     keys = {
       {
         '<leader>db',
@@ -137,4 +146,5 @@ return {
       end
     end,
   },
+  { 'nvim-neotest/nvim-nio', lazy = true },
 }

@@ -4,9 +4,9 @@ return {
     event = 'VeryLazy',
     opts = {
       options = {
-        -- theme = 'tokyonight',
         theme = 'tokyonight',
         icons_enabled = true,
+        globalstatus = false,
         section_separators = '',
         component_separators = '|',
       },

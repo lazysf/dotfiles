@@ -2,6 +2,12 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Shared UI sizing
+vim.g.centered_window_width = 80
+vim.g.health = {
+  style = nil,
+}
+
 -- UI: numbers, cursor, and matching
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -29,7 +35,7 @@ vim.opt.pumheight = 10
 vim.opt.showmode = false
 vim.opt.conceallevel = 0
 vim.opt.concealcursor = ''
-vim.opt.lazyredraw = true
+vim.opt.lazyredraw = false
 vim.opt.synmaxcol = 300
 
 -- Editing: tabs

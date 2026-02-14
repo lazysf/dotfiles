@@ -10,11 +10,19 @@ return {
       { '<leader>fh', '<cmd>Telescope help_tags<CR>', mode = 'n', desc = 'Help tags' },
     },
     opts = function()
+      local centered_width = vim.g.centered_window_width or 80
+
       local telescope = require('telescope')
       local actions = require('telescope.actions')
 
       telescope.setup({
         defaults = {
+          layout_strategy = 'horizontal',
+          layout_config = {
+            width = centered_width,
+            height = 0.85,
+            preview_cutoff = 90,
+          },
           mappings = {
             i = {
               ['<C-j>'] = actions.move_selection_next,
