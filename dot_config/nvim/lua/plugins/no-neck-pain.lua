@@ -3,11 +3,19 @@ return {
   lazy = false,
   priority = 900,
   config = function()
+    local centered_width = vim.g.centered_window_width or 80
+
     require('no-neck-pain').setup({
-      width = 80,
+      width = centered_width,
+      autocmds = {
+        enableOnTabEnter = true,
+      },
       buffers = {
+        bo = {
+          filetype = 'no-neck-pain-side',
+        },
         left = { enabled = true },
-        right = { enabled = false },
+        right = { enabled = true },
         scratchPad = {
           enabled = false,
         },
