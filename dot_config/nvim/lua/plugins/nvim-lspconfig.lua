@@ -62,7 +62,7 @@ return {
       end,
       { silent = true, desc = 'Go to next diagnostic' }
     )
-    vim.keymap.set('n', '<leader>e', function()
+    vim.keymap.set('n', '<leader>xd', function()
       vim.diagnostic.open_float(nil, {
         focusable = false,
         scope = 'cursor',

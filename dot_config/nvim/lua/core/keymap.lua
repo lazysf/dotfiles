@@ -6,7 +6,6 @@ local opts = { noremap = true, silent = true }
 
 -- Insert/visual mode: quick escape
 vim.keymap.set({ 'i', 'v' }, 'jk', '<ESC>', opts)
-vim.keymap.set({ 'i', 'v' }, 'jk', '<ESC>', opts)
 
 -- Window navigation
 vim.keymap.set('n', '<C-h>', '<C-w>h', opts)
