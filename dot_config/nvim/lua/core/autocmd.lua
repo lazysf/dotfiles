@@ -84,3 +84,27 @@ for pattern, rule in pairs(reopen_encodings) do
     end,
   })
 end
+
+local indent_group = vim.api.nvim_create_augroup('filetype-indent-overrides', { clear = true })
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = indent_group,
+  pattern = 'go',
+  callback = function(args)
+    vim.bo[args.buf].expandtab = false
+    vim.bo[args.buf].tabstop = 4
+    vim.bo[args.buf].softtabstop = 4
+    vim.bo[args.buf].shiftwidth = 4
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = indent_group,
+  pattern = { 'python', 'rust' },
+  callback = function(args)
+    vim.bo[args.buf].expandtab = true
+    vim.bo[args.buf].tabstop = 4
+    vim.bo[args.buf].softtabstop = 4
+    vim.bo[args.buf].shiftwidth = 4
+  end,
+})
