@@ -1,2 +1,11 @@
 .DS_Store
-.venv
+
+# Editor / IDE
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Tool caches
+.pre-commit-cache/
