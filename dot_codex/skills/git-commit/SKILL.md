@@ -1,21 +1,20 @@
 ---
 name: git-commit
-description: Gitコミット作成とコミットメッセージ整備を支援する。ユーザーがコミット実行やメッセージ作成を求める場合に使用する（Conventional Commits 準拠。プッシュは git-push）。
+description: Gitコミット実行（対象確認・ステージ・実行・結果報告）を支援する。ユーザーがコミット操作を求める場合に使用する（メッセージ整備のみは commit-message、プッシュは git-push）。
 metadata:
-  short-description: Git commit (Conventional Commits)
+  short-description: Git commit execution
 ---
 
 # Git Commit
 
-Gitの変更をコミットする依頼に対応する。
+Gitの変更を安全にコミットする依頼に対応する。
 
 ## 基本方針
 
 - 対象が不明なら確認する。
 - 破壊的操作は行わない。
-- コミットメッセージが未指定なら候補を提示して確認する。
-- detached HEAD の場合は止めて、どのブランチでコミットするか確認する。
-- rebase・merge・cherry-pick・revert 中やコンフリクトがある場合は止めて確認する。
+- detached HEAD の場合は停止し、どのブランチでコミットするか確認する。
+- rebase・merge・cherry-pick・revert 中やコンフリクトがある場合は停止して確認する。
 - 未追跡ファイルや大きな生成物、バイナリ、機密情報が含まれる場合は対象を確認する。
 - リポジトリの規約（README・CONTRIBUTING・テンプレ）があれば優先する。
 - `--amend` や履歴の書き換えは指示がない限り行わない。
@@ -43,6 +42,7 @@ Gitの変更をコミットする依頼に対応する。
 ## 対象外
 
 - プッシュのみが目的の依頼（git-push を使用）。
+- コミットメッセージの作成・推敲のみが目的の依頼（commit-message を使用）。
 - 変更が存在しない状態でのコミット要求。
 
 ## コミット前チェックリスト
@@ -52,205 +52,18 @@ Gitの変更をコミットする依頼に対応する。
 - [ ] コミットメッセージが変更内容と一致している
 - [ ] 無関係な変更が混在していない
 
-## コミットメッセージ
+## コミットメッセージの扱い
 
-- Conventional Commits に準拠する（必須）。
-- 言語は原則英語だが、リポジトリの規約があればそれを優先し、不明なら確認する。
-- 形式に合わない場合は修正案を提示して確認する。
-- 本文やフッターが必要な場合は、エディタ起動のコミットを優先する。
-- 可能なら 1〜3 件の候補を提示し、ユーザーに選んでもらう。
-- 生成したコミットメッセージは、レビューと改善を3回繰り返して最終案を確定する。
-
-### Commit Message Rule
-
-- Conventional Commits を必須とする。
-- 次のいずれかを満たすコミットは、本文を必須とする。
-  - 変更ファイル数が 8 以上
-  - 追加行数 + 削除行数が 200 以上
-- 例外（本文省略可）:
-  - 機械的 rename のみ
-  - 自明な一括整形（formatter/linter のみ）
-
-### Body Template
-
-本文は次の3点を簡潔に含める。
-
-- Why: この変更が必要な理由
-- What: 何を変更したか
-- Impact: 利用者・運用・互換性への影響
-
-例:
-
-```txt
-<type>(<scope>): <summary>
-
-Why: ...
-What: ...
-Impact: ...
-```
-
-### レビュー・改善サイクル（必須）
-
-- 生成したコミットメッセージ案に対して、以下の観点でレビューする。
-  - Conventional Commits 形式に準拠しているか
-  - 変更内容と type/scope/description が一致しているか
-  - ヘッダーが簡潔で曖昧さがないか（目安 72 文字以内）
-  - 本文・フッターが必要十分か（不足・冗長がないか）
-- レビュー結果を反映して改善し、これを3回繰り返す。
-- 3回目の改善結果のみを最終案としてユーザーに提示する（途中案は原則提示しない）。
-- ユーザーがメッセージ未指定の場合は最終案を提示して確認し、承認後に使用する。
-- ユーザーがメッセージ指定済みの場合でも、内部で3回の改善を実施して最終案のみ提示する。
-- 途中案や各ラウンドの内容は、ユーザーから明示的に要求された場合にのみ提示する。
-
-### 形式
-
-```txt
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-### ヘッダー (header)
-
-- 形式の `<type>[optional scope]: <description>` に相当する。
-- 1 行のみで書く。
-- 72 文字以内にする。
-- 英小文字で記載する（固有名詞は英大文字でよい）。
-- 動詞は命令形（add・fix・update など）を基本とする。
-
-#### タイプ (type)
-
-- ヘッダーの `<type>` に相当する。
-- 下記のタイプから適切なものを選ぶ。
-
-##### 基本のタイプ
-
-- `fix`: バグ修正（Semantic Versioning の `PATCH`）
-- `feat`: 新機能（Semantic Versioning の `MINOR`）
-
-##### 追加のタイプ（例）
-
-- `build`: ビルドシステムや外部依存の変更
-- `chore`: メンテナンスや雑多な変更（他の type に当てはまらないもの）
-- `ci`: CI 設定やスクリプトの変更
-- `docs`: ドキュメントのみの変更
-- `style`: ふるまいに影響しない見た目の変更（空白・フォーマット等）
-- `refactor`: バグ修正や新機能追加を伴わないコード整理
-- `perf`: パフォーマンス向上
-- `test`: テストの追加・修正
-
-追加のタイプは必須ではない。BREAKING CHANGE を含まない限り Semantic Versioning に対する暗黙的な効果を持たない。
-
-#### スコープ (scope)
-
-- ヘッダーの `[optional scope]` に相当する。
-- 任意。必須ではない。
-- 型には追加の文脈としてスコープを付けられる。スコープは括弧で囲み、名詞にする。例: `feat(parser): add ability to parse arrays`。
-- リポジトリがスコープ運用をしていない場合は無理に付けない。
-
-#### 説明 (description)
-
-- ヘッダーの `<description>` に相当する。
-- 変更内容の短い要約を書く。
-- できれば約 50 文字以内で簡潔に書く（72 文字以内の範囲で）。
-- 先頭行はコミットのタイトルとして扱われるため、読みやすい要約にする。
-- 詳細が書ききれない場合は description を簡潔にし、本文に詳細を記載する。
-
-### 本文 (body)
-
-- 形式の `[optional body]` に相当する。
-- 通常は任意。`Commit Message Rule` に該当する場合は必須とする。
-- 記載する場合は、ヘッダーの後に 1 行空けて書く。
-- 改行で区切った複数段落にできる。
-- 通常の英文で記載する（先頭1文字が英大文字）。
-- 変更理由や影響、代替案を簡潔に記す。
-- 1行の長さは概ね 72 文字程度を目安にする。
-
-### フッター (footer)
-
-- 形式の `[optional footer(s)]` に相当する。
-- 任意。本文の後に 1 行空けて書く（本文がない場合はヘッダーの後に 1 行空ける）。
-- git trailer 形式に準拠する。
-- 形式は `Token: value` または `Token #value`。
-- トークンは先頭1文字を英大文字にする。
-- トークン内の空白は `-` に置き換える（後述する `BREAKING CHANGE` は例外）。
-- 値はスペースや改行を含められ、次のトークンで終端される。
-- 値は英小文字で記載する（固有名詞は英大文字でよい）。
-- Issue 連携は `Refs: #123`、`Fixes: #123`、`Closes: #123` を用いる。
-
-### 破壊的変更
-
-- `BREAKING CHANGE:` をフッターに書く、または型・スコープの直後に `!` を付けると破壊的変更を表す（Semantic Versioning の `MAJOR`）。
-- `BREAKING CHANGE` は任意の型に付けられる。
-- `!` がある場合、`BREAKING CHANGE:` を省略してよい。その場合はヘッダーの description で破壊的変更の内容を説明する。
-- `BREAKING CHANGE:` は大文字で `BREAKING CHANGE:` の後に半角スペースを入れて説明を書く。
-- `BREAKING-CHANGE` は `BREAKING CHANGE` と同義。
-
-### 例
-
-タイトルおよび破壊的変更のフッターを持つコミットメッセージ
-
-```txt
-feat: allow provided config object to extend other configs
-
-BREAKING CHANGE: `extends` key in config file is now used for extending other config files
-```
-
-破壊的変更を目立たせるために `!` を持つコミットメッセージ
-
-```txt
-feat!: send an email to the customer when a product is shipped
-```
-
-スコープおよび破壊的変更を目立たせるための `!` を持つコミットメッセージ
-
-```txt
-feat(api)!: send an email to the customer when a product is shipped
-```
-
-`!` と `BREAKING CHANGE` フッターの両方を持つコミットメッセージ
-
-```txt
-chore!: drop support for Node 6
-
-BREAKING CHANGE: use JavaScript features not available in Node 6.
-```
-
-本文を持たないコミットメッセージ
-
-```txt
-docs: correct spelling of CHANGELOG
-```
-
-スコープを持つコミットメッセージ
-
-```txt
-feat(lang): add Polish language
-```
-
-複数段落からなる本文と複数のフッターを持ったコミットメッセージ
-
-```txt
-fix: prevent racing of requests
-
-Introduce a request id and a reference to latest request. Dismiss
-incoming responses other than from latest request.
-
-Remove timeouts which were used to mitigate the racing issue but are
-obsolete now.
-
-Reviewed-by: Z
-Refs: #123
-```
+- メッセージ作成・推敲は `commit-message` スキルを使用する。
+- ユーザーがメッセージを指定した場合も、必要に応じて整形・妥当性確認を行う。
+- メッセージ未指定時は `commit-message` の最終案を提示し、承認後にコミットする。
 
 ## 手順
 
 ### 1) 状態確認
 
 - `git status -sb` で状態を確認する。
-- rebase・merge・cherry-pick・revert 中やコンフリクトがある場合は止めて確認する。
+- rebase・merge・cherry-pick・revert 中やコンフリクトがある場合は停止して確認する。
 
 ### 2) 変更有無の判定
 
@@ -259,7 +72,7 @@ Refs: #123
 ### 3) 変更内容の確認
 
 - `git diff` で変更内容を確認する（対象が不明なら質問する）。
-- 変更を目的単位で分類し、混在している場合はコミットを止めて分割方針を合意する。
+- 変更を目的単位で分類し、混在している場合はコミットを停止して分割方針を合意する。
 - 未追跡ファイルや大きな生成物、バイナリが含まれる場合は対象を確認し、必要なら除外を提案する。
 - 合意前に `git add -A` やコミットを実行しない。
 
@@ -275,8 +88,7 @@ Refs: #123
 
 ### 6) コミット
 
-- コミットメッセージ案を作成し、レビューと改善を3回実施して最終案を確定する。
-- ユーザー確認が必要な場合は最終案を提示して承認を得る。
+- `commit-message` スキルの最終案を使用する（未指定時は承認を得る）。
 - 本文やフッターが必要な場合は `git commit` を使い、短いタイトルのみなら `git commit -m "..."` を使う。
 - 必要なら `git log -1 --oneline` でコミット結果を確認する。
 - コミット失敗時はエラー内容をそのまま示し、再実行前に原因（hook失敗、整合性エラー等）を確認する。
