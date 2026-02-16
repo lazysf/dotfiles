@@ -43,6 +43,27 @@ return {
       }
     end
 
+    -- Markdown lint with markdownlint-cli2.
+    if not lint.linters.markdownlint_cli2 then
+      lint.linters.markdownlint_cli2 = {
+        cmd = 'markdownlint-cli2',
+        args = { '--no-globs' },
+        stdin = false,
+        append_fname = true,
+        stream = 'stdout',
+        ignore_exitcode = true,
+        parser = parser.from_pattern(
+          '([^:]+):(%d+):(%d+)%s+(%w+)%s+(.+)',
+          { 'file', 'lnum', 'col', 'severity', 'message' },
+          {
+            error = vim.diagnostic.severity.WARN,
+            warning = vim.diagnostic.severity.WARN,
+          },
+          { source = 'markdownlint-cli2' }
+        ),
+      }
+    end
+
     lint.linters_by_ft = {
       bash = { 'shellcheck' },
       dockerfile = { 'hadolint' },
@@ -52,7 +73,7 @@ return {
       json = { 'biomejs' },
       jsonc = { 'biomejs' },
       lua = { 'selene' },
-      markdown = { 'markdownlint' },
+      markdown = { 'markdownlint_cli2' },
       python = { 'ruff' },
       rust = { 'clippy' },
       sh = { 'shellcheck' },
