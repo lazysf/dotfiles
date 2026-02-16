@@ -46,3 +46,41 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
   pattern = '*',
   callback = recenter_special_buffer,
 })
+
+local reopen_group = vim.api.nvim_create_augroup('reopen-with-encoding', { clear = true })
+local reopen_encodings = require('core.encoding_map')
+
+for pattern, rule in pairs(reopen_encodings) do
+  local encoding = rule.encoding
+  local fileformat = rule.fileformat
+
+  vim.api.nvim_create_autocmd('BufReadPost', {
+    group = reopen_group,
+    pattern = pattern,
+    callback = function(args)
+      if vim.b[args.buf].reopened_with_encoding then
+        return
+      end
+
+      vim.b[args.buf].reopened_with_encoding = true
+      vim.api.nvim_buf_call(args.buf, function()
+        vim.cmd(('silent noautocmd keepjumps edit ++enc=%s'):format(encoding))
+      end)
+      vim.bo[args.buf].fileencoding = encoding
+      if fileformat then
+        vim.bo[args.buf].fileformat = fileformat
+      end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('BufNewFile', {
+    group = reopen_group,
+    pattern = pattern,
+    callback = function(args)
+      vim.bo[args.buf].fileencoding = encoding
+      if fileformat then
+        vim.bo[args.buf].fileformat = fileformat
+      end
+    end,
+  })
+end
