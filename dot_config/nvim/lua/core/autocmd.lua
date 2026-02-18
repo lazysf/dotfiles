@@ -53,6 +53,7 @@ local reopen_encodings = require('core.encoding_map')
 for pattern, rule in pairs(reopen_encodings) do
   local encoding = rule.encoding
   local fileformat = rule.fileformat
+  local bomb = rule.bomb
 
   vim.api.nvim_create_autocmd('BufReadPost', {
     group = reopen_group,
@@ -70,6 +71,9 @@ for pattern, rule in pairs(reopen_encodings) do
       if fileformat then
         vim.bo[args.buf].fileformat = fileformat
       end
+      if bomb ~= nil then
+        vim.bo[args.buf].bomb = bomb
+      end
     end,
   })
 
@@ -80,6 +84,9 @@ for pattern, rule in pairs(reopen_encodings) do
       vim.bo[args.buf].fileencoding = encoding
       if fileformat then
         vim.bo[args.buf].fileformat = fileformat
+      end
+      if bomb ~= nil then
+        vim.bo[args.buf].bomb = bomb
       end
     end,
   })
