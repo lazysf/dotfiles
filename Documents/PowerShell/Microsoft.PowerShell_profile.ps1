@@ -34,39 +34,6 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
 }
 
 # -----------------------------
-# Built-in aliases
-# Keep only aliases that are useful for zsh-like operation.
-# -----------------------------
-$keepAliases = @(
-  "cat",
-  "cd",
-  "cls",
-  "cp",
-  "dir",
-  "echo",
-  "ls",
-  "man",
-  "mv",
-  "pwd",
-  "rm",
-  "sleep",
-  "sort",
-  "tee"
-)
-
-Get-Alias | ForEach-Object {
-  if ($keepAliases -contains $_.Name) {
-    return
-  }
-
-  if ($_.Options -match "Constant") {
-    return
-  }
-
-  Remove-Item -LiteralPath ("Alias:" + $_.Name) -Force -ErrorAction SilentlyContinue
-}
-
-# -----------------------------
 # Tool activation (mise)
 # -----------------------------
 if (Get-Command mise -ErrorAction SilentlyContinue) {
@@ -87,6 +54,10 @@ if ($starship) {
 # Aliases / wrappers
 # -----------------------------
 if (Get-Command eza -ErrorAction SilentlyContinue) {
+  @("ls", "la", "ll", "lt") | ForEach-Object {
+    Remove-Item -LiteralPath ("Alias:" + $_) -Force -ErrorAction SilentlyContinue
+  }
+
   function ls {
     eza --icons --git @args
   }
@@ -109,6 +80,10 @@ function reload {
 }
 
 if (Get-Command nvim -ErrorAction SilentlyContinue) {
+  @("vi", "vim") | ForEach-Object {
+    Remove-Item -LiteralPath ("Alias:" + $_) -Force -ErrorAction SilentlyContinue
+  }
+
   Set-Alias -Name vi -Value nvim
   Set-Alias -Name vim -Value nvim
 }
@@ -142,7 +117,7 @@ if (Get-Command yazi -ErrorAction SilentlyContinue) {
 # ghq + fzf
 # -----------------------------
 if ((Get-Command ghq -ErrorAction SilentlyContinue) -and (Get-Command fzf -ErrorAction SilentlyContinue)) {
-  function ghq-fzf {
+  function g {
     $root = ghq root
     if (-not $root) {
       return
@@ -150,15 +125,10 @@ if ((Get-Command ghq -ErrorAction SilentlyContinue) -and (Get-Command fzf -Error
 
     $src = ghq list | fzf
     if ($src) {
-      Set-Location -LiteralPath (Join-Path $root $src)
-    }
-  }
-
-  # Ctrl+g runs ghq-fzf via PSReadLine key binding.
-  if (Get-Module -ListAvailable -Name PSReadLine) {
-    Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock {
-      ghq-fzf
-      [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
+      $dest = Join-Path $root $src
+      if (Test-Path -LiteralPath $dest) {
+        Set-Location -LiteralPath $dest
+      }
     }
   }
 }
