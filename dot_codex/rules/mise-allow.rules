@@ -1,0 +1,16 @@
+prefix_rule(
+  pattern = ["mise", "run"],
+  decision = "allow",
+  justification = "日常的で安全な mise run 操作のみ許可する。",
+  match = [
+    "mise run",
+    "mise run test",
+    "mise run lint",
+    "mise run format",
+  ],
+  not_match = [
+    "mise install",
+    "mise use node@latest",
+    "mise settings ls",
+  ],
+)
