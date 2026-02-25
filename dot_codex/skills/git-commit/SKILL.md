@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Gitコミット実行（対象確認・ステージ・実行・結果報告）を支援する。ユーザーがコミット操作を求める場合に使用する（メッセージ整備のみは commit-message、プッシュは git-push）。
+description: Gitコミット実行（対象確認・ステージ・実行・結果報告）を支援する。ユーザーがコミット操作を求める場合に使用する（ポリシー判定は commit-policy、メッセージ整備のみは commit-message、プッシュは git-push）。
 metadata:
   short-description: Git commit execution
 ---
@@ -22,6 +22,7 @@ Gitの変更を安全にコミットする依頼に対応する。
 - 部分コミット（hunk単位）を許容し、必要に応じて `git add -p` を使う。
 - 無関係な変更が混在する場合は、コミットを実行せず分割方針の合意を先に取る。
 - 目的が異なる変更（例: スキル削除と他スキル改善）は同一コミットに混ぜない（必須）。
+- `commit-policy` の判定がない限りコミットしない（fail-closed）。
 
 ## コミット分割の原則
 
@@ -43,6 +44,7 @@ Gitの変更を安全にコミットする依頼に対応する。
 
 - プッシュのみが目的の依頼（git-push を使用）。
 - コミットメッセージの作成・推敲のみが目的の依頼（commit-message を使用）。
+- 本文必須判定のみが目的の依頼（commit-policy を使用）。
 - 変更が存在しない状態でのコミット要求。
 
 ## コミット前チェックリスト
@@ -54,9 +56,11 @@ Gitの変更を安全にコミットする依頼に対応する。
 
 ## コミットメッセージの扱い
 
+- 本文必須判定は `commit-policy` スキルを使用する。
 - メッセージ作成・推敲は `commit-message` スキルを使用する。
 - ユーザーがメッセージを指定した場合も、必要に応じて整形・妥当性確認を行う。
 - メッセージ未指定時は `commit-message` の最終案を提示し、承認後にコミットする。
+- `require_body=yes` の場合、本文なしメッセージでのコミットを禁止する。
 
 ## 手順
 
@@ -86,16 +90,25 @@ Gitの変更を安全にコミットする依頼に対応する。
 
 - `git diff --staged` でステージ内容を確認する。
 
-### 6) コミット
+### 6) ポリシー判定
 
-- `commit-message` スキルの最終案を使用する（未指定時は承認を得る）。
-- 本文やフッターが必要な場合は `git commit` を使い、短いタイトルのみなら `git commit -m "..."` を使う。
+- `commit-policy` スキルで `require_body` を判定する。
+- 判定結果（`allow_commit`, `require_body`, `changed_files`, `total_changed_lines`, `reason`, `exception`）を記録する。
+- `allow_commit=no` の場合はコミットを実行せず停止する。
+- 判定結果が得られない・矛盾する場合は停止する（fail-closed）。
+
+### 7) コミット
+
+- `commit-message` スキルを `mode=git-commit` で呼び出し、最終案を使用する（未指定時は承認を得る）。
+- `require_body=yes` の場合、本文を含む最終案のみ許可する。
+- 本文が必要な場合は `git commit` を使い、本文不要の場合のみ短いタイトルで `git commit -m "..."` を使う。
 - 必要なら `git log -1 --oneline` でコミット結果を確認する。
 - コミット失敗時はエラー内容をそのまま示し、再実行前に原因（hook失敗、整合性エラー等）を確認する。
 
-### 7) 事後確認
+### 8) 事後確認
 
 - `git status -sb` でコミット後の状態を確認する。
+- `git log -1 --pretty=%B` で最終メッセージを確認し、`require_body=yes` なのに本文欠落があれば違反として報告する。
 
 ## 出力フォーマット
 
@@ -106,6 +119,9 @@ Gitの変更を安全にコミットする依頼に対応する。
 - commit hash:
 - summary:
 - staged files:
+- policy allow_commit:
+- policy require_body:
+- policy reason:
 - remaining changes:
 - 実行時の注意事項:
 ```
