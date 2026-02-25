@@ -8,6 +8,7 @@ metadata:
 # Commit Message
 
 コミット実行は行わず、コミットメッセージの作成・見直しに特化して対応する。
+本文必須の判定は `commit-policy` に委譲する。
 
 ## 基本方針
 
@@ -17,21 +18,31 @@ metadata:
 - 本文やフッターが必要な場合は、それを含む完全なメッセージを提示する。
 - 可能なら 1〜3 件の候補を提示し、ユーザーに選んでもらう。
 - 生成したコミットメッセージは、レビューと改善を3回繰り返して最終案を確定する。
+- 本文必須の有無は `commit-policy` の `require_body` を唯一の根拠として扱う。
 
 ## 対象外
 
 - `git add`、`git commit`、`git rebase` などのGit実操作（git-commit を使用）。
 - プッシュ操作（git-push を使用）。
+- 本文必須の判定（commit-policy を使用）。
+
+## 入力契約（commit-policy 連携）
+
+- `commit-policy` の判定結果を受け取る。
+  - `require_body: yes/no`
+  - `reason`
+  - `changed_files`
+  - `total_changed_lines`
+  - `exception`
+- 呼び出し元のモードを受け取る（`mode: standalone / git-commit`）。
+- `require_body` が未指定・不整合な場合:
+  - `mode=git-commit`: エラーを返し、メッセージ最終案を返さない（fail-closed）。
+  - `mode=standalone`: 不足情報を問い合わせる。
 
 ## コミットメッセージ規約
 
 - Conventional Commits を必須とする。
-- 次のいずれかを満たすコミットは、本文を必須とする。
-  - 変更ファイル数が 8 以上
-  - 追加行数 + 削除行数が 200 以上
-- 例外（本文省略可）:
-  - 機械的 rename のみ
-  - 自明な一括整形（formatter/linter のみ）
+- 本文必須判定は `commit-policy` に従う（このスキル内で閾値判定しない）。
 
 ## 本文テンプレート
 
@@ -123,7 +134,7 @@ Impact: ...
 ## 本文 (body)
 
 - 形式の `[optional body]` に相当する。
-- 通常は任意。`Commit Message Rule` に該当する場合は必須とする。
+- 通常は任意。`require_body=yes` の場合は必須とする。
 - 記載する場合は、ヘッダーの後に 1 行空けて書く。
 - 改行で区切った複数段落にできる。
 - 通常の英文で記載する（先頭1文字が英大文字）。
@@ -211,12 +222,12 @@ Refs: #123
 
 ### 1) 入力確認
 
-- 変更概要、対象ファイル、差分量、既存の文面有無を確認する。
+- 変更概要、既存の文面有無、`commit-policy` 判定結果を確認する。
 - 情報不足なら最小限の質問をする。
 
 ### 2) 初稿作成
 
-- type/scope/description を決定し、必要に応じて body/footer を追加する。
+- type/scope/description を決定し、`require_body=yes` なら body を必ず追加する。
 
 ### 3) 3回レビュー
 
@@ -235,7 +246,7 @@ Refs: #123
 - final:
 - type:
 - scope:
-- body: あり / なし
+- body: あり / なし（`require_body` と整合）
 - footer: あり / なし
 - 備考:
 ```
@@ -244,4 +255,4 @@ Refs: #123
 
 - 最終メッセージをコードブロックで提示する。
 - なぜその type/scope にしたかを1〜2行で補足する。
-- 本文必須ルールに該当する場合は、その理由を明示する。
+- `require_body=yes` の場合は、その根拠（`commit-policy` の `reason`）を明示する。
