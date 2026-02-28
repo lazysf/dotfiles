@@ -16,6 +16,7 @@ local fullscreen_mods = 'CMD'
 local resize_mods = 'META'
 local default_shell = os.getenv('SHELL') or '/bin/zsh'
 local default_prog = { default_shell, '-l' }
+local window_resize_step = 60
 
 -- Windows overrides
 if is_windows then
@@ -91,6 +92,15 @@ config.freetype_load_flags = 'NO_HINTING'
 config.freetype_render_target = 'HorizontalLcd'
 
 -- Key bindings
+local function adjust_window_size(dx, dy)
+  return wezterm.action_callback(function(window, _)
+    local dims = window:get_dimensions()
+    local next_width = math.max(320, dims.pixel_width + dx)
+    local next_height = math.max(240, dims.pixel_height + dy)
+    window:set_inner_size(next_width, next_height)
+  end)
+end
+
 config.keys = {
   { key = 'Enter', mods = fullscreen_mods, action = wezterm.action.ToggleFullScreen },
 
@@ -123,6 +133,12 @@ config.key_tables = {
     { key = 'j', mods = resize_mods, action = wezterm.action.AdjustPaneSize({ 'Down', 5 }) },
     { key = 'k', mods = resize_mods, action = wezterm.action.AdjustPaneSize({ 'Up', 5 }) },
     { key = 'l', mods = resize_mods, action = wezterm.action.AdjustPaneSize({ 'Right', 5 }) },
+
+    -- Resize window: Shift+h/j/k/l
+    { key = 'H', action = adjust_window_size(-window_resize_step, 0) },
+    { key = 'J', action = adjust_window_size(0, window_resize_step) },
+    { key = 'K', action = adjust_window_size(0, -window_resize_step) },
+    { key = 'L', action = adjust_window_size(window_resize_step, 0) },
 
     -- Tab operations (while in pane mode)
     { key = 't', action = wezterm.action.SpawnTab('CurrentPaneDomain') },
