@@ -9,3 +9,4 @@
 
 # Tool caches
 .pre-commit-cache/
+.nvimlog
