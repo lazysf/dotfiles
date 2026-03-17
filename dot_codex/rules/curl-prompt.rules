@@ -1,0 +1,12 @@
+prefix_rule(
+  pattern = ["curl"],
+  decision = "prompt",
+  justification = "外部通信を伴う curl は都度確認する。",
+  match = [
+    "curl https://example.com",
+    "curl -I https://example.com",
+  ],
+  not_match = [
+    "curl --help",
+  ],
+)

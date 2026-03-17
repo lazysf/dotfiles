@@ -1,0 +1,11 @@
+prefix_rule(
+  pattern = ["pip", "install"],
+  decision = "prompt",
+  justification = "pip による Python 依存追加は影響が大きいため都度確認する。",
+  match = [
+    "pip install requests",
+  ],
+  not_match = [
+    "pip --version",
+  ],
+)
