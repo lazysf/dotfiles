@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = ["git", "restore", "--staged"],
+  decision = "allow",
+  justification = "ステージ解除のみを安全な git restore 操作として許可する。",
+  match = [
+    "git restore --staged README.md",
+    "git restore --staged .",
+  ],
+  not_match = [
+    "git restore README.md",
+    "git restore .",
+  ],
+)

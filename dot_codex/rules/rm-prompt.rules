@@ -1,0 +1,12 @@
+prefix_rule(
+  pattern = ["rm"],
+  decision = "prompt",
+  justification = "削除は不可逆になりやすいため都度確認する。",
+  match = [
+    "rm file.txt",
+    "rm -rf tmp",
+  ],
+  not_match = [
+    "rm --help",
+  ],
+)

@@ -1,0 +1,11 @@
+prefix_rule(
+  pattern = ["kubectl"],
+  decision = "prompt",
+  justification = "Kubernetes 操作は影響範囲が大きいため都度確認する。",
+  match = [
+    "kubectl get pods",
+  ],
+  not_match = [
+    "kubectl version --client",
+  ],
+)
