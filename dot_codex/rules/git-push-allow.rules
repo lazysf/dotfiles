@@ -1,0 +1,14 @@
+prefix_rule(
+  pattern = ["git", "push"],
+  decision = "allow",
+  justification = "通常の git push 操作のみ許可する。",
+  match = [
+    "git push",
+    "git push origin main",
+  ],
+  not_match = [
+    "git push -f",
+    "git push --force",
+    "git push --force-with-lease",
+  ],
+)

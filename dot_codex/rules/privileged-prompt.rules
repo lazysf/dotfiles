@@ -8,6 +8,7 @@ prefix_rule(
     "launchctl list",
   ],
   not_match = [
-    "git status",
+    "sudo -V",
+    "launchctl help",
   ],
 )
