@@ -1,4 +1,4 @@
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "medium"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
@@ -10,3 +10,12 @@ notification_method = "bel"
 
 [features]
 shell_snapshot = true
+multi_agent = true
+
+{{ if eq .chezmoi.os "windows" -}}
+[windows]
+sandbox = "elevated"
+
+[sandbox_workspace_write]
+network_access = false
+{{ end -}}
