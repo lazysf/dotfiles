@@ -26,10 +26,15 @@ fi
 # -----------------------------------------
 if command -v ghq >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1; then
   function ghq-fzf() {
-    local root src target
+    local root preview_cmd src target
     root="$(ghq root)" || return 1
+    if command -v bat >/dev/null 2>&1; then
+      preview_cmd="bat --color=always --style=header,grid --line-range :80 ${root}/{}/README.*"
+    else
+      preview_cmd="command ls -la ${root}/{}"
+    fi
 
-    src="$(ghq list | fzf --preview "bat --color=always --style=header,grid --line-range :80 ${root}/{}/README.*")"
+    src="$(ghq list | fzf --preview "${preview_cmd}")"
     if [[ -n "${src}" ]]; then
       target="${root}/${src}"
       BUFFER="cd ${(q)target}"

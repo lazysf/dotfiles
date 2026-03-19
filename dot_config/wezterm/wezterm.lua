@@ -14,8 +14,7 @@ local font_size = 16
 local line_height = 1.06
 local fullscreen_mods = 'CMD'
 local resize_mods = 'META'
-local default_shell = os.getenv('SHELL') or '/bin/zsh'
-local default_prog = { default_shell, '-l' }
+local default_prog = { '/bin/zsh', '-l' }
 local window_resize_step = 60
 
 -- Windows overrides

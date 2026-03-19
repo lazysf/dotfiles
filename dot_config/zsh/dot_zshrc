@@ -4,7 +4,7 @@
 export HISTFILE="${ZDOTDIR}/.zsh_history"
 export HISTFILESIZE=100000
 export HISTSIZE=10000
-export SAVEHIST=100000
+export SAVEHIST=10000
 
 setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
@@ -30,6 +30,7 @@ fi
 # -----------------------------------------
 # mise
 # -----------------------------------------
+# Add interactive-shell integration for day-to-day shell usage.
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
@@ -47,7 +48,12 @@ fi
 ZSH_COMPDUMP="${ZDOTDIR:-${HOME}}/.zcompdump"
 
 autoload -Uz compinit
-compinit -d "${ZSH_COMPDUMP}"
+if [[ -f "${ZSH_COMPDUMP}" ]]; then
+  # Reuse an existing compdump to keep interactive startup lighter.
+  compinit -C -d "${ZSH_COMPDUMP}"
+else
+  compinit -d "${ZSH_COMPDUMP}"
+fi
 
 zstyle ':completion:*' ignore-parents parent pwd ..
 zstyle ':completion:*' list-colors ''
