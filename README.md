@@ -19,6 +19,14 @@ Dotfiles managed with [chezmoi](https://www.chezmoi.io/).
   - If `op` is installed on macOS, run `op signin` before `chezmoi apply` (`dot_config/git/config.tmpl` requires `op whoami`)
 - `prek` only if you want to run pre-commit hooks (`.pre-commit-config.yaml`)
 
+## Shell policy
+
+- Use the macOS default `/bin/zsh` as the login shell
+- Use Homebrew to provide shell-related tools and plugins such as `starship`, `fzf`, and `mise`
+- Do not require Homebrew's `zsh` package for this dotfiles setup
+- Initialize `mise` in `~/.zprofile` with `mise activate zsh --shims` so tools installed via `mise` are available from non-interactive shell entry points
+- Initialize `mise` again in `~/.zshrc` with `mise activate zsh` because day-to-day work usually runs through interactive shells
+
 ## Quick start
 
 Initialize from the repo:

@@ -10,6 +10,7 @@ fi
 # -----------------------------------------
 # mise
 # -----------------------------------------
+# Initialize shims for login and non-interactive shell entry points.
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh --shims)"
 fi
