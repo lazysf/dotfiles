@@ -5,7 +5,4 @@ prefix_rule(
   match = [
     "ssh user@example.com",
   ],
-  not_match = [
-    "ssh -V",
-  ],
 )

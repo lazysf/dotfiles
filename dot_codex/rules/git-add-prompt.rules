@@ -1,14 +1,11 @@
 prefix_rule(
   pattern = ["git", "add"],
-  decision = "allow",
-  justification = "日常的で安全な git add 操作のみ許可する。",
+  decision = "prompt",
+  justification = "ステージ変更は影響範囲を誤りやすいため都度確認する。",
   match = [
     "git add .",
     "git add README.md",
     "git add --patch",
     "git add -p",
-  ],
-  not_match = [
-    "git add -A",
   ],
 )

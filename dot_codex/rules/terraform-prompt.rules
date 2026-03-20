@@ -5,7 +5,4 @@ prefix_rule(
   match = [
     "terraform plan",
   ],
-  not_match = [
-    "terraform version",
-  ],
 )
