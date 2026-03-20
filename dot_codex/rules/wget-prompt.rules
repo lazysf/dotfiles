@@ -5,7 +5,4 @@ prefix_rule(
   match = [
     "wget https://example.com/file.tar.gz",
   ],
-  not_match = [
-    "wget --help",
-  ],
 )

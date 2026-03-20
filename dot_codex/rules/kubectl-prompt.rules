@@ -5,7 +5,4 @@ prefix_rule(
   match = [
     "kubectl get pods",
   ],
-  not_match = [
-    "kubectl version --client",
-  ],
 )

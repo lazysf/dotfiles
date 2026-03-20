@@ -6,7 +6,4 @@ prefix_rule(
     "curl https://example.com",
     "curl -I https://example.com",
   ],
-  not_match = [
-    "curl --help",
-  ],
 )

@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["git", "commit", "--amend"],
+  decision = "forbidden",
+  justification = "amend は既存コミットを書き換えるため禁止する。",
+  match = [
+    "git commit --amend",
+    "git commit --amend --no-edit",
+  ],
+)

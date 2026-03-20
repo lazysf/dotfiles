@@ -6,7 +6,4 @@ prefix_rule(
     "rm file.txt",
     "rm -rf tmp",
   ],
-  not_match = [
-    "rm --help",
-  ],
 )

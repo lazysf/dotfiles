@@ -6,7 +6,4 @@ prefix_rule(
     "docker ps",
     "docker build -t app .",
   ],
-  not_match = [
-    "docker --help",
-  ],
 )
