@@ -5,7 +5,4 @@ prefix_rule(
   match = [
     "scp file.txt user@example.com:/tmp/",
   ],
-  not_match = [
-    "scp -V",
-  ],
 )

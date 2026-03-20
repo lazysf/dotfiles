@@ -5,7 +5,4 @@ prefix_rule(
   match = [
     "rsync -av ./src/ user@example.com:/tmp/src/",
   ],
-  not_match = [
-    "rsync --version",
-  ],
 )

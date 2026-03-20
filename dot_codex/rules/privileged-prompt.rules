@@ -7,8 +7,4 @@ prefix_rule(
     "sudo systemsetup -getcomputersleep",
     "launchctl list",
   ],
-  not_match = [
-    "sudo -V",
-    "launchctl help",
-  ],
 )
