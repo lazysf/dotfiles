@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["git", "commit"],
-  decision = "prompt",
-  justification = "コミット作成は履歴や変更確定に影響するため都度確認する。",
-  match = [
-    "git commit -m \"chore: update\"",
-    "git commit",
-  ],
-)
