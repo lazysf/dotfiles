@@ -1,0 +1,19 @@
+prefix_rule(
+  pattern = ["git", "add"],
+  decision = "allow",
+  justification = "合意済みの対象に限ったパス指定の git add を許可する。",
+  match = [
+    "git add README.md",
+    "git add path/to/file",
+    "git add dir/file1 dir/file2",
+  ],
+  not_match = [
+    "git add .",
+    "git add -A",
+    "git add --all",
+    "git add -u",
+    "git add --update",
+    "git add -p",
+    "git add --patch",
+  ],
+)

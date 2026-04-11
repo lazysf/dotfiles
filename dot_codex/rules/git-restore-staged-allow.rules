@@ -1,12 +1,14 @@
 prefix_rule(
   pattern = ["git", "restore", "--staged"],
   decision = "allow",
-  justification = "ステージ解除のみを安全な git restore 操作として許可する。",
+  justification = "合意済みの対象に限ったステージ解除のみを安全な git restore 操作として許可する。",
   match = [
     "git restore --staged README.md",
-    "git restore --staged .",
+    "git restore --staged path/to/file",
   ],
   not_match = [
+    "git restore --staged .",
+    "git restore --staged --worktree README.md",
     "git restore README.md",
     "git restore .",
   ],
