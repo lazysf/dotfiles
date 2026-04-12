@@ -118,19 +118,17 @@ Gitの変更を安全にコミットする依頼に対応する。
 ## 出力フォーマット
 
 ```markdown
-# Commit結果
-
-- branch:
-- commit hash:
-- summary:
-- staged files:
-- body: あり / なし
-- remaining changes:
-- 実行時の注意事項:
+branch: <branch-name>
+commit: <commit-hash>
+message: <commit-subject>
+body: yes|no
+remaining: clean|<remaining summary>
+notes: <only when needed>
 ```
 
 ## 返答のガイド
 
-- 何をステージし、何をコミットしたかを簡潔に報告する。
-- コミットハッシュ、ブランチ名、残りの未コミット変更があれば併記する。
-- 追加の確認が必要なら、短く具体的に質問する。
+- 既定では文章で要約せず、上記フォーマットをそのまま最小限で返す。
+- `notes` は補足が必要な場合のみ付け、不要なら省略する。
+- `remaining` は作業ツリーが空なら `clean` と書く。
+- 追加の確認が必要な場合のみ、フォーマットの後に短く具体的に質問する。
