@@ -37,7 +37,7 @@
 │       └── Microsoft.PowerShell_profile.ps1
 ├── .chezmoiignore
 ├── .pre-commit-config.yaml
-├── dot_codex/          # ~/.codex (Codex config/skills)
+├── dot_codex/          # ~/.codex (高品質なバイブコーディングを実現するための Codex 設定/skills)
 │   ├── AGENTS.md
 │   ├── config.toml
 │   ├── rules/
@@ -62,6 +62,7 @@
 ## メモ
 
 - `dot_ssh/private_config.tmpl` はプライベートな設定を想定。
+- `dot_codex/` 配下の Codex 関連設定は、高品質なバイブコーディングを実現するための設定を管理する。
 - macOSで`op`が存在する場合、`dot_config/git/config.tmpl` は `op whoami` 成功を前提に展開される。未サインイン時は `chezmoi apply` が失敗する。
 - Neovim のツール管理方針: LSP/DAP は Mason 管理、runtime/formatter/linter は mise 管理とする。
 - `taplo` は役割分担を明確化し、LSP は Mason、format/lint は mise 側の CLI を利用する。
