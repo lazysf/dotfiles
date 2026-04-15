@@ -12,6 +12,10 @@ notification_method = "bel"
 shell_snapshot = true
 multi_agent = true
 
+[agents]
+max_threads = 6
+max_depth = 1
+
 {{ if eq .chezmoi.os "windows" -}}
 [windows]
 sandbox = "elevated"
