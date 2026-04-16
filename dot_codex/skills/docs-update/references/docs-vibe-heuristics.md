@@ -1,6 +1,6 @@
 # Docs Vibe Heuristics
 
-`docs-review` / `docs-update` の本文だけでは判断しづらい場面のための補助資料。
+`docs-update` の本文だけでは判断しづらい場面のための補助資料。
 ここに書く内容は必須ルールではなく、迷ったときの目安。
 
 ## まず疑うこと
