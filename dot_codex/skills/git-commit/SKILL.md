@@ -70,7 +70,7 @@ Gitの変更を安全にコミットする依頼に対応する。
 
 ## Custom Agent からの利用
 
-- このスキルは、`Commiter` などの custom agent から参照される Git コミット実行スキルとして使う。
+- このスキルは、`commit` などの custom agent から参照される Git コミット実行スキルとして使う。
 - custom agent 側でモデル、推論労力、sandbox、停止条件を定義し、このスキルはコミット手順と安全ルールの知識源を担う。
 
 ## 手順
