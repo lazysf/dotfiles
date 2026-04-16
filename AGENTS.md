@@ -39,7 +39,7 @@
 ├── .pre-commit-config.yaml
 ├── dot_codex/          # ~/.codex (高品質なバイブコーディングを実現するための Codex 設定/skills)
 │   ├── AGENTS.md
-│   ├── config.toml
+│   ├── private_config.toml.tmpl
 │   ├── rules/
 │   └── skills/
 ├── dot_config/         # ~/.config
