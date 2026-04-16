@@ -61,8 +61,10 @@ chezmoi diff
 
 - `dot_codex/AGENTS.md`
   - 運用全体の基準。判断原則、既定フロー、確認必須境界、検証と報告、Git 方針、スキル選択ルールを定義します。
+- `dot_codex/HIGH_QUALITY_VIBE_CODING.md`
+  - 高品質なバイブコーディングの手引き。依頼テンプレート、レーン別の進め方、良い依頼例、終了時チェックをまとめます。
 - `dot_codex/private_config.toml.tmpl`
-  - Codex の設定テンプレート。現在の既定値は `gpt-5.4`、`medium`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true` です。
+  - Codex の設定テンプレート。現在の既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`max_depth=1` です。
 - `dot_codex/rules/`
   - 実行ガードレール。`git diff/status/log` やパス限定 `git add` などの許可、`git push` や `rm` などの要確認、`git push --force` と `grep` の禁止を管理します。
 - `dot_codex/skills/`
@@ -83,14 +85,20 @@ chezmoi diff
 9. 必要なら `git-commit`
 10. 必要なら `git-push`
 
+依頼が散らばっている場合は、入口で `request-shaping` を使ってから既定フローへ入ります。長めの変更では、`plan-product` のあとに `session-orchestrator` または `plan-architect` を使って進め方を固めます。
+
 ### Core skills
 
+- `request-shaping`
+  - 散らばった依頼を実装ブリーフへ整える
 - `task-intake`
   - 曖昧依頼の軽い入口整理
 - `workspace-intake`
   - 既存規約、関連ファイル、近傍実装、テスト入口の探索
 - `plan-product`
   - 目的、成功条件、非目的、制約の整理
+- `session-orchestrator`
+  - 長めの作業で、探索、要件整理、実装、検証、レビューの切り替え条件を整理
 - `plan-architect`
   - 実装順序、影響範囲、検証方法の整理
 - `coding-standards`
@@ -115,7 +123,7 @@ chezmoi diff
 
 ### Situational skills
 
-状況に応じて `debug-fix`、`refactor-safely`、`git-push`、`docs-update` を使います。
+状況に応じて `debug-fix`、`refactor-safely`、`git-push`、`docs-update` を使います。運用の具体例は `dot_codex/HIGH_QUALITY_VIBE_CODING.md` を参照してください。
 
 - `debug-fix`
   - 症状再現、原因切り分け、最小修正が必要なときに使います。
