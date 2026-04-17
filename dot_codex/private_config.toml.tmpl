@@ -21,40 +21,33 @@
 
 {{- $managedProjects := dict .chezmoi.sourceDir (dict "trust_level" "trusted") -}}
 {{- $finalProjects := mergeOverwrite $preservedProjects $managedProjects -}}
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "live"
 
-{{- $final := dict
-  "model" "gpt-5.4"
-  "model_reasoning_effort" "high"
-  "approval_policy" "on-request"
-  "sandbox_mode" "workspace-write"
-  "web_search" "live"
-  "tui" (dict
-    "notifications" (list "agent-turn-complete" "approval-requested")
-    "notification_method" "bel"
-  )
-  "features" (dict
-    "shell_snapshot" true
-    "multi_agent" true
-  )
-  "agents" (dict
-    "max_threads" 6
-    "max_depth" 1
-  )
-  "projects" $finalProjects
--}}
+[agents]
+max_threads = 6
+max_depth = 1
 
-{{- if eq .chezmoi.os "windows" -}}
-  {{- $final = mergeOverwrite $final (dict
-    "windows" (dict "sandbox" "elevated")
-    "sandbox_workspace_write" (dict "network_access" false)
-  ) -}}
-{{- end -}}
+{{ if eq .chezmoi.os "windows" -}}
+[sandbox_workspace_write]
+network_access = false
 
-{{- if $hasPlugins -}}
-  {{- $final = mergeOverwrite $final (dict "plugins" $preservedPlugins) -}}
-{{- end -}}
-{{- if $hasMarketplaces -}}
-  {{- $final = mergeOverwrite $final (dict "marketplaces" $preservedMarketplaces) -}}
-{{- end -}}
+{{ end -}}
+[tui]
+notifications = ["agent-turn-complete", "approval-requested"]
+notification_method = "bel"
 
-{{ $final | toToml -}}
+[features]
+shell_snapshot = true
+multi_agent = true
+{{ printf "\n%s" (dict "projects" $finalProjects | toToml | trim) -}}
+{{- if $hasPlugins }}{{ printf "\n\n%s" (dict "plugins" $preservedPlugins | toToml | trim) -}}{{ end }}
+{{- if $hasMarketplaces }}{{ printf "\n\n%s" (dict "marketplaces" $preservedMarketplaces | toToml | trim) -}}{{ end }}
+{{- if eq .chezmoi.os "windows" }}
+
+[windows]
+sandbox = "elevated"
+{{ end }}
