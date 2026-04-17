@@ -14,6 +14,7 @@ metadata:
 
 - [AGENTS.md](../../AGENTS.md) の共通品質原則を前提に適用する。
 - とくに `既存コンテキストを優先する`、`スコープを最小に保つ`、`単純さを優先する (KISS)`、`今必要ないものを先回りしない (YAGNI)` を強く意識する。
+- 言語別ベストプラクティスは補助資料として扱い、repo 固有規約や近傍実装と衝突する場合は既存コンテキストを優先する。
 
 ## 目的
 
@@ -77,6 +78,7 @@ metadata:
 ### 1) 規約と周辺実装を読む
 
 - 既存規約と、変更対象の近傍コードを確認する。
+- 共通判断で足りない場合だけ、対象言語に対応する reference を追加で読む。
 
 ### 2) 変更範囲を絞る
 
@@ -102,6 +104,14 @@ metadata:
 - コメントは「見れば分かること」ではなく、「見ただけでは分からない制約」を書く。
 - 関数抽出や共通化は、重複や責務の混在が実際にレビュー負荷を上げているときだけ行う。
 
+## 言語別 reference の読み分け
+
+- 共通判断で足りる依頼は、この本文と [references/vibe-coding-heuristics.md](references/vibe-coding-heuristics.md) までで止める。
+- `Lua` 実装で迷う場合は [references/lua-best-practices.md](references/lua-best-practices.md) を読む。
+- `Shell`、`zsh`、`bash` を扱う場合は [references/shell-best-practices.md](references/shell-best-practices.md) を読む。
+- `TOML` や設定ファイル編集で迷う場合は [references/toml-best-practices.md](references/toml-best-practices.md) を読む。
+- 将来の言語追加は `references/<language>-best-practices.md` を増やし、この節に 1 行だけ導線を足す。
+
 ## 確認が必要なとき
 
 - 要件が曖昧なとき。
@@ -110,4 +120,4 @@ metadata:
 
 ## 参考資料
 
-- 詳細な判断ヒントが必要なら [references/vibe-coding-heuristics.md](references/vibe-coding-heuristics.md) を参照する。
+- 共通の判断ヒントは [references/vibe-coding-heuristics.md](references/vibe-coding-heuristics.md) を参照する。
