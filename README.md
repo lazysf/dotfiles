@@ -64,7 +64,7 @@ chezmoi diff
 - `dot_codex/HIGH_QUALITY_VIBE_CODING.md`
   - 高品質なバイブコーディングの手引き。依頼テンプレート、レーン別の進め方、良い依頼例、終了時チェックをまとめます。
 - `dot_codex/private_config.toml.tmpl`
-  - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects`、`plugins`、`marketplaces` を preserve しつつ最終設定を生成します。
+  - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects`、`plugins`、`marketplaces` を preserve しつつ、OpenAI の sample config に寄せた順序で最終設定を生成します。
 - `dot_codex/rules/`
   - 実行ガードレール。`git diff/status/log` やパス限定 `git add` などの許可、`git push` や `rm` などの要確認、`git push --force` と `grep` の禁止を管理します。
 - `dot_codex/skills/`
@@ -75,6 +75,7 @@ chezmoi diff
 - `~/.codex/config.toml` は、dotfiles 側で管理する静的既定値と、Codex がランタイムに追記する状態が混在するファイルです。
 - `chezmoi apply` では `dot_codex/private_config.toml.tmpl` が現在の `~/.codex/config.toml` を読み、`projects`、`plugins`、`marketplaces` を preserve したうえで最終ファイルを再生成します。
 - 空の `plugins` / `marketplaces` テーブルも、既存 config に key が存在すれば preserve 対象として再出力します。
+- 出力順は OpenAI の sample config の相対順に寄せ、sample に無い `plugins` / `marketplaces` は preserve 系セクションとして末尾に置きます。
 - `projects` は既存エントリを残しつつ、同一 path に対してテンプレートが明示する key を優先します。
 - Codex が今後ほかの自動管理テーブルを追加した場合は、必要に応じて preserve 対象を増やします。
 
