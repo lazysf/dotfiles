@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["launchctl"],
+  decision = "prompt",
+  justification = "launchctl はシステムサービスや起動設定に影響するため都度確認する。",
+  match = [
+    "launchctl list",
+    "launchctl print system",
+  ],
+)

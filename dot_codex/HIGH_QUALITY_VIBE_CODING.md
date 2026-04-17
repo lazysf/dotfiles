@@ -2,6 +2,7 @@
 
 この文書は、Codex Desktop を前提に、高品質なバイブコーディングを安定して進めるための実務ガイドです。
 目的は「勢いで雑に作る」ことではなく、「頼み方と進め方を整えて、良い差分を再現しやすくする」ことです。
+毎回の短い手順は [QUICKSTART.md](./QUICKSTART.md) を参照してください。
 
 ## まず意識すること
 
@@ -58,7 +59,14 @@
 - 入口で `request-shaping` または `task-intake` を使い、今回の芯を揃える
 - `workspace-intake` と `plan-product` で前提を固める
 - 長めの進行管理が必要なら `session-orchestrator`、技術計画が必要なら `plan-architect` を使う
+- 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置く
 - 実装後は `test-runner → change-review` で閉じる
+
+## Multi-agent の扱い
+
+- `multi_agent=true` は有効だが、sub-agent を常用する前提ではない
+- delegation や parallel work をユーザーが明示的に求めた時だけ使う
+- 深く考えたい、丁寧に調べたい、詳細にレビューしたい、という理由だけでは自動で sub-agent に振らない
 
 ## おすすめスキルの組み合わせ
 
@@ -79,7 +87,9 @@
 ## どこを読むべきか
 
 - 運用全体の基準: [AGENTS.md](./AGENTS.md)
+- 毎回の実務手順: [QUICKSTART.md](./QUICKSTART.md)
 - 依頼を整える: [request-shaping](./skills/request-shaping/SKILL.md)
+- 環境点検: [environment-audit](./skills/environment-audit/SKILL.md)
 - 長めの進行を整える: [session-orchestrator](./skills/session-orchestrator/SKILL.md)
 - 実装の品質基準: [coding-standards](./skills/coding-standards/SKILL.md)
 - 出口の確認: [change-review](./skills/change-review/SKILL.md)
