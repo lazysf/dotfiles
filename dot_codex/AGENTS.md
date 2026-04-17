@@ -71,6 +71,7 @@
   - 小さな修正: `task-intake → workspace-intake → coding-standards → test-runner`
   - 曖昧な相談: `task-intake → workspace-intake → plan-product`
   - 大きめの変更: `task-intake → workspace-intake → plan-product → plan-architect`
+  - 環境整備相談: `environment-audit → task-intake → workspace-intake → 必要なら plan-product / plan-architect`
   - コミット不要なら Git 系スキルは使わない
 
 ## 確認が必須な境界
@@ -126,7 +127,7 @@
 - 情報が散らばっている場合は、まず `request-shaping` で実装ブリーフへ整える
 - 依頼が十分具体的なら、`task-intake` から始めてよい
 
-### 3つの進め方レーン
+### 4つの進め方レーン
 
 - `小さな修正`
   - 例: 軽微な設定修正、局所的な不具合修正、単一ファイル中心の改善
@@ -137,6 +138,9 @@
 - `大きめ変更`
   - 例: 複数段階の変更、複数ファイル変更、確認ポイントを置きながら進めたい変更
   - 基本レーン: `request-shaping または task-intake → workspace-intake → plan-product → session-orchestrator または plan-architect → coding-standards → test-runner → change-review`
+- `環境整備相談`
+  - 例: Codex の config、AGENTS、skills、rules、docs の整合性を点検したい
+  - 基本レーン: `environment-audit → task-intake → workspace-intake → 必要なら plan-product / plan-architect`
 
 ### 確認が必要な停止線
 
@@ -158,6 +162,7 @@
   - 何を変えたか、または何を提案したか
   - 何を検証したか
   - 何が未検証か、どこで確認待ちか
+- 同一スレッドで長い作業を続ける場合は、必要に応じて `session-orchestrator` で checkpoint を置き、文脈を圧縮してから続ける
 
 ## スキル選択と返答
 
@@ -174,6 +179,7 @@
   - `commit-message`
   - `git-commit`
 - 状況別だが常備するスキルとして次を使う
+  - `environment-audit`
   - `debug-fix`
   - `refactor-safely`
   - `git-push`
@@ -181,6 +187,7 @@
 - 役割の目安は次のとおり
   - `request-shaping`: 依頼を実装ブリーフへ整える
   - `task-intake`: 今回の対象と成功条件を軽く固定する
+  - `environment-audit`: Codex 環境そのものの整合性と改善候補を点検する
   - `session-orchestrator`: 長めの作業で、探索、要件整理、実装、検証、レビューの切り替え条件を整理する
   - `plan-architect`: 実装順序、影響範囲、検証方法を技術計画として整理する
 - 各ターンの最終返答で、スキルを使ったかどうかを必ず明示する
