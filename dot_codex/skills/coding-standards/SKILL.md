@@ -107,6 +107,7 @@ metadata:
 ## 言語別 reference の読み分け
 
 - 共通判断で足りる依頼は、この本文と [references/vibe-coding-heuristics.md](references/vibe-coding-heuristics.md) までで止める。
+- `Python` 実装で迷う場合は [references/python-best-practices.md](references/python-best-practices.md) を読む。
 - `Lua` 実装で迷う場合は [references/lua-best-practices.md](references/lua-best-practices.md) を読む。
 - `Shell`、`zsh`、`bash` を扱う場合は [references/shell-best-practices.md](references/shell-best-practices.md) を読む。
 - `TOML` や設定ファイル編集で迷う場合は [references/toml-best-practices.md](references/toml-best-practices.md) を読む。
