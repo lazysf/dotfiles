@@ -118,7 +118,7 @@ Codex 環境自体を点検したい場合は、入口に `environment-audit` �
 - `test-runner`
   - テスト範囲決定、実行、結果整理
 - `change-review`
-  - 変更後の自己レビューと review agent 利用判断
+  - 変更後の自己レビューと findings / 未検証 / 残リスクの整理
 - `commit-message`
   - コミットメッセージの作成と推敲
 - `git-commit`
