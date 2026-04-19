@@ -10,6 +10,7 @@
 - 背景説明は `確認済みの事実` を優先し、推測は分ける
 - スコープを広げすぎず、今回やらないことを明示する
 - 高リスクな変更は、バイブコーディング中でも確認を挟む
+- `目的 / 確認済み事実 / 制約 / 完了条件` は良い整理軸だが、毎回の入力必須項目として扱わず、不足分は `request-shaping` で補ってよい
 
 ## 良い依頼例
 
@@ -59,7 +60,8 @@
 - 入口で `request-shaping` または `task-intake` を使い、今回の芯を揃える
 - `workspace-intake` と `plan-product` で前提を固める
 - 長めの進行管理が必要なら `session-orchestrator`、技術計画が必要なら `plan-architect` を使う
-- 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置く
+- 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置き、必要なら compact を使う
+- fork は本当に別問題へ分岐したときだけ使う
 - 実装後は `test-runner → change-review` で閉じる
 
 ## おすすめスキルの組み合わせ
