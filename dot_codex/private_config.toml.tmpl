@@ -21,6 +21,12 @@
 
 {{- $managedProjects := dict .chezmoi.sourceDir (dict "trust_level" "trusted") -}}
 {{- $finalProjects := mergeOverwrite $preservedProjects $managedProjects -}}
+{{- $projectsToml := (dict "projects" $finalProjects | toToml | trim) -}}
+{{- $projectsToml = regexReplaceAll "(?m)^ +" $projectsToml "" -}}
+{{- $pluginsToml := (dict "plugins" $preservedPlugins | toToml | trim) -}}
+{{- $pluginsToml = regexReplaceAll "(?m)^ +" $pluginsToml "" -}}
+{{- $marketplacesToml := (dict "marketplaces" $preservedMarketplaces | toToml | trim) -}}
+{{- $marketplacesToml = regexReplaceAll "(?m)^ +" $marketplacesToml "" -}}
 model = "gpt-5.4"
 model_reasoning_effort = "high"
 approval_policy = "on-request"
@@ -43,9 +49,9 @@ notification_method = "bel"
 [features]
 shell_snapshot = true
 multi_agent = true
-{{ printf "\n%s" (dict "projects" $finalProjects | toToml | trim) -}}
-{{- if $hasPlugins }}{{ printf "\n\n%s" (dict "plugins" $preservedPlugins | toToml | trim) -}}{{ end }}
-{{- if $hasMarketplaces }}{{ printf "\n\n%s" (dict "marketplaces" $preservedMarketplaces | toToml | trim) -}}{{ end }}
+{{ printf "\n%s" $projectsToml -}}
+{{- if $hasPlugins }}{{ printf "\n\n%s" $pluginsToml -}}{{ end }}
+{{- if $hasMarketplaces }}{{ printf "\n\n%s" $marketplacesToml -}}{{ end }}
 {{- if eq .chezmoi.os "windows" }}
 
 [windows]
