@@ -69,6 +69,8 @@ chezmoi diff
   - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects`、`plugins`、`marketplaces` を preserve しつつ、OpenAI の sample config に寄せた順序で最終設定を生成します。
 - `dot_codex/rules/`
   - 実行ガードレール。`git diff/status/log` やパス限定 `git add` などの許可、`git push`、`rm`、`sudo`、`launchctl` などの要確認、`git push --force` と `grep` の禁止を管理します。
+- `dot_codex/agents/`
+  - 専門化した subagent 定義を管理します。レビュー本体は `review-quality` / `review-security` agent を優先して使います。
 - `dot_codex/skills/`
   - 再利用可能な作業単位を管理します。コア導線と状況別スキルに分けて使います。
 
@@ -98,6 +100,7 @@ chezmoi diff
 
 依頼が散らばっている場合は、入口で `request-shaping` を使ってから既定フローへ入ります。長めの変更では、`plan-product` のあとに `session-orchestrator` または `plan-architect` を使って進め方を固めます。
 Codex 環境自体を点検したい場合は、入口に `environment-audit` を置いてから通常の整理へ進みます。
+品質レビューが必要な場合は `review-quality` agent、セキュリティレビューが必要な場合は `review-security` agent を使い、その結果を必要に応じて `change-review` で整理します。
 
 ### Core skills
 
@@ -118,7 +121,7 @@ Codex 環境自体を点検したい場合は、入口に `environment-audit` �
 - `test-runner`
   - テスト範囲決定、実行、結果整理
 - `change-review`
-  - 変更後の自己レビューと findings / 未検証 / 残リスクの整理
+  - 変更後の自己レビュー、または review agent の結果を findings / 未検証 / 残リスクへ整理
 - `commit-message`
   - コミットメッセージの作成と推敲
 - `git-commit`
@@ -136,6 +139,15 @@ Codex 環境自体を点検したい場合は、入口に `environment-audit` �
 ### Situational skills
 
 状況に応じて `environment-audit`、`debug-fix`、`refactor-safely`、`git-push`、`docs-update` を使います。日常の入口は `dot_codex/QUICKSTART.md`、運用の具体例は `dot_codex/HIGH_QUALITY_VIBE_CODING.md` を参照してください。
+
+### Review agents
+
+- `review-quality`
+  - 品質レビュー本体を担当します。可読性、責務、命名、例外処理、仕様不整合、回帰リスクを確認します。
+- `review-security`
+  - セキュリティレビュー本体を担当します。入力検証、認証認可、注入、秘密情報、外部 I/O、危険なデフォルトを確認します。
+- `change-review`
+  - specialized review の代替ではなく、review の出口整理に使います。
 
 - `environment-audit`
   - Codex の config、文書、rules、skills、agents の整合性確認と改善候補整理に使います。

@@ -62,7 +62,7 @@
 - 長めの進行管理が必要なら `session-orchestrator`、技術計画が必要なら `plan-architect` を使う
 - 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置き、必要なら compact を使う
 - fork は本当に別問題へ分岐したときだけ使う
-- 実装後は `test-runner → change-review` で閉じる
+- 実装後は `test-runner → 必要なら review-quality agent / review-security agent → change-review` で閉じる
 
 ## おすすめスキルの組み合わせ
 
@@ -70,7 +70,7 @@
 - 相談を要件化したい: `request-shaping → workspace-intake → plan-product`
 - 段階的に安全に進めたい: `request-shaping → workspace-intake → plan-product → session-orchestrator`
 - 実装順序まで明確にしたい: `task-intake → workspace-intake → plan-product → plan-architect`
-- 実装を締めたい: `coding-standards → test-runner → change-review`
+- 実装を締めたい: `coding-standards → test-runner → 必要なら review-quality agent / review-security agent → change-review`
 
 ## セッション終了時のチェック項目
 
@@ -88,4 +88,5 @@
 - 環境点検: [environment-audit](./skills/environment-audit/SKILL.md)
 - 長めの進行を整える: [session-orchestrator](./skills/session-orchestrator/SKILL.md)
 - 実装の品質基準: [coding-standards](./skills/coding-standards/SKILL.md)
+- レビュー本体: `review-quality` / `review-security` agent
 - 出口の確認: [change-review](./skills/change-review/SKILL.md)
