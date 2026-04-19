@@ -40,6 +40,8 @@
   - 品質レビュー本体は `review-quality` agent を使う。
   - セキュリティレビュー本体は `review-security` agent を使う。
   - `change-review` は specialized review の代替ではなく、最終的な出口整理として使う。
+  - ユーザーが `review-quality` / `review-security` を単独指定した場合は、特に明示がない限り `review agent → change-review` を 1 セットとして扱う。
+  - review agent の raw JSON / 生出力を明示要求された場合だけ、`change-review` を省略してよい。
 - すべての依頼で全段階を通す前提にはしない。
   - 小さな修正: `task-intake → workspace-intake → coding-standards → test-runner`
   - 曖昧な相談: `request-shaping → task-intake → workspace-intake → 必要なら plan-product`

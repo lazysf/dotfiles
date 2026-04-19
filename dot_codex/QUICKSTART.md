@@ -112,6 +112,14 @@
 - 今回は何を直さないか
 ```
 
+短く頼むなら、次の依頼でよいです。
+
+```md
+review-quality でレビューして
+```
+
+この shorthand は既定で `review-quality agent → change-review` を意味し、`review-security` でも同様です。review agent の raw JSON / 生出力を明示要求した場合だけ、出口整理を省略します。
+
 ## Checkpoint テンプレート
 
 長い作業で文脈が膨らんだら、同一スレッド内で `session-orchestrator` に checkpoint を置かせます。
