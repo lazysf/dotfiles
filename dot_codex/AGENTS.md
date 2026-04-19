@@ -23,8 +23,9 @@
 
 ## Workflow Policy
 
-- 依頼は、必要な段階だけ `task-intake → workspace-intake → 必要なら plan-product → 必要なら plan-architect → coding-standards → 必要なら test-runner → 必要なら change-review → 必要なら commit-message → 必要なら git-commit → 必要なら git-push` の順で進める。
+- 依頼は、必要な段階だけ `request-shaping → task-intake → workspace-intake → 必要なら plan-product → 必要なら plan-architect → coding-standards → 必要なら test-runner → 必要なら change-review → 必要なら commit-message → 必要なら git-commit → 必要なら git-push` の順で進める。
 - 各段階の役割は次のとおり。
+  - `request-shaping`: 散らばった依頼を、Codex が扱いやすいブリーフへ正規化する
   - `task-intake`: 今回の依頼の主語、対象、成功条件、非目的を軽くそろえる
   - `workspace-intake`: 何を読むべきか、何が既存規約か、どこに近い実装があるかを探索する
   - `plan-product`: 探索後も要件が揺れる場合に、目的、成功条件、非目的、制約を固める
@@ -37,9 +38,13 @@
   - `git-push`: 明示依頼がある場合のみ push を行う
 - すべての依頼で全段階を通す前提にはしない。
   - 小さな修正: `task-intake → workspace-intake → coding-standards → test-runner`
-  - 曖昧な相談: `task-intake → workspace-intake → plan-product`
-  - 大きめの変更: `task-intake → workspace-intake → plan-product → plan-architect`
-  - 環境整備相談: `environment-audit → task-intake → workspace-intake → 必要なら plan-product / plan-architect`
+  - 曖昧な相談: `request-shaping → task-intake → workspace-intake → 必要なら plan-product`
+  - 大きめの変更:
+    - 依頼の主題や制約が散らばっているなら `request-shaping → task-intake → workspace-intake → plan-product → plan-architect`
+    - 依頼が十分具体的なら `task-intake → workspace-intake → plan-product → plan-architect`
+  - 環境整備相談:
+    - 相談の輪郭が散らばっているなら `environment-audit → request-shaping → task-intake → workspace-intake → 必要なら plan-product / plan-architect`
+    - 相談が十分具体的なら `environment-audit → task-intake → workspace-intake → 必要なら plan-product / plan-architect`
   - コミット不要なら Git 系スキルは使わない
 
 ## Confirmation Boundaries
@@ -52,6 +57,8 @@
   - 依頼の解釈が複数あり、結果が変わりうる
   - 依頼範囲外の整理、横展開、大きな設計変更が混ざりそう
 - 曖昧な依頼では、まず `task-intake` で今回の対象を軽く固定してから探索する。
+- 情報が散らばっている場合は、その前に `request-shaping` で `目的 / 確認済み事実 / 制約 / 完了条件` を短く正規化してよい。
+- `request-shaping` は「情報が散らばっている」「依頼の主題が揺れている」ときに使い、依頼が十分具体的なら `task-intake` から始める。
 - 探索後も要件が揺れている場合だけ `plan-product` へ進む。
 - バイブコーディング中でも、この停止線は維持する。
 
@@ -84,7 +91,8 @@
 
 - 高品質なバイブコーディングでは、速さよりも `依頼の明確さ`、`進め方の一貫性`、`確認境界の明示` を優先する
 - `AGENTS.md` は全体原則、`coding-standards` は実装詳細、`references/*` は本文を重くしすぎない判断例として使い分ける
-- 同一スレッドで長い作業を続ける場合は、必要に応じて `session-orchestrator` で checkpoint を置き、文脈を圧縮してから続ける
+- 同一スレッドで長い作業を続ける場合は、必要に応じて `session-orchestrator` で checkpoint を置き、必要なら compact を使って文脈を圧縮してから続ける
+- fork は本当に別問題へ分岐したときだけ使い、同じ問題の続きなら同一スレッドを維持する
 
 ### 依頼テンプレート
 
@@ -94,7 +102,9 @@
   - `制約`: 触ってよい範囲、期限、避けたい変更
   - `完了条件`: どうなれば今回は十分か
   - `非目的`: 今回やらないこと
+- これは推奨テンプレートであり、未記入でも受け付ける
 - 情報が散らばっている場合は、まず `request-shaping` で実装ブリーフへ整える
+- `request-shaping` は内部的に `目的 / 確認済み事実 / 制約 / 完了条件` をそろえるが、ユーザーへの入力必須項目を増やすものではない
 - 依頼が十分具体的なら、`task-intake` から始めてよい
 
 ### セッション終端の報告項目
