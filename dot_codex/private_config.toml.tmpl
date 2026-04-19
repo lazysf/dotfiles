@@ -4,28 +4,20 @@
   {{- $current = (include $configPath | fromToml) -}}
 {{- end -}}
 
-{{- $hasPlugins := hasKey $current "plugins" -}}
-{{- $hasMarketplaces := hasKey $current "marketplaces" -}}
 {{- $preservedProjects := dict -}}
-{{- $preservedPlugins := dict -}}
-{{- $preservedMarketplaces := dict -}}
 {{- if hasKey $current "projects" -}}
   {{- $preservedProjects = get $current "projects" -}}
 {{- end -}}
-{{- if hasKey $current "plugins" -}}
-  {{- $preservedPlugins = get $current "plugins" -}}
-{{- end -}}
-{{- if hasKey $current "marketplaces" -}}
-  {{- $preservedMarketplaces = get $current "marketplaces" -}}
-{{- end -}}
+{{- $managedPlugins := dict -}}
+{{- $managedMarketplaces := dict -}}
 
 {{- $managedProjects := dict .chezmoi.sourceDir (dict "trust_level" "trusted") -}}
 {{- $finalProjects := mergeOverwrite $preservedProjects $managedProjects -}}
 {{- $projectsToml := (dict "projects" $finalProjects | toToml | trim) -}}
 {{- $projectsToml = regexReplaceAll "(?m)^ +" $projectsToml "" -}}
-{{- $pluginsToml := (dict "plugins" $preservedPlugins | toToml | trim) -}}
+{{- $pluginsToml := (dict "plugins" $managedPlugins | toToml | trim) -}}
 {{- $pluginsToml = regexReplaceAll "(?m)^ +" $pluginsToml "" -}}
-{{- $marketplacesToml := (dict "marketplaces" $preservedMarketplaces | toToml | trim) -}}
+{{- $marketplacesToml := (dict "marketplaces" $managedMarketplaces | toToml | trim) -}}
 {{- $marketplacesToml = regexReplaceAll "(?m)^ +" $marketplacesToml "" -}}
 model = "gpt-5.4"
 model_reasoning_effort = "high"
@@ -50,10 +42,5 @@ notification_method = "bel"
 shell_snapshot = true
 multi_agent = true
 {{ printf "\n%s" $projectsToml -}}
-{{- if $hasPlugins }}{{ printf "\n\n%s" $pluginsToml -}}{{ end }}
-{{- if $hasMarketplaces }}{{ printf "\n\n%s" $marketplacesToml -}}{{ end }}
-{{- if eq .chezmoi.os "windows" }}
-
-[windows]
-sandbox = "elevated"
-{{ end }}
+{{- if gt (len $managedPlugins) 0 }}{{ printf "\n\n%s" $pluginsToml -}}{{ end }}
+{{- if gt (len $managedMarketplaces) 0 }}{{ printf "\n\n%s" $marketplacesToml -}}{{ end }}

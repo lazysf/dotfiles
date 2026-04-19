@@ -14,6 +14,7 @@ metadata:
 - push はユーザーの明示的な依頼がある場合のみ行う。
 - commit 作成やメッセージ整備はこのスキルの責務に含めない。
 - 強制 push は対象外とし、自動実行しない。
+- `git push --force`、`git push --force-with-lease`、`git push origin main --force-with-lease` のような後置フラグ形も含めて扱わない。
 
 ## 対象外
 

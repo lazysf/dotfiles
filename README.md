@@ -66,9 +66,10 @@ chezmoi diff
 - `dot_codex/HIGH_QUALITY_VIBE_CODING.md`
   - 高品質なバイブコーディングの考え方と良い依頼例をまとめた実務ガイドです。
 - `dot_codex/private_config.toml.tmpl`
-  - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects`、`plugins`、`marketplaces` を preserve しつつ、OpenAI の sample config に寄せた順序で最終設定を生成します。
+  - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects` を preserve しつつ、repo 管理の allowlist に含めた `plugins` / `marketplaces` だけを OpenAI の sample config に寄せた順序で最終設定へ出力します。
 - `dot_codex/rules/`
-  - 実行ガードレール。`git diff/status/log` やパス限定 `git add` などの許可、`git push`、`rm`、`sudo`、`launchctl` などの要確認、`git push --force` と `grep` の禁止を管理します。
+  - 実行ガードレール。`git diff/status/log`、パス限定 `git add`、`mise run test/lint/format` などの許可、`git push`、`rm`、`sudo`、`launchctl` などの要確認、`git push --force*` と `grep` の禁止を管理します。
+- 既知制約として、current `prefix_rule` DSL では raw `git commit` / `git push` の後置フラグを厳密に拒否できません。`--amend`、`--no-verify`、force push は skills と運用方針で扱い、rules 側で suffix 形まで完全には強制していません。
 - `dot_codex/agents/`
   - 専門化した subagent 定義を管理します。レビュー本体は `review-quality` / `review-security` agent を優先して使います。
 - `dot_codex/skills/`
@@ -77,11 +78,13 @@ chezmoi diff
 ### Config merge behavior
 
 - `~/.codex/config.toml` は、dotfiles 側で管理する静的既定値と、Codex がランタイムに追記する状態が混在するファイルです。
-- `chezmoi apply` では `dot_codex/private_config.toml.tmpl` が現在の `~/.codex/config.toml` を読み、`projects`、`plugins`、`marketplaces` を preserve したうえで最終ファイルを再生成します。
-- 空の `plugins` / `marketplaces` テーブルも、既存 config に key が存在すれば preserve 対象として再出力します。
-- 出力順は OpenAI の sample config の相対順に寄せ、sample に無い `plugins` / `marketplaces` は preserve 系セクションとして末尾に置きます。
+- `chezmoi apply` では `dot_codex/private_config.toml.tmpl` が現在の `~/.codex/config.toml` を読み、`projects` を preserve したうえで最終ファイルを再生成します。
+- `plugins` / `marketplaces` はローカル既存値をそのまま引き継がず、repo 管理の allowlist に含めたものだけを出力します。
+- allowlist が空の間は `plugins` / `marketplaces` セクションを出力しません。
+- 出力順は OpenAI の sample config の相対順に寄せます。
 - `projects` は既存エントリを残しつつ、同一 path に対してテンプレートが明示する key を優先します。
-- Codex が今後ほかの自動管理テーブルを追加した場合は、必要に応じて preserve 対象を増やします。
+- Windows でも Codex の既定 sandbox は `workspace-write` を使い、OS ごとの権限昇格設定は追加しません。
+- Codex が今後ほかの自動管理テーブルを追加した場合は、必要に応じて repo 管理 allowlist の対象を増やします。
 
 ### Default flow
 
