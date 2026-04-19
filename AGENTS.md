@@ -27,6 +27,14 @@
 - 変更の確認:
   - `chezmoi diff`
 
+## Source of Truth
+
+- このリポジトリで管理している設定はすべて、repo 側の source を正本として扱う。
+- `Documents/*` を含む chezmoi 管理下の全 source を編集対象にする。
+- `~/.codex/*`、`~/.config/*`、`~/.ssh/*`、`~/.zshenv` を含む home 配下の実ファイルは `chezmoi apply` 後の反映先であり、直接編集してはならない。
+- home 配下の設定を変更したい場合でも、必ず repo 側 source を修正し、`chezmoi apply` で反映する。
+- このガードの目的は、Codex が repo 外の live 設定を誤って直接編集する事故を防ぐこと。
+
 ## リポジトリ構成（抜粋）
 
 ```text
@@ -63,6 +71,7 @@
 
 - `dot_ssh/private_config.tmpl` はプライベートな設定を想定。
 - `dot_codex/` 配下の Codex 関連設定は、高品質なバイブコーディングを実現するための設定を管理する。
+- Codex 運用ルールの詳細は `dot_codex/AGENTS.md`、日常の入口は `dot_codex/QUICKSTART.md` を参照する。
 - macOSで`op`が存在する場合、`dot_config/git/config.tmpl` は `op whoami` 成功を前提に展開される。未サインイン時は `chezmoi apply` が失敗する。
 - Neovim のツール管理方針: LSP/DAP は Mason 管理、runtime/formatter/linter は mise 管理とする。
 - `taplo` は役割分担を明確化し、LSP は Mason、format/lint は mise 側の CLI を利用する。
