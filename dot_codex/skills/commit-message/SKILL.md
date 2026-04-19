@@ -13,7 +13,7 @@ metadata:
 
 - リポジトリに別規約がなければ Conventional Commits を既定とする。
 - 言語はリポジトリ規約を優先し、規約がなければ英語を既定とする。
-- スコープは既定では付けず、まず scope なしで自然に伝わる案を優先する。
+- このスキルではヘッダーを `type: description` に固定し、scope は使わない。
 - 本文の有無は、ユーザー指定、リポジトリ規約、変更の分かりやすさをもとに判断する。
 - 通常は最終案を 1 件だけ返し、複数候補は明示要求がある場合に限る。
 
@@ -32,8 +32,9 @@ metadata:
 ## コミットメッセージ規約
 
 - Conventional Commits は既定であり、リポジトリ規約があればそれを優先する。
-- スコープは、識別上の実益が明確な場合にのみ付ける。
-- type / scope / body / footer の詳細は `references/commit-message-format.md` を参照する。
+- このスキルのヘッダー形式は `type: description` に固定し、scope は採用しない。
+- 既存の scoped commit 履歴は legacy とみなし、このスキルの推奨形には含めない。
+- type / body / footer の詳細は `references/commit-message-format.md` を参照する。
 
 ## 手順
 
@@ -44,9 +45,9 @@ metadata:
 
 ### 2) 初稿作成
 
-- まず scope なしで type と description を決定する。
+- まず `type: description` の形で type と description を決定する。
 - 本文が必要なら body を追加する。
-- scope を付けるときは、付けないと曖昧になる理由を確認する。
+- 変更の識別は description を優先し、必要なら body や footer で補足する。
 
 ### 3) 見直し
 
@@ -73,7 +74,6 @@ metadata:
 - body_text:
 - footer_text:
 - type:
-- scope:
 - body: あり / なし
 - footer: あり / なし
 - 備考:
