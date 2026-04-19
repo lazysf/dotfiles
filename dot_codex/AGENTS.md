@@ -32,10 +32,14 @@
   - `plan-architect`: 実装順序、影響範囲、検証方法の判断が必要な場合に整理する
   - `coding-standards`: 既存に寄せた最小差分で安全に実装する
   - `test-runner`: 変更に近い検証を優先して実行し、結果を整理する
-  - `change-review`: 変更後の自己レビューを行い、findings / 未検証 / 残リスクを整理する
+  - `change-review`: 変更後の自己レビュー、または review agent の結果を findings / 未検証 / 残リスクへ整理する
   - `commit-message`: コミットメッセージのみ作成・推敲する
   - `git-commit`: 対象確認、限定 staging、非対話 commit を行う
   - `git-push`: 明示依頼がある場合のみ push を行う
+- レビュー本体は agent を優先する。
+  - 品質レビュー本体は `review-quality` agent を使う。
+  - セキュリティレビュー本体は `review-security` agent を使う。
+  - `change-review` は specialized review の代替ではなく、最終的な出口整理として使う。
 - すべての依頼で全段階を通す前提にはしない。
   - 小さな修正: `task-intake → workspace-intake → coding-standards → test-runner`
   - 曖昧な相談: `request-shaping → task-intake → workspace-intake → 必要なら plan-product`
@@ -143,6 +147,10 @@
   - `environment-audit`: Codex 環境そのものの整合性と改善候補を点検する
   - `session-orchestrator`: 長めの作業で、探索、要件整理、実装、検証、レビューの切り替え条件を整理する
   - `plan-architect`: 実装順序、影響範囲、検証方法を技術計画として整理する
+- review agent は次のように使い分ける
+  - `review-quality`: 品質レビュー本体
+  - `review-security`: セキュリティレビュー本体
+  - `change-review`: review agent の結果を含む出口整理
 - 各ターンの最終返答で、スキルを使ったかどうかを必ず明示する
 - 最終返答の末尾に次の1行を追加する
   - スキル使用あり: `スキル: 使用（skill1, skill2）`
