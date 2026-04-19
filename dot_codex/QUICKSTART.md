@@ -54,6 +54,9 @@
 
 - 対象: 複数ファイル変更、段階的に確認しながら進めたい作業
 - 基本レーン: `request-shaping または task-intake → workspace-intake → plan-product → session-orchestrator または plan-architect → coding-standards → test-runner → change-review`
+- 品質レビューが必要なら: `... → test-runner → review-quality agent → change-review`
+- セキュリティレビューが必要なら: `... → test-runner → review-security agent → change-review`
+- 両方必要なら: `... → test-runner → review-quality agent / review-security agent → change-review`
 
 ```md
 目的:
@@ -83,6 +86,10 @@
 ## レビュー依頼テンプレート
 
 コードレビューだけを頼みたいときは、変更点と見てほしい観点を先に渡します。
+
+- 品質レビュー本体は `review-quality` agent を使う。
+- セキュリティレビュー本体は `review-security` agent を使う。
+- `change-review` は specialized review の代替ではなく、最後の整理に使う。
 
 ```md
 対象:
@@ -150,3 +157,4 @@
 - 実務ガイド: [HIGH_QUALITY_VIBE_CODING.md](./HIGH_QUALITY_VIBE_CODING.md)
 - 環境点検: [environment-audit](./skills/environment-audit/SKILL.md)
 - 長い作業の進行整理: [session-orchestrator](./skills/session-orchestrator/SKILL.md)
+- 出口整理: [change-review](./skills/change-review/SKILL.md)
