@@ -1,0 +1,18 @@
+prefix_rule(
+  pattern = ["git", "commit", ["--interactive", "--edit", "-e", "-c", "--reuse-message", "--patch", "-p"]],
+  decision = "prompt",
+  justification = "対話的な commit や既存メッセージの編集を伴う commit は、内容確認が必要なため都度確認する。",
+  match = [
+    "git commit --interactive",
+    "git commit --edit",
+    "git commit -e",
+    "git commit -c HEAD",
+    "git commit --reuse-message HEAD --edit",
+    "git commit --patch",
+    "git commit -p",
+  ],
+  not_match = [
+    "git commit -m \"chore: update\"",
+    "git commit -F /tmp/git-commit-message.txt",
+  ],
+)
