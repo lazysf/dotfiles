@@ -1,14 +1,16 @@
 prefix_rule(
-  pattern = ["mise", "run"],
+  pattern = ["mise", "run", ["test", "lint", "format"]],
   decision = "allow",
-  justification = "日常的で安全な mise run 操作のみ許可する。",
+  justification = "日常的で安全な mise run の定番タスクのみを許可する。",
   match = [
-    "mise run",
     "mise run test",
     "mise run lint",
     "mise run format",
   ],
   not_match = [
+    "mise run",
+    "mise run deploy",
+    "mise run release",
     "mise install",
     "mise use node@latest",
     "mise settings ls",

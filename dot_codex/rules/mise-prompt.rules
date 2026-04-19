@@ -1,0 +1,10 @@
+prefix_rule(
+  pattern = ["mise", "run"],
+  decision = "prompt",
+  justification = "allowlist 外の mise run タスクは副作用が読みにくいため都度確認する。",
+  match = [
+    "mise run",
+    "mise run deploy",
+    "mise run release",
+  ],
+)
