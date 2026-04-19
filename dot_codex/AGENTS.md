@@ -30,7 +30,7 @@
   - `plan-architect`: 実装順序、影響範囲、検証方法の判断が必要な場合に整理する
   - `coding-standards`: 既存に寄せた最小差分で安全に実装する
   - `test-runner`: 変更に近い検証を優先して実行し、結果を整理する
-  - `change-review`: 変更後の自己レビューを行い、必要時のみ review agent を使う
+  - `change-review`: 変更後の自己レビューを行い、findings / 未検証 / 残リスクを整理する
   - `commit-message`: コミットメッセージのみ作成・推敲する
   - `git-commit`: 対象確認、限定 staging、非対話 commit を行う
   - `git-push`: 明示依頼がある場合のみ push を行う

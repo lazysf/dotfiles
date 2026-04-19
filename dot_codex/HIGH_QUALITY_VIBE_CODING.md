@@ -29,7 +29,7 @@
 - AGENTS、README、専用スキルで導線が一致している
 
 非目的:
-- review agent 設定の見直し
+- 既存の agent 定義そのものの見直し
 - 大規模な README 全面改稿
 ```
 
@@ -61,12 +61,6 @@
 - 長めの進行管理が必要なら `session-orchestrator`、技術計画が必要なら `plan-architect` を使う
 - 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置く
 - 実装後は `test-runner → change-review` で閉じる
-
-## Multi-agent の扱い
-
-- `multi_agent=true` は有効だが、sub-agent を常用する前提ではない
-- delegation や parallel work をユーザーが明示的に求めた時だけ使う
-- 深く考えたい、丁寧に調べたい、詳細にレビューしたい、という理由だけでは自動で sub-agent に振らない
 
 ## おすすめスキルの組み合わせ
 
