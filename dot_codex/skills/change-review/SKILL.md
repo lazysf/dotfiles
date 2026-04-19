@@ -1,6 +1,6 @@
 ---
 name: change-review
-description: 変更後の自己レビューを行い、必要な場合だけ review-quality / review-security を使って最終確認する。実装後の出口整理に使用する。
+description: 変更後の自己レビューを行い、findings / 未検証 / 残リスクを整理する。実装後の出口整理に使用する。
 metadata:
   short-description: 変更レビュー
 ---
@@ -18,7 +18,6 @@ metadata:
 ## 目的
 
 - 変更後の自己レビューを標準化する。
-- review agent を使う条件を明確にする。
 - 指摘がある場合は findings-first で返し、ない場合も残リスクを明示する。
 
 ## 対象
@@ -34,7 +33,7 @@ metadata:
 
 ## 基本方針
 
-- まず自己レビューし、必要時のみ review agent を使う。
+- まず自己レビューする。
 - 問題があれば findings-first で返す。
 - 問題がなくても、未検証事項や残リスクは隠さない。
 
@@ -59,18 +58,7 @@ metadata:
   - 境界/影響範囲: 外部入力、永続化、公開インターフェース、近傍機能への波及
 - 単一ファイルの軽微変更で、上記観点に強い懸念がなければ自己レビューのみで止めてよい。
 
-### 3) 必要時のみ review agent へ上げる
-
-- 次のいずれかに当てはまる場合のみ `review-quality` または `review-security` を使う。
-  - 複数ファイル変更で追跡が難しい
-  - 公開インターフェース、永続化、外部 I/O、権限境界などの境界変更がある
-  - 認証認可、入力処理、秘密情報、ファイル操作、外部 API に触れる
-  - 変更影響が広く、自己レビューだけでは見落としが不安
-- `review-quality` は品質、仕様整合、テスト不足、変更影響の確認に使う。
-- `review-security` はセキュリティや権限境界の確認に使う。
-- 将来、対象言語固有の観点が `review-quality` だけでは不足すると確認できた場合に限り、言語別 reviewer の追加を検討する。
-
-### 4) 出力を findings-first でまとめる
+### 3) 出力を findings-first でまとめる
 
 - 指摘がある場合:
   - `critical` / `high` / `medium` / `low` の順で findings を並べる
