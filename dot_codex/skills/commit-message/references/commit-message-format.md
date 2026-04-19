@@ -6,7 +6,6 @@
 - 本文テンプレート
 - ヘッダー
 - タイプ
-- スコープ
 - 説明
 - 本文
 - フッター
@@ -16,7 +15,7 @@
 ## 形式
 
 ```txt
-<type>[optional scope]: <description>
+<type>: <description>
 
 [optional body]
 
@@ -43,12 +42,12 @@ Impact: ...
 
 ## ヘッダー
 
-- 形式の `<type>[optional scope]: <description>` に相当する。
+- 形式の `<type>: <description>` に相当する。
 - 1行のみで書く。
 - 72文字以内にする。
 - 英小文字で記載する（固有名詞は英大文字でよい）。
 - 動詞は命令形（add・fix・update など）を基本とする。
-- デフォルトでは scope を付けず、`<type>: <description>` を優先する。
+- 常に `<type>: <description>` を使い、scope は付けない。
 
 ## タイプ
 
@@ -72,17 +71,6 @@ Impact: ...
 - `test`: テストの追加・修正
 
 追加のタイプは必須ではない。BREAKING CHANGE を含まない限り Semantic Versioning に対する暗黙的な効果を持たない。
-
-## スコープ
-
-- ヘッダーの `[optional scope]` に相当する。
-- 任意。必須ではない。
-- デフォルトでは省略する。
-- まず `<type>: <description>` で十分に伝わるかを確認し、伝わるなら scope は付けない。
-- 付けるのは、同じ type だけでは変更対象の識別が弱い場合、またはリポジトリ規約で要求される場合に限る。
-- ディレクトリ名やモジュール名が見えるだけでは不足で、scope を外すとタイトルの意味が曖昧になる場合に限って付ける。
-- 型には追加の文脈としてスコープを付けられる。スコープは括弧で囲み、名詞にする。例: `feat(parser): add ability to parse arrays`。
-- リポジトリがスコープ運用をしていない場合は無理に付けない。
 
 ## 説明
 
@@ -116,7 +104,7 @@ Impact: ...
 
 ## 破壊的変更
 
-- `BREAKING CHANGE:` をフッターに書く、または型・スコープの直後に `!` を付けると破壊的変更を表す（Semantic Versioning の `MAJOR`）。
+- `BREAKING CHANGE:` をフッターに書く、または `type` の直後に `!` を付けると破壊的変更を表す（Semantic Versioning の `MAJOR`）。
 - `BREAKING CHANGE` は任意の型に付けられる。
 - `!` がある場合、`BREAKING CHANGE:` を省略してよい。その場合はヘッダーの description で破壊的変更の内容を説明する。
 - `BREAKING CHANGE:` は大文字で `BREAKING CHANGE:` の後に半角スペースを入れて説明を書く。
@@ -138,12 +126,6 @@ BREAKING CHANGE: `extends` key in config file is now used for extending other co
 feat!: send an email to the customer when a product is shipped
 ```
 
-スコープおよび破壊的変更を目立たせるための `!` を持つコミットメッセージ
-
-```txt
-feat(api)!: send an email to the customer when a product is shipped
-```
-
 `!` と `BREAKING CHANGE` フッターの両方を持つコミットメッセージ
 
 ```txt
@@ -158,10 +140,10 @@ BREAKING CHANGE: use JavaScript features not available in Node 6.
 docs: correct spelling of CHANGELOG
 ```
 
-スコープを持つコミットメッセージ
+本文なしの機能追加コミットメッセージ
 
 ```txt
-feat(lang): add Polish language
+feat: add Polish language
 ```
 
 複数段落からなる本文と複数のフッターを持ったコミットメッセージ
