@@ -1,5 +1,5 @@
 prefix_rule(
-  pattern = ["git", "branch"],
+  pattern = ["git", "branch", ["-vv", "--show-current"]],
   decision = "allow",
   justification = "push 先判定に必要な読み取り専用の git branch 確認のみ許可する。",
   match = [

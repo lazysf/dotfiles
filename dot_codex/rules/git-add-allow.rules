@@ -8,12 +8,7 @@ prefix_rule(
     "git add dir/file1 dir/file2",
   ],
   not_match = [
-    "git add .",
-    "git add -A",
-    "git add --all",
-    "git add -u",
-    "git add --update",
-    "git add -p",
-    "git add --patch",
+    "git commit -m \"chore: update\"",
+    "git status",
   ],
 )
