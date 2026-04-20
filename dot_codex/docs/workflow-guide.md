@@ -1,9 +1,8 @@
-# 高品質なバイブコーディング手引き
+# 共通ワークフローガイド
 
 この文書は、Codex Desktop を前提に、高品質なバイブコーディングを安定して進めるための実務ガイドです。
-目的は「勢いで雑に作る」ことではなく、「頼み方と進め方を整えて、良い差分を再現しやすくする」ことです。
-毎回の短い手順は [QUICKSTART.md](./QUICKSTART.md) を参照してください。
-正式なフローや停止線は [AGENTS.md](./AGENTS.md) を優先します。共通 docs は [docs/README.md](./docs/README.md) を参照してください。
+正式なフローや停止線は [AGENTS.md](../AGENTS.md) を正本とし、日常の入口は [QUICKSTART.md](../QUICKSTART.md) を参照してください。
+このガイドでは、直下 2 ファイルだけでは書き切らない具体例、補足、長めセッションの進め方を扱います。
 
 ## まず意識すること
 
@@ -43,29 +42,26 @@
 - 事実確認なしで「たぶんこれが原因だから直して」
 - 今回やらないことがないまま、広い改善をまとめて依頼する
 
-## レーン別の進め方
+## レーン別の補足
 
 ### 小さな修正
 
-- まず `task-intake` で今回の対象と完了条件を軽く固定する
-- 次に `workspace-intake` で近傍実装と確認手段を掴む
-- その後は `coding-standards → test-runner` で短く閉じる
+- 入口は [QUICKSTART.md](../QUICKSTART.md) の小さな修正レーンを使う
+- `task-intake` では対象と完了条件を軽く固定し、`workspace-intake` では近傍実装と確認手段だけを掴む
+- 深い要件整理や計画へ広げず、`coding-standards → test-runner` で短く閉じる
 
 ### 探索多めの相談
 
-- 依頼が散らばっているなら `request-shaping` で実装ブリーフへ整える
-- その後に `task-intake` で今回の停止線を置く
-- 次に `workspace-intake` で事実ベースの探索を行う
-- 要件が揺れる場合だけ `plan-product` へ進む
+- 情報が散らばっているときは、まず `request-shaping` で実装ブリーフへ整える
+- その後に `task-intake` で今回の停止線を置き、`workspace-intake` で事実ベースの探索へ進む
+- 要件が揺れるときだけ `plan-product` を追加し、入口整理と要件整理を混ぜない
 
 ### 大きめ変更
 
-- 依頼が散らばっているなら `request-shaping`、十分具体的なら `task-intake` を入口にする
+- 依頼が十分具体的なら `task-intake`、散らばっているなら `request-shaping` から入る
 - `request-shaping` を使った場合も、通常は `task-intake` を経てから探索へ進む
-- `workspace-intake` と `plan-product` で前提を固める
 - 長めの進行管理が必要なら `session-orchestrator`、技術計画が必要なら `plan-architect` を使う
 - 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置き、必要なら compact を使う
-- fork は本当に別問題へ分岐したときだけ使う
 - 実装後は `test-runner → 必要なら review-quality agent / review-security agent → change-review` で閉じる
 
 ## おすすめスキルの組み合わせ
@@ -86,12 +82,12 @@
 
 ## どこを読むべきか
 
-- 運用全体の基準: [AGENTS.md](./AGENTS.md)
-- 毎回の実務手順: [QUICKSTART.md](./QUICKSTART.md)
-- 共通 docs: [docs/README.md](./docs/README.md)
-- 依頼を整える: [request-shaping](./skills/request-shaping/SKILL.md)
-- 環境点検: [environment-audit](./skills/environment-audit/SKILL.md)
-- 長めの進行を整える: [session-orchestrator](./skills/session-orchestrator/SKILL.md)
-- 実装の品質基準: [coding-standards](./skills/coding-standards/SKILL.md)
+- 運用全体の基準: [AGENTS.md](../AGENTS.md)
+- 毎回の実務入口: [QUICKSTART.md](../QUICKSTART.md)
+- 共通 docs の入口: [README.md](./README.md)
+- 依頼を整える: [request-shaping](../skills/request-shaping/SKILL.md)
+- 環境点検: [environment-audit](../skills/environment-audit/SKILL.md)
+- 長めの進行を整える: [session-orchestrator](../skills/session-orchestrator/SKILL.md)
+- 実装の品質基準: [coding-standards](../skills/coding-standards/SKILL.md)
 - レビュー本体: `review-quality` / `review-security` agent
-- 出口の確認: [change-review](./skills/change-review/SKILL.md)
+- 出口の確認: [change-review](../skills/change-review/SKILL.md)
