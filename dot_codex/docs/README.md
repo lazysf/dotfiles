@@ -7,15 +7,17 @@
 
 1. [AGENTS.md](../AGENTS.md)
 2. [QUICKSTART.md](../QUICKSTART.md)
-3. [harness-architecture.md](./harness-architecture.md)
-4. [knowledge-promotion.md](./knowledge-promotion.md)
-5. [project-integration.md](./project-integration.md)
-6. [verification.md](./verification.md)
-7. [rules.md](./rules.md)
+3. [workflow-guide.md](./workflow-guide.md)
+4. [harness-architecture.md](./harness-architecture.md)
+5. [knowledge-promotion.md](./knowledge-promotion.md)
+6. [project-integration.md](./project-integration.md)
+7. [verification.md](./verification.md)
+8. [rules.md](./rules.md)
 
 ## ここに置くもの
 
 - 共通ハーネスの構成
+- 展開後も参照する共通運用ガイド
 - 知見をどこへ昇格するかの判断基準
 - project との接続方法
 - 共通検証手順

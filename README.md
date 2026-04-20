@@ -72,8 +72,8 @@ chezmoi diff
   - 共通運用契約。停止線、報告方針、Git 方針、スキル導線を定義します。
 - `dot_codex/QUICKSTART.md`
   - 日常の入口として、依頼レーンの選び方と shorthand をまとめた索引です。正式なフローは `dot_codex/AGENTS.md` を参照します。
-- `dot_codex/HIGH_QUALITY_VIBE_CODING.md`
-  - 高品質なバイブコーディングの考え方と良い依頼例をまとめた実務ガイドです。
+- `dot_codex/docs/workflow-guide.md`
+  - 高品質なバイブコーディングの具体例、依頼例、長めセッションの進め方をまとめた実務ガイドです。
 - `dot_codex/docs/`
   - 展開後にも参照する共通 docs です。ハーネス構成、project との連携、検証手順、rules の考え方を整理します。
 - `docs/harness-engineering-best-practices.md`
@@ -169,7 +169,7 @@ Codex 環境自体を点検したい場合は、入口に `environment-audit` �
 
 ### Situational skills
 
-状況に応じて `environment-audit`、`debug-fix`、`refactor-safely`、`git-push`、`docs-update` を使います。日常の入口は `dot_codex/QUICKSTART.md`、運用の具体例は `dot_codex/HIGH_QUALITY_VIBE_CODING.md` を参照してください。
+状況に応じて `environment-audit`、`debug-fix`、`refactor-safely`、`git-push`、`docs-update` を使います。日常の入口は `dot_codex/QUICKSTART.md`、運用の具体例は `dot_codex/docs/workflow-guide.md` を参照してください。
 
 ### Review agents
 

@@ -11,7 +11,7 @@
 - 高品質かつ素晴らしいバイブコーディング体験を実現するため
 - 高品質なハーネスエンジニアリングを実現し、開発の高品質化と高速化を支えるため
 
-詳細な運用ルールは `dot_codex/AGENTS.md`、日常の入口は `dot_codex/QUICKSTART.md` を参照する。
+詳細な運用ルールは `dot_codex/AGENTS.md`、日常の入口は `dot_codex/QUICKSTART.md`、実務ガイドは `dot_codex/docs/workflow-guide.md` を参照する。
 
 ## ハーネス知見の置き場
 
