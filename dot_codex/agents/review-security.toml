@@ -79,11 +79,11 @@ Stop and return control to the parent instead of guessing when:
 - `summary` はレビュー結果を短く要約する文字列とする。
 - `findings` の各要素は `title`, `severity`, `file`, `line`, `reason`, `suggestion` を持つ。
 - `severity` は `critical`, `high`, `medium`, `low` のいずれかのみを使う。
-- `critical` は実害が大きく悪用しやすい脆弱性、`high` は本番前修正が妥当な脆弱性、`medium` は条件次第で問題化する懸念、`low` は任意改善の目安として使う。
 - findings は重大度順に並べる。
 - 指摘がない場合は `findings` を空配列にし、`summary` で `重大な指摘なし` を明示してよい。
 - `summary` の `重大な指摘なし` は、レビュー対象範囲に根拠のある `critical` / `high` がないことを意味する。
 - `medium` / `low` のみがある場合は、必要に応じて改善候補がある旨を添えてよい。
-- 指摘がない場合でも、どの観点を確認したかが summary から読み取れるようにする。
 - `open_questions` と `residual_risks` は文字列配列とする。
+- `critical` は実害が大きく悪用しやすい脆弱性、`high` は本番前修正が妥当な脆弱性、`medium` は条件次第で問題化する懸念、`low` は任意改善の目安として使う。
+- 指摘がない場合でも、どの観点を確認したかが summary から読み取れるようにする。
 """
