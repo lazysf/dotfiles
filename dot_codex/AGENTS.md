@@ -43,7 +43,7 @@
   - セキュリティレビュー本体は `review-security` agent を使う。
   - `change-review` は specialized review の代替ではなく、最終的な出口整理として使う。
   - ユーザーが `review-quality` / `review-security` を単独指定した場合は、特に明示がない限り `review agent → change-review` を 1 セットとして扱う。
-  - review agent の raw JSON / 生出力を明示要求された場合だけ、`change-review` を省略してよい。
+  - review agent の raw JSON / 生出力を明示要求された場合だけ、`change-review` を省略してよい。その場合は機械可読な出力形式を優先し、末尾の `スキル: ...` 行は付けない。
 - すべての依頼で全段階を通す前提にはしない。
   - 小さな修正: `task-intake → workspace-intake → coding-standards → test-runner`
   - 曖昧な相談: `request-shaping → task-intake → workspace-intake → 必要なら plan-product`
@@ -157,7 +157,7 @@
   - `review-quality`: 品質レビュー本体
   - `review-security`: セキュリティレビュー本体
   - `change-review`: review agent の結果を含む出口整理
-- 各ターンの最終返答で、スキルを使ったかどうかを必ず明示する
+- 通常の assistant による各ターンの最終返答では、スキルを使ったかどうかを必ず明示する
 - 最終返答の末尾に次の1行を追加する
   - スキル使用あり: `スキル: 使用（skill1, skill2）`
   - スキル使用なし: `スキル: 未使用`
