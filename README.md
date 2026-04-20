@@ -62,7 +62,7 @@ chezmoi diff
 - `dot_codex/AGENTS.md`
   - 運用全体の基準。判断原則、既定フロー、確認必須境界、検証と報告、Git 方針、スキル選択ルールを定義します。
 - `dot_codex/QUICKSTART.md`
-  - 毎回の依頼テンプレートと運用レーンをまとめたチートシートです。日常の入口はここから確認します。
+  - 日常の入口として、依頼レーンの選び方と shorthand をまとめた索引です。正式なフローは `dot_codex/AGENTS.md` を参照します。
 - `dot_codex/HIGH_QUALITY_VIBE_CODING.md`
   - 高品質なバイブコーディングの考え方と良い依頼例をまとめた実務ガイドです。
 - `dot_codex/private_config.toml.tmpl`
@@ -101,9 +101,9 @@ chezmoi diff
 9. 必要なら `git-commit`
 10. 必要なら `git-push`
 
-依頼が散らばっている場合は、入口で `request-shaping` を使ってから既定フローへ入ります。長めの変更では、`plan-product` のあとに `session-orchestrator` または `plan-architect` を使って進め方を固めます。
+依頼が散らばっている場合は、入口で `request-shaping` を使い、その後 `task-intake` を経て既定フローへ入ります。長めの変更では、`plan-product` のあとに `session-orchestrator` または `plan-architect` を使って進め方を固めます。
 Codex 環境自体を点検したい場合は、入口に `environment-audit` を置いてから通常の整理へ進みます。
-品質レビューが必要な場合は `review-quality` agent、セキュリティレビューが必要な場合は `review-security` agent を使い、その結果を必要に応じて `change-review` で整理します。
+品質レビューが必要な場合は `review-quality` agent、セキュリティレビューが必要な場合は `review-security` agent を使います。結果を人間向けに整理するときは `change-review` を使います。
 
 ### Core skills
 
