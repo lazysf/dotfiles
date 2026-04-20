@@ -26,7 +26,7 @@ metadata:
 - 実装後の最終確認。
 - 複数ファイル変更や境界変更を含む差分。
 - 変更内容をユーザーへ返す前の品質整理。
-- `review-quality` / `review-security` agent の結果を、共通の出力契約へそろえる場面。
+- `review-quality` / `review-security` agent の結果を、人間向けの出口整理へ統合する場面。
 
 ## 対象外
 
@@ -39,7 +39,7 @@ metadata:
 - 問題があれば findings-first で返す。
 - 問題がなくても、未検証事項や残リスクは隠さない。
 - 品質レビュー本体は `review-quality` agent、セキュリティレビュー本体は `review-security` agent を優先する。
-- このスキルは specialized review の代替ではなく、最終的な `findings` / `open_questions` / `residual_risks` の整理と統合に使う。
+- このスキルは specialized review の代替ではなく、レビュー結果を人間向けに整理して返す役割に徹する。
 
 ## 進め方
 

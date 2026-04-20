@@ -23,6 +23,8 @@
 
 ## Workflow Policy
 
+- `AGENTS.md` を、正式なフロー、確認境界、返答方針の source of truth とする。
+- `QUICKSTART.md` は入口の索引、`HIGH_QUALITY_VIBE_CODING.md` は実務ガイドとして扱い、相違がある場合はこの `AGENTS.md` を優先する。
 - 依頼は、必要な段階だけ `request-shaping → task-intake → workspace-intake → 必要なら plan-product → 必要なら plan-architect → coding-standards → 必要なら test-runner → 必要なら change-review → 必要なら commit-message → 必要なら git-commit → 必要なら git-push` の順で進める。
 - 各段階の役割は次のとおり。
   - `request-shaping`: 散らばった依頼を、Codex が扱いやすいブリーフへ正規化する
@@ -63,8 +65,9 @@
   - 依頼の解釈が複数あり、結果が変わりうる
   - 依頼範囲外の整理、横展開、大きな設計変更が混ざりそう
 - 曖昧な依頼では、まず `task-intake` で今回の対象を軽く固定してから探索する。
-- 情報が散らばっている場合は、その前に `request-shaping` で `目的 / 確認済み事実 / 制約 / 完了条件` を短く正規化してよい。
+- 情報が散らばっている場合は、その前に `request-shaping` で `目的 / 確認済み事実 / 制約` を芯に短く正規化してよい。
 - `request-shaping` は「情報が散らばっている」「依頼の主題が揺れている」ときに使い、依頼が十分具体的なら `task-intake` から始める。
+- `request-shaping` を使った場合も、通常は `task-intake` を経てから `workspace-intake` へ進む。
 - 探索後も要件が揺れている場合だけ `plan-product` へ進む。
 - バイブコーディング中でも、この停止線は維持する。
 
@@ -111,7 +114,7 @@
   - `非目的`: 今回やらないこと
 - これは推奨テンプレートであり、未記入でも受け付ける
 - 情報が散らばっている場合は、まず `request-shaping` で実装ブリーフへ整える
-- `request-shaping` は内部的に `目的 / 確認済み事実 / 制約 / 完了条件` をそろえるが、ユーザーへの入力必須項目を増やすものではない
+- `request-shaping` は内部的に `目的 / 確認済み事実 / 制約` をそろえつつ、`仮定 / 未確定事項 / 次アクション` を切り分けるが、ユーザーへの入力必須項目を増やすものではない
 - 依頼が十分具体的なら、`task-intake` から始めてよい
 
 ### セッション終端の報告項目

@@ -3,6 +3,7 @@
 この文書は、Codex Desktop を前提に、高品質なバイブコーディングを安定して進めるための実務ガイドです。
 目的は「勢いで雑に作る」ことではなく、「頼み方と進め方を整えて、良い差分を再現しやすくする」ことです。
 毎回の短い手順は [QUICKSTART.md](./QUICKSTART.md) を参照してください。
+正式なフローや停止線は [AGENTS.md](./AGENTS.md) を優先します。
 
 ## まず意識すること
 
@@ -10,7 +11,8 @@
 - 背景説明は `確認済みの事実` を優先し、推測は分ける
 - スコープを広げすぎず、今回やらないことを明示する
 - 高リスクな変更は、バイブコーディング中でも確認を挟む
-- `目的 / 確認済み事実 / 制約 / 完了条件` は良い整理軸だが、毎回の入力必須項目として扱わず、不足分は `request-shaping` で補ってよい
+- `目的 / 確認済み事実 / 制約 / 完了条件` は良い整理軸だが、毎回の入力必須項目として扱わない
+- `request-shaping` は入口で `目的 / 確認済み事実 / 制約` と未確定事項を整え、完了条件は `task-intake` や `plan-product` で固めてよい
 
 ## 良い依頼例
 
@@ -52,12 +54,14 @@
 ### 探索多めの相談
 
 - 依頼が散らばっているなら `request-shaping` で実装ブリーフへ整える
-- その後に `workspace-intake` で事実ベースの探索を行う
+- その後に `task-intake` で今回の停止線を置く
+- 次に `workspace-intake` で事実ベースの探索を行う
 - 要件が揺れる場合だけ `plan-product` へ進む
 
 ### 大きめ変更
 
-- 入口で `request-shaping` または `task-intake` を使い、今回の芯を揃える
+- 依頼が散らばっているなら `request-shaping`、十分具体的なら `task-intake` を入口にする
+- `request-shaping` を使った場合も、通常は `task-intake` を経てから探索へ進む
 - `workspace-intake` と `plan-product` で前提を固める
 - 長めの進行管理が必要なら `session-orchestrator`、技術計画が必要なら `plan-architect` を使う
 - 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置き、必要なら compact を使う
@@ -67,8 +71,8 @@
 ## おすすめスキルの組み合わせ
 
 - 依頼が散らばっている: `request-shaping → task-intake → workspace-intake`
-- 相談を要件化したい: `request-shaping → workspace-intake → plan-product`
-- 段階的に安全に進めたい: `request-shaping → workspace-intake → plan-product → session-orchestrator`
+- 相談を要件化したい: `request-shaping → task-intake → workspace-intake → plan-product`
+- 段階的に安全に進めたい: `request-shaping → task-intake → workspace-intake → plan-product → session-orchestrator`
 - 実装順序まで明確にしたい: `task-intake → workspace-intake → plan-product → plan-architect`
 - 実装を締めたい: `coding-standards → test-runner → 必要なら review-quality agent / review-security agent → change-review`
 
