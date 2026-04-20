@@ -1,7 +1,7 @@
 # Codex QUICKSTART
 
 日常のバイブコーディングで毎回迷わないための、最小のチートシートです。
-詳しい考え方は [HIGH_QUALITY_VIBE_CODING.md](./HIGH_QUALITY_VIBE_CODING.md)、正式ルールは [AGENTS.md](./AGENTS.md)、共通運用 docs は [docs/README.md](./docs/README.md) を参照してください。
+正式ルールは [AGENTS.md](./AGENTS.md)、詳しい実務ガイドは [docs/workflow-guide.md](./docs/workflow-guide.md)、共通運用 docs の入口は [docs/README.md](./docs/README.md) を参照してください。
 
 ## 3つの依頼レーン
 
@@ -40,7 +40,7 @@
 ## 詳細を読む先
 
 - 全体ルール: [AGENTS.md](./AGENTS.md)
-- 実務ガイド: [HIGH_QUALITY_VIBE_CODING.md](./HIGH_QUALITY_VIBE_CODING.md)
+- 実務ガイド: [docs/workflow-guide.md](./docs/workflow-guide.md)
 - 共通 docs: [docs/README.md](./docs/README.md)
 - 依頼の整形: [request-shaping](./skills/request-shaping/SKILL.md)
 - 入口整理: [task-intake](./skills/task-intake/SKILL.md)

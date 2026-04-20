@@ -26,7 +26,7 @@
 
 - 正式なフローの正本はこの `AGENTS.md`
 - 入口の索引は `QUICKSTART.md`
-- 実務ガイドは `HIGH_QUALITY_VIBE_CODING.md`
+- 実務ガイドは `docs/workflow-guide.md`
 - 詳細な共通運用 docs は `docs/` を参照する
 - 依頼は必要な段階だけ次の順で進める
   - `request-shaping`

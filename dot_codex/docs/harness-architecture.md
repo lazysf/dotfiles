@@ -8,7 +8,7 @@
   - 共通運用契約
 - [QUICKSTART.md](../QUICKSTART.md)
   - 日常の入口索引
-- [HIGH_QUALITY_VIBE_CODING.md](../HIGH_QUALITY_VIBE_CODING.md)
+- [workflow-guide.md](./workflow-guide.md)
   - 実務ガイド
 - [private_config.toml.tmpl](../private_config.toml.tmpl)
   - Codex の既定設定
@@ -23,7 +23,7 @@
 
 - 入口の説明は `QUICKSTART.md`
 - 正式な運用契約は `AGENTS.md`
-- 実装・運用の具体例は `HIGH_QUALITY_VIBE_CODING.md`
+- 実装・運用の具体例は `docs/workflow-guide.md`
 - 実行挙動の制御は `private_config.toml.tmpl` と `rules/`
 - 継続利用するノウハウは `skills/`
 
