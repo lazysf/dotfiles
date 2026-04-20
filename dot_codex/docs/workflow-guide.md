@@ -42,35 +42,15 @@
 - 事実確認なしで「たぶんこれが原因だから直して」
 - 今回やらないことがないまま、広い改善をまとめて依頼する
 
-## レーン別の補足
+## 長めセッションの補足
 
-### 小さな修正
-
-- 入口は [QUICKSTART.md](../QUICKSTART.md) の小さな修正レーンを使う
-- `task-intake` では対象と完了条件を軽く固定し、`workspace-intake` では近傍実装と確認手段だけを掴む
-- 深い要件整理や計画へ広げず、`coding-standards → test-runner` で短く閉じる
-
-### 探索多めの相談
-
-- 情報が散らばっているときは、まず `request-shaping` で実装ブリーフへ整える
-- その後に `task-intake` で今回の停止線を置き、`workspace-intake` で事実ベースの探索へ進む
-- 要件が揺れるときだけ `plan-product` を追加し、入口整理と要件整理を混ぜない
-
-### 大きめ変更
-
+- 正式な順序は [AGENTS.md](../AGENTS.md) の `運用フロー` を参照する
 - 依頼が十分具体的なら `task-intake`、散らばっているなら `request-shaping` から入る
 - `request-shaping` を使った場合も、通常は `task-intake` を経てから探索へ進む
-- 長めの進行管理が必要なら `session-orchestrator`、技術計画が必要なら `plan-architect` を使う
+- 要件整理が重いときは `plan-product`、進行管理が必要なときは `session-orchestrator`、技術計画が必要なときは `plan-architect` を追加する
 - 文脈が膨らんだら、同一スレッド内で `session-orchestrator` の checkpoint を置き、必要なら compact を使う
-- 実装後は `test-runner → 必要なら review-quality agent / review-security agent → change-review` で閉じる
-
-## おすすめスキルの組み合わせ
-
-- 依頼が散らばっている: `request-shaping → task-intake → workspace-intake`
-- 相談を要件化したい: `request-shaping → task-intake → workspace-intake → plan-product`
-- 段階的に安全に進めたい: `request-shaping → task-intake → workspace-intake → plan-product → session-orchestrator`
-- 実装順序まで明確にしたい: `task-intake → workspace-intake → plan-product → plan-architect`
-- 実装を締めたい: `coding-standards → test-runner → 必要なら review-quality agent / review-security agent → change-review`
+- 実装後は `test-runner` を行い、必要に応じて `review-quality` / `review-security` を挟み、最後に `change-review` で閉じる
+- review shorthand の意味や省略規則は `QUICKSTART.md` ではなく `AGENTS.md` を正本とする
 
 ## セッション終了時のチェック項目
 
@@ -85,9 +65,4 @@
 - 運用全体の基準: [AGENTS.md](../AGENTS.md)
 - 毎回の実務入口: [QUICKSTART.md](../QUICKSTART.md)
 - 共通 docs の入口: [README.md](./README.md)
-- 依頼を整える: [request-shaping](../skills/request-shaping/SKILL.md)
-- 環境点検: [environment-audit](../skills/environment-audit/SKILL.md)
-- 長めの進行を整える: [session-orchestrator](../skills/session-orchestrator/SKILL.md)
-- 実装の品質基準: [coding-standards](../skills/coding-standards/SKILL.md)
-- レビュー本体: `review-quality` / `review-security` agent
-- 出口の確認: [change-review](../skills/change-review/SKILL.md)
+- 個別の使い方を確認したいとき: [skills/](../skills/)
