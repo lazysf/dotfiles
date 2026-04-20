@@ -4,6 +4,15 @@
 
 このリポジトリは、`chezmoi` を使って各種の設定ファイルを一元管理するための dotfiles リポジトリ。
 
+## Codex 設定の目的
+
+このリポジトリの `dot_codex/` 配下の設定、ルール、スキルは、Codex を高品質に運用するための基盤である。Codex を使ってこのリポジトリの Codex 設定を追加・修正するときにも、何のための設定かを見失わないよう、この目的を明示する。
+
+- 高品質かつ素晴らしいバイブコーディング体験を実現するため
+- 高品質なハーネスエンジニアリングを実現し、開発の高品質化と高速化を支えるため
+
+詳細な運用ルールは `dot_codex/AGENTS.md`、日常の入口は `dot_codex/QUICKSTART.md` を参照する。
+
 ## 対象環境
 
 - macOS（主対象。他OSは未検証）
@@ -70,8 +79,6 @@
 ## メモ
 
 - `dot_ssh/private_config.tmpl` はプライベートな設定を想定。
-- `dot_codex/` 配下の Codex 関連設定は、高品質なバイブコーディングを実現するための設定を管理する。
-- Codex 運用ルールの詳細は `dot_codex/AGENTS.md`、日常の入口は `dot_codex/QUICKSTART.md` を参照する。
 - macOSで`op`が存在する場合、`dot_config/git/config.tmpl` は `op whoami` 成功を前提に展開される。未サインイン時は `chezmoi apply` が失敗する。
 - Neovim のツール管理方針: LSP/DAP は Mason 管理、runtime/formatter/linter は mise 管理とする。
 - `taplo` は役割分担を明確化し、LSP は Mason、format/lint は mise 側の CLI を利用する。
