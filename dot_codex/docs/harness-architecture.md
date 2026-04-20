@@ -1,6 +1,6 @@
 # 共通ハーネス構成
 
-`dot_codex/` は、どの workspace に展開しても同じように使える共通ハーネスを管理します。
+`~/.codex/` は、どの workspace に展開しても同じように使える共通ハーネスです。
 
 ## 構成
 
@@ -30,5 +30,5 @@
 ## 設計方針
 
 - 共通ハーネスには project-specific knowledge を持ち込まない
-- repo-level の設計履歴は `dot_codex/` ではなく保守元の repo で管理する
+- repo-level の設計履歴は `~/.codex/` ではなく保守元の repo で管理する
 - 実装されていない Codex 機能には依存しない

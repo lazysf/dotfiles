@@ -59,6 +59,13 @@ chezmoi diff
 
 この repo で `dot_codex/` をどう設計・保守するかの判断履歴は [docs/adr/](./docs/adr/) に置きます。展開後に Codex が日常参照する運用文書は `dot_codex/` 側に集約します。
 
+### Harness knowledge
+
+- 外部ベストプラクティスと repo-level の保守知識は [docs/harness-engineering-best-practices.md](./docs/harness-engineering-best-practices.md) に蓄積します。
+- 手動で回す代表シナリオは [docs/harness-regression-scenarios.md](./docs/harness-regression-scenarios.md) に置きます。
+- 知見の昇格ルールは [docs/adr/0005-promote-harness-knowledge-by-runtime-surface.md](./docs/adr/0005-promote-harness-knowledge-by-runtime-surface.md) を正本とします。
+- 展開後にも日常参照する判断基準は [dot_codex/docs/knowledge-promotion.md](./dot_codex/docs/knowledge-promotion.md) に置きます。
+
 ### Main files
 
 - `dot_codex/AGENTS.md`
@@ -69,6 +76,10 @@ chezmoi diff
   - 高品質なバイブコーディングの考え方と良い依頼例をまとめた実務ガイドです。
 - `dot_codex/docs/`
   - 展開後にも参照する共通 docs です。ハーネス構成、project との連携、検証手順、rules の考え方を整理します。
+- `docs/harness-engineering-best-practices.md`
+  - この repo を保守するときの外部調査メモと、repo-level の知見整理です。`dot_codex/` に昇格する前の判断材料を扱います。
+- `docs/harness-regression-scenarios.md`
+  - docs / rules / agents / config の更新後に回す手動シナリオ集です。
 - `dot_codex/private_config.toml.tmpl`
   - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`codex_hooks=false`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects` を preserve しつつ、repo 管理の allowlist に含めた `plugins` / `marketplaces` だけを OpenAI の sample config に寄せた順序で最終設定へ出力します。
 - `dot_codex/rules/`
@@ -115,6 +126,12 @@ Codex 環境自体を点検したい場合は、入口に `environment-audit` �
 - project-specific knowledge の正本は各プロジェクトの `docs/`
 - 各プロジェクトのルート `AGENTS.md` は短いポインタとして、`./docs/` を参照させる運用を推奨します
 - `.codex/` は knowledge の標準置き場としては採用しません
+
+### Knowledge promotion
+
+- 外部調査メモや repo-level の保守判断は root `docs/` と `docs/adr/` に置きます。
+- 展開後にも残したい恒久ガイドだけを `dot_codex/docs/` に昇格します。
+- 繰り返し手順は `skills/`、機械的ガードは `rules/`、専門化した読取作業は `agents/` に分けます。
 
 ### Core skills
 
