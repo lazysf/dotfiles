@@ -19,7 +19,7 @@
 ### 3. 大きめ変更
 
 - 対象: 複数ファイル変更、段階的に確認しながら進めたい作業
-- 基本レーン: `request-shaping → task-intake → workspace-intake → plan-product → session-orchestrator または plan-architect → coding-standards → test-runner → change-review`
+- 基本レーン: `request-shaping → task-intake → workspace-intake → plan-product → 必要なら session-orchestrator → 必要なら plan-architect → coding-standards → test-runner → change-review`
 - 品質レビューが必要なら: `... → test-runner → review-quality agent → change-review`
 - セキュリティレビューが必要なら: `... → test-runner → review-security agent → change-review`
 - 両方必要なら: `... → test-runner → review-quality agent / review-security agent → change-review`
