@@ -57,18 +57,22 @@ chezmoi diff
 
 `dot_codex/` では、Codex 用の設定、ルール、スキルを管理しています。
 
+この repo で `dot_codex/` をどう設計・保守するかの判断履歴は [docs/adr/](./docs/adr/) に置きます。展開後に Codex が日常参照する運用文書は `dot_codex/` 側に集約します。
+
 ### Main files
 
 - `dot_codex/AGENTS.md`
-  - 運用全体の基準。判断原則、既定フロー、確認必須境界、検証と報告、Git 方針、スキル選択ルールを定義します。
+  - 共通運用契約。停止線、報告方針、Git 方針、スキル導線を定義します。
 - `dot_codex/QUICKSTART.md`
   - 日常の入口として、依頼レーンの選び方と shorthand をまとめた索引です。正式なフローは `dot_codex/AGENTS.md` を参照します。
 - `dot_codex/HIGH_QUALITY_VIBE_CODING.md`
   - 高品質なバイブコーディングの考え方と良い依頼例をまとめた実務ガイドです。
+- `dot_codex/docs/`
+  - 展開後にも参照する共通 docs です。ハーネス構成、project との連携、検証手順、rules の考え方を整理します。
 - `dot_codex/private_config.toml.tmpl`
-  - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects` を preserve しつつ、repo 管理の allowlist に含めた `plugins` / `marketplaces` だけを OpenAI の sample config に寄せた順序で最終設定へ出力します。
+  - Codex の設定テンプレート。主要な既定値は `gpt-5.4`、`high`、`on-request`、`workspace-write`、`web_search=live`、`multi_agent=true`、`codex_hooks=false`、`max_depth=1` です。`chezmoi apply` 時に `chezmoi` テンプレート内で既存の `~/.codex/config.toml` を読み、`projects` を preserve しつつ、repo 管理の allowlist に含めた `plugins` / `marketplaces` だけを OpenAI の sample config に寄せた順序で最終設定へ出力します。
 - `dot_codex/rules/`
-  - 実行ガードレール。`git diff/status/log`、パス限定 `git add`、`mise run test/lint/format` などの許可、`git push`、`rm`、`sudo`、`launchctl` などの要確認、`git push --force*` と `grep` の禁止を管理します。
+  - 実行ガードレール。`git diff/status/log`、パス限定 `git add`、`mise run test/lint/format` などの許可、`git push`、`rm`、`sudo`、高リスクな Git 操作、依存追加系コマンドなどの要確認、`git push --force*` と `grep` の禁止を管理します。
 - 既知制約として、current `prefix_rule` DSL では raw `git commit` / `git push` の後置フラグを厳密に拒否できません。`--amend`、`--no-verify`、force push は skills と運用方針で扱い、rules 側で suffix 形まで完全には強制していません。
 - `dot_codex/agents/`
   - 専門化した subagent 定義を管理します。レビュー本体は `review-quality` / `review-security` agent を優先して使います。
@@ -104,6 +108,13 @@ chezmoi diff
 依頼が散らばっている場合は、入口で `request-shaping` を使い、その後 `task-intake` を経て既定フローへ入ります。長めの変更では、`plan-product` のあとに `session-orchestrator` または `plan-architect` を使って進め方を固めます。
 Codex 環境自体を点検したい場合は、入口に `environment-audit` を置いてから通常の整理へ進みます。
 品質レビューが必要な場合は `review-quality` agent、セキュリティレビューが必要な場合は `review-security` agent を使います。結果を人間向けに整理するときは `change-review` を使います。
+
+### Project-local knowledge
+
+- 共通ハーネスの正本は `dot_codex/`
+- project-specific knowledge の正本は各プロジェクトの `docs/`
+- 各プロジェクトのルート `AGENTS.md` は短いポインタとして、`./docs/` を参照させる運用を推奨します
+- `.codex/` は knowledge の標準置き場としては採用しません
 
 ### Core skills
 

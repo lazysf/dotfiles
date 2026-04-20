@@ -1,0 +1,8 @@
+prefix_rule(
+  pattern = ["uv", "add"],
+  decision = "prompt",
+  justification = "uv add は依存定義を更新するため都度確認する。",
+  match = [
+    "uv add requests",
+  ],
+)

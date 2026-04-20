@@ -1,0 +1,8 @@
+prefix_rule(
+  pattern = ["uv", "pip", "install"],
+  decision = "prompt",
+  justification = "uv pip install は Python 依存を追加するため都度確認する。",
+  match = [
+    "uv pip install requests",
+  ],
+)
