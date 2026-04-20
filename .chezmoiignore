@@ -1,3 +1,4 @@
+# Git-managed, but not deployed by chezmoi
 .DS_Store
 .gitignore
 .pre-commit-config.yaml
@@ -5,6 +6,10 @@
 AGENTS.md
 LICENSE
 README.md
+docs
+scripts
+
+# OS-specific deployment
 {{- if ne .chezmoi.os "windows" }}
 Documents
 Documents/PowerShell
