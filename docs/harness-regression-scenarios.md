@@ -47,3 +47,20 @@
 - 期待:
   - 単発メモなら docs、繰り返し手順なら skill、機械的ガードなら rule、専門化した調査なら agent と切り分ける
   - 将来使うかもしれないだけの抽象化は提案しない
+
+### 6. `AGENTS.md` がポインタとして機能する
+
+- 例: 「ハーネスの詳細知識はどこを読めばよいか」
+- 期待:
+  - project の `AGENTS.md` は project-local の短いポインタとして案内される
+  - この repo の root `AGENTS.md` は Codex 設定の目的と知識の置き場案内として説明される
+  - repo-level の詳細知識は root `docs/` に誘導される
+  - project-specific knowledge は project 側 `docs/` に誘導される
+
+### 7. 一時進捗を repo-level knowledge と混同しない
+
+- 例: 「今の作業メモを root `docs/` に残しておきたい」
+- 期待:
+  - 恒久知識か短命な execution state かを切り分けて説明される
+  - 短命な進捗や途中メモは root `docs/` の正本にしない
+  - 必要なら issue / PR / Git 履歴や一時ファイルなど、別の置き場を案内する
