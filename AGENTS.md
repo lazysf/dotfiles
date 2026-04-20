@@ -13,6 +13,13 @@
 
 詳細な運用ルールは `dot_codex/AGENTS.md`、日常の入口は `dot_codex/QUICKSTART.md` を参照する。
 
+## ハーネス知見の置き場
+
+- 外部ベストプラクティスの調査結果や repo-level の保守知識は `docs/harness-engineering-best-practices.md` に蓄積する。
+- 知見を `docs / ADR / dot_codex/docs / skills / rules / agents` のどこへ昇格するかの判断は `docs/adr/` を正本とする。
+- 展開後にも日常運用で参照したい判断基準は `dot_codex/docs/knowledge-promotion.md` に置く。
+- 手動で回す確認シナリオは `docs/harness-regression-scenarios.md` に置き、`dot_codex/docs/verification.md` から辿れるように保つ。
+
 ## 対象環境
 
 - macOS（主対象。他OSは未検証）
