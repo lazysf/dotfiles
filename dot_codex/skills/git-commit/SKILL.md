@@ -74,13 +74,16 @@ Git の変更を安全にコミットする依頼に対応する。
 
 - `git status -sb` でコミット後の状態を確認する。
 
-## 出力フォーマット
+## 結果報告
 
-```markdown
-branch: <branch-name>
-commit: <commit-hash>
-message: <commit-subject>
-body: yes|no
-remaining: clean|<remaining summary>
-notes: <only when needed>
-```
+- 最終返答では、コミット結果を通常の返答文の中で簡潔に報告する。
+- 固定テンプレートやキー順は要求しない。
+- prose でも短い箇条書きでもよいが、次の事実は漏らさない。
+  - `branch`
+  - `commit`
+  - `message`
+  - `body` の有無
+  - `remaining` の有無または要約
+  - `notes` が必要な場合の補足
+- `commit-message` は文面作成の内部導線として使ってよいが、その出力ブロックを最終返答へ連結しない。
+- 失敗時は、失敗理由と次に確認すべき点を短く示す。
