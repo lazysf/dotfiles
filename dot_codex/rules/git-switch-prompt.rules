@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["git", "switch"],
+  decision = "prompt",
+  justification = "git switch は branch 切替や新規 branch 作成を伴うため都度確認する。",
+  match = [
+    "git switch main",
+    "git switch -c feature/foo",
+  ],
+)

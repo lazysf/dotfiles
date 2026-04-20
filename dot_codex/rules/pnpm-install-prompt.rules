@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["pnpm", ["add", "install"]],
+  decision = "prompt",
+  justification = "pnpm による依存追加や更新は影響が大きいため都度確認する。",
+  match = [
+    "pnpm add zod",
+    "pnpm install",
+  ],
+)

@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["brew", ["install", "upgrade"]],
+  decision = "prompt",
+  justification = "brew による package 追加や更新は環境全体へ影響するため都度確認する。",
+  match = [
+    "brew install jq",
+    "brew upgrade git",
+  ],
+)

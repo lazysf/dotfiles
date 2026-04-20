@@ -14,3 +14,10 @@ repos:
       - id: mixed-line-ending
         args: ["--fix=no"]
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: verify-codex-harness
+        name: verify codex harness
+        entry: python3 scripts/verify-codex-harness.py
+        language: system
+        pass_filenames: false

@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["git", "clean"],
+  decision = "prompt",
+  justification = "git clean は未追跡ファイルを削除しうるため都度確認する。",
+  match = [
+    "git clean -fd",
+    "git clean -fdx",
+  ],
+)

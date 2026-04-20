@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["git", "reset"],
+  decision = "prompt",
+  justification = "git reset は履歴や staging、worktree を大きく変えうるため都度確認する。",
+  match = [
+    "git reset --hard HEAD~1",
+    "git reset --soft HEAD~1",
+  ],
+)
