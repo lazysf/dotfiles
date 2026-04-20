@@ -1,8 +1,7 @@
 # Codex QUICKSTART
 
 日常のバイブコーディングで毎回迷わないための、最小のチートシートです。
-考え方や詳しい例は [HIGH_QUALITY_VIBE_CODING.md](./HIGH_QUALITY_VIBE_CODING.md)、全体ルールは [AGENTS.md](./AGENTS.md) を参照してください。
-フローや停止線の正式な定義は `AGENTS.md` を優先します。
+詳しい考え方は [HIGH_QUALITY_VIBE_CODING.md](./HIGH_QUALITY_VIBE_CODING.md)、正式ルールは [AGENTS.md](./AGENTS.md)、共通運用 docs は [docs/README.md](./docs/README.md) を参照してください。
 
 ## 3つの依頼レーン
 
@@ -29,7 +28,6 @@
 - 具体的なら、そのまま依頼してよい
 - 情報が散らばっているなら、最初に `request-shaping` を使ってよい
 - `目的 / 背景・事実 / 制約 / 完了条件 / 非目的` は推奨の整理軸であり、全部そろっていなくてもよい
-- `request-shaping` は不足項目を会話から補い、重要な未確定事項だけを残す
 - 既存挙動変更、公開インターフェース、永続化、認証認可、秘密情報、破壊的操作に触れそうなら、最初にその点を明示する
 
 ## Shorthand
@@ -43,6 +41,7 @@
 
 - 全体ルール: [AGENTS.md](./AGENTS.md)
 - 実務ガイド: [HIGH_QUALITY_VIBE_CODING.md](./HIGH_QUALITY_VIBE_CODING.md)
+- 共通 docs: [docs/README.md](./docs/README.md)
 - 依頼の整形: [request-shaping](./skills/request-shaping/SKILL.md)
 - 入口整理: [task-intake](./skills/task-intake/SKILL.md)
 - 探索の足場固め: [workspace-intake](./skills/workspace-intake/SKILL.md)
