@@ -13,6 +13,12 @@
 - 小さな判断は既存文脈に寄せて自走し、大きな判断だけ確認する
 - workspace 外のファイルは、現状確認や diff のための読み取りだけに留める
 
+## 文書の責務
+
+- `AGENTS.md` は、共通ハーネスの運用契約と正式フローの正本を扱う
+- `QUICKSTART.md` は、今回どこから入るかを素早く決める入口を扱う
+- `docs/workflow-guide.md` は、良い依頼例、補足、長めセッションの進め方を扱う
+
 ## Core Principles
 
 1. **既存コンテキスト優先** — 既存規約、既存実装、運用前提に寄せる
@@ -28,25 +34,29 @@
 - 入口の索引は `QUICKSTART.md`
 - 実務ガイドは `docs/workflow-guide.md`
 - 詳細な共通運用 docs は `docs/` を参照する
-- 依頼は必要な段階だけ次の順で進める
-  - `request-shaping`
+- 通常は次の順で、必要な段階だけ進める
   - `task-intake`
   - `workspace-intake`
   - 必要なら `plan-product`
-  - 必要なら `plan-architect`
+  - 長めの作業なら `session-orchestrator`
+  - 技術計画が必要なら `plan-architect`
   - `coding-standards`
   - 必要なら `test-runner`
   - 必要なら `change-review`
   - 必要なら `commit-message`
   - 必要なら `git-commit`
   - 必要なら `git-push`
+- 依頼が散らばっている場合だけ、入口に `request-shaping` を置く
+- 環境自体の点検や整備相談では、入口に `environment-audit` を置いてから通常フローへ戻る
 
 ## 使い分け
 
-- 小さな修正: `task-intake → workspace-intake → coding-standards → test-runner`
-- 探索多めの相談: `request-shaping → task-intake → workspace-intake → 必要なら plan-product`
-- 大きめの変更: `request-shaping → task-intake → workspace-intake → plan-product → 必要なら plan-architect`
-- 環境整備相談: `environment-audit → task-intake → workspace-intake → 必要なら plan-product / plan-architect`
+- 依頼が具体的なら `task-intake` から入る
+- 依頼が散らばっているなら `request-shaping` から入る
+- 要件整理が重いなら `plan-product` を追加する
+- 長めの作業なら `session-orchestrator` を追加する
+- 技術計画が必要なら `plan-architect` を追加する
+- 環境整備相談は `environment-audit` から入る
 
 ## 確認を優先する境界
 
@@ -87,26 +97,10 @@
 - push はユーザーの明示的な指示があるまで実行しない
 - force push は行わない
 
-## Skills
+## Skills の参照先
 
-- コア導線
-  - `request-shaping`
-  - `task-intake`
-  - `workspace-intake`
-  - `plan-product`
-  - `session-orchestrator`
-  - `plan-architect`
-  - `coding-standards`
-  - `test-runner`
-  - `change-review`
-  - `commit-message`
-  - `git-commit`
-- 状況別
-  - `environment-audit`
-  - `debug-fix`
-  - `refactor-safely`
-  - `git-push`
-  - `docs-update`
+- 利用可能な skill の正本は `skills/` 配下とする
+- 入口の判断は `QUICKSTART.md` を参照し、個別の使い方は各 `SKILL.md` を参照する
 
 ## 返答ルール
 
