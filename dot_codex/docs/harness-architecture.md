@@ -21,9 +21,9 @@
 
 ## 責務分担
 
-- 入口の説明は `QUICKSTART.md`
+- 入口判断は `QUICKSTART.md`
 - 正式な運用契約は `AGENTS.md`
-- 実装・運用の具体例は `docs/workflow-guide.md`
+- 実装・運用の具体例と補足は `docs/workflow-guide.md`
 - 実行挙動の制御は `private_config.toml.tmpl` と `rules/`
 - 継続利用するノウハウは `skills/`
 

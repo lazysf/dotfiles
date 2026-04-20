@@ -2,26 +2,27 @@
 
 日常のバイブコーディングで毎回迷わないための、最小のチートシートです。
 正式ルールは [AGENTS.md](./AGENTS.md)、詳しい実務ガイドは [docs/workflow-guide.md](./docs/workflow-guide.md)、共通運用 docs の入口は [docs/README.md](./docs/README.md) を参照してください。
+この文書のレーンは入口選択の目安であり、正式な順序や shorthand の意味定義は `AGENTS.md` を優先します。
 
 ## 3つの依頼レーン
 
 ### 1. 小さな修正
 
 - 対象: 単一ファイル中心の修正、軽微な設定変更、局所的な不具合修正
-- 基本レーン: `task-intake → workspace-intake → coding-standards → test-runner`
+- 開始点: `task-intake`
+- 追加判断: 近傍探索は `workspace-intake`、実装は `coding-standards`、検証は必要に応じて `test-runner`
 
 ### 2. 探索多めの相談
 
 - 対象: 背景が散らばっている相談、先に要件整理したい依頼
-- 基本レーン: `request-shaping → task-intake → workspace-intake → 必要なら plan-product`
+- 開始点: `request-shaping`
+- 追加判断: 入口整理は `task-intake`、探索は `workspace-intake`、要件が重ければ `plan-product`
 
 ### 3. 大きめ変更
 
 - 対象: 複数ファイル変更、段階的に確認しながら進めたい作業
-- 基本レーン: `request-shaping → task-intake → workspace-intake → plan-product → 必要なら session-orchestrator → 必要なら plan-architect → coding-standards → test-runner → change-review`
-- 品質レビューが必要なら: `... → test-runner → review-quality agent → change-review`
-- セキュリティレビューが必要なら: `... → test-runner → review-security agent → change-review`
-- 両方必要なら: `... → test-runner → review-quality agent / review-security agent → change-review`
+- 開始点: `task-intake`
+- 追加判断: 依頼が散らばっている場合のみ `request-shaping` を先頭に置き、要件整理が必要なら `plan-product`、長めなら `session-orchestrator`、技術計画が必要なら `plan-architect`
 
 ## 最初の頼み方
 
@@ -33,20 +34,11 @@
 ## Shorthand
 
 - 短く頼むなら `review-quality でレビューして`
-- この shorthand は既定で `review-quality agent → change-review` を意味し、`review-security` でも同様です
-- review agent はレビュー本体、`change-review` は人間向けの出口整理を担当します
-- raw JSON / 生出力が必要な場合だけ、`change-review` の省略を明示します
+- shorthand の正式な意味と省略規則は [AGENTS.md](./AGENTS.md) の `レビュー方針` を参照する
 
 ## 詳細を読む先
 
 - 全体ルール: [AGENTS.md](./AGENTS.md)
 - 実務ガイド: [docs/workflow-guide.md](./docs/workflow-guide.md)
 - 共通 docs: [docs/README.md](./docs/README.md)
-- 依頼の整形: [request-shaping](./skills/request-shaping/SKILL.md)
-- 入口整理: [task-intake](./skills/task-intake/SKILL.md)
-- 探索の足場固め: [workspace-intake](./skills/workspace-intake/SKILL.md)
-- 要件整理: [plan-product](./skills/plan-product/SKILL.md)
-- 環境点検: [environment-audit](./skills/environment-audit/SKILL.md)
-- 長い作業の進行整理: [session-orchestrator](./skills/session-orchestrator/SKILL.md)
-- 実装の品質基準: [coding-standards](./skills/coding-standards/SKILL.md)
-- 出口整理: [change-review](./skills/change-review/SKILL.md)
+- 利用可能な skills: [skills/](./skills/)
