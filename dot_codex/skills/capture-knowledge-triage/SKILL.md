@@ -1,6 +1,6 @@
 ---
 name: capture-knowledge-triage
-description: 知識仕分け手順。今回の作業で得た知識が残すべきものか、個人メモか共有知識か、どこへ置くべきかを整理する。
+description: 「今回の知見をどこに残すべきか決めたい」「共有知識にするか判断したい」といった依頼で使う。残すべき知識か、共有か個人か、通常知見か判断記録か、どの置き場に送るかを整理する。既存文書の更新は `docs-update`、文面草案の作成は `write-knowledge-note` / `write-adr` で扱う。
 metadata:
   short-description: 知識の仕分け
 ---

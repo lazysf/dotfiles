@@ -1,6 +1,6 @@
 ---
 name: write-adr
-description: ADR 草案作成手順。architecture decision record、設計判断、運用判断、互換性判断、採用 / 不採用の決定を `root docs/adr/` 向けの番号付き標準形 Markdown 草案へ整理する。
+description: 「この判断を ADR 草案にしたい」「採用 / 不採用の理由を残したい」といった判断記録の依頼で使う。背景、決定、影響を `docs/adr/NNNN-kebab-case-title.md` 向けの ADR 草案へ整理する。置き場判断は `capture-knowledge-triage`、通常知見メモは `write-knowledge-note` で扱う。
 metadata:
   short-description: ADR 草案作成
 ---

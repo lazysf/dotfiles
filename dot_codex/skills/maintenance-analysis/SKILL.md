@@ -1,6 +1,6 @@
 ---
 name: maintenance-analysis
-description: maintenance 案件の分析手順。最小リファクタ境界と保護すべき挙動を整理する。
+description: 「リファクタ境界を決めたい」「保守性改善でどの挙動を守るか整理したい」といった maintenance 案件で使う。最小のリファクタ境界、今回の整理範囲、保護すべき既存挙動、重点確認点を整理する。性能や安定性の改善が主題なら `quality-analysis`、新機能追加が主題なら feature 側を優先する。
 metadata:
   short-description: Maintenance 分析
 ---

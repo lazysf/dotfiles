@@ -1,6 +1,6 @@
 ---
 name: research
-description: 調査系案件の詳細手順。事実、未知、選択肢、推奨を整理する。
+description: 「まず調べたい」「原因や影響、選択肢を事実ベースで整理したい」といった調査依頼で使う。初見 repo の grounding を含め、facts、unknowns、options、recommendation、next_step を整理する。調査結果を前提にした実装は `code-implementation-loop`、bugfix の診断は `bug-diagnosis` など個別 skill を優先する。
 metadata:
   short-description: 調査手順
 ---

@@ -1,6 +1,6 @@
 ---
 name: write-knowledge-note
-description: 通常知見メモ作成手順。手順メモ、確認ポイント、落とし穴、運用メモ、再発防止メモを `root docs/knowledge/` 向けの短い Markdown 草案へ整理する。
+description: 「通常知見として残すメモを書きたい」「手順や落とし穴を knowledge note 草案にしたい」といった依頼で使う。手順メモ、確認ポイント、落とし穴、運用メモを `docs/knowledge/kebab-case-title.md` 向けの短い Markdown 草案へ整理する。判断記録は `write-adr`、既存文書の更新は `docs-update` で扱う。
 metadata:
   short-description: 通常知見メモ作成
 ---
