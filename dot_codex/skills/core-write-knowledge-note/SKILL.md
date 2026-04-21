@@ -1,6 +1,6 @@
 ---
 name: core-write-knowledge-note
-description: 通常知見メモ草案を作る skill。手順メモ、確認ポイント、落とし穴、運用メモ、再発防止メモを `root docs/knowledge/` 向けの短い Markdown 草案へ整理したい場合に使用する。
+description: Capture Knowledge フェーズの内部 writer 手順。手順メモ、確認ポイント、落とし穴、運用メモ、再発防止メモを `root docs/knowledge/` 向けの短い Markdown 草案へ整理する。
 metadata:
   short-description: 通常知見メモ作成
 ---

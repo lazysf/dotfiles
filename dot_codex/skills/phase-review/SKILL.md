@@ -20,11 +20,16 @@ Review 工程の入口をそろえ、重大な欠陥や受け入れ条件との�
 
 単独依頼では、この入力だけでレビュー対象、懸念点、再確認の要否まで返せることを重視する。
 
+## uses
+
+- `core-code-review`
+- `core-review-findings-summary`
+
 ## 進め方
 
-1. `core-code-review` でレビュー対象と必要な reviewer agent を決める
-2. `quality-reviewer` を既定で使い、必要時だけ `security-reviewer` を追加する
-3. `core-review-findings-summary` で findings-first の出口へ整理する
+1. まず `$core-code-review` を使い、レビュー対象の確定と必要な reviewer agent の起動方針をそろえる
+2. `quality-reviewer` を既定とし、必要時だけ `security-reviewer` を追加する判断は `core-code-review` の中で扱う
+3. 最後に `$core-review-findings-summary` を使い、findings-first の出口へ統合する
 
 ## 出力
 

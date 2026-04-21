@@ -1,0 +1,7 @@
+interface:
+  display_name: "Core Implementation Planning"
+  short_description: "Internal implementation planning step for phases"
+  default_prompt: "Use $core-implementation-planning as an internal phase step to turn settled requirements into implementation order, scope, and verification."
+
+policy:
+  allow_implicit_invocation: false

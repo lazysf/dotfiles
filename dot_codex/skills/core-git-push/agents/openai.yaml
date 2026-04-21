@@ -1,0 +1,7 @@
+interface:
+  display_name: "Core Git Push"
+  short_description: "Internal publish execution step for phases"
+  default_prompt: "Use $core-git-push as an internal phase step to validate push conditions and publish the intended branch safely."
+
+policy:
+  allow_implicit_invocation: false
