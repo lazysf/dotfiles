@@ -1,7 +1,9 @@
-# macOS system files
+# OS files
 .DS_Store
 
-# Python bytecode files
+# Python cache
 __pycache__/
 *.pyc
+
+# Local env
 .venv/
