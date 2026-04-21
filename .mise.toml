@@ -48,7 +48,7 @@ depends = ["lint:markdown", "lint:yaml", "lint:lua"]
 
 [tasks."test:harness"]
 description = "Verify Codex harness docs and metadata"
-run = "python3 scripts/verify-codex-harness.py"
+run = "uv run python scripts/verify-codex-harness.py"
 
 [tasks.test]
 description = "Run tests"

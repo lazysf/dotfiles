@@ -5,11 +5,17 @@
 .markdownlint.jsonc
 .mise.toml
 .pre-commit-config.yaml
+.python-version
 LICENSE
 README.md
 nvim.yml
+pyproject.toml
 selene.toml
 tmp
+uv.lock
+.venv
+**/__pycache__
+**/*.pyc
 
 # Windows only
 {{- if ne .chezmoi.os "windows" }}
