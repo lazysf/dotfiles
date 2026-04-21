@@ -70,6 +70,20 @@
   - `product-planning`, `code-review`, `git-commit` など、依頼内容に近い skill がそのまま案内される
   - 旧 implicit invocation 前提の説明が残っていない
   - 旧導線向けの内部専用表現が skill の入口説明に残っていない
+  - 近接 skill の境界が自然文プロンプトでも崩れない
+- 代表プロンプト:
+  - 「依頼文が散らばっているので整えたい」 -> `request-shaping`
+  - 「今回どこまでやるか先に軽く決めたい」 -> `task-intake`
+  - 「成功条件と非目的を詰めたい」 -> `product-planning`
+  - 「実装順序と影響範囲を決めたい」 -> `implementation-planning`
+  - 「README だけ更新したい」 -> `docs-update`
+  - 「今回の知見をどこに残すか決めたい」 -> `capture-knowledge-triage`
+  - 「通常知見メモの草案を書きたい」 -> `write-knowledge-note`
+  - 「この判断を ADR 草案にしたい」 -> `write-adr`
+  - 「この差分をレビューしたい」 -> `code-review`
+  - 「レビュー findings を整理したい」 -> `review-findings-summary`
+  - 「この依頼をどの分類で扱うべきか迷う」 -> `task-classification`
+  - 「バグ修正の結果を確認したい」 -> `change-verification`
 
 ### 8. docs-only 依頼が `docs-update` に導かれる
 
@@ -95,6 +109,15 @@
   - maintenance は `maintenance-analysis -> code-implementation-loop -> change-testing -> code-review`
   - feature は `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> code-review`
   - `docs-update` 追加後も、既存の skill 導線が別用途へ押し流されない
+
+### 11. planning reviewer が skill-first 導線を壊さない
+
+- 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
+- 期待:
+  - 正式入口は引き続き `product-planning` / `implementation-planning` として案内される
+  - `product-planning-reviewer` / `implementation-planning-reviewer` は内部補助 reviewer として扱われる
+  - reviewer の raw JSON をそのままユーザー向けの最終返答に流さない
+  - planning reviewer の追加後も、`code-review` は `quality-reviewer` / `security-reviewer` 中心のままで説明と起動条件が崩れない
 
 ## 関連文書
 
