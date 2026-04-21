@@ -1,13 +1,14 @@
 ---
 name: phase-verify
-description: 検証工程。bugfix / security / quality / compat の修正結果と回帰を確認する。
+description: Deprecated wrapper。旧 Verify 導線互換のために `core-change-verification` へ受け渡す。
 metadata:
   short-description: Verify 工程
 ---
 
 # Phase Verify
 
-検証工程の入口をそろえ、修正や追従が効いた証拠を整理する。
+旧 Verify 導線互換のために、修正結果や追従結果の確認依頼を `core-change-verification` へ橋渡しする。
+新規の正式入口としては使わず、`core-change-verification` を直接使う。
 
 ## 入力
 
@@ -25,6 +26,10 @@ metadata:
 - `verification_result`
 - `regression_check`
 - `residual_risks`
+
+## 次に渡す情報
+
+- `verification_result`, `regression_check`, `residual_risks` を最終報告や追加修正判断へ渡す
 
 ## 完了条件
 

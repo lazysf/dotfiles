@@ -1,14 +1,13 @@
 ---
 name: core-capture-knowledge-triage
-description: Capture Knowledge フェーズの内部仕分け手順。今回の作業で得た知識が残すべきものか、個人メモか共有知識か、どこへ置くべきかを整理する。
+description: 知識仕分け手順。今回の作業で得た知識が残すべきものか、個人メモか共有知識か、どこへ置くべきかを整理する。
 metadata:
   short-description: 知識の仕分け
 ---
 
 # Capture Knowledge Triage
 
-Capture Knowledge 工程の内部手順として、今回の作業で得た知識を残す / 残さない、個人用 / 共有用、どこへ置くか、に分ける。
-フェーズ全体の入口は `phase-capture-knowledge` を参照する。
+今回の作業で得た知識を残す / 残さない、個人用 / 共有用、どこへ置くか、に分ける。
 
 ## 手順
 

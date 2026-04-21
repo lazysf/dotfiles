@@ -1,6 +1,6 @@
 ---
 name: core-review-findings-summary
-description: Review フェーズの内部出口整理手順。`core-code-review` や reviewer 結果を findings-first で整理し、未検証事項と残リスクを分けて `phase-review` の出力へつなぐ。
+description: レビュー出口整理手順。`core-code-review` や reviewer 結果を findings-first で整理し、未検証事項と残リスクを分ける。
 metadata:
   short-description: レビュー要約
 ---
@@ -10,7 +10,6 @@ metadata:
 reviewer 結果を、人間が次の判断に使いやすい形へ整える。
 このスキルは、reviewer agent の代替ではなく、出口整理を担う。
 レビュー対象の確定と reviewer 起動は `core-code-review` が担い、このスキルは findings-first の整理に専念する。
-フェーズ全体の入口は `phase-review` を参照する。
 
 ## 基本方針
 

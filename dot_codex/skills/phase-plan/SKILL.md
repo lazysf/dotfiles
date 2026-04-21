@@ -1,15 +1,14 @@
 ---
 name: phase-plan
-description: 共通 Plan 工程。依頼整理、要件整理、技術計画のどこまで必要かを見極め、関連 core へ受け渡す。
+description: Deprecated wrapper。旧 Plan 導線互換のために関連する planning 系 `core-*` へ受け渡す。
 metadata:
   short-description: Plan 工程
 ---
 
 # Phase Plan
 
-Plan 工程の入口をそろえ、依頼を実装可能な計画状態まで引き上げる。
-この phase は workflow 内の工程としてだけでなく、要件定義だけ、計画作成だけといった明確な単独依頼の正式入口としても使う。
-この phase は詳細手順を自前で持たず、どの core をどの順で使うかと、各 core の入出力をそろえる薄い orchestrator に徹する。
+旧 Plan 導線互換のために、依頼整理や要件整理を planning 系 `core-*` へ橋渡しする。
+新規の正式入口としては使わず、`core-request-shaping`, `core-task-intake`, `core-product-planning`, `core-implementation-planning` を直接使う。
 
 ## 入力
 
@@ -46,6 +45,11 @@ Plan 工程の入口をそろえ、依頼を実装可能な計画状態まで引
 - `verification_outline`
 - `open_questions`
 - `assumptions`
+
+## 次に渡す情報
+
+- 実装へ進む場合は `plan_scope`, `success_criteria`, `implementation_outline` を `phase-implement` へ渡す
+- 確認重視の場合は `verification_outline` を `phase-test` や `phase-review` の起点として渡す
 
 ## 完了条件
 

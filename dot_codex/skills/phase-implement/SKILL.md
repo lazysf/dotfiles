@@ -1,14 +1,14 @@
 ---
 name: phase-implement
-description: 共通 Implement 工程。合意した方針に沿って実装し、必要な確認ループへ受け渡す。
+description: Deprecated wrapper。旧 Implement 導線互換のために `core-code-implementation-loop` へ受け渡す。
 metadata:
   short-description: Implement 工程
 ---
 
 # Phase Implement
 
-Implement 工程の入口をそろえ、変更意図に対応する実装と確認を進める。
-この phase は詳細手順を自前で持たず、既定の実装 core と確認結果の受け渡しに徹する薄い orchestrator である。
+旧 Implement 導線互換のために、実装依頼を `core-code-implementation-loop` へ橋渡しする。
+新規の正式入口としては使わず、`core-code-implementation-loop` を直接使う。
 
 ## 入力
 
@@ -33,6 +33,12 @@ Implement 工程の入口をそろえ、変更意図に対応する実装と確�
 - `implemented_scope`
 - `executed_checks`
 - `remaining_risks`
+
+## 次に渡す情報
+
+- `phase-test` へ進む場合は `change_summary`, `implemented_scope`, `executed_checks` を渡す
+- `phase-review` へ進む場合は `change_summary`, `executed_checks`, `remaining_risks` を渡す
+- `phase-verify` へ進む場合は `change_summary`, `implemented_scope`, `executed_checks`, `remaining_risks` を渡す
 
 ## 完了条件
 

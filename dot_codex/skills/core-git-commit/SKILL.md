@@ -1,15 +1,14 @@
 ---
 name: core-git-commit
-description: Commit フェーズの内部実行手順。`phase-commit` から渡された差分境界に対して、Git コミット実行、ステージ範囲確認、コミットメッセージ作成を担う。プッシュは core-git-push を使う。
+description: Git commit 手順。差分境界に対して、コミット実行、ステージ範囲確認、コミットメッセージ作成を担う。プッシュは `core-git-push` を使う。
 metadata:
   short-description: Git commit
 ---
 
 # Core Git Commit
 
-Commit 工程の内部手順として、Git の変更を安全にコミットし、必要ならコミットメッセージを作成・見直しする。
+Git の変更を安全にコミットし、必要ならコミットメッセージを作成・見直しする。
 このスキルは、Git 導線のうち `1コミット1変更`、staging 粒度、文面作成の責務を担う。
-フェーズ全体の入口は `phase-commit` を参照する。
 
 ## 基本方針
 

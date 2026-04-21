@@ -1,13 +1,13 @@
 ---
 name: core-task-classification
-description: 要求分類の詳細手順。ユーザー要求を単一主分類へ倒し、後続 workflow を決める。
+description: 要求分類の補助手順。ユーザー要求を単一主分類へ倒し、関連する `core-*` 候補を整理する。
 metadata:
   short-description: 要求分類
 ---
 
 # Core Task Classification
 
-ユーザー要求を `research` / `bugfix` / `feature` / `security` / `quality` / `maintenance` / `compat` のいずれか 1 つへ分類する。
+ユーザー要求を `research` / `bugfix` / `feature` / `security` / `quality` / `maintenance` / `compat` のいずれか 1 つへ分類し、関連する `core-*` 候補を整理する。
 
 ## 対象
 
@@ -49,7 +49,7 @@ metadata:
 - `primary_category`
 - `reason`
 - `boundary_note`
-- `selected_workflow`
+- `suggested_core_skills`
 - `stop_conditions`
 
 ## 停止条件

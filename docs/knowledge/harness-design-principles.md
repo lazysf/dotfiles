@@ -17,6 +17,7 @@
 - まず repo-level knowledge として調査結果や運用知見を `docs/` に残し、その後で `dot_codex/` に昇格すべきものだけを選ぶ
 - `dot_codex/` には、展開後にも価値があり、workspace 横断で再利用するものだけを置く
 - 大きな runtime surface の追加よりも、docs、verification、rules、skills の整合を優先する
+- 旧導線 wrapper を増やすより、`core-*` の発火条件と説明を揃えることを優先する
 
 ## 採用している考え方
 

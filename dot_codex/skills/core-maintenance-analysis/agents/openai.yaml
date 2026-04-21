@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Maintenance Analysis"
-  short_description: "Internal maintenance analysis step for phases"
-  default_prompt: "Use $core-maintenance-analysis as an internal phase step to set refactor boundaries and protected behavior."
-
-policy:
-  allow_implicit_invocation: false

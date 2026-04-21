@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Task Intake"
-  short_description: "Internal intake step for plan phases"
-  default_prompt: "Use $core-task-intake as an internal phase step to set the current scope, success condition, and immediate checks."
-
-policy:
-  allow_implicit_invocation: false

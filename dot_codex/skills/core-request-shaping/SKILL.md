@@ -1,15 +1,14 @@
 ---
 name: core-request-shaping
-description: Plan フェーズの内部依頼整形手順。`phase-plan` から渡された曖昧な依頼や散在した要求を、Codex が扱いやすい短い実装ブリーフへ整える。
+description: 依頼整形手順。曖昧な依頼や散在した要求を、Codex が扱いやすい短い実装ブリーフへ整える。
 metadata:
   short-description: 依頼の整形
 ---
 
 # Request Shaping
 
-Plan 工程の内部手順として、散らばった相談を実装や探索に渡せる短いブリーフへ整える。
+散らばった相談を実装や探索に渡せる短いブリーフへ整える。
 目的は、散らばった相談を `実装や探索に渡せる短いブリーフ` に整えること。
-フェーズ全体の入口は `phase-plan` を参照する。
 
 ## 前提
 

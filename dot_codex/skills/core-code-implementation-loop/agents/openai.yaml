@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Code Implementation Loop"
-  short_description: "Internal implementation loop step for phases"
-  default_prompt: "Use $core-code-implementation-loop as an internal phase step to drive test-first implementation, minimal changes, and rechecks."
-
-policy:
-  allow_implicit_invocation: false

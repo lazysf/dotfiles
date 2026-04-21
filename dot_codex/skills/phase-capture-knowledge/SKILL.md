@@ -1,14 +1,14 @@
 ---
 name: phase-capture-knowledge
-description: 共通 Capture Knowledge 工程。残すべき知識の要否を整理し、適切な core へ渡す。
+description: Deprecated wrapper。旧 Knowledge 導線互換のために knowledge 系 `core-*` へ受け渡す。
 metadata:
   short-description: Knowledge 工程
 ---
 
 # Phase Capture Knowledge
 
-Capture Knowledge 工程の入口をそろえ、残すべき知識だけを適切な置き場へ送る。
-この phase は docs を増やすこと自体を目的にせず、知識の仕分けと writer core への受け渡しを担う。
+旧 Knowledge 導線互換のために、知識の仕分けや文面化を knowledge 系 `core-*` へ橋渡しする。
+新規の正式入口としては使わず、`core-capture-knowledge-triage`, `core-write-knowledge-note`, `core-write-adr` を直接使う。
 
 ## 入力
 
@@ -36,6 +36,11 @@ Capture Knowledge 工程の入口をそろえ、残すべき知識だけを適�
 - `destination`
 - `writer_core`
 - `draft_status`
+
+## 次に渡す情報
+
+- 知識を残す場合は `destination`, `writer_core`, `draft_status` を writer core や後続共有判断へ渡す
+- 残さない場合は `knowledge_decision` だけを簡潔に返す
 
 ## 完了条件
 

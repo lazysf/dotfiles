@@ -1,13 +1,14 @@
 ---
 name: phase-compat-assessment
-description: 互換性評価工程。外部変化の影響範囲と追従方針を整理する。
+description: Deprecated wrapper。旧 Compat 導線互換のために `core-compat-assessment` へ受け渡す。
 metadata:
   short-description: Compat Assessment 工程
 ---
 
 # Phase Compat Assessment
 
-互換性評価工程の入口をそろえ、追従すべき外部変化と検証観点を整理する。
+旧 Compat 導線互換のために、互換性評価依頼を `core-compat-assessment` へ橋渡しする。
+新規の正式入口としては使わず、`core-compat-assessment` を直接使う。
 
 ## 入力
 
@@ -25,6 +26,10 @@ metadata:
 - `affected_surface`
 - `adaptation_scope`
 - `verification_focus`
+
+## 次に渡す情報
+
+- `adaptation_scope` と `verification_focus` を `phase-implement` へ渡す
 
 ## 完了条件
 

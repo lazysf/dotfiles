@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Compat Assessment"
-  short_description: "Internal compat assessment step for phases"
-  default_prompt: "Use $core-compat-assessment as an internal phase step to organize compatibility gaps, affected surfaces, and adaptation scope."
-
-policy:
-  allow_implicit_invocation: false

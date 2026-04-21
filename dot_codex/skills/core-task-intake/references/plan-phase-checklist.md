@@ -1,4 +1,4 @@
-# Plan Phase Checklist
+# Planning Checklist
 
 - 依頼の主語を一文で言えるか
 - 今回の対象と非対象が分かれているか
