@@ -71,6 +71,31 @@
   - 旧 implicit invocation 前提の説明が残っていない
   - 旧導線向けの内部専用表現が skill の入口説明に残っていない
 
+### 8. docs-only 依頼が `docs-update` に導かれる
+
+- 例: 「README の手順だけ更新したい」「既存の運用 docs を実装に合わせて直したい」
+- 期待:
+  - docs-only の依頼では `docs-update` が正式入口として案内される
+  - 主分類を増やさず、既存ドキュメント更新の専用入口として扱われる
+  - 知識の置き場判断と混同されない
+
+### 9. 知識の置き場相談は knowledge 系導線に残る
+
+- 例: 「今回の知見をどこに残すべきか」「通常知見か ADR かを決めたい」
+- 期待:
+  - 入口は `capture-knowledge-triage` に導かれる
+  - 通常知見なら `write-knowledge-note`、判断記録なら `write-adr` に渡される
+  - `docs-update` が知識の置き場判断を奪わない
+
+### 10. 既存の主要導線が壊れていない
+
+- 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
+- 期待:
+  - bugfix は `bug-diagnosis -> code-implementation-loop -> change-verification`
+  - maintenance は `maintenance-analysis -> code-implementation-loop -> change-testing -> code-review`
+  - feature は `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> code-review`
+  - `docs-update` 追加後も、既存の skill 導線が別用途へ押し流されない
+
 ## 関連文書
 
 - [Harness Design Principles](./harness-design-principles.md)

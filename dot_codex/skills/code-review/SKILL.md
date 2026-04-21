@@ -1,14 +1,14 @@
 ---
 name: code-review
-description: レビュー手順。対象差分に対し、quality-reviewer を基本として必要に応じて security-reviewer も呼び出し、findings-first の出口へつなぐ。
+description: レビュー手順。対象差分に対し、quality-reviewer を基本として必要に応じて security-reviewer も呼び出し、`review-findings-summary` へ渡す。
 metadata:
   short-description: レビュー内部手順
 ---
 
 # Code Review
 
-コードレビュー対象を確定し reviewer agent の結果を統合する。
-このスキルは、レビュー本体を広く自前でやり直すのではなく、既存 reviewer agent を起動して結果を統合する役割に徹する。
+コードレビュー対象を確定し reviewer agent を起動する。
+このスキルは、レビュー本体を広く自前でやり直すのではなく、既存 reviewer agent の起動と入力整理に徹し、詳細な出口整理は `review-findings-summary` に委ねる。
 
 ## 基本方針
 
@@ -17,7 +17,7 @@ metadata:
 - reviewer agent は補助役であり、導線の主導権は持たせない。
 - reviewer agent は差分起点の read-only 用途に限り、差分が曖昧なまま範囲を広げない。
 - agent の raw JSON は内部入力として扱い、最終返答は findings-first の人間向け要約にする。
-- 出口整理は `review-findings-summary` の方針に合わせる。
+- 詳細な出口整理は `review-findings-summary` の方針に合わせる。
 
 ## 対象
 
@@ -60,24 +60,23 @@ metadata:
   - デプロイや設定の境界
 - 上記に明確に当てはまらない懸念は、一般論で security review を増やさない。
 
-### 4) 必要なら両方の結果を統合する
+### 4) 必要なら両方の結果をそろえる
 
 - quality と security の両方が必要な場合は、可能なら独立に実行してから統合する。
 - 並列実行できない環境では順次実行でよい。
 - 両方の agent を使った場合でも、同じ指摘は重複して返さない。
 - 根拠が弱い懸念は findings に入れず、open questions または residual risks に落とす。
 
-### 5) review-findings-summary 形式で返す
+### 5) `review-findings-summary` へ渡す入力をそろえる
 
-- 最終返答は raw JSON ではなく、人間向けの findings-first 要約にする。
+- 最終返答の詳細な整形は `review-findings-summary` に委ねる。
 - 少なくとも次を落とさない。
   - 対象差分または対象範囲
   - 確認した事実
   - 実施済み検証
   - 未検証事項
-  - findings または `重大な指摘なし`
-  - Residual risks
-- 必要な場合は Open questions を分けて示す。
+  - 今回レビューしない範囲
+  - reviewer agent の findings / open questions / residual risks
 - 出口整理は `review-findings-summary` の方針に合わせ、次に修正判断しやすい粒度へ整える。
 
 ## 出力ガイド

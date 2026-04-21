@@ -77,12 +77,14 @@ metadata:
 ### 5) 重い整理へ飛びすぎない
 
 - 次に repo の関連ファイルや規約を調べるのか、要件整理を深めるのかを決める。
+- 初見 repo で、何を読むべきかや規約の所在がまだ見えていない場合は `research` で grounding を先に取る。
 - 優先順位や制約の整理が重いなら `product-planning` を検討する。
 - 実装順序や影響範囲を詰める段階なら `implementation-planning` を検討する。
 
 ## 使い分け
 
 - 軽い入口整理で足りるときは、この `task-intake` を使う。
+- 初見 repo や規約確認が必要で、探索順を先にそろえたいときは `research` へ進む。
 - 追加の要件整理が必要なときは `product-planning` へ進む。
 - 実装順序や影響範囲を詰める段階では `implementation-planning` へ進む。
 - 依頼文自体が散らばっている場合は、先に `request-shaping` を使う。
