@@ -11,6 +11,7 @@
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
+docs-only の依頼で、成果物が既存ドキュメント更新に限られる場合は、主分類を増やさず `docs-update` を直接入口として使ってよい。
 
 ## 要求分類
 
@@ -33,6 +34,7 @@
 - `quality`: `quality-analysis -> code-implementation-loop -> change-verification`
 - `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> code-review`
 - `compat`: `compat-assessment -> code-implementation-loop -> change-verification`
+- `docs-only artifact`: `docs-update`
 - `knowledge`: `capture-knowledge-triage -> write-knowledge-note` または `write-adr`
 - `git`: `git-commit`, `git-push`
 - `classification helper`: `task-classification`

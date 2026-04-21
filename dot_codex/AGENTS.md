@@ -34,6 +34,7 @@
 - 調査: `research`
 - 診断: `bug-diagnosis`, `quality-analysis`, `security-scan`, `compat-assessment`, `maintenance-analysis`
 - 実装: `code-implementation-loop`
+- 文書更新: `docs-update`
 - 確認: `change-testing`, `change-verification`, `code-review`
 - 知識化: `capture-knowledge-triage`, `write-knowledge-note`, `write-adr`
 - Git: `git-commit`, `git-push`

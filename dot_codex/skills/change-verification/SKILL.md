@@ -10,12 +10,20 @@ metadata:
 bugfix / security / quality / compat 案件で、修正や追従の効果を確認する。
 このスキルは修正結果と回帰確認を担い、feature / maintenance の受け入れ確認は `change-testing` に委ねる。
 
+## 基本方針
+
+- 修正前症状や追従前ギャップに最も近い確認を先に置く。
+- 回帰観点は修正効果と分けて整理する。
+- 直接確認できない場合は、代替確認と未確認理由を明示する。
+- 未確認や結果のぶれは `residual_risks` に残す。
+
 ## 手順
 
 1. 修正前症状または追従前ギャップに対応する確認を `verification_plan` に置く
-2. 実行結果を `verification_result` に整理する
-3. 回帰観点を `regression_check` に整理する
-4. 未確認や残リスクを `residual_risks` に残す
+2. 直接確認できない項目には、代替確認と未確認理由を添える
+3. 実行結果を `verification_result` に整理する
+4. 回帰観点を `regression_check` に整理する
+5. 未確認や残リスクを `residual_risks` に残す
 
 ## 判断基準
 
@@ -23,6 +31,8 @@ bugfix / security / quality / compat 案件で、修正や追従の効果を確�
 - security は hardening が効いたかと副作用を見る
 - quality は改善対象の品質特性に変化があるかを見る
 - compat は外部変化への追従が成立したかを見る
+- 実行できない確認は、理由と代替確認をセットで残す
+- 同一条件で結果がぶれる場合は、未解消リスクとして扱う
 
 ## 出力フォーマット
 
