@@ -1,14 +1,14 @@
 ---
 name: entry-classify
-description: 共通入口。ユーザー要求を単一主分類へ倒し、次に入る workflow を決める。
+description: Deprecated wrapper。旧導線互換のために要求を整理し、関連する `core-*` 候補へつなぐ。
 metadata:
   short-description: 分類入口
 ---
 
 # Entry Classify
 
-全導線の共通入口をそろえ、要求を単一主分類へ整理する。
-この skill は workflow の一工程ではなく、workflow 選択前に使う入口である。
+旧導線互換のために、要求をざっくり整理して関連する `core-*` 候補へつなぐ。
+新規の正式入口としては使わず、まず対応する `core-*` を直接使う。
 
 ## 入力
 
@@ -25,9 +25,9 @@ metadata:
 - `primary_category`
 - `reason`
 - `boundary_note`
-- `selected_workflow`
+- `suggested_core_skills`
 - `stop_conditions`
 
 ## 完了条件
 
-- 分類理由と選んだ workflow を短く説明できる
+- 分類理由と次に見るべき `core-*` を短く説明できる

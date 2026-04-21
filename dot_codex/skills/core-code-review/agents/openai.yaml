@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Code Review"
-  short_description: "Internal review orchestration step for phases"
-  default_prompt: "Use $core-code-review as an internal phase step to scope the review and coordinate the right reviewer agents."
-
-policy:
-  allow_implicit_invocation: false

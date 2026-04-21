@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Bug Diagnosis"
-  short_description: "Internal bugfix diagnosis step for phases"
-  default_prompt: "Use $core-bug-diagnosis as an internal phase step to organize symptoms, repro conditions, cause candidates, and fix scope."
-
-policy:
-  allow_implicit_invocation: false

@@ -1,16 +1,16 @@
 # Classification-Driven Workflow Surface
 
 この文書は、`dot_codex/AGENTS.md` で使う開発フロー surface の基準をまとめる。
+現在の正式な公開 surface は `core-*` であり、`entry-classify` と `phase-*` は移行期間中の deprecated wrapper として残す。
 
 ## Surface の責務
 
-- `entry-classify`: 全導線の共通入口。要求を単一主分類へ倒し、次に入る workflow を決める
-- `workflow-*`: 分類後の案件タイプ別導線。どの phase をどの順で通すかを決める
-- `phase-*`: 再利用可能な工程。目的、開始条件、完了条件、入出力、使用 core を定義する薄い orchestrator
-- `core-*`: 主役となる実行手順。詳細手順、判断基準、停止条件、出力フォーマットを定義する
+- `core-*`: 主役となる実行手順。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
+- `entry-classify`: 旧導線互換の整理 wrapper。新規の正式入口にはしない
+- `phase-*`: 旧導線互換の wrapper。対応する `core-*` への橋渡しだけを担う
 - `agents/`: 専門 reviewer などの補助役。read-only reviewer はここに残す
 
-詳細なチェックリスト、テンプレート、例外規則は core とその `references/` に集約する。`entry-classify` は workflow 選択に徹し、workflow は phase の並びに徹し、phase は core の束ねに徹する。
+詳細なチェックリスト、テンプレート、例外規則は core とその `references/` に集約する。wrapper は互換性のためにのみ残し、新規の導線説明は `core-*` を基準にする。
 
 ## 要求分類
 
@@ -24,27 +24,23 @@
 | `maintenance` | 将来の保守性・変更容易性を上げる | リファクタ、技術的負債返済、テスト追加、命名整理、重複除去 | 将来の変更を楽にする案件 | 性能や安定性が主なら `quality`                     |
 | `compat`      | 外部変化に追従する               | 外部 API 変更対応、依存更新、ランタイム更新、EOL 対応      | 外部変化に合わせる案件   | CVE 対応や権限強化が主なら `security`              |
 
-## workflow 一覧
+## 代表的な core 導線
 
-- `entry-classify -> workflow-research -> phase-research`
-- `entry-classify -> workflow-bugfix -> phase-diagnose -> phase-implement -> phase-verify`
-- `entry-classify -> workflow-feature -> phase-plan -> phase-implement -> phase-test -> phase-review`
-- `entry-classify -> workflow-security -> phase-security-scan -> phase-implement -> phase-verify`
-- `entry-classify -> workflow-quality -> phase-quality-analysis -> phase-implement -> phase-verify`
-- `entry-classify -> workflow-maintenance -> phase-maintenance-analysis -> phase-implement -> phase-test -> phase-review`
-- `entry-classify -> workflow-compat -> phase-compat-assessment -> phase-implement -> phase-verify`
-
-必要時のみ次を共通 tail として差し込む。
-
-- `phase-capture-knowledge`
-- `phase-commit`
-- `phase-publish`
+- `research`: `core-research`
+- `bugfix`: `core-bug-diagnosis -> core-code-implementation-loop -> core-change-verification`
+- `feature`: `core-request-shaping` / `core-task-intake` / `core-product-planning` / `core-implementation-planning -> core-code-implementation-loop -> core-change-testing -> core-code-review`
+- `security`: `core-security-scan -> core-code-implementation-loop -> core-change-verification`
+- `quality`: `core-quality-analysis -> core-code-implementation-loop -> core-change-verification`
+- `maintenance`: `core-maintenance-analysis -> core-code-implementation-loop -> core-change-testing -> core-code-review`
+- `compat`: `core-compat-assessment -> core-code-implementation-loop -> core-change-verification`
+- `knowledge`: `core-capture-knowledge-triage -> core-write-knowledge-note` または `core-write-adr`
+- `git`: `core-git-commit`, `core-git-push`
+- `classification helper`: `core-task-classification`
+- `review summary helper`: `core-review-findings-summary`
 
 ## 命名規約
 
-- `workflow-*`: 案件タイプ名を置く
-- `entry-classify`: 共通入口名を置く
-- `phase-*`: 工程名を置く
 - `core-*`: 工程内の詳細作業名を置く
+- `entry-*` / `phase-*`: 旧導線互換の wrapper 名を置く
 
-旧 `*-workflow` や旧 detailed skill 名は移行期間を設けず新命名へ一本化する。
+旧 `workflow-*` は削除済みとし、旧 `entry-*` / `phase-*` も互換用途に縮退させる。

@@ -1,14 +1,14 @@
 ---
 name: phase-publish
-description: 共通 Publish 工程。共有の要否を確認し、push core へ受け渡す。
+description: Deprecated wrapper。旧 Publish 導線互換のために `core-git-push` へ受け渡す。
 metadata:
   short-description: Publish 工程
 ---
 
 # Phase Publish
 
-Publish 工程の入口をそろえ、共有が必要な場合だけ push や共有文面の整理へ進める。
-この phase は push 詳細を自前で持たず、共有条件と push 対象を `core-git-push` へ渡す薄い orchestrator である。
+旧 Publish 導線互換のために、push 依頼を `core-git-push` へ橋渡しする。
+新規の正式入口としては使わず、`core-git-push` を直接使う。
 
 ## 入力
 
@@ -31,6 +31,11 @@ Publish 工程の入口をそろえ、共有が必要な場合だけ push や共
 - `publish_target`
 - `publish_action`
 - `publish_result`
+
+## 次に渡す情報
+
+- `publish_target` と `publish_action` を `core-git-push` へ渡す
+- 実行後は `publish_result` を共有結果として返す
 
 ## 完了条件
 

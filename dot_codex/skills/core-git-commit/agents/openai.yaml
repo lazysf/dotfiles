@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Git Commit"
-  short_description: "Internal commit execution step for phases"
-  default_prompt: "Use $core-git-commit as an internal phase step to validate commit scope and execute or draft a safe commit."
-
-policy:
-  allow_implicit_invocation: false

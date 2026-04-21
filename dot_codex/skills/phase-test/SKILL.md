@@ -1,13 +1,14 @@
 ---
 name: phase-test
-description: テスト工程。feature と maintenance の確認方法と実施結果を整理する。
+description: Deprecated wrapper。旧 Test 導線互換のために `core-change-testing` へ受け渡す。
 metadata:
   short-description: Test 工程
 ---
 
 # Phase Test
 
-テスト工程の入口をそろえ、期待挙動と保護したい既存挙動の確認結果を整理する。
+旧 Test 導線互換のために、feature / maintenance の確認依頼を `core-change-testing` へ橋渡しする。
+新規の正式入口としては使わず、`core-change-testing` を直接使う。
 
 ## 入力
 
@@ -24,6 +25,10 @@ metadata:
 - `test_plan`
 - `executed_checks`
 - `remaining_test_risks`
+
+## 次に渡す情報
+
+- `executed_checks` と `remaining_test_risks` を `phase-review` や最終報告へ渡す
 
 ## 完了条件
 

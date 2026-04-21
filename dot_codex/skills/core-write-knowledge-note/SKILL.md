@@ -1,6 +1,6 @@
 ---
 name: core-write-knowledge-note
-description: Capture Knowledge フェーズの内部 writer 手順。手順メモ、確認ポイント、落とし穴、運用メモ、再発防止メモを `root docs/knowledge/` 向けの短い Markdown 草案へ整理する。
+description: 通常知見メモ作成手順。手順メモ、確認ポイント、落とし穴、運用メモ、再発防止メモを `root docs/knowledge/` 向けの短い Markdown 草案へ整理する。
 metadata:
   short-description: 通常知見メモ作成
 ---
@@ -9,7 +9,6 @@ metadata:
 
 通常知見として残す内容を、`root docs/knowledge/` 向けの短い知見メモ草案へ整理する。
 この skill は文面作成に責務を限定し、ファイル作成や既存文書更新の実行は行わない。
-フェーズ全体の入口は `phase-capture-knowledge` を参照する。
 
 ## 基本方針
 
