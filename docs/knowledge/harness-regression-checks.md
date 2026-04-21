@@ -119,6 +119,20 @@
   - reviewer の raw JSON をそのままユーザー向けの最終返答に流さない
   - planning reviewer の追加後も、`code-review` は `quality-reviewer` / `security-reviewer` 中心のままで説明と起動条件が崩れない
 
+### 12. review summary helper が reviewer 起動元へ昇格しない
+
+- 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
+- 期待:
+  - `review-findings-summary` は reviewer 結果の統合と整形に専念し、自分では reviewer を起動しない
+  - 差分レビューの reviewer 起動は `code-review` が担う
+  - 要件 draft reviewer の起動は `product-planning` が担う
+  - 実装計画 draft reviewer の起動は `implementation-planning` が担う
+- 代表プロンプト:
+  - 「レビュー findings を整理したい」 -> `review-findings-summary`
+  - 「この差分をレビューして結果までまとめたい」 -> `code-review`
+  - 「要件 draft の抜け漏れを見たい」 -> `product-planning`
+  - 「実装計画 draft の危ない点を見たい」 -> `implementation-planning`
+
 ## 関連文書
 
 - [Harness Design Principles](./harness-design-principles.md)
