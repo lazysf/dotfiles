@@ -1,15 +1,14 @@
 ---
 name: core-implementation-planning
-description: Plan フェーズの内部技術計画手順。`phase-plan` から渡された要件に対して、既存実装と規約に沿った影響範囲、変更単位、実装順序、検証方法を整理する。
+description: 技術計画手順。要件に対して、既存実装と規約に沿った影響範囲、変更単位、実装順序、検証方法を整理する。
 metadata:
   short-description: 技術計画
 ---
 
 # Core Implementation Planning
 
-Plan 工程の内部手順として、要件が固まったあとにこの repo でどう安全に実装するかを整理する。
+要件が固まったあとに、この repo でどう安全に実装するかを整理する。
 このスキルは「何を作るか」が固まったあとに、「このリポジトリでどう安全に実装するか」を整理するために使う。
-フェーズ全体の入口は `phase-plan` を参照する。
 
 ## 前提
 

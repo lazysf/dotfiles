@@ -1,13 +1,14 @@
 ---
 name: phase-research
-description: 調査工程。事実確認と判断材料の整理を行う。
+description: Deprecated wrapper。旧 Research 導線互換のために `core-research` へ受け渡す。
 metadata:
   short-description: Research 工程
 ---
 
 # Phase Research
 
-調査工程の入口をそろえ、実装前の判断材料を整理する。
+旧 Research 導線互換のために、調査依頼を `core-research` へ橋渡しする。
+新規の正式入口としては使わず、`core-research` を直接使う。
 
 ## 入力
 
@@ -32,6 +33,11 @@ metadata:
 - `options`
 - `recommendation`
 - `next_step`
+
+## 次に渡す情報
+
+- 標準ではこの phase で閉じる
+- 実装へ進める場合だけ `recommendation` と `next_step` を次の phase 判断へ渡す
 
 ## 完了条件
 

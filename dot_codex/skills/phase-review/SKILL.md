@@ -1,15 +1,14 @@
 ---
 name: phase-review
-description: 共通 Review 工程。レビュー依頼、reviewer agent の起動、出口整理をまとめる。
+description: Deprecated wrapper。旧 Review 導線互換のために review 系 `core-*` へ受け渡す。
 metadata:
   short-description: Review 工程
 ---
 
 # Phase Review
 
-Review 工程の入口をそろえ、重大な欠陥や受け入れ条件とのずれを残さない状態へ進める。
-この phase は workflow 内の工程としてだけでなく、レビューだけを求める明確な単独依頼の正式入口としても使う。
-この phase は詳細レビュー手順を自前で持たず、review core と reviewer agent の受け渡しに徹する薄い orchestrator である。
+旧 Review 導線互換のために、レビュー依頼を review 系 `core-*` へ橋渡しする。
+新規の正式入口としては使わず、`core-code-review` を直接使う。
 
 ## 入力
 
@@ -38,6 +37,11 @@ Review 工程の入口をそろえ、重大な欠陥や受け入れ条件との�
 - `open_questions`
 - `residual_risks`
 - `recheck_needed`
+
+## 次に渡す情報
+
+- 指摘対応が必要な場合は `findings`, `residual_risks`, `recheck_needed` を再実装や再確認へ渡す
+- 問題が閉じている場合は `review_scope` と結論を最終出口へ渡す
 
 ## 完了条件
 

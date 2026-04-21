@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Task Classification"
-  short_description: "Internal task classification step for entry"
-  default_prompt: "Use $core-task-classification as an internal entry step to classify the request into a single primary workflow."
-
-policy:
-  allow_implicit_invocation: false

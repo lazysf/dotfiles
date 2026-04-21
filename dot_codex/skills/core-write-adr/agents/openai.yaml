@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Write ADR"
-  short_description: "Internal ADR drafting step for phases"
-  default_prompt: "Use $core-write-adr as an internal phase step to draft an ADR from a confirmed decision record."
-
-policy:
-  allow_implicit_invocation: false

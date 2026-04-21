@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Change Testing"
-  short_description: "Internal change testing step for phases"
-  default_prompt: "Use $core-change-testing as an internal phase step to define and record feature or maintenance checks."
-
-policy:
-  allow_implicit_invocation: false

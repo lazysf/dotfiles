@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Write Knowledge Note"
-  short_description: "Internal knowledge note drafting step"
-  default_prompt: "Use $core-write-knowledge-note as an internal phase step to draft a concise reusable knowledge note."
-
-policy:
-  allow_implicit_invocation: false

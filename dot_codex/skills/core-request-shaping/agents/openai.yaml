@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Request Shaping"
-  short_description: "Internal request shaping step for phases"
-  default_prompt: "Use $core-request-shaping as an internal phase step to compress a scattered request into a short implementation brief."
-
-policy:
-  allow_implicit_invocation: false

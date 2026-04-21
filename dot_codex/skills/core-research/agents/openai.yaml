@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Research"
-  short_description: "Internal research step for phases"
-  default_prompt: "Use $core-research as an internal phase step to separate facts, unknowns, options, recommendations, and next steps."
-
-policy:
-  allow_implicit_invocation: false

@@ -1,21 +1,20 @@
 ---
 name: core-code-review
-description: Review フェーズの内部レビュー手順。`phase-review` から渡された対象差分に対し、quality-reviewer を基本として必要に応じて security-reviewer も呼び出し、findings-first の出口へつなぐ。
+description: レビュー手順。対象差分に対し、quality-reviewer を基本として必要に応じて security-reviewer も呼び出し、findings-first の出口へつなぐ。
 metadata:
   short-description: レビュー内部手順
 ---
 
 # Code Review
 
-Review 工程の内部手順として、コードレビュー対象を確定し reviewer agent の結果を統合する。
+コードレビュー対象を確定し reviewer agent の結果を統合する。
 このスキルは、レビュー本体を広く自前でやり直すのではなく、既存 reviewer agent を起動して結果を統合する役割に徹する。
-フェーズ全体の入口は `phase-review` を参照する。
 
 ## 基本方針
 
 - まず対象差分または対象ファイルを確定する。
 - レビュー本体は `quality-reviewer` を既定とし、必要時だけ `security-reviewer` を追加する。
-- reviewer agent は補助役であり、workflow や phase の主導権は持たせない。
+- reviewer agent は補助役であり、導線の主導権は持たせない。
 - reviewer agent は差分起点の read-only 用途に限り、差分が曖昧なまま範囲を広げない。
 - agent の raw JSON は内部入力として扱い、最終返答は findings-first の人間向け要約にする。
 - 出口整理は `core-review-findings-summary` の方針に合わせる。

@@ -1,15 +1,14 @@
 ---
 name: core-task-intake
-description: Plan フェーズの内部依頼整理手順。`phase-plan` から渡された日常的な曖昧依頼を、実装や詳細計画に入る前の最小単位へ整え、今回どこまで扱うかを軽く固定する。
+description: 依頼整理手順。日常的な曖昧依頼を、実装や詳細計画に入る前の最小単位へ整え、今回どこまで扱うかを軽く固定する。
 metadata:
   short-description: 依頼整理
 ---
 
 # Task Intake
 
-Plan 工程の内部手順として、探索や次の整理に入る前に今回どこまで扱うかを軽く固定する。
+探索や次の整理に入る前に、今回どこまで扱うかを軽く固定する。
 目的は、探索の前に「今回どこまでを扱うか」を短くそろえること。
-フェーズ全体の入口は `phase-plan` を参照する。
 
 ## 前提
 
@@ -103,4 +102,4 @@ Plan 工程の内部手順として、探索や次の整理に入る前に今回
 
 ## 参照先
 
-- Plan 入口の確認: [references/plan-phase-checklist.md](references/plan-phase-checklist.md)
+- planning 系 core の確認: [references/plan-phase-checklist.md](references/plan-phase-checklist.md)

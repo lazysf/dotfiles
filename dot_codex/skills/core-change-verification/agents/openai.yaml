@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Change Verification"
-  short_description: "Internal change verification step for phases"
-  default_prompt: "Use $core-change-verification as an internal phase step to verify fixes, follow-up changes, and regression checks."
-
-policy:
-  allow_implicit_invocation: false

@@ -1,15 +1,14 @@
 ---
 name: phase-commit
-description: 共通 Commit 工程。コミット対象の境界を確認し、commit core へ受け渡す。
+description: Deprecated wrapper。旧 Commit 導線互換のために `core-git-commit` へ受け渡す。
 metadata:
   short-description: Commit 工程
 ---
 
 # Phase Commit
 
-Commit 工程の入口をそろえ、差分を意味のある最小単位へまとめる。
-この phase は workflow の後段だけでなく、コミットだけを求める明確な単独依頼の正式入口としても使う。
-この phase は詳細な Git 操作を自前で持たず、commit 実行に必要な前提をそろえて `core-git-commit` へ渡す薄い orchestrator である。
+旧 Commit 導線互換のために、コミット依頼を `core-git-commit` へ橋渡しする。
+新規の正式入口としては使わず、`core-git-commit` を直接使う。
 
 ## 入力
 
@@ -36,6 +35,11 @@ Commit 工程の入口をそろえ、差分を意味のある最小単位へま�
 - `commit_message_requirements`
 - `remaining_changes`
 - `commit_result`
+
+## 次に渡す情報
+
+- commit 実行前は `commit_scope` と `commit_message_requirements` を `core-git-commit` へ渡す
+- commit 後は `commit_result` と `remaining_changes` を次の共有判断へ渡す
 
 ## 完了条件
 

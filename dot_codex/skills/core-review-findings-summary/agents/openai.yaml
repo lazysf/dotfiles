@@ -1,7 +1,0 @@
-interface:
-  display_name: "Core Review Findings Summary"
-  short_description: "Internal review summary step for phases"
-  default_prompt: "Use $core-review-findings-summary as an internal phase step to turn reviewer output into a findings-first summary."
-
-policy:
-  allow_implicit_invocation: false
