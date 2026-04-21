@@ -24,6 +24,7 @@
 - まず依頼の主目的にもっとも近い入口から入り、複数工程にまたがる場合だけ必要な skill へ順に切り替える
 - `skills/` をユーザー向けの正式入口とし、詳細手順、判断基準、停止条件、出力フォーマットの正本は各 skill に置く
 - `task-classification`、`review-findings-summary`、`reviewer`、`rules` は補助導線であり、入口整理、出口整形、機械的ガードに責務を絞る
+- reviewer 起動は隣接 skill が担い、`review-findings-summary` は出口整理専用として扱う
 
 ### 1. 主分類から入る
 
@@ -46,6 +47,7 @@
 
 - 主分類に迷う場合だけ `task-classification` を使う
 - review の出口整形が必要な場合だけ `review-findings-summary` を使う
+- reviewer 起動は `code-review`、`product-planning`、`implementation-planning` の隣接 skill で行う
 - `reviewer` や `rules` は隣接して使う補助役であり、入口や本体導線にはしない
 
 ## 置き場の原則

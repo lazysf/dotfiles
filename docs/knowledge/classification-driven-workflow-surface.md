@@ -40,6 +40,25 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - `classification helper`: `task-classification`
 - `review summary helper`: `review-findings-summary`
 
+## review 系 skill の役割分担
+
+- 差分レビュー用 reviewer の起動元は `code-review`
+- 要件 draft reviewer の起動元は `product-planning`
+- 実装計画 draft reviewer の起動元は `implementation-planning`
+- `review-findings-summary` は reviewer 非起動の出口整理 helper として使う
+
+## Frontmatter Description 設計ルール
+
+- skill の発火面は `SKILL.md` frontmatter の `name` と `description` であり、特に `description` を主な自然文入口として扱う
+- `description` は原則 3 文でそろえる
+- 1 文目で、ユーザーが言いそうな依頼語を優先して「どんな依頼で使うか」を自然文で示す
+- 2 文目で、その skill が何を整理 / 実行 / 出力するかを示す
+- 3 文目で、近接 skill との差分、渡し先、または対象外を明示する
+- 主役 skill と補助 skill の違いは prefix や内部用語ではなく prose で表現する
+- `metadata.short-description` は UI 向けの短い説明であり、trigger surface の正本としては扱わない
+- 旧 implicit invocation、wrapper、legacy surface を前提にした言い回しは `description` に持ち込まない
+- 文量は必要最小限に保ちつつ、短さより境界語の明確さを優先する
+
 ## 命名規約
 
 - skill 名は prefix なしの kebab-case とする
