@@ -1,6 +1,6 @@
 ---
 name: workflow-maintenance
-description: maintenance 案件の入口 workflow。保守性分析、リファクタ、テスト、レビューの順で進める。
+description: maintenance 案件の導線 workflow。保守性分析、リファクタ、テスト、レビューの順で進める。
 metadata:
   short-description: Maintenance workflow
 ---
@@ -8,14 +8,14 @@ metadata:
 # Workflow Maintenance
 
 `maintenance` 分類の案件を、`maintenance-analysis -> implement -> test -> review` で進める。
+この workflow は `entry-classify` により選択されたあとに始まる。
 
 ## フロー
 
-1. `phase-classify`
-2. `phase-maintenance-analysis`
-3. `phase-implement`
-4. `phase-test`
-5. `phase-review`
+1. `phase-maintenance-analysis`
+2. `phase-implement`
+3. `phase-test`
+4. `phase-review`
 
 ## 主要受け渡し
 

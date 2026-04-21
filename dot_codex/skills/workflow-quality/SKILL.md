@@ -1,6 +1,6 @@
 ---
 name: workflow-quality
-description: quality 案件の入口 workflow。品質課題の分析、改善実装、検証の順で進める。
+description: quality 案件の導線 workflow。品質課題の分析、改善実装、検証の順で進める。
 metadata:
   short-description: Quality workflow
 ---
@@ -8,13 +8,13 @@ metadata:
 # Workflow Quality
 
 `quality` 分類の案件を、`quality-analysis -> implement -> verify` で進める。
+この workflow は `entry-classify` により選択されたあとに始まる。
 
 ## フロー
 
-1. `phase-classify`
-2. `phase-quality-analysis`
-3. `phase-implement`
-4. `phase-verify`
+1. `phase-quality-analysis`
+2. `phase-implement`
+3. `phase-verify`
 
 ## 主要受け渡し
 
