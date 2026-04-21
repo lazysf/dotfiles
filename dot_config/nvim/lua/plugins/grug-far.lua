@@ -1,5 +1,5 @@
 return {
-  'MagicDuck/grug-far.nvim',
-  cmd = { 'GrugFar', 'GrugFarWithin' },
-  opts = {},
+	"MagicDuck/grug-far.nvim",
+	cmd = { "GrugFar", "GrugFarWithin" },
+	opts = {},
 }
