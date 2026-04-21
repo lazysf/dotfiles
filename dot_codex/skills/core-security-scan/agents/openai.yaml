@@ -1,0 +1,7 @@
+interface:
+  display_name: "Core Security Scan"
+  short_description: "Internal security scan step for phases"
+  default_prompt: "Use $core-security-scan as an internal phase step to scope security findings, hardening needs, and verification focus."
+
+policy:
+  allow_implicit_invocation: false

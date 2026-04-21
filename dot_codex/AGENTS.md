@@ -28,6 +28,9 @@
 - workflow は分類後に使う工程の並びと入出力の受け渡しだけを扱う
 - phase は工程の目的、開始条件、完了条件、I/O schema、使う core を扱う薄い orchestrator とする
 - core は主役の実行手順として、詳細手順、判断基準、停止条件、出力フォーマットの正本を持つ
+- repo 配下の `core-*` には `agents/openai.yaml` を置き、原則 `policy.allow_implicit_invocation: false` を設定する
+- 上記設定は `core-*` の暗黙起動を抑制する補助線であり、単独では phase-only の呼び出し面を保証しない
+- `phase-*` は本文中で必要な `core-*` を明示的に呼び出し、呼び出し面の責務を持つ
 - 詳細な手順、判断基準、テンプレート、例外規則は core skill と配下の `references/` を参照する
 - ユーザー向けの公開入口は `entry-classify` と `phase-*` とし、`workflow-*` は分類結果として入る導線、`core-*` は phase の内部詳細として扱う
 - `phase-*` を直接入口にする場合も、phase 単位で入力、出力、完了条件を説明できる状態を保つ
@@ -81,7 +84,9 @@
 - repo-level の参照知見は `root docs/` に置く
 - repo-level の判断記録は `root docs/adr/` に置く
 - 再利用する作業手順は `skills/` に置く
-- `entry-classify` は全導線の共通入口、`workflow-*` は分類後の案件タイプ別導線、`phase-*` は再利用可能な工程、`core-*` は主役の実行手順の正規置き場にする
+- `entry-classify` は全導線の共通入口、`workflow-*` は分類後の案件タイプ別導線、`phase-*` は再利用可能な工程、`core-*` は self-contained な内部手順の正規置き場にする
+- `core-*` は正式入口として公開せず、`phase-*` から明示的に呼び出す内部詳細として扱う
+- `core-*` の `agents/openai.yaml` は暗黙起動抑制の補助設定として使い、入口契約そのものは `AGENTS.md` と各 skill 本文で表現する
 - 詳細な判断基準、チェックリスト、テンプレート、例外規則は core skill 配下の `references/` に置く
 - 専門化した補助役は `agents/` に置く
   - 現時点の reviewer は read-only 運用とする

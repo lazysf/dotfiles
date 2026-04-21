@@ -17,11 +17,15 @@ Implement 工程の入口をそろえ、変更意図に対応する実装と確�
 - 変更意図
 - 確認方法または確認観点
 
+## uses
+
+- `core-code-implementation-loop`
+
 ## 進め方
 
-1. テスト可能な変更では `core-code-implementation-loop` を既定ループとして使う
-2. docs-only や設定変更では、同じ phase の出力 schema を満たす確認手段へ置き換える
-3. 実装結果と確認結果を次の `phase-test`、`phase-review`、`phase-verify` のいずれかへ渡す
+1. テスト可能な変更では、まず `$core-code-implementation-loop` を使って確認方法先行の小さな実装ループで進める
+2. docs-only や設定変更では、同じ phase の出力 schema を満たす最小の実装・確認ループへ置き換える
+3. 実装結果と確認結果をそろえ、次の `phase-test`、`phase-review`、`phase-verify` のいずれかへ渡す
 
 ## 出力
 

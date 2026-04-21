@@ -1,0 +1,7 @@
+interface:
+  display_name: "Core Product Planning"
+  short_description: "Internal product planning step for phases"
+  default_prompt: "Use $core-product-planning as an internal phase step to clarify goals, success criteria, non-goals, and priorities."
+
+policy:
+  allow_implicit_invocation: false

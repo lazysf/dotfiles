@@ -1,0 +1,7 @@
+interface:
+  display_name: "Core Quality Analysis"
+  short_description: "Internal quality analysis step for phases"
+  default_prompt: "Use $core-quality-analysis as an internal phase step to define the quality problem, scope, and verification focus."
+
+policy:
+  allow_implicit_invocation: false

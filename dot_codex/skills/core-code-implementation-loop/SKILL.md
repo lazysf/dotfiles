@@ -1,14 +1,15 @@
 ---
 name: core-code-implementation-loop
-description: テスト可能な変更を、先に確認方法を置いてから最小実装、必要ならリファクタ、再確認へ進める。Implement フェーズの基本ループとして使用する。
+description: Implement フェーズの内部実装ループ。`phase-implement` から渡されたテスト可能な変更を、先に確認方法を置いてから最小実装、必要ならリファクタ、再確認へ進める。
 metadata:
   short-description: 実装ループ
 ---
 
 # Core Code Implementation Loop
 
-テスト可能な変更を、確認方法先行の小さなループで進める。
+Implement 工程の内部手順として、テスト可能な変更を確認方法先行の小さなループで進める。
 この skill は Implement フェーズの既定ループであり、変更意図をテストや再現手順に結び付ける。
+フェーズ全体の入口は `phase-implement` を参照する。
 
 ## 基本方針
 

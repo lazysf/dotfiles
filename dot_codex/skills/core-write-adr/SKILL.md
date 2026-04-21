@@ -1,6 +1,6 @@
 ---
 name: core-write-adr
-description: ADR 草案を作る skill。architecture decision record、設計判断、運用判断、互換性判断、採用 / 不採用の決定を `root docs/adr/` 向けの番号付き標準形 Markdown 草案へ整理したい場合に使用する。
+description: Capture Knowledge フェーズの内部 writer 手順。architecture decision record、設計判断、運用判断、互換性判断、採用 / 不採用の決定を `root docs/adr/` 向けの番号付き標準形 Markdown 草案へ整理する。
 metadata:
   short-description: ADR 草案作成
 ---
