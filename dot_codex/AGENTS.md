@@ -20,41 +20,42 @@
 
 ## 開発フロー
 
-- 標準導線は `依頼内容 -> 該当する skill -> 必要時に隣接 skill / reviewer / rules` とする
-- まず依頼の主目的を見て、もっとも近い skill へ入る
-- 複数工程にまたがる依頼では、必要な skill を順に切り替えて進める
-- skill は主役の実行手順として、詳細手順、判断基準、停止条件、出力フォーマットの正本を持つ
-- 詳細な手順、判断基準、テンプレート、例外規則は skill と配下の `references/` を参照する
-- ユーザー向けの正式入口は skill 群とする
-- 補助的な整理や出口整形だけを担う skill は、正式入口ではなく補助 skill として扱う
+- 標準導線は `依頼内容 -> 主目的の主分類または直接入口 -> 該当 skill -> 必要時に隣接 skill / reviewer / rules` とする
+- まず依頼の主目的にもっとも近い入口から入り、複数工程にまたがる場合だけ必要な skill へ順に切り替える
+- `skills/` をユーザー向けの正式入口とし、詳細手順、判断基準、停止条件、出力フォーマットの正本は各 skill に置く
+- `task-classification`、`review-findings-summary`、`reviewer`、`rules` は補助導線であり、入口整理、出口整形、機械的ガードに責務を絞る
 
-### 1. Skill Entry Guidance
+### 1. 主分類から入る
 
-- 依頼整理: `request-shaping`, `task-intake`, `product-planning`, `implementation-planning`
-- 調査: `research`
-- 診断: `bug-diagnosis`, `quality-analysis`, `security-scan`, `compat-assessment`, `maintenance-analysis`
-- 実装: `code-implementation-loop`
-- 文書更新: `docs-update`
-- 確認: `change-testing`, `change-verification`, `code-review`
-- 知識化: `capture-knowledge-triage`, `write-knowledge-note`, `write-adr`
-- Git: `git-commit`, `git-push`
-- 分類補助が必要な場合だけ `task-classification` を使う
-- review 出口整形が必要な場合だけ `review-findings-summary` を使う
+- `research`: `research`
+- `bugfix`: `bug-diagnosis -> code-implementation-loop -> change-verification`
+- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> code-review`
+- `security`: `security-scan -> code-implementation-loop -> change-verification`
+- `quality`: `quality-analysis -> code-implementation-loop -> change-verification`
+- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> code-review`
+- `compat`: `compat-assessment -> code-implementation-loop -> change-verification`
+- 実装方針や原因が未確定なら、まず `research` に倒す
 
-## Workflow Surface Policy
+### 2. 主分類の外にある直接入口
 
-- 全体契約と導線は `AGENTS.md` に置く
-- repo-level の参照知見は `root docs/` に置く
-- repo-level の判断記録は `root docs/adr/` に置く
-- 再利用する作業手順は `skills/` に置く
-- skill は self-contained な手順の正規置き場であり、正式入口としても使う
-- 詳細な判断基準、チェックリスト、テンプレート、例外規則は skill 配下の `references/` に置く
-- 専門化した補助役は `agents/` に置く
-  - 現時点の reviewer は read-only 運用とする
-  - 導線の入口や本体は `agents/` に置かない
-- コマンド単位の安全制約や許可ルールは `rules/` に置く
-  - 運用フロー本体は `rules/` に書かない
-- `AGENTS.md` に skill の詳細手順や長いテンプレートを書かない
-- 継続参照したい repo-level の知見は `AGENTS.md` に長文化せず、`root docs/` へ寄せる
-- `references/` はトップレベルに置かず、原則として skill ディレクトリ配下にのみ置く
+- `docs-only`: 成果物が既存ドキュメント更新に限られる場合は、主分類を増やさず `docs-update` へ直接入る
+- `knowledge`: `capture-knowledge-triage -> write-knowledge-note` または `write-adr`
+- `git`: `git-commit`, `git-push`
+
+### 3. 補助導線
+
+- 主分類に迷う場合だけ `task-classification` を使う
+- review の出口整形が必要な場合だけ `review-findings-summary` を使う
+- `reviewer` や `rules` は隣接して使う補助役であり、入口や本体導線にはしない
+
+## 置き場の原則
+
+- この節は、知見、手順、補助役をどこに置くかだけを短く案内する
+- `AGENTS.md`: 全体契約と導線を置く。長い背景、詳細手順、テンプレートは置かない
+- `docs/knowledge/`: repo-level の通常知見を置く
+- `docs/adr/`: repo-level の判断記録を置く
+- `skills/`: 再利用する作業手順を置く。詳細手順、判断基準、停止条件、出力フォーマットの正本もここに置く
+- `references/`: チェックリスト、テンプレート、例外規則などの詳細を置く。トップレベルには置かず、skill 配下に限定する
+- `rules/`: 機械的なガードを置く。運用フロー本体は置かない
+- `agents/`: read-only の専門化した補助役を置く。入口や本体導線にはしない
 - 置き場が曖昧でもトップレベルに新しい運用ファイルを増やさない
