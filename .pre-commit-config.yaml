@@ -16,6 +16,6 @@ repos:
     hooks:
       - id: verify-codex-harness
         name: verify codex harness
-        entry: python3 scripts/verify-codex-harness.py
+        entry: uv run python scripts/verify-codex-harness.py
         language: system
         pass_filenames: false

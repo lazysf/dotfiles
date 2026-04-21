@@ -46,6 +46,24 @@ mise run lint
 mise run test
 ```
 
+## Python 実行
+
+repo 保守用の Python 実行環境は `uv` で管理します。
+初回セットアップまたは依存更新後は、次を実行します。
+
+```sh
+uv sync
+```
+
+手動でハーネス検証を実行するときは、repo 直下の仮想環境を使うため `uv run python ...` を使います。
+
+```sh
+uv run python scripts/verify-codex-harness.py
+```
+
+通常の確認入口は引き続き `mise run test` です。
+`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
+
 ## Repo-Level Knowledge
 
 この repo を保守するときの知見は `docs/` に置きます。
