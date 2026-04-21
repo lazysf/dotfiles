@@ -1,6 +1,6 @@
 ---
 name: workflow-feature
-description: feature 案件の入口 workflow。計画、実装、テスト、レビューの順で進める。
+description: feature 案件の導線 workflow。計画、実装、テスト、レビューの順で進める。
 metadata:
   short-description: Feature workflow
 ---
@@ -8,14 +8,14 @@ metadata:
 # Workflow Feature
 
 `feature` 分類の案件を、`plan -> implement -> test -> review` で進める。
+この workflow は `entry-classify` により選択されたあとに始まる。
 
 ## フロー
 
-1. `phase-classify`
-2. `phase-plan`
-3. `phase-implement`
-4. `phase-test`
-5. `phase-review`
+1. `phase-plan`
+2. `phase-implement`
+3. `phase-test`
+4. `phase-review`
 
 ## 主要受け渡し
 

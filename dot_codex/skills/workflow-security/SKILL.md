@@ -1,6 +1,6 @@
 ---
 name: workflow-security
-description: security 案件の入口 workflow。セキュリティ観点のスキャン、実装、検証の順で進める。
+description: security 案件の導線 workflow。セキュリティ観点のスキャン、実装、検証の順で進める。
 metadata:
   short-description: Security workflow
 ---
@@ -8,13 +8,13 @@ metadata:
 # Workflow Security
 
 `security` 分類の案件を、`security-scan -> implement -> verify` で進める。
+この workflow は `entry-classify` により選択されたあとに始まる。
 
 ## フロー
 
-1. `phase-classify`
-2. `phase-security-scan`
-3. `phase-implement`
-4. `phase-verify`
+1. `phase-security-scan`
+2. `phase-implement`
+3. `phase-verify`
 
 ## 主要受け渡し
 
