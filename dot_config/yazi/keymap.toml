@@ -14,6 +14,6 @@ run = "plugin smart-paste"
 desc = "Paste into the hovered diredtory or CWD"
 
 [[mgr.prepend_keymap]]
-on   = [ "g", "c" ]
-run  = "plugin vcs-files"
+on = ["g", "c"]
+run = "plugin vcs-files"
 desc = "Show Git file changes"

@@ -1,5 +1,5 @@
 return {
-  'kevinhwang91/nvim-hlslens',
-  event = 'VeryLazy',
-  opts = {},
+	"kevinhwang91/nvim-hlslens",
+	event = "VeryLazy",
+	opts = {},
 }
