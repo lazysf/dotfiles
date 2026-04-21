@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["docker"],
-  decision = "prompt",
-  justification = "Docker 操作は影響範囲が大きいため都度確認する。",
-  match = [
-    "docker ps",
-    "docker build -t app .",
-  ],
-)

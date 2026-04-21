@@ -1,0 +1,22 @@
+prefix_rule(
+  pattern = ["git", "clean"],
+  decision = "prompt",
+  justification = "git clean は未追跡ファイルを削除しうるため都度確認する。",
+  match = [
+    "git clean -fd",
+    "git clean -f -d",
+  ],
+)
+
+# This intentionally overlaps with the rule above.
+# Codex applies the most restrictive decision when multiple rules match.
+prefix_rule(
+  pattern = ["git", "clean", ["-fdx", "-xdf", "-fxd"]],
+  decision = "forbidden",
+  justification = "git clean の -x 付き削除は無視ファイルまで消しうるため禁止する。",
+  match = [
+    "git clean -fdx",
+    "git clean -xdf",
+    "git clean -fxd",
+  ],
+)

@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["git", "diff"],
+  decision = "allow",
+  justification = "commit と push の事前確認に必要な読み取り専用の git diff のみ許可する。",
+  match = [
+    "git diff",
+    "git diff --staged",
+  ],
+)

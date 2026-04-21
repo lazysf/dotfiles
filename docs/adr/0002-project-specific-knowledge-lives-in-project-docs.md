@@ -16,3 +16,4 @@ project root `AGENTS.md` は短いポインタとして運用する。
 
 - 共通ハーネスは project 固有の知識を持たない
 - `.codex/` は knowledge の標準置き場として採用しない
+- 共通ハーネス側の docs や skills には、workspace 横断で使う知識だけを残す

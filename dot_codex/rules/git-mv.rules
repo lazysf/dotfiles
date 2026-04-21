@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["git", "mv"],
+  decision = "allow",
+  justification = "合意済みの対象に限った git mv のみ許可する。",
+  match = [
+    "git mv old.txt new.txt",
+    "git mv src/old.ts src/new.ts",
+  ],
+)

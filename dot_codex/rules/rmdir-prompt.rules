@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["rmdir"],
-  decision = "prompt",
-  justification = "ディレクトリ削除は不可逆になりやすいため都度確認する。",
-  match = [
-    "rmdir empty_dir",
-  ],
-)

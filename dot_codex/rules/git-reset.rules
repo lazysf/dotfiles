@@ -1,0 +1,22 @@
+prefix_rule(
+  pattern = ["git", "reset"],
+  decision = "prompt",
+  justification = "git reset は staging や履歴を変えうるため都度確認する。",
+  match = [
+    "git reset HEAD~1",
+    "git reset --soft HEAD~1",
+    "git reset --mixed HEAD~1",
+  ],
+)
+
+# This intentionally overlaps with the rule above.
+# Codex applies the most restrictive decision when multiple rules match.
+prefix_rule(
+  pattern = ["git", "reset", "--hard"],
+  decision = "forbidden",
+  justification = "git reset --hard は worktree と履歴を強く破壊しうるため禁止する。",
+  match = [
+    "git reset --hard HEAD~1",
+    "git reset --hard",
+  ],
+)

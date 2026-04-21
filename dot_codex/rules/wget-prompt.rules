@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["wget"],
-  decision = "prompt",
-  justification = "外部通信を伴う wget は都度確認する。",
-  match = [
-    "wget https://example.com/file.tar.gz",
-  ],
-)

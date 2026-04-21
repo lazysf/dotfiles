@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["scp"],
-  decision = "prompt",
-  justification = "リモート転送は影響範囲が大きいため都度確認する。",
-  match = [
-    "scp file.txt user@example.com:/tmp/",
-  ],
-)

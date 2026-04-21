@@ -1,0 +1,23 @@
+prefix_rule(
+  pattern = ["git", "push"],
+  decision = "prompt",
+  justification = "push は共有先の履歴に影響するため都度確認する。",
+  match = [
+    "git push",
+    "git push origin main",
+    "git push -u origin feature/foo",
+  ],
+)
+
+# This intentionally overlaps with the rule above.
+# Codex applies the most restrictive decision when multiple rules match.
+prefix_rule(
+  pattern = ["git", "push", ["-f", "--force", "--force-with-lease"]],
+  decision = "forbidden",
+  justification = "強制 push は共有履歴を書き換えるため禁止する。",
+  match = [
+    "git push -f",
+    "git push --force",
+    "git push --force-with-lease origin main",
+  ],
+)
