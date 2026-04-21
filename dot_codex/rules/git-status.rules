@@ -1,0 +1,8 @@
+prefix_rule(
+  pattern = ["git", "status"],
+  decision = "allow",
+  justification = "commit と push の事前確認に必要な読み取り専用の git status のみ許可する。",
+  match = [
+    "git status -sb",
+  ],
+)

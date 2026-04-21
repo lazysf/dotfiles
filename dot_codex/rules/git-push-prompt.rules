@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["git", "push"],
-  decision = "prompt",
-  justification = "push はリモート履歴や共有ブランチに影響するため都度確認する。",
-  match = [
-    "git push",
-    "git push origin main",
-  ],
-)

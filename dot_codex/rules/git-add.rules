@@ -1,0 +1,31 @@
+prefix_rule(
+  pattern = ["git", "add"],
+  decision = "allow",
+  justification = "合意済みの対象に限ったパス指定の git add のみ許可する。",
+  match = [
+    "git add README.md",
+    "git add path/to/file",
+    "git add dir/file1 dir/file2",
+  ],
+  not_match = [
+    "git add .",
+    "git add --all",
+  ],
+)
+
+# This intentionally overlaps with the rule above.
+# Codex applies the most restrictive decision when multiple rules match.
+prefix_rule(
+  pattern = ["git", "add", [".", "-A", "--all", "-u", "--update", "-p", "--patch"]],
+  decision = "prompt",
+  justification = "広域 staging や対話的 staging は意図しない対象を含めやすいため都度確認する。",
+  match = [
+    "git add .",
+    "git add -A",
+    "git add --all",
+    "git add -u",
+    "git add --update",
+    "git add -p",
+    "git add --patch",
+  ],
+)

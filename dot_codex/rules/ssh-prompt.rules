@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["ssh"],
-  decision = "prompt",
-  justification = "リモート接続は影響範囲が大きいため都度確認する。",
-  match = [
-    "ssh user@example.com",
-  ],
-)

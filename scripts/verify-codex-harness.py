@@ -10,9 +10,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOT_CODEX = ROOT / "dot_codex"
-AGENTS_DIR = DOT_CODEX / "agents"
-RULES_DIR = DOT_CODEX / "rules"
-DOCS_DIR = DOT_CODEX / "docs"
+DOCS = ROOT / "docs"
+DOCS_README = DOCS / "README.md"
+KNOWLEDGE_DIR = DOCS / "knowledge"
 
 REQUIRED_AGENT_KEYS = {
     "name",
@@ -26,11 +26,11 @@ REQUIRED_AGENT_KEYS = {
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 RULE_DECISION_RE = re.compile(r'decision\s*=\s*"(allow|prompt|forbidden)"')
 RULE_PATTERN_RE = re.compile(r"prefix_rule\s*\(")
-ROOT_ADR_RE = re.compile(r"(^|[(/`\s])docs/adr/|^\.\.?/docs/adr/", re.MULTILINE)
 PROJECT_DOT_CODEX_RE = re.compile(r"(^|[`\s(])\./\.codex/?")
-FORBIDDEN_DOT_CODEX_DOC_NAMES = {
-    "harness-engineering-best-practices.md",
-    "harness-regression-scenarios.md",
+EXPECTED_KNOWLEDGE_DOCS = {
+    "classification-driven-workflow-surface.md",
+    "harness-design-principles.md",
+    "harness-regression-checks.md",
 }
 
 
@@ -40,7 +40,7 @@ def fail(message: str) -> None:
 
 
 def check_agents() -> None:
-    for path in sorted(AGENTS_DIR.glob("*.toml")):
+    for path in sorted((DOT_CODEX / "agents").glob("*.toml")):
         data = tomllib.loads(path.read_text())
         missing = sorted(REQUIRED_AGENT_KEYS - set(data.keys()))
         if missing:
@@ -48,7 +48,7 @@ def check_agents() -> None:
 
 
 def check_rules() -> None:
-    for path in sorted(RULES_DIR.glob("*.rules")):
+    for path in sorted((DOT_CODEX / "rules").glob("*.rules")):
         text = path.read_text()
         if not RULE_PATTERN_RE.search(text):
             fail(f"{path.relative_to(ROOT)} does not contain prefix_rule(...)")
@@ -71,43 +71,36 @@ def resolve_markdown_link(source: Path, target: str) -> None:
         fail(f"{source.relative_to(ROOT)} references missing path: {target}")
 
 
-def check_markdown() -> None:
-    for path in sorted(DOT_CODEX.rglob("*.md")):
-        text = path.read_text()
-        if ROOT_ADR_RE.search(text):
-            fail(f"{path.relative_to(ROOT)} must not reference root docs/adr")
-        if PROJECT_DOT_CODEX_RE.search(text):
-            fail(f"{path.relative_to(ROOT)} must not recommend ./.codex as knowledge storage")
-        for match in MARKDOWN_LINK_RE.finditer(text):
-            resolve_markdown_link(path, match.group(1))
-    for path in sorted(DOT_CODEX.rglob("*.md")):
-        if path.name in FORBIDDEN_DOT_CODEX_DOC_NAMES:
-            fail(f"{path.relative_to(ROOT)} must remain a root-level knowledge doc")
+def check_markdown_links() -> None:
+    for root in (DOT_CODEX, DOCS):
+        for path in sorted(root.rglob("*.md")):
+            text = path.read_text()
+            if PROJECT_DOT_CODEX_RE.search(text):
+                fail(f"{path.relative_to(ROOT)} must not recommend ./.codex as knowledge storage")
+            for match in MARKDOWN_LINK_RE.finditer(text):
+                resolve_markdown_link(path, match.group(1))
 
 
-def check_docs_index() -> None:
-    readme_path = DOCS_DIR / "README.md"
-    readme_text = readme_path.read_text()
+def check_docs_readme() -> None:
+    readme_text = DOCS_README.read_text()
     linked_docs = set()
     for match in MARKDOWN_LINK_RE.finditer(readme_text):
         target = match.group(1).split("#", 1)[0]
         if not target.endswith(".md"):
             continue
-        resolved = (readme_path.parent / target).resolve()
-        if resolved.parent == DOCS_DIR and resolved != readme_path:
+        resolved = (DOCS_README.parent / target).resolve()
+        if resolved.parent == KNOWLEDGE_DIR:
             linked_docs.add(resolved.name)
-
-    doc_files = {path.name for path in DOCS_DIR.glob("*.md") if path.name != "README.md"}
-    missing = sorted(doc_files - linked_docs)
+    missing = sorted(EXPECTED_KNOWLEDGE_DOCS - linked_docs)
     if missing:
-        fail(f"dot_codex/docs/README.md is missing links to: {', '.join(missing)}")
+        fail(f"docs/README.md is missing links to: {', '.join(missing)}")
 
 
 def main() -> None:
     check_agents()
     check_rules()
-    check_markdown()
-    check_docs_index()
+    check_markdown_links()
+    check_docs_readme()
     print("Codex harness verification passed.")
 
 

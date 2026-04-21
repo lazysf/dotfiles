@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["terraform"],
-  decision = "prompt",
-  justification = "Terraform 操作はインフラ影響が大きいため都度確認する。",
-  match = [
-    "terraform plan",
-  ],
-)

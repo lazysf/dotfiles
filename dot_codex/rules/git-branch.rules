@@ -1,0 +1,21 @@
+prefix_rule(
+  pattern = ["git", "branch", ["-vv", "--show-current"]],
+  decision = "allow",
+  justification = "現在ブランチと upstream 状態の確認に必要な読み取り専用の git branch 操作のみ許可する。",
+  match = [
+    "git branch -vv",
+    "git branch --show-current",
+  ],
+)
+
+prefix_rule(
+  pattern = ["git", "branch", ["-d", "-D", "-m", "--unset-upstream"]],
+  decision = "prompt",
+  justification = "branch の削除や改名、upstream 変更は履歴運用に影響するため都度確認する。",
+  match = [
+    "git branch -d feature/foo",
+    "git branch -D feature/foo",
+    "git branch -m old new",
+    "git branch --unset-upstream",
+  ],
+)

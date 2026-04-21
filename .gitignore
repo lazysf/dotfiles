@@ -1,19 +1,6 @@
+# macOS system files
 .DS_Store
 
-# Editor / IDE
-*.swp
-*.swo
-*~
-.vscode/
-.idea/
-
-# Tool caches
-.pre-commit-cache/
-.nvimlog
-
-# Python
+# Python bytecode files
 __pycache__/
-*.py[cod]
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+*.pyc

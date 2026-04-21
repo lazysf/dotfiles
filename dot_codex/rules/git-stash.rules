@@ -1,0 +1,9 @@
+prefix_rule(
+  pattern = ["git", "stash"],
+  decision = "prompt",
+  justification = "git stash は差分境界を見失いやすいため都度確認する。",
+  match = [
+    "git stash",
+    "git stash pop",
+  ],
+)

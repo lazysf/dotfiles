@@ -1,0 +1,31 @@
+prefix_rule(
+  pattern = ["mise", "run", ["test", "lint", "format"]],
+  decision = "allow",
+  justification = "日常的で安全な mise run の定番タスクのみを許可する。",
+  match = [
+    "mise run test",
+    "mise run lint",
+    "mise run format",
+  ],
+  not_match = [
+    "mise run",
+    "mise run deploy",
+    "mise run release",
+    "mise install",
+    "mise use node@latest",
+    "mise settings ls",
+  ],
+)
+
+# This intentionally overlaps with the rule above.
+# Codex applies the most restrictive decision when multiple rules match.
+prefix_rule(
+  pattern = ["mise", "run"],
+  decision = "prompt",
+  justification = "allowlist 外の mise run タスクは副作用が読みにくいため都度確認する。",
+  match = [
+    "mise run",
+    "mise run deploy",
+    "mise run release",
+  ],
+)

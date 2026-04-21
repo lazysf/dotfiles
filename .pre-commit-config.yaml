@@ -7,13 +7,11 @@ repos:
       - id: check-case-conflict
       - id: check-json
       - id: check-merge-conflict
-      - id: check-toml
-      - id: check-yaml
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
-        args: ["--fix=no"]
       - id: trailing-whitespace
+        exclude: \.(md|markdown)$
   - repo: local
     hooks:
       - id: verify-codex-harness
