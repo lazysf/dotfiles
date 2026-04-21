@@ -17,7 +17,7 @@
 - まず repo-level knowledge として調査結果や運用知見を `docs/` に残し、その後で `dot_codex/` に昇格すべきものだけを選ぶ
 - `dot_codex/` には、展開後にも価値があり、workspace 横断で再利用するものだけを置く
 - 大きな runtime surface の追加よりも、docs、verification、rules、skills の整合を優先する
-- 旧導線 wrapper を増やすより、`core-*` の発火条件と説明を揃えることを優先する
+- prefix 付きの workflow 名を増やすより、各 skill の発火条件と説明を揃えることを優先する
 
 ## 採用している考え方
 
@@ -61,3 +61,4 @@
 - [ADR 0001](../adr/0001-common-codex-harness-lives-in-dot_codex.md)
 - [ADR 0002](../adr/0002-project-specific-knowledge-lives-in-project-docs.md)
 - [ADR 0003](../adr/0003-promote-harness-knowledge-by-runtime-surface.md)
+- [ADR 0004](../adr/0004-retire-legacy-workflow-prefixes.md)

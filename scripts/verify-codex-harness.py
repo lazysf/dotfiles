@@ -32,6 +32,15 @@ EXPECTED_KNOWLEDGE_DOCS = {
     "harness-design-principles.md",
     "harness-regression-checks.md",
 }
+LEGACY_SKILL_DIR_PREFIXES = ("core-", "phase-")
+LEGACY_SKILL_NAME_RE = re.compile(r"^name:\s*(core-|phase-|entry-)", re.MULTILINE)
+LEGACY_SURFACE_PATTERNS = (
+    re.compile(r"core-"),
+    re.compile(r"phase-"),
+    re.compile(r"entry-classify"),
+    re.compile(r"deprecated wrapper"),
+    re.compile(r"\bcore skills?\b"),
+)
 
 
 def fail(message: str) -> None:
@@ -96,11 +105,38 @@ def check_docs_readme() -> None:
         fail(f"docs/README.md is missing links to: {', '.join(missing)}")
 
 
+def check_skill_surface() -> None:
+    skills_dir = DOT_CODEX / "skills"
+    legacy_dirs = sorted(
+        path.relative_to(ROOT)
+        for path in skills_dir.iterdir()
+        if path.is_dir() and (path.name == "entry-classify" or path.name.startswith(LEGACY_SKILL_DIR_PREFIXES))
+    )
+    if legacy_dirs:
+        fail(f"legacy skill directories remain: {', '.join(map(str, legacy_dirs))}")
+
+    for path in sorted(skills_dir.rglob("SKILL.md")):
+        text = path.read_text()
+        if LEGACY_SKILL_NAME_RE.search(text):
+            fail(f"{path.relative_to(ROOT)} still declares a legacy skill prefix in frontmatter")
+
+
+def check_surface_docs() -> None:
+    paths = [DOT_CODEX / "AGENTS.md", DOCS_README, *sorted(KNOWLEDGE_DIR.glob("*.md"))]
+    for path in paths:
+        text = path.read_text()
+        for pattern in LEGACY_SURFACE_PATTERNS:
+            if pattern.search(text):
+                fail(f"{path.relative_to(ROOT)} still contains legacy skill surface text matching {pattern.pattern!r}")
+
+
 def main() -> None:
     check_agents()
     check_rules()
     check_markdown_links()
     check_docs_readme()
+    check_skill_surface()
+    check_surface_docs()
     print("Codex harness verification passed.")
 
 
