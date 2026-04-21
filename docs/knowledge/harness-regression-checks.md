@@ -49,8 +49,8 @@
 - 例: 「ハーネスの詳細知識はどこを読めばよいか」
 - 期待:
   - `dot_codex/AGENTS.md` は契約と導線の入口として案内される
-  - 正式入口は `core-*` として案内される
-  - `entry-*` / `phase-*` は deprecated wrapper として扱われる
+  - 正式入口は skill 群として案内される
+  - 補助 skill は主役 skill と混同せずに案内される
   - repo-level の詳細知識は `docs/knowledge/` に誘導される
   - 判断理由は `docs/adr/` に誘導される
   - project-specific knowledge は project 側 `docs/` に誘導される
@@ -63,13 +63,13 @@
   - 短命な進捗や途中メモは `docs/` の正本にしない
   - 必要なら issue / PR / Git 履歴や一時ファイルなど、別の置き場を案内する
 
-### 7. `core-*` の発火条件と説明が一致する
+### 7. skill の発火条件と説明が一致する
 
 - 例: 「要件を詰めたい」「レビューしたい」「コミットしたい」
 - 期待:
-  - `core-product-planning`, `core-code-review`, `core-git-commit` など、依頼内容に近い `core-*` がそのまま案内される
+  - `product-planning`, `code-review`, `git-commit` など、依頼内容に近い skill がそのまま案内される
   - 旧 implicit invocation 前提の説明が残っていない
-  - 旧導線向けの内部専用表現が `core-*` の入口説明に残っていない
+  - 旧導線向けの内部専用表現が skill の入口説明に残っていない
 
 ## 関連文書
 

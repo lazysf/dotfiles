@@ -4,7 +4,7 @@ prefix_rule(
   justification = "非対話の通常 commit のみ許可する。",
   match = [
     "git commit -m \"chore: update\"",
-    "git commit -F /tmp/core-git-commit-message.txt",
+    "git commit -F /tmp/git-commit-message.txt",
   ],
   not_match = [
     "git commit",
