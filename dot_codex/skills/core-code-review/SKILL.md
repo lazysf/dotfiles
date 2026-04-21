@@ -1,13 +1,13 @@
 ---
 name: core-code-review
-description: Review フェーズのレビュー入口。コードレビュー依頼時に、quality-reviewer を基本として必要に応じて security-reviewer も呼び出し、最後に core-review-findings-summary 形式で findings-first に整理して返す。差分レビューの入口として使用する。
+description: Review フェーズの内部レビュー手順。`phase-review` から渡された対象差分に対し、quality-reviewer を基本として必要に応じて security-reviewer も呼び出し、findings-first の出口へつなぐ。
 metadata:
-  short-description: コードレビュー入口
+  short-description: レビュー内部手順
 ---
 
 # Code Review
 
-コードレビュー依頼時の入口をそろえる。
+Review 工程の内部手順として、コードレビュー対象を確定し reviewer agent の結果を統合する。
 このスキルは、レビュー本体を広く自前でやり直すのではなく、既存 reviewer agent を起動して結果を統合する役割に徹する。
 フェーズ全体の入口は `phase-review` を参照する。
 

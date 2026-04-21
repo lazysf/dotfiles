@@ -1,0 +1,7 @@
+interface:
+  display_name: "Core Capture Knowledge Triage"
+  short_description: "Internal knowledge triage step for phases"
+  default_prompt: "Use $core-capture-knowledge-triage as an internal phase step to decide whether knowledge should be kept and where it belongs."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,13 +1,13 @@
 ---
 name: core-git-push
-description: Publish フェーズの実行 skill。ローカルコミットのリモートプッシュ手順（upstream 設定・タグプッシュを含む）を提供する。ユーザーが Git のプッシュや upstream 設定を求める場合に使用する（強制プッシュは現行ルールでは対象外）。
+description: Publish フェーズの内部実行手順。`phase-publish` から渡された共有条件に対して、ローカルコミットのリモートプッシュ手順と upstream 設定判断を担う。強制プッシュは現行ルールでは対象外。
 metadata:
   short-description: Git push
 ---
 
 # Core Git Push
 
-現在のブランチのローカルコミットをリモートへプッシュし、必要なら upstream を設定する。
+Publish 工程の内部手順として、現在のブランチのローカルコミットをリモートへプッシュし、必要なら upstream を設定する。
 このスキルは、Git 導線のうち push 実行と upstream 判定の責務を担う。
 フェーズ全体の入口は `phase-publish` を参照する。
 

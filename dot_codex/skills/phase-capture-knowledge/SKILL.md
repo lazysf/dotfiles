@@ -17,11 +17,18 @@ Capture Knowledge 工程の入口をそろえ、残すべき知識だけを適�
 - 既存 docs や ADR の候補
 - 共有要否に関する前提
 
+## uses
+
+- `core-capture-knowledge-triage`
+- `core-write-knowledge-note`
+- `core-write-adr`
+
 ## 進め方
 
-1. `core-capture-knowledge-triage` で残すかどうかと置き場を決める
-2. 通常知見なら `core-write-knowledge-note` へ渡す
-3. 判断記録なら `core-write-adr` へ渡す
+1. まず `$core-capture-knowledge-triage` を使い、残すかどうか、共有範囲、置き場を決める
+2. 通常知見として残す場合は `$core-write-knowledge-note` へ渡す
+3. 判断記録として残す場合は `$core-write-adr` へ渡す
+4. 最後に Capture Knowledge 工程の出力形式へ統合する
 
 ## 出力
 

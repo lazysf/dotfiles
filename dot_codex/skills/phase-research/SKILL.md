@@ -19,6 +19,12 @@ metadata:
 
 - `core-research`
 
+## 進め方
+
+1. まず `$core-research` を使い、調査対象、確認論点、既存文脈から確認できる事実を整理する
+2. `facts`、`unknowns`、`options`、`recommendation`、`next_step` を分けて扱い、未確認事項を事実へ混ぜない
+3. 最後に Research 工程の出力形式へ統合する
+
 ## 出力
 
 - `facts`
