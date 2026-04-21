@@ -2,14 +2,15 @@
 
 この文書は、`dot_codex/AGENTS.md` で使う開発フロー surface の基準をまとめる。
 
-## 4層の責務
+## Surface の責務
 
-- `workflow-*`: 案件タイプごとの入口。どの phase をどの順で通すかを決める
+- `entry-classify`: 全導線の共通入口。要求を単一主分類へ倒し、次に入る workflow を決める
+- `workflow-*`: 分類後の案件タイプ別導線。どの phase をどの順で通すかを決める
 - `phase-*`: 再利用可能な工程。目的、開始条件、完了条件、入出力、使用 core を定義する薄い orchestrator
 - `core-*`: 主役となる実行手順。詳細手順、判断基準、停止条件、出力フォーマットを定義する
 - `agents/`: 専門 reviewer などの補助役。read-only reviewer はここに残す
 
-詳細なチェックリスト、テンプレート、例外規則は core とその `references/` に集約する。workflow は phase の並びに徹し、phase は core の束ねに徹する。
+詳細なチェックリスト、テンプレート、例外規則は core とその `references/` に集約する。`entry-classify` は workflow 選択に徹し、workflow は phase の並びに徹し、phase は core の束ねに徹する。
 
 ## 要求分類
 
@@ -25,13 +26,13 @@
 
 ## workflow 一覧
 
-- `workflow-research`: `phase-classify -> phase-research`
-- `workflow-bugfix`: `phase-classify -> phase-diagnose -> phase-implement -> phase-verify`
-- `workflow-feature`: `phase-classify -> phase-plan -> phase-implement -> phase-test -> phase-review`
-- `workflow-security`: `phase-classify -> phase-security-scan -> phase-implement -> phase-verify`
-- `workflow-quality`: `phase-classify -> phase-quality-analysis -> phase-implement -> phase-verify`
-- `workflow-maintenance`: `phase-classify -> phase-maintenance-analysis -> phase-implement -> phase-test -> phase-review`
-- `workflow-compat`: `phase-classify -> phase-compat-assessment -> phase-implement -> phase-verify`
+- `entry-classify -> workflow-research -> phase-research`
+- `entry-classify -> workflow-bugfix -> phase-diagnose -> phase-implement -> phase-verify`
+- `entry-classify -> workflow-feature -> phase-plan -> phase-implement -> phase-test -> phase-review`
+- `entry-classify -> workflow-security -> phase-security-scan -> phase-implement -> phase-verify`
+- `entry-classify -> workflow-quality -> phase-quality-analysis -> phase-implement -> phase-verify`
+- `entry-classify -> workflow-maintenance -> phase-maintenance-analysis -> phase-implement -> phase-test -> phase-review`
+- `entry-classify -> workflow-compat -> phase-compat-assessment -> phase-implement -> phase-verify`
 
 必要時のみ次を共通 tail として差し込む。
 
@@ -42,6 +43,7 @@
 ## 命名規約
 
 - `workflow-*`: 案件タイプ名を置く
+- `entry-classify`: 共通入口名を置く
 - `phase-*`: 工程名を置く
 - `core-*`: 工程内の詳細作業名を置く
 

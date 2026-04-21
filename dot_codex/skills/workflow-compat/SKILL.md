@@ -1,6 +1,6 @@
 ---
 name: workflow-compat
-description: compat 案件の入口 workflow。互換性ギャップの評価、追従実装、検証の順で進める。
+description: compat 案件の導線 workflow。互換性ギャップの評価、追従実装、検証の順で進める。
 metadata:
   short-description: Compat workflow
 ---
@@ -8,13 +8,13 @@ metadata:
 # Workflow Compat
 
 `compat` 分類の案件を、`compat-assessment -> implement -> verify` で進める。
+この workflow は `entry-classify` により選択されたあとに始まる。
 
 ## フロー
 
-1. `phase-classify`
-2. `phase-compat-assessment`
-3. `phase-implement`
-4. `phase-verify`
+1. `phase-compat-assessment`
+2. `phase-implement`
+3. `phase-verify`
 
 ## 主要受け渡し
 

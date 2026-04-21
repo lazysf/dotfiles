@@ -1,6 +1,6 @@
 ---
 name: workflow-bugfix
-description: bugfix 案件の入口 workflow。診断、実装、検証の順で進める。
+description: bugfix 案件の導線 workflow。診断、実装、検証の順で進める。
 metadata:
   short-description: Bugfix workflow
 ---
@@ -8,13 +8,13 @@ metadata:
 # Workflow Bugfix
 
 `bugfix` 分類の案件を、`diagnose -> implement -> verify` で進める。
+この workflow は `entry-classify` により選択されたあとに始まる。
 
 ## フロー
 
-1. `phase-classify`
-2. `phase-diagnose`
-3. `phase-implement`
-4. `phase-verify`
+1. `phase-diagnose`
+2. `phase-implement`
+3. `phase-verify`
 
 ## 主要受け渡し
 
