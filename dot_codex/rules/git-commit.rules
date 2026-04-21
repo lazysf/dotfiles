@@ -1,0 +1,23 @@
+prefix_rule(
+  pattern = ["git", "commit", ["-m", "-F"]],
+  decision = "allow",
+  justification = "非対話の通常 commit のみ許可する。",
+  match = [
+    "git commit -m \"chore: update\"",
+    "git commit -F /tmp/core-git-commit-message.txt",
+  ],
+  not_match = [
+    "git commit",
+    "git commit --amend",
+  ],
+)
+
+prefix_rule(
+  pattern = ["git", "commit", "--amend"],
+  decision = "prompt",
+  justification = "amend は履歴を書き換えるため都度確認する。",
+  match = [
+    "git commit --amend",
+    "git commit --amend --no-edit",
+  ],
+)

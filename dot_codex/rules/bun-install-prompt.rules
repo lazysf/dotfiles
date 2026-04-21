@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["bun", ["add", "install"]],
-  decision = "prompt",
-  justification = "bun による依存追加や更新は影響が大きいため都度確認する。",
-  match = [
-    "bun add zod",
-    "bun install",
-  ],
-)

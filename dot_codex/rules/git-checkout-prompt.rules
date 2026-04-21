@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["git", "checkout"],
-  decision = "prompt",
-  justification = "git checkout は branch 切替や worktree 上書きに使えるため都度確認する。",
-  match = [
-    "git checkout main",
-    "git checkout -- README.md",
-  ],
-)

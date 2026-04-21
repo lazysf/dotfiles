@@ -1,10 +1,5 @@
 # AGENTS.md
 
-## 目的
-
-この `AGENTS.md` は、`~/.codex` に展開される共通ハーネスの運用契約です。
-個別リポジトリの設計や履歴はここに持ち込まず、各プロジェクトのルート `AGENTS.md` と `docs/` で管理してください。
-
 ## 基本姿勢
 
 - 日本語で返答する
@@ -12,99 +7,78 @@
 - 推測や憶測で処理を進めない
 - 小さな判断は既存文脈に寄せて自走し、大きな判断だけ確認する
 - workspace 外のファイルは、現状確認や diff のための読み取りだけに留める
-
-## 文書の責務
-
-- `AGENTS.md` は、共通ハーネスの運用契約と正式フローの正本を扱う
-- `QUICKSTART.md` は、今回どこから入るかを素早く決める入口を扱う
-- `docs/workflow-guide.md` は、良い依頼例、補足、長めセッションの進め方を扱う
-
-## Core Principles
-
-1. **既存コンテキスト優先** — 既存規約、既存実装、運用前提に寄せる
-2. **スコープ最小化** — 今回の依頼で必要な範囲だけを扱う
-3. **KISS** — まず理解しやすく運用しやすい案を選ぶ
-4. **YAGNI** — 将来の可能性だけを理由に抽象化や拡張を入れない
-5. **不確実さを隠さず確認** — 未確認事項は断定せず分けて扱う
-6. **境界と検証条件を意識** — 入出力、永続化、認証認可、権限、公開面は明示的に確認する
-
-## 運用フロー
-
-- 正式なフローの正本はこの `AGENTS.md`
-- 入口の索引は `QUICKSTART.md`
-- 実務ガイドは `docs/workflow-guide.md`
-- 詳細な共通運用 docs は `docs/` を参照する
-- 通常は次の順で、必要な段階だけ進める
-  - `task-intake`
-  - `workspace-intake`
-  - 必要なら `plan-product`
-  - 長めの作業なら `session-orchestrator`
-  - 技術計画が必要なら `plan-architect`
-  - `coding-standards`
-  - 必要なら `test-runner`
-  - 必要なら `change-review`
-  - 必要なら `commit-message`
-  - 必要なら `git-commit`
-  - 必要なら `git-push`
-- 依頼が散らばっている場合だけ、入口に `request-shaping` を置く
-- 環境自体の点検や整備相談では、入口に `environment-audit` を置いてから通常フローへ戻る
-
-## 使い分け
-
-- 依頼が具体的なら `task-intake` から入る
-- 依頼が散らばっているなら `request-shaping` から入る
-- 要件整理が重いなら `plan-product` を追加する
-- 長めの作業なら `session-orchestrator` を追加する
-- 技術計画が必要なら `plan-architect` を追加する
-- 環境整備相談は `environment-audit` から入る
-
-## 確認を優先する境界
-
-- 既存挙動が変わる可能性がある
-- 公開インターフェース、永続化、認証認可、権限に触れる
-- 秘密情報の参照、生成、更新、出力に触れる
-- 削除や上書きなどの破壊的操作を伴う
-- 依頼の解釈が複数あり、結果が変わりうる
-- 依頼範囲外の整理、横展開、大きな設計変更が混ざりそう
-
-## レビュー方針
-
-- レビュー本体は specialized agent を優先する
-  - 品質レビュー: `review-quality`
-  - セキュリティレビュー: `review-security`
-- `change-review` は review の代替ではなく、出口整理として使う
-- `review-quality` / `review-security` の shorthand は、特に明示がない限り `review agent → change-review` の組として扱う
-- raw JSON / 生出力を明示要求された場合だけ `change-review` を省略してよい
-
-## Reporting Policy
-
-- 実装、提案、計画のいずれでも、何を確認したかを明示する
-- 実行できた検証と、実行できなかった検証を分けて扱う
-- 未検証事項や残リスクがある場合は、断定せずに明示する
-- 最終返答では必要に応じて次を短く整理する
-  - 依頼をどう理解したか
-  - 事実として何を確認したか
-  - 何を変えたか、または何を提案したか
-  - 何を検証したか
-  - 何が未検証か
-
-## Git Policy
-
-- コミットは `1コミット1変更` を原則とする
-- staging は対象を絞って行い、`git add .`、`git add -A`、`git add --all` は既定手段にしない
-- コミットメッセージは、別規約がなければ Conventional Commits を既定とする
-- コミットメッセージ作成は `commit-message`、commit 実行は `git-commit`、push は `git-push` に責務を分ける
-- push はユーザーの明示的な指示があるまで実行しない
-- force push は行わない
-
-## Skills の参照先
-
-- 利用可能な skill の正本は `skills/` 配下とする
-- 入口の判断は `QUICKSTART.md` を参照し、個別の使い方は各 `SKILL.md` を参照する
-
-## 返答ルール
-
 - 通常の最終返答では、スキルを使ったかどうかを末尾に必ず明示する
-  - 使用あり: `スキル: 使用（skill1, skill2）`
+  - 使用あり: `スキル: skill1, skill2`
   - 使用なし: `スキル: 未使用`
 - 次の提案アクションがある場合は、番号付きリストで示す
+
+## 停止線
+
+- 既存挙動が変わる可能性がある場合は、根拠と影響範囲を明示して確認する
+- 公開インターフェース、永続化、認証認可、権限、秘密情報に触れる場合は確認を優先する
+- 削除や上書きなどの破壊的操作を伴う場合は、ユーザーの明示的な意図なしに進めない
+
+## 開発フロー
+
+- 標準導線は `phase-classify -> workflow-* -> 必要時に phase-capture-knowledge -> 必要時に phase-commit -> 必要時に phase-publish` とする
+- まず `phase-classify` で要求を単一の主分類へ倒し、対応する `workflow-*` へ入る
+- workflow は工程の並びと入出力の受け渡しだけを扱う
+- phase は工程の目的、開始条件、完了条件、I/O schema、使う core を扱う薄い orchestrator とする
+- core は主役の実行手順として、詳細手順、判断基準、停止条件、出力フォーマットの正本を持つ
+- 詳細な手順、判断基準、テンプレート、例外規則は core skill と配下の `references/` を参照する
+
+### 1. Classify
+
+- 目的: チャット入力された要求を単一の主分類へ整理し、次に入る `workflow-*` を決める
+- 進む条件: `primary_category`、`reason`、`boundary_note`、`selected_workflow`、`stop_conditions` を説明できる
+- 詳細: `phase-classify` を起点に、分類判断の詳細は `core-task-classification` を使う
+
+### 2. Typed Workflow
+
+- 目的: 要求分類に応じて必要な phase だけを並べ、工程間の受け渡しをそろえる
+- workflow の種類:
+  - `workflow-research`
+  - `workflow-bugfix`
+  - `workflow-feature`
+  - `workflow-security`
+  - `workflow-quality`
+  - `workflow-maintenance`
+  - `workflow-compat`
+- 代表フロー:
+  - `workflow-research`: `phase-classify -> phase-research`
+  - `workflow-bugfix`: `phase-classify -> phase-diagnose -> phase-implement -> phase-verify`
+  - `workflow-feature`: `phase-classify -> phase-plan -> phase-implement -> phase-test -> phase-review`
+  - `workflow-security`: `phase-classify -> phase-security-scan -> phase-implement -> phase-verify`
+  - `workflow-quality`: `phase-classify -> phase-quality-analysis -> phase-implement -> phase-verify`
+  - `workflow-maintenance`: `phase-classify -> phase-maintenance-analysis -> phase-implement -> phase-test -> phase-review`
+  - `workflow-compat`: `phase-classify -> phase-compat-assessment -> phase-implement -> phase-verify`
+
+### 3. Phase Tail
+
+- `phase-capture-knowledge`
+  - 目的: 残すべき知識の要否と置き場を整理し、必要なら docs へ落とす
+  - 詳細: `core-capture-knowledge-triage`、`core-write-adr`、`core-write-knowledge-note`
+- `phase-commit`
+  - 目的: 差分を意味のある最小単位へまとめ、規約に沿ったコミットへ整理する
+  - 詳細: `core-git-commit`
+- `phase-publish`
+  - 目的: 明示依頼がある場合だけ共有先へ push し、共有結果を整える
+  - 詳細: `core-git-push`
+
+## Workflow Surface Policy
+
+- 全体契約と導線は `AGENTS.md` に置く
+- repo-level の参照知見は `root docs/` に置く
+- repo-level の判断記録は `root docs/adr/` に置く
+- 再利用する作業手順は `skills/` に置く
+- `workflow-*` は案件タイプの入口、`phase-*` は再利用可能な工程、`core-*` は主役の実行手順の正規置き場にする
+- 詳細な判断基準、チェックリスト、テンプレート、例外規則は core skill 配下の `references/` に置く
+- 専門化した補助役は `agents/` に置く
+  - 現時点の reviewer は read-only 運用とする
+  - workflow の入口や本体は `agents/` に置かない
+- コマンド単位の安全制約や許可ルールは `rules/` に置く
+  - 運用フロー本体は `rules/` に書かない
+- `AGENTS.md` に workflow / phase / core の詳細手順や長いテンプレートを書かない
+- 継続参照したい repo-level の知見は `AGENTS.md` に長文化せず、`root docs/` へ寄せる
+- `references/` はトップレベルに置かず、原則として core skill ディレクトリ配下にのみ置く
+- 置き場が曖昧でもトップレベルに新しい運用ファイルを増やさない

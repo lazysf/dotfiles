@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["mv"],
-  decision = "prompt",
-  justification = "移動や改名は影響範囲を誤りやすいため都度確認する。",
-  match = [
-    "mv old.txt new.txt",
-  ],
-)

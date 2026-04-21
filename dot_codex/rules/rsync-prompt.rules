@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["rsync"],
-  decision = "prompt",
-  justification = "リモート同期や転送は影響範囲が大きいため都度確認する。",
-  match = [
-    "rsync -av ./src/ user@example.com:/tmp/src/",
-  ],
-)

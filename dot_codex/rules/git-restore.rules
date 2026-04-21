@@ -1,0 +1,25 @@
+prefix_rule(
+  pattern = ["git", "restore", "--staged"],
+  decision = "allow",
+  justification = "合意済みの対象に限ったステージ解除のみ許可する。",
+  match = [
+    "git restore --staged README.md",
+    "git restore --staged path/to/file",
+  ],
+  not_match = [
+    "git restore --staged .",
+    "git restore --staged --worktree README.md",
+  ],
+)
+
+# This intentionally overlaps with the rule above.
+# Codex applies the most restrictive decision when multiple rules match.
+prefix_rule(
+  pattern = ["git", "restore", "--staged", [".", "--worktree"]],
+  decision = "prompt",
+  justification = "広域 unstage や worktree を触る restore は影響範囲を誤りやすいため都度確認する。",
+  match = [
+    "git restore --staged .",
+    "git restore --staged --worktree README.md",
+  ],
+)

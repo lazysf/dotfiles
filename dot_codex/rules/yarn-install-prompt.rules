@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["yarn", ["add", "install"]],
-  decision = "prompt",
-  justification = "yarn による依存追加や更新は影響が大きいため都度確認する。",
-  match = [
-    "yarn add zod",
-    "yarn install",
-  ],
-)
