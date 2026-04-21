@@ -1,6 +1,6 @@
 ---
 name: docs-update
-description: 既存ドキュメント更新手順。README、運用手順、設計メモなどを、一次情報と既存文脈に沿って必要十分に更新する。
+description: 「README だけ直したい」「既存 docs を実装や運用に合わせて更新したい」といった docs-only の依頼で使う。README、運用手順、設計メモなど既存ドキュメントの更新内容を、一次情報と既存文脈に沿って必要十分に反映する。知識の置き場判断は `capture-knowledge-triage`、新しい知見草案は `write-knowledge-note` / `write-adr` で扱う。
 metadata:
   short-description: 文書更新
 ---

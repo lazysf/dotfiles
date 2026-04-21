@@ -1,6 +1,6 @@
 ---
 name: request-shaping
-description: 依頼整形手順。曖昧な依頼や散在した要求を、Codex が扱いやすい短い実装ブリーフへ整える。
+description: 「依頼文が散らばっているので整えたい」「まず短い実装ブリーフにしたい」といった入口整理で使う。目的、確認済み事実、制約、仮定、未確定事項を短い依頼ブリーフへ圧縮する。今回どこまで扱うかの停止線を置く役割は `task-intake`、重い要件整理は `product-planning` で扱う。
 metadata:
   short-description: 依頼の整形
 ---

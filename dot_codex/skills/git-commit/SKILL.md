@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Git commit 手順。差分境界に対して、コミット実行、ステージ範囲確認、コミットメッセージ作成を担う。プッシュは `git-push` を使う。
+description: 「この変更をコミットしたい」「コミットメッセージを作って安全に commit したい」といった Git の依頼で使う。1 コミット 1 変更の粒度で staging 範囲、コミットメッセージ、commit 実行を整理する。push の実行や upstream 判定は `git-push` で扱う。
 metadata:
   short-description: Git commit
 ---

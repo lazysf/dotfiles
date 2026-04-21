@@ -1,6 +1,6 @@
 ---
 name: git-push
-description: Git push 手順。ローカルコミットのリモートプッシュ手順と upstream 設定判断を担う。強制プッシュは現行ルールでは対象外。
+description: 「今のブランチを push したい」「upstream を設定してリモートへ出したい」といった Git の依頼で使う。push 対象、push 先、upstream 設定の有無を確認し、通常 push を安全に実行する。コミット作成やメッセージ整備は `git-commit`、強制 push はこの skill の対象外とする。
 metadata:
   short-description: Git push
 ---

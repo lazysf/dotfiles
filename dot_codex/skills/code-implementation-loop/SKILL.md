@@ -1,6 +1,6 @@
 ---
 name: code-implementation-loop
-description: 実装ループ手順。テスト可能な変更を、先に確認方法を置いてから最小実装、必要ならリファクタ、再確認へ進める。
+description: 「実装に入りたい」「確認方法を先に置いて最小差分で進めたい」といった変更実装の依頼で使う。テストや再現手順を先に置き、最小実装、必要なリファクタ、再確認の順で小さく実装を進める。原因調査や要件整理だけが主目的なら `research` や planning 系 skill を優先する。
 metadata:
   short-description: 実装ループ
 ---
