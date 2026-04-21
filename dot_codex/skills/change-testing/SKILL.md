@@ -1,6 +1,6 @@
 ---
 name: change-testing
-description: feature / maintenance 案件の確認手順。期待挙動と保護したい既存挙動の確認を整理する。
+description: 「新機能やリファクタの確認項目を決めたい」「期待挙動と守るべき既存挙動を確認したい」といった feature / maintenance の依頼で使う。受け入れ確認と保護したい既存挙動の test plan、実行結果、残る test risk を整理する。bugfix / security / quality / compat の修正結果確認は `change-verification` で扱う。
 metadata:
   short-description: テスト手順
 ---

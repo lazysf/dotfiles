@@ -1,6 +1,6 @@
 ---
 name: task-intake
-description: 依頼整理手順。日常的な曖昧依頼を、実装や詳細計画に入る前の最小単位へ整え、今回どこまで扱うかを軽く固定する。
+description: 「今回どこまでやるか先に軽く決めたい」「探索に入る前の停止線を置きたい」といった日常的な曖昧依頼で使う。今回の対象、前提、成功条件、非目的、先に確認すべき点を軽く固定する。依頼文そのものの整形は `request-shaping`、重い要件整理は `product-planning` で扱う。
 metadata:
   short-description: 依頼整理
 ---

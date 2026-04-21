@@ -1,6 +1,6 @@
 ---
 name: change-verification
-description: bugfix / security / quality / compat 案件の検証手順。修正結果と回帰を確認する。
+description: 「バグ修正が効いたか確かめたい」「追従や hardening の結果を検証したい」といった bugfix / security / quality / compat の依頼で使う。修正前症状や追従前ギャップに対する verification plan、結果、回帰観点、残リスクを整理する。feature / maintenance の受け入れ確認は `change-testing` で扱う。
 metadata:
   short-description: 検証手順
 ---

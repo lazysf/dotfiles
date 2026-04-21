@@ -1,6 +1,6 @@
 ---
 name: bug-diagnosis
-description: bugfix 案件の診断手順。症状、再現条件、原因候補、修正対象を整理する。
+description: 「バグを切り分けたい」「再現条件と修正対象を先に固めたい」といった bugfix 前の依頼で使う。症状、再現条件、原因候補、最小の failing check、今回触る修正対象を整理する。修正実装は `code-implementation-loop`、修正後の確認は `change-verification` で扱う。
 metadata:
   short-description: 診断手順
 ---

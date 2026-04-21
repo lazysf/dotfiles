@@ -1,6 +1,6 @@
 ---
 name: quality-analysis
-description: quality 案件の分析手順。改善対象の品質特性と検証観点を整理する。
+description: 「性能や安定性を改善したい」「品質改善の焦点と検証観点を決めたい」といった quality 案件で使う。改善対象の品質特性、現状のボトルネックやリスク、今回の改善範囲、検証観点を整理する。変更容易性が主題なら `maintenance-analysis`、通常不具合の是正が主題なら `bug-diagnosis` を優先する。
 metadata:
   short-description: Quality 分析
 ---

@@ -1,6 +1,6 @@
 ---
 name: compat-assessment
-description: compat 案件の分析手順。外部変化の影響範囲と追従方針を整理する。
+description: 「外部 API 変更に追従したい」「依存やランタイム更新の影響を見たい」といった compat 案件で使う。外部変化とのギャップ、影響面、今回の追従範囲、検証観点を整理する。新しい価値追加は feature 側、CVE や権限強化が主題なら `security-scan` を優先する。
 metadata:
   short-description: Compat 分析
 ---

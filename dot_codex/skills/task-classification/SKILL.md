@@ -1,6 +1,6 @@
 ---
 name: task-classification
-description: 要求分類の補助手順。ユーザー要求を単一主分類へ倒し、関連する skill 候補を整理する。
+description: 「この依頼をどの分類で扱うべきか迷う」「次に使う skill 候補を絞りたい」といった入口補助で使う。ユーザー要求を主分類 1 つへ倒し、理由、境界メモ、次に使う skill 候補を整理する。実装や要件整理の本体ではなく、主役 skill を選ぶための補助に徹する。
 metadata:
   short-description: 要求分類
 ---
