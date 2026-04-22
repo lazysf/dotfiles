@@ -1,6 +1,6 @@
 ---
 name: write-knowledge-note
-description: 「通常知見として残すメモを作りたい」「knowledge note を追加したい」といった依頼で使う。手順メモ、確認ポイント、落とし穴、運用メモを `docs/knowledge/kebab-case-title.md` として新規作成する。判断記録は `write-adr`、既存 note の更新は `docs-update` で扱う。
+description: 「通常知見として残すメモを作りたい」「knowledge note を追加したい」といった依頼で使う。手順メモ、確認ポイント、落とし穴、運用メモを `docs/knowledge/kebab-case-title.md` として新規作成する。判断記録を残したい時は `write-adr` スキルを使い、既存 note を更新したい時は `docs-update` スキルを使う。
 metadata:
   short-description: 通常知見メモ作成
 ---
@@ -32,7 +32,7 @@ metadata:
 - 方針変更や互換性判断
 - 採用 / 不採用の決定
 - 既存 knowledge note の追記や統合
-- 上記に当てはまる内容は `write-adr` を使う
+- 上記に当てはまる内容を残したい時は `write-adr` スキルを使う
 
 ## 出力ガイド
 

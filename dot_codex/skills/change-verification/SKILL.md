@@ -1,6 +1,6 @@
 ---
 name: change-verification
-description: 「バグ修正が効いたか確かめたい」「追従や hardening の結果を検証したい」といった bugfix / security / quality / compat の依頼で使う。修正前症状や追従前ギャップに対する verification plan、結果、回帰観点、残リスクを整理する。feature / maintenance の受け入れ確認は `change-testing` で扱う。
+description: 「バグ修正が効いたか確かめたい」「追従や hardening の結果を検証したい」といった bugfix / security / quality / compat の依頼で使う。修正前症状や追従前ギャップに対する verification plan、結果、回帰観点、残リスクを整理する。feature / maintenance の受け入れ確認をしたい時は `change-testing` スキルを使う。
 metadata:
   short-description: 検証手順
 ---
@@ -8,7 +8,8 @@ metadata:
 # Change Verification
 
 bugfix / security / quality / compat 案件で、修正や追従の効果を確認する。
-このスキルは修正結果と回帰確認を担い、feature / maintenance の受け入れ確認は `change-testing` に委ねる。
+このスキルは修正結果と回帰確認を担う。
+feature / maintenance の受け入れ確認をしたい時は `change-testing` スキルを使う。
 
 ## 基本方針
 

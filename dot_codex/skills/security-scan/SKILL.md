@@ -1,6 +1,6 @@
 ---
 name: security-scan
-description: 「セキュリティリスクを下げたい」「hardening の対象と検証観点を決めたい」といった security 案件で使う。対象リスク、今回の security scope、必要な hardening、重点検証項目を整理する。外部変化への追従が主題なら `compat-assessment`、通常 bugfix が主題なら `bug-diagnosis` を優先する。
+description: 「セキュリティリスクを下げたい」「hardening の対象と検証観点を決めたい」といった security 案件で使う。対象リスク、今回の security scope、必要な hardening、重点検証項目を整理する。外部変化への追従が主題の時は `compat-assessment` スキル、通常 bugfix が主題の時は `bug-diagnosis` スキルを使う。
 metadata:
   short-description: Security 分析
 ---

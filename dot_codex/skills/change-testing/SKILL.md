@@ -1,6 +1,6 @@
 ---
 name: change-testing
-description: 「新機能やリファクタの確認項目を決めたい」「期待挙動と守るべき既存挙動を確認したい」といった feature / maintenance の依頼で使う。受け入れ確認と保護したい既存挙動の test plan、実行結果、残る test risk を整理する。bugfix / security / quality / compat の修正結果確認は `change-verification` で扱う。
+description: 「新機能やリファクタの確認項目を決めたい」「期待挙動と守るべき既存挙動を確認したい」といった feature / maintenance の依頼で使う。受け入れ確認と保護したい既存挙動の test plan、実行結果、残る test risk を整理する。bugfix / security / quality / compat の修正結果を確認したい時は `change-verification` スキルを使う。
 metadata:
   short-description: テスト手順
 ---
@@ -8,7 +8,8 @@ metadata:
 # Change Testing
 
 feature と maintenance 案件で、何をどう確認するかを整理して実施する。
-このスキルは確認計画と実施整理を担い、修正効果の検証は `change-verification` に持ち込まない。
+このスキルは確認計画と実施整理を担う。
+修正効果を検証したい時は `change-verification` スキルを使う。
 
 ## 基本方針
 

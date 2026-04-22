@@ -1,6 +1,6 @@
 ---
 name: write-adr
-description: 「この判断を ADR として残したい」「新しい ADR を追加したい」といった依頼で使う。背景、決定、影響を `docs/adr/NNNN-kebab-case-title.md` として採番し、`Proposed` 状態の新規 ADR を作成する。既存 ADR の状態更新は `update-adr-status`、通常知見メモは `write-knowledge-note` で扱う。
+description: 「この判断を ADR として残したい」「新しい ADR を追加したい」といった依頼で使う。背景、決定、影響を `docs/adr/NNNN-kebab-case-title.md` として採番し、`Proposed` 状態の新規 ADR を作成する。既存 ADR の状態を更新したい時は `update-adr-status` スキル、通常知見メモを書きたい時は `write-knowledge-note` スキルを使う。
 metadata:
   short-description: ADR 作成
 ---
