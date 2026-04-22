@@ -15,6 +15,7 @@
   - [0003-promote-harness-knowledge-by-runtime-surface.md](./adr/0003-promote-harness-knowledge-by-runtime-surface.md)
   - [0004-retire-legacy-workflow-prefixes.md](./adr/0004-retire-legacy-workflow-prefixes.md)
   - [0005-keep-harness-verification-focused-on-repo-contracts.md](./adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
+  - [0006-keep-agents-thin-and-surface-oriented.md](./adr/0006-keep-agents-thin-and-surface-oriented.md)
 - `dot_codex/AGENTS.md`: 運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: review の正式入口になる reviewer agent を置く。review はここから明示的に呼び出す
