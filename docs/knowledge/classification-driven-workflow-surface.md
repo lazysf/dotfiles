@@ -13,7 +13,7 @@
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
 docs-only の依頼で、成果物が既存ドキュメント更新に限られる場合は、主分類を増やさず `docs-update` を直接入口として使ってよい。
 
-## 要求分類
+## 要求分類の見方
 
 | 主分類        | 主目的                           | 主に含むもの                                               | ひとことで言うと         | 境界の扱い                                         |
 | ------------- | -------------------------------- | ---------------------------------------------------------- | ------------------------ | -------------------------------------------------- |
@@ -25,23 +25,7 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 | `maintenance` | 将来の保守性・変更容易性を上げる | リファクタ、技術的負債返済、テスト追加、命名整理、重複除去 | 将来の変更を楽にする案件 | 性能や安定性が主なら `quality`                     |
 | `compat`      | 外部変化に追従する               | 外部 API 変更対応、依存更新、ランタイム更新、EOL 対応      | 外部変化に合わせる案件   | CVE 対応や権限強化が主なら `security`              |
 
-## 代表的な skill 導線
-
-- `research`: `research`
-- `bugfix`: `bug-diagnosis -> code-implementation-loop -> change-verification`
-- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> quality-reviewer`
-- `security`: `security-scan -> code-implementation-loop -> change-verification`
-- `quality`: `quality-analysis -> code-implementation-loop -> change-verification`
-- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> quality-reviewer`
-- `compat`: `compat-assessment -> code-implementation-loop -> change-verification`
-- `docs-only artifact`: `docs-update`
-- `knowledge`: `capture-knowledge-triage -> write-knowledge-note` または `write-adr`
-- `git`: `git-commit`, `git-push`
-- `change-to-knowledge helper`: `capture-change-knowledge`
-- `adr lifecycle helper`: `update-adr-status`
-- `classification helper`: `task-classification`
-- `review summary helper`: `review-findings-summary`
-- `review entrypoints`: `quality-reviewer`, `security-reviewer`, `product-planning-reviewer`, `implementation-planning-reviewer`
+代表導線の列挙は `dot_codex/AGENTS.md` を正本にし、この文書では分類語と surface 設計の背景だけを扱う。
 
 ## review 系 surface の役割分担
 
@@ -53,6 +37,7 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - generic review から `security-reviewer` への自動昇格は行わない
 - `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
 - `review-findings-summary` は reviewer 非起動、agent 出力限定の出口整理 helper として使う
+- `docs/README.md` は index、`dot_codex/AGENTS.md` は運用契約と導線、`docs/knowledge/harness-regression-checks.md` は手動回帰シナリオを担当する
 
 ## Frontmatter Description 設計ルール
 
