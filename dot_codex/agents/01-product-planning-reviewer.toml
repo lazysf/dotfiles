@@ -1,4 +1,4 @@
-name = "product-planning-reviewer"
+name = "01-product-planning-reviewer"
 description = "Read-only reviewer for requirement drafts in product planning."
 model = "gpt-5.4-mini"
 model_reasoning_effort = "medium"

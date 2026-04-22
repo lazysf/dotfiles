@@ -1,6 +1,6 @@
 ---
 name: product-planning
-description: 「何を作るかと今回はやらないことを詰めたい」「成功条件と優先順位を整理したい」といった重めの要件整理で使う。目的、成功条件、非目的、制約、優先順位、未確定事項を整理して実装可能な要件へ落とし込む。依頼文の整形だけなら `request-shaping`、要件 draft のレビュー自体は `product-planning-reviewer` を使う。
+description: 「何を作るかと今回はやらないことを詰めたい」「成功条件と優先順位を整理したい」といった重めの要件整理で使う。目的、成功条件、非目的、制約、優先順位、未確定事項を整理して実装可能な要件へ落とし込む。依頼文の整形だけなら `request-shaping`、要件 draft のレビュー自体は `01-product-planning-reviewer` を使う。
 metadata:
   short-description: プロダクト計画
 ---
@@ -30,7 +30,7 @@ metadata:
 - 非目的と制約を早めに置き、スコープを膨らませない。
 - 技術設計の詳細には踏み込みすぎない。
 - この skill 自体は review を行わず、要件整理に専念する。
-- 要件 draft の抜け漏れ確認が必要なら、整理した結果を `product-planning-reviewer` へ明示的に渡す。
+- 要件 draft の抜け漏れ確認が必要なら、整理した結果を `01-product-planning-reviewer` へ明示的に渡す。
 
 ## 対象
 
