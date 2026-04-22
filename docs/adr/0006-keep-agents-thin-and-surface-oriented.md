@@ -1,6 +1,6 @@
 # 0006: `AGENTS.md` は薄い surface 案内に留める
 
-- Status: Proposed
+- Status: Accepted
 
 ## Context
 
