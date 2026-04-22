@@ -90,8 +90,7 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - `ADR-only commit` の新 ADR に `Supersedes` が明示されている場合だけ、続けて旧 ADR に対して `update-adr-status(target_adr=<old>, new_status=Superseded, related_adrs=<new>, event_basis=commit)` を別更新として行う。
 - `ADR-only commit` で policy が `default_branch` のときは、新 ADR を `Proposed` に留める。
 - `ADR-only commit` で policy が不正値なら、新 ADR を更新せず `notes` に skip 理由を残す。
-- それ以外の docs-only のコミットや、一過性の change だけなら知見化しない。
-- 上記以外の durable change を知見化したい時は `capture-change-knowledge` スキルを使う。
+- 上記以外の commit 後の知見判断は `capture-change-knowledge` スキルを使う。
 - `capture-change-knowledge` スキルが ADR を作り、policy が `commit` なら `update-adr-status` スキルで `Accepted` に進める。
 
 ## 結果報告
