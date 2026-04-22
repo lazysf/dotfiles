@@ -1,6 +1,6 @@
 ---
 name: product-planning
-description: 「何を作るかと今回はやらないことを詰めたい」「成功条件と優先順位を整理したい」といった重めの要件整理で使う。目的、成功条件、非目的、制約、優先順位、未確定事項を整理して実装可能な要件へ落とし込む。依頼文の整形だけなら `request-shaping`、技術計画だけなら `implementation-planning` を使う。
+description: 「何を作るかと今回はやらないことを詰めたい」「成功条件と優先順位を整理したい」といった重めの要件整理で使う。目的、成功条件、非目的、制約、優先順位、未確定事項を整理して実装可能な要件へ落とし込む。依頼文の整形だけなら `request-shaping`、要件 draft のレビュー自体は `product-planning-reviewer` を使う。
 metadata:
   short-description: プロダクト計画
 ---
@@ -29,9 +29,8 @@ metadata:
 - 成功条件は実装手段ではなく、確認できる結果で置く。
 - 非目的と制約を早めに置き、スコープを膨らませない。
 - 技術設計の詳細には踏み込みすぎない。
-- draft 要件をまとめたら `product-planning-reviewer` を既定で起動し、補助的に抜け漏れを確認する。
-- reviewer は補助役として使い、要件整理の主導権はこの skill が持つ。
-- reviewer の raw JSON は内部入力として扱い、そのまま最終返答に流さない。
+- この skill 自体は review を行わず、要件整理に専念する。
+- 要件 draft の抜け漏れ確認が必要なら、整理した結果を `product-planning-reviewer` へ明示的に渡す。
 
 ## 対象
 
@@ -127,14 +126,7 @@ metadata:
 - 仮定と未確定事項を分け、前提が揺れる部分を隠さない。
 - 未確定事項が大きい場合は、確認タスクを先に置く。
 
-### 5) `product-planning-reviewer` を既定で使う
-
-- 目的、背景、成功条件、非目的、制約、仮定、優先順位、未確定事項を一度 draft としてそろえる。
-- `product-planning-reviewer` に渡し、成功条件の曖昧さ、スコープ肥大、制約との矛盾、危険な仮定、高インパクトな未確認事項を確認する。
-- reviewer が stop 条件で返した場合は、推測で埋めずに必要な確認事項として扱う。
-- reviewer の `findings` / `open_questions` / `residual_risks` は、人間向けの要件整理へ統合して使う。
-
-### 6) 次の渡し先を決める
+### 5) 次の渡し先を決める
 
 - 目的、成功条件、非目的、制約が説明できる状態になったら `implementation-planning` へ渡せる。
 - まだ要件が揺れているなら、技術計画を作り込まない。
@@ -147,6 +139,5 @@ metadata:
 - 技術計画まで必要な場合は、その後に `implementation-planning` で扱う前提を明示してよい。
 - 5〜8項目程度で読める密度を優先する。
 - 仮定がある場合は、確定事項と明確に分ける。
-- reviewer を使った場合も raw JSON をそのまま返さず、人間向けの要件整理に統合する。
-- reviewer により追加確認が必要になった論点は、未確定事項または確認事項として明示する。
+- review を求める場合は、この skill の出力をそのまま reviewer agent へ渡せる粒度で整理する。
 - 詳細な判断ヒントが必要なら [references/product-planning-heuristics.md](references/product-planning-heuristics.md) を参照する。

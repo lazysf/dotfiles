@@ -1,13 +1,13 @@
 # Classification-Driven Workflow Surface
 
 この文書は、`dot_codex/AGENTS.md` で使う開発フロー surface の基準をまとめる。
-現在の正式な公開 surface は `dot_codex/skills/` 配下の prefix なし skill 名であり、命名規約は kebab-case に統一する。
+現在の正式な公開 surface は、基本的には `dot_codex/skills/` 配下の prefix なし skill 名とし、review だけは `dot_codex/agents/` 配下の reviewer agent を正式入口にする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
 - `capture-change-knowledge`, `update-adr-status`, `task-classification`, `review-findings-summary`: 補助 skill。routing、lifecycle update、入口整理、出口整形に責務を絞る
-- `agents/`: 専門 reviewer などの補助役。read-only reviewer はここに残す
+- `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
@@ -29,10 +29,10 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 
 - `research`: `research`
 - `bugfix`: `bug-diagnosis -> code-implementation-loop -> change-verification`
-- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> code-review`
+- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> quality-reviewer`
 - `security`: `security-scan -> code-implementation-loop -> change-verification`
 - `quality`: `quality-analysis -> code-implementation-loop -> change-verification`
-- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> code-review`
+- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> quality-reviewer`
 - `compat`: `compat-assessment -> code-implementation-loop -> change-verification`
 - `docs-only artifact`: `docs-update`
 - `knowledge`: `capture-knowledge-triage -> write-knowledge-note` または `write-adr`
@@ -41,13 +41,16 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - `adr lifecycle helper`: `update-adr-status`
 - `classification helper`: `task-classification`
 - `review summary helper`: `review-findings-summary`
+- `review entrypoints`: `quality-reviewer`, `security-reviewer`, `product-planning-reviewer`, `implementation-planning-reviewer`
 
-## review 系 skill の役割分担
+## review 系 surface の役割分担
 
-- 差分レビュー用 reviewer の起動元は `code-review`
-- 要件 draft reviewer の起動元は `product-planning`
-- 実装計画 draft reviewer の起動元は `implementation-planning`
-- `review-findings-summary` は reviewer 非起動の出口整理 helper として使う
+- 差分レビューの正式入口は `quality-reviewer`
+- セキュリティレビューの正式入口は `security-reviewer`
+- 要件 draft review の正式入口は `product-planning-reviewer`
+- 実装計画 draft review の正式入口は `implementation-planning-reviewer`
+- `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
+- `review-findings-summary` は reviewer 非起動、agent 出力限定の出口整理 helper として使う
 
 ## Frontmatter Description 設計ルール
 
