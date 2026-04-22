@@ -1,6 +1,6 @@
 # Classification-Driven Workflow Surface
 
-この文書は、`dot_codex/AGENTS.md` で使う開発フロー surface の基準をまとめる。
+この文書は、`dot_codex/AGENTS.md` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現在の正式な公開 surface は、基本的には `dot_codex/skills/` 配下の prefix なし skill 名とし、review だけは `dot_codex/agents/` 配下の reviewer agent を正式入口にする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
@@ -25,7 +25,7 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 | `maintenance` | 将来の保守性・変更容易性を上げる | リファクタ、技術的負債返済、テスト追加、命名整理、重複除去 | 将来の変更を楽にする案件 | 性能や安定性が主なら `quality`                     |
 | `compat`      | 外部変化に追従する               | 外部 API 変更対応、依存更新、ランタイム更新、EOL 対応      | 外部変化に合わせる案件   | CVE 対応や権限強化が主なら `security`              |
 
-代表導線の列挙は `dot_codex/AGENTS.md` を正本にし、この文書では分類語と surface 設計の背景だけを扱う。
+固定の代表導線は `dot_codex/AGENTS.md` に持たせず、この文書では分類語と surface 設計の背景だけを扱う。
 
 ## review 系 surface の役割分担
 
@@ -37,7 +37,7 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - generic review から `04-security-reviewer` への自動昇格は行わない
 - `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
 - `review-findings-summary` は reviewer 非起動、agent 出力限定の出口整理 helper として使う
-- `docs/README.md` は index、`dot_codex/AGENTS.md` は運用契約と導線、`docs/knowledge/harness-regression-checks.md` は手動回帰シナリオを担当する
+- `docs/README.md` は index、`dot_codex/AGENTS.md` は運用契約と薄い surface 案内、`docs/knowledge/harness-regression-checks.md` は手動回帰シナリオを担当する
 
 ## Frontmatter Description 設計ルール
 

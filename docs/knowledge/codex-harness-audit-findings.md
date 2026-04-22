@@ -17,10 +17,10 @@
 
 - `dot_codex/AGENTS.md` と `docs/knowledge/classification-driven-workflow-surface.md` の両方に代表導線の列挙があり、どちらが正本か迷いやすかった。
   - Impact: flow 名や補助導線の更新時に二重管理が発生しやすい。
-  - Recommendation: `dot_codex/AGENTS.md` を契約と導線の正本、`classification-driven-workflow-surface.md` を背景知識と命名規約の説明に寄せる。
+  - Recommendation: `dot_codex/AGENTS.md` は契約と薄い surface 案内に留め、詳細な導線列挙は各 `SKILL.md` / agent 定義に寄せ、`classification-driven-workflow-surface.md` は背景知識と命名規約の説明に寄せる。
 - `docs/knowledge/harness-regression-checks.md` に surface の正本説明が混ざっていた。
   - Impact: 手動回帰シナリオ集と運用契約の本文が競合しやすい。
-  - Recommendation: 手動回帰では「何を確認するか」だけを残し、導線の正本は `dot_codex/AGENTS.md` と `classification-driven-workflow-surface.md` へ参照で寄せる。
+  - Recommendation: 手動回帰では「何を確認するか」だけを残し、全体契約と薄い surface 案内は `dot_codex/AGENTS.md`、surface 設計の背景は `classification-driven-workflow-surface.md` へ参照で寄せる。
 
 ## Nice-to-Have
 
