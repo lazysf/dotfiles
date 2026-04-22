@@ -13,6 +13,7 @@ DOT_CODEX = ROOT / "dot_codex"
 DOCS = ROOT / "docs"
 DOCS_README = DOCS / "README.md"
 KNOWLEDGE_DIR = DOCS / "knowledge"
+ADR_DIR = DOCS / "adr"
 
 REQUIRED_AGENT_KEYS = {
     "name",
@@ -27,20 +28,23 @@ MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 RULE_DECISION_RE = re.compile(r'decision\s*=\s*"(allow|prompt|forbidden)"')
 RULE_PATTERN_RE = re.compile(r"prefix_rule\s*\(")
 PROJECT_DOT_CODEX_RE = re.compile(r"(^|[`\s(])\./\.codex/?")
-EXPECTED_KNOWLEDGE_DOCS = {
-    "adr-ledger-model.md",
-    "classification-driven-workflow-surface.md",
-    "harness-design-principles.md",
-    "harness-regression-checks.md",
-}
 LEGACY_SKILL_DIR_PREFIXES = ("core-", "phase-")
 LEGACY_SKILL_NAME_RE = re.compile(r"^name:\s*(core-|phase-|entry-)", re.MULTILINE)
-LEGACY_SURFACE_PATTERNS = (
-    re.compile(r"core-"),
-    re.compile(r"phase-"),
-    re.compile(r"entry-classify"),
-    re.compile(r"deprecated wrapper"),
-    re.compile(r"\bcore skills?\b"),
+REVIEW_DOC_PATHS = (
+    DOT_CODEX / "AGENTS.md",
+    DOCS / "knowledge" / "classification-driven-workflow-surface.md",
+    DOCS / "knowledge" / "harness-regression-checks.md",
+)
+PLANNING_SKILL_PATHS = (
+    DOT_CODEX / "skills" / "product-planning" / "SKILL.md",
+    DOT_CODEX / "skills" / "implementation-planning" / "SKILL.md",
+)
+REQUIRED_REVIEW_ENTRIES = (
+    "quality-reviewer",
+    "security-reviewer",
+    "product-planning-reviewer",
+    "implementation-planning-reviewer",
+    "review-findings-summary",
 )
 
 
@@ -91,19 +95,26 @@ def check_markdown_links() -> None:
                 resolve_markdown_link(path, match.group(1))
 
 
-def check_docs_readme() -> None:
-    readme_text = DOCS_README.read_text()
+def collect_readme_links(target_dir: Path) -> set[str]:
     linked_docs = set()
+    readme_text = DOCS_README.read_text()
     for match in MARKDOWN_LINK_RE.finditer(readme_text):
         target = match.group(1).split("#", 1)[0]
         if not target.endswith(".md"):
             continue
         resolved = (DOCS_README.parent / target).resolve()
-        if resolved.parent == KNOWLEDGE_DIR:
+        if resolved.parent == target_dir:
             linked_docs.add(resolved.name)
-    missing = sorted(EXPECTED_KNOWLEDGE_DOCS - linked_docs)
-    if missing:
-        fail(f"docs/README.md is missing links to: {', '.join(missing)}")
+    return linked_docs
+
+
+def check_docs_readme_index() -> None:
+    for target_dir in (KNOWLEDGE_DIR, ADR_DIR):
+        existing_docs = {path.name for path in target_dir.glob("*.md")}
+        linked_docs = collect_readme_links(target_dir)
+        missing = sorted(existing_docs - linked_docs)
+        if missing:
+            fail(f"{DOCS_README.relative_to(ROOT)} is missing links to: {', '.join(missing)}")
 
 
 def check_skill_surface() -> None:
@@ -122,22 +133,43 @@ def check_skill_surface() -> None:
             fail(f"{path.relative_to(ROOT)} still declares a legacy skill prefix in frontmatter")
 
 
-def check_surface_docs() -> None:
-    paths = [DOT_CODEX / "AGENTS.md", DOCS_README, *sorted(KNOWLEDGE_DIR.glob("*.md"))]
-    for path in paths:
+def check_review_surface() -> None:
+    code_review_skill = DOT_CODEX / "skills" / "code-review" / "SKILL.md"
+    if code_review_skill.exists():
+        fail(f"{code_review_skill.relative_to(ROOT)} must be removed")
+
+    for path in REVIEW_DOC_PATHS:
         text = path.read_text()
-        for pattern in LEGACY_SURFACE_PATTERNS:
-            if pattern.search(text):
-                fail(f"{path.relative_to(ROOT)} still contains legacy skill surface text matching {pattern.pattern!r}")
+        if "code-review" in text:
+            fail(f"{path.relative_to(ROOT)} still references removed review skill `code-review`")
+        for entry in REQUIRED_REVIEW_ENTRIES:
+            if entry not in text:
+                fail(f"{path.relative_to(ROOT)} must mention review entry `{entry}`")
+
+    for path in PLANNING_SKILL_PATHS:
+        text = path.read_text()
+        if "review を行わず" not in text and "review を行わない" not in text:
+            fail(f"{path.relative_to(ROOT)} must state that the skill does not perform review")
+        if "既定で起動" in text or "自動起動" in text:
+            fail(f"{path.relative_to(ROOT)} must not claim automatic reviewer startup")
+
+    review_summary = DOT_CODEX / "skills" / "review-findings-summary" / "SKILL.md"
+    review_summary_text = review_summary.read_text()
+    if "agent 出力" not in review_summary_text:
+        fail(f"{review_summary.relative_to(ROOT)} must require agent output as input")
+    if "fail closed" not in review_summary_text:
+        fail(f"{review_summary.relative_to(ROOT)} must describe fail-closed behavior")
+    if "code-review" in review_summary_text:
+        fail(f"{review_summary.relative_to(ROOT)} must not reference removed review skill `code-review`")
 
 
 def main() -> None:
     check_agents()
     check_rules()
     check_markdown_links()
-    check_docs_readme()
+    check_docs_readme_index()
     check_skill_surface()
-    check_surface_docs()
+    check_review_surface()
     print("Codex harness verification passed.")
 
 

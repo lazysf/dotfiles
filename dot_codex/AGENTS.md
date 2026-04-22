@@ -20,20 +20,20 @@
 
 ## 開発フロー
 
-- 標準導線は `依頼内容 -> 主目的の主分類または直接入口 -> 該当 skill -> 必要時に隣接 skill / reviewer / rules` とする
+- 標準導線は `依頼内容 -> 主目的の主分類または直接入口 -> 該当 skill / reviewer agent -> 必要時に隣接 skill / helper / rules` とする
 - まず依頼の主目的にもっとも近い入口から入り、複数工程にまたがる場合だけ必要な skill へ順に切り替える
-- `skills/` をユーザー向けの正式入口とし、詳細手順、判断基準、停止条件、出力フォーマットの正本は各 skill に置く
-- `task-classification`、`review-findings-summary`、`reviewer`、`rules` は補助導線であり、入口整理、出口整形、機械的ガードに責務を絞る
-- reviewer 起動は隣接 skill が担い、`review-findings-summary` は出口整理専用として扱う
+- `skills/` を基本の正式入口とし、review だけは `agents/` 配下の reviewer agent を正式入口とする
+- `task-classification`、`review-findings-summary`、`rules` は補助導線であり、入口整理、出口整形、機械的ガードに責務を絞る
+- review は reviewer agent へ直接渡し、`review-findings-summary` は agent 出力の整形専用として扱う
 
 ### 1. 主分類から入る
 
 - `research`: `research`
 - `bugfix`: `bug-diagnosis -> code-implementation-loop -> change-verification`
-- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> code-review`
+- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> quality-reviewer`
 - `security`: `security-scan -> code-implementation-loop -> change-verification`
 - `quality`: `quality-analysis -> code-implementation-loop -> change-verification`
-- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> code-review`
+- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> quality-reviewer`
 - `compat`: `compat-assessment -> code-implementation-loop -> change-verification`
 - 実装方針や原因が未確定なら、まず `research` に倒す
 
@@ -49,8 +49,9 @@
 - `capture-change-knowledge` は `git-commit` に隣接する change-to-knowledge helper として使う
 - `update-adr-status` は ADR の状態遷移と supersede 関係更新を担う helper として使う
 - review の出口整形が必要な場合だけ `review-findings-summary` を使う
-- reviewer 起動は `code-review`、`product-planning`、`implementation-planning` の隣接 skill で行う
-- `reviewer` や `rules` は隣接して使う補助役であり、入口や本体導線にはしない
+- 差分 review は `quality-reviewer` を既定とし、セキュリティ観点が必要な場合だけ `security-reviewer` を追加する
+- 要件 draft review は `product-planning-reviewer`、実装計画 draft review は `implementation-planning-reviewer` を直接使う
+- `rules` は隣接して使う補助役であり、review 本体の代替にはしない
 
 ## 置き場の原則
 
@@ -60,5 +61,5 @@
 - `docs/adr/`: repo-level の判断記録を置く
 - `skills/`: 再利用する作業手順を置く。詳細手順、判断基準、停止条件、出力フォーマットの正本もここに置く。チェックリスト、テンプレート、例外規則などの詳細は各 skill 配下の `references/` に置く
 - `rules/`: 機械的なガードを置く。運用フロー本体は置かない
-- `agents/`: read-only の専門化した補助役を置く。入口や本体導線にはしない
+- `agents/`: read-only の専門化した reviewer と review 入口を置く
 - 置き場が曖昧でもトップレベルに新しい運用ファイルを増やさない

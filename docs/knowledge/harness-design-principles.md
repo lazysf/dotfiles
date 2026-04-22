@@ -69,3 +69,4 @@
 - [ADR 0002](../adr/0002-project-specific-knowledge-lives-in-project-docs.md)
 - [ADR 0003](../adr/0003-promote-harness-knowledge-by-runtime-surface.md)
 - [ADR 0004](../adr/0004-retire-legacy-workflow-prefixes.md)
+- [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
