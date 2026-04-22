@@ -9,6 +9,7 @@
 - 期待から外れた場合は、`docs/knowledge/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - `scripts/verify-codex-harness.py` で見なくなった docs 網羅性や移行残骸の観点は、この文書で手動確認する
+- 導線の正本説明は `dot_codex/AGENTS.md`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
 
 ## チェック項目
 
@@ -50,7 +51,7 @@
 - 例: 「ハーネスの詳細知識はどこを読めばよいか」
 - 期待:
   - `dot_codex/AGENTS.md` は契約と導線の入口として案内される
-  - 正式入口は skill 群として案内される
+  - 代表導線は `dot_codex/AGENTS.md` の説明と矛盾しない
   - 補助 skill は主役 skill と混同せずに案内される
   - repo-level の詳細知識は `docs/knowledge/` に誘導される
   - 判断理由は `docs/adr/` に誘導される
@@ -68,7 +69,7 @@
 
 - 例: 「要件を詰めたい」「レビューしたい」「コミットしたい」
 - 期待:
-  - `product-planning`, `git-commit` など、依頼内容に近い skill がそのまま案内される
+  - `classification-driven-workflow-surface.md` の命名規約と frontmatter 説明ルールに沿って、依頼内容に近い skill が案内される
   - 旧 implicit invocation 前提の説明が残っていない
   - 旧導線向けの内部専用表現が skill の入口説明に残っていない
   - 近接 skill の境界が自然文プロンプトでも崩れない
@@ -160,10 +161,8 @@
 
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 期待:
-  - bugfix は `bug-diagnosis -> code-implementation-loop -> change-verification`
-  - maintenance は `maintenance-analysis -> code-implementation-loop -> change-testing -> quality-reviewer`
-  - feature は `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> quality-reviewer`
-  - `docs-update` 追加後も、既存の skill 導線が別用途へ押し流されない
+  - 代表導線の確認は `dot_codex/AGENTS.md` を正本として行う
+  - docs 更新後も、主分類から正式入口へ進む導線が別用途へ押し流されない
 
 ### 16. planning skill が整理専用のまま保たれる
 
@@ -189,6 +188,13 @@
   - 「この差分をセキュリティ観点でレビューしたい」 -> `security-reviewer`
   - 「要件 draft の抜け漏れを見たい」 -> `product-planning-reviewer`
   - 「実装計画 draft の危ない点を見たい」 -> `implementation-planning-reviewer`
+
+### 18. `scripts/verify-codex-harness.py` が ADR 0005 の守備範囲に留まる
+
+- 例: 「自動検査で docs index や legacy surface 残骸まで失敗させていないか」
+- 期待:
+  - 自動検査は agent metadata、rule metadata、Markdown 相対リンク、project-local `.codex` directory の推奨禁止だけを扱う
+  - docs index の網羅性や legacy surface の残骸確認は、この文書側の手動回帰に残る
 
 ## 関連文書
 

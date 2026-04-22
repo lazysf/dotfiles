@@ -25,6 +25,7 @@
 - `skills/` を基本の正式入口とし、review だけは `agents/` 配下の reviewer agent を正式入口とする
 - `task-classification`、`review-findings-summary`、`rules` は補助導線であり、入口整理、出口整形、機械的ガードに責務を絞る
 - review は reviewer agent へ直接渡し、`review-findings-summary` は agent 出力の整形専用として扱う
+- 命名規約や frontmatter description の設計原則は `docs/knowledge/classification-driven-workflow-surface.md` を参照する
 
 ### 1. 主分類から入る
 
@@ -49,9 +50,7 @@
 - `capture-change-knowledge` は `git-commit` に隣接する change-to-knowledge helper として使う
 - `update-adr-status` は ADR の状態遷移と supersede 関係更新を担う helper として使う
 - review の出口整形が必要な場合だけ `review-findings-summary` を使う
-- generic な差分 review は `quality-reviewer` を明示的に呼ぶ
-- セキュリティ観点の review は `security-reviewer` を明示的に呼ぶ
-- 要件 draft review は `product-planning-reviewer`、実装計画 draft review は `implementation-planning-reviewer` を明示的に呼ぶ
+- review の正式入口は `dot_codex/agents/` 配下の reviewer agent とする
 - `rules` は隣接して使う補助役であり、review 本体の代替にはしない
 
 ## 置き場の原則
