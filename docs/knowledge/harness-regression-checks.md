@@ -182,9 +182,11 @@
   - `review-findings-summary` は review 判断を代行しない
   - `review-findings-summary` は agent 出力だけを入力として受け付ける
   - reviewer 結果がない場合は fail closed で止まり、適切な reviewer agent へ誘導される
+  - `quality-reviewer` から `security-reviewer` への自動昇格を前提にしない
 - 代表プロンプト:
   - 「レビュー findings を整理したい」 -> `review-findings-summary`
   - 「この差分をレビューして結果までまとめたい」 -> `quality-reviewer`
+  - 「この差分をセキュリティ観点でレビューしたい」 -> `security-reviewer`
   - 「要件 draft の抜け漏れを見たい」 -> `product-planning-reviewer`
   - 「実装計画 draft の危ない点を見たい」 -> `implementation-planning-reviewer`
 

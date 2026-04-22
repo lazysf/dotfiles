@@ -16,4 +16,5 @@
   - [0005-keep-harness-verification-focused-on-repo-contracts.md](./adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
 - `dot_codex/AGENTS.md`: 運用契約と導線を置く
 - `dot_codex/skills/`: prefix なしの skill 手順と、その `references/` を置く
+- `dot_codex/agents/`: review の正式入口になる reviewer agent を置く。review はここから明示的に呼び出す
 - `dot_codex/rules/`: 機械的なガードを置く
