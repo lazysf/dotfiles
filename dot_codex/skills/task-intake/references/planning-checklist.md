@@ -7,4 +7,4 @@
 - 主要リスクと先に確認すべき点を分けたか
 - そのまま実装へ入るのか、`product-planning` や `implementation-planning` が要るのかを判断したか
 
-重い要件整理が必要なら `product-planning`、実装順序や影響範囲の整理が必要なら `implementation-planning` を使う。
+重い要件整理が必要な時は `product-planning` スキルを使い、実装順序や影響範囲の整理が必要な時は `implementation-planning` スキルを使う。

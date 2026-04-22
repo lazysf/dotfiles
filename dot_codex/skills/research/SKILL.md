@@ -1,6 +1,6 @@
 ---
 name: research
-description: 「まず調べたい」「原因や影響、選択肢を事実ベースで整理したい」といった調査依頼で使う。初見 repo の grounding を含め、facts、unknowns、options、recommendation、next_step を整理する。調査結果を前提にした実装は `code-implementation-loop`、bugfix の診断は `bug-diagnosis` など個別 skill を優先する。
+description: 「まず調べたい」「原因や影響、選択肢を事実ベースで整理したい」といった調査依頼で使う。初見 repo の grounding を含め、facts、unknowns、options、recommendation、next_step を整理する。調査結果を前提に実装したい時は `code-implementation-loop` スキル、bugfix の診断をしたい時は `bug-diagnosis` スキルなど個別スキルを使う。
 metadata:
   short-description: 調査手順
 ---

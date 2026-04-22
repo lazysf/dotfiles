@@ -72,6 +72,8 @@
   - `classification-driven-workflow-surface.md` の命名規約と frontmatter 説明ルールに沿って、依頼内容に近い skill が案内される
   - 旧 implicit invocation 前提の説明が残っていない
   - 旧導線向けの内部専用表現が skill の入口説明に残っていない
+  - 他 skill / agent の案内が `〜したい時は \`skill-name\` スキルを使う`、`〜したい時は \`agent-name\` reviewer agent を使う` の形で自然に読める
+  - `writer skill`、`handoff`、skill 名の裸参照だけで意味を持たせる表現が再導入されていない
   - 近接 skill の境界が自然文プロンプトでも崩れない
   - 旧 skill prefix や deprecated wrapper の歴史説明は ADR に閉じ、現行 surface に再混入していない
   - `dot_codex/skills/` に旧 skill ディレクトリや frontmatter 名が再導入されていない

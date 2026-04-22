@@ -1,6 +1,6 @@
 ---
 name: docs-update
-description: 「README だけ直したい」「既存 docs を実装や運用に合わせて更新したい」といった docs-only の依頼で使う。README、運用手順、設計メモなど既存ドキュメントの更新内容を、一次情報と既存文脈に沿って必要十分に反映する。知識の置き場判断は `capture-knowledge-triage`、新しい knowledge / ADR の作成は `write-knowledge-note` / `write-adr` で扱う。
+description: 「README だけ直したい」「既存 docs を実装や運用に合わせて更新したい」といった docs-only の依頼で使う。README、運用手順、設計メモなど既存ドキュメントの更新内容を、一次情報と既存文脈に沿って必要十分に反映する。知識の置き場を決めたい時は `capture-knowledge-triage` スキルを使い、通常知見メモを作りたい時は `write-knowledge-note` スキルを使い、ADR を作りたい時は `write-adr` スキルを使う。
 metadata:
   short-description: 文書更新
 ---
@@ -8,7 +8,8 @@ metadata:
 # Docs Update
 
 既存のドキュメントを、実装事実と運用前提に沿って更新する。
-この skill は既存ドキュメントの更新に責務を絞り、知識の置き場判断は `capture-knowledge-triage` に委ねる。
+この skill は既存ドキュメントの更新に責務を絞る。
+知識の置き場を決めたい時は `capture-knowledge-triage` スキルを使う。
 
 ## 対象
 

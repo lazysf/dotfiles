@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」といった要件確定後の依頼で使う。既存実装と規約に沿って、触る範囲、変更単位、実装順序、各ステップの検証方法を整理する。要件や成功条件がまだ曖昧なら `task-intake` / `product-planning` を優先し、計画 draft のレビュー自体は `02-implementation-planning-reviewer` を使う。
+description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」といった要件確定後の依頼で使う。既存実装と規約に沿って、触る範囲、変更単位、実装順序、各ステップの検証方法を整理する。要件や成功条件を先に固めたい時は `task-intake` スキルや `product-planning` スキルを使い、計画 draft をレビューしたい時は `02-implementation-planning-reviewer` reviewer agent を使う。
 metadata:
   short-description: 技術計画
 ---
@@ -29,7 +29,7 @@ metadata:
 - 不要な抽象化や大規模設計を前提にしない。
 - 要件が未確定なら、要件整理へ戻す。
 - この skill 自体は review を行わず、実装計画の整理に専念する。
-- 計画 draft の危険箇所を見たい場合は、整理した結果を `02-implementation-planning-reviewer` へ明示的に渡す。
+- 計画 draft の危険箇所を見たい時は、整理した結果を `02-implementation-planning-reviewer` reviewer agent に明示的に渡す。
 
 ## 対象
 
@@ -96,7 +96,7 @@ metadata:
 - 関連ファイル、近い実装、明示規約を確認する。
 - どの既存パターンに合わせるかを決める。
 - どこまでを今回の書き込み範囲にするかを決める。
-- 要件が未確定なら、先に `task-intake` または `product-planning` へ戻す。
+- 要件が未確定なら、先に `task-intake` スキルまたは `product-planning` スキルを使う。
 
 ### 2) 影響範囲を切る
 
@@ -124,7 +124,7 @@ metadata:
 - ステップには「何をするか」「なぜこの順か」「依存関係」「検証方法」を短く添える。
 - 互換性、ロールバック観点、境界への影響は必要な場合だけ添える。
 - 確認した事実と未確定事項は分けて扱う。
-- 要件がまだ曖昧なら、先に `task-intake` または `product-planning` が必要だと明示してよい。
+- 要件がまだ曖昧なら、先に `task-intake` スキルまたは `product-planning` スキルが必要だと明示してよい。
 - 未検証を断定しない。
-- review を求める場合は、この skill の出力をそのまま reviewer agent へ渡せる粒度で整理する。
+- review を求める場合は、この skill の出力をそのまま reviewer agent に渡せる粒度で整理する。
 - 詳細な判断ヒントが必要なら [references/architect-planning-heuristics.md](references/architect-planning-heuristics.md) を参照する。

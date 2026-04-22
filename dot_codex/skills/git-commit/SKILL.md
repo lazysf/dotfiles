@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: 「この変更をコミットしたい」「安全に commit したい」といった Git の依頼で使う。1 コミット 1 変更の粒度で staging 範囲を整理し、必要ならコミットメッセージを整えたうえで commit を実行する。push の実行や upstream 判定は `git-push` で扱う。
+description: 「この変更をコミットしたい」「安全に commit したい」といった Git の依頼で使う。1 コミット 1 変更の粒度で staging 範囲を整理し、必要ならコミットメッセージを整えたうえで commit を実行する。push を進めたい時は `git-push` スキルを使う。
 metadata:
   short-description: Git commit
 ---
@@ -19,11 +19,11 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - この skill では、手順に明示した Git コマンドだけを使う。
 - 1コミット1変更を原則とし、単一のコミットメッセージで自然に説明できる最小単位に分ける。
 - 複数の変更が混在している場合は、そのまま進めず分割方針を確認する。
-- 実コミット後に durable change の知見化が必要なら `capture-change-knowledge` へ渡す。
+- 実コミット後に durable change の知見化をしたい時は `capture-change-knowledge` スキルを使う。
 
 ## 対象外
 
-- プッシュのみが目的の依頼。`git-push` を使う。
+- プッシュだけしたい時は `git-push` スキルを使う。
 - 変更が存在しない状態でのコミット要求。
 
 ## コミットメッセージの扱い
@@ -79,20 +79,20 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 
 - `git status -sb` でコミット後の状態を確認する。
 
-### 9) 必要なら変更後知見化または ADR 状態更新へ渡す
+### 9) 必要なら次に使うスキルを決める
 
 - 実際に commit が成功した場合だけ後段へ進む。
 - project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にする。
 - key がない場合は `commit` として扱う。
 - 値が `commit | default_branch` 以外なら、自動 `Accepted` 化だけを抑止し `notes` に `skipped(invalid-adr-acceptance-policy)` を残す。
 - `ADR-only commit` は、新規 `docs/adr/NNNN-*.md` 1 件と任意の `docs/README.md` 変更だけを含む commit とする。
-- `ADR-only commit` では `capture-change-knowledge` を使わず、policy が `commit` のときだけ新 ADR を `update-adr-status` で `Accepted` に進める。
+- `ADR-only commit` では `capture-change-knowledge` スキルを使わず、policy が `commit` のときだけ新 ADR を `update-adr-status` スキルで `Accepted` に進める。
 - `ADR-only commit` の新 ADR に `Supersedes` が明示されている場合だけ、続けて旧 ADR に対して `update-adr-status(target_adr=<old>, new_status=Superseded, related_adrs=<new>, event_basis=commit)` を別更新として行う。
 - `ADR-only commit` で policy が `default_branch` のときは、新 ADR を `Proposed` に留める。
 - `ADR-only commit` で policy が不正値なら、新 ADR を更新せず `notes` に skip 理由を残す。
 - それ以外の docs-only のコミットや、一過性の change だけなら知見化しない。
-- 上記以外の durable change は `capture-change-knowledge` に渡す。
-- `capture-change-knowledge` が ADR を作り、policy が `commit` なら `update-adr-status` で `Accepted` に進める。
+- 上記以外の durable change を知見化したい時は `capture-change-knowledge` スキルを使う。
+- `capture-change-knowledge` スキルが ADR を作り、policy が `commit` なら `update-adr-status` スキルで `Accepted` に進める。
 
 ## 結果報告
 
