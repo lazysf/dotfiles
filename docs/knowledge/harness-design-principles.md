@@ -67,6 +67,15 @@
 - review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
 - `review-findings-summary` は review 本体や reviewer 選択を担わず、agent 出力の整形だけに留める
 
+### 7. reviewer の model tier は役割ごとに分ける
+
+- 親エージェントは `gpt-5.4` と高めの推論労力で広い整理や最終判断を担い、reviewer は read-only の狭い責務に絞る
+- `01-product-planning-reviewer` と `02-implementation-planning-reviewer` は `gpt-5.4-mini` と `medium` を基本にし、論点を絞った安定したレビューを優先する
+- `03-quality-reviewer` は generic diff review の精度を優先して `gpt-5.4` と `medium` を既定にする
+- `04-security-reviewer` は見落としコストが高いため `gpt-5.4` と `medium` を基本にする
+- reviewer の品質を上げたい場合は、まず対象 reviewer の model を見直し、`model_reasoning_effort` を一律に重くしない
+- planning reviewer 2 種まで同時に重くせず、generic diff review の改善はまず `03-quality-reviewer` 単体で調整する
+
 ## 関連文書
 
 - [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
