@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」といった要件確定後の依頼で使う。既存実装と規約に沿って、触る範囲、変更単位、実装順序、各ステップの検証方法を整理する。要件や成功条件がまだ曖昧なら `task-intake` / `product-planning` を優先する。
+description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」といった要件確定後の依頼で使う。既存実装と規約に沿って、触る範囲、変更単位、実装順序、各ステップの検証方法を整理する。要件や成功条件がまだ曖昧なら `task-intake` / `product-planning` を優先し、計画 draft のレビュー自体は `implementation-planning-reviewer` を使う。
 metadata:
   short-description: 技術計画
 ---
@@ -28,9 +28,8 @@ metadata:
 - 変更を小さく分け、検証可能な順序に並べる。
 - 不要な抽象化や大規模設計を前提にしない。
 - 要件が未確定なら、要件整理へ戻す。
-- draft 実装計画をまとめたら `implementation-planning-reviewer` を既定で起動し、補助的に計画リスクを確認する。
-- reviewer は補助役として使い、実装計画の主導権はこの skill が持つ。
-- reviewer の raw JSON は内部入力として扱い、そのまま最終返答に流さない。
+- この skill 自体は review を行わず、実装計画の整理に専念する。
+- 計画 draft の危険箇所を見たい場合は、整理した結果を `implementation-planning-reviewer` へ明示的に渡す。
 
 ## 対象
 
@@ -119,13 +118,6 @@ metadata:
 - 未確定事項が大きい場合は、実装ではなく確認タスクを先に置く。
 - 未確定事項がある場合は、確認タスクや保留条件を書く。
 
-### 5) `implementation-planning-reviewer` を既定で使う
-
-- 関連ファイルの grounding、影響範囲、触らない範囲、実装ステップ、検証方法、リスク、未確定事項を一度 draft としてそろえる。
-- `implementation-planning-reviewer` に渡し、変更境界の広げすぎ、順序不整合、依存関係の確認漏れ、検証不足、互換性や安全境界の見落とし、不要な抽象化を確認する。
-- reviewer が grounding 不足や stop 条件で返した場合は、推測で埋めずに確認タスクへ戻す。
-- reviewer の `findings` / `open_questions` / `residual_risks` は、実装ステップ、検証、リスク、未確定事項へ統合して使う。
-
 ## 出力ガイド
 
 - 概要、影響範囲、触らない範囲、実装ステップ、検証、リスク、未確定事項を簡潔に示す。
@@ -134,6 +126,5 @@ metadata:
 - 確認した事実と未確定事項は分けて扱う。
 - 要件がまだ曖昧なら、先に `task-intake` または `product-planning` が必要だと明示してよい。
 - 未検証を断定しない。
-- reviewer を使った場合も raw JSON をそのまま返さず、人間向けの実装計画へ統合する。
-- reviewer により追加 grounding や確認が必要になった論点は、確認タスクまたは未確定事項として明示する。
+- review を求める場合は、この skill の出力をそのまま reviewer agent へ渡せる粒度で整理する。
 - 詳細な判断ヒントが必要なら [references/architect-planning-heuristics.md](references/architect-planning-heuristics.md) を参照する。

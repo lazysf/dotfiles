@@ -8,6 +8,7 @@
 - 変更内容に近いシナリオを優先して回す
 - 期待から外れた場合は、`docs/knowledge/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
+- `scripts/verify-codex-harness.py` で見なくなった docs 網羅性や移行残骸の観点は、この文書で手動確認する
 
 ## チェック項目
 
@@ -67,10 +68,12 @@
 
 - 例: 「要件を詰めたい」「レビューしたい」「コミットしたい」
 - 期待:
-  - `product-planning`, `code-review`, `git-commit` など、依頼内容に近い skill がそのまま案内される
+  - `product-planning`, `git-commit` など、依頼内容に近い skill がそのまま案内される
   - 旧 implicit invocation 前提の説明が残っていない
   - 旧導線向けの内部専用表現が skill の入口説明に残っていない
   - 近接 skill の境界が自然文プロンプトでも崩れない
+  - 旧 skill prefix や deprecated wrapper の歴史説明は ADR に閉じ、現行 surface に再混入していない
+  - `dot_codex/skills/` に旧 skill ディレクトリや frontmatter 名が再導入されていない
 - 代表プロンプト:
   - 「依頼文が散らばっているので整えたい」 -> `request-shaping`
   - 「今回どこまでやるか先に軽く決めたい」 -> `task-intake`
@@ -82,12 +85,21 @@
   - 「この判断を ADR 草案にしたい」 -> `write-adr`
   - 「コミット後の変更から残すべき知見を拾いたい」 -> `capture-change-knowledge`
   - 「この ADR を Accepted にしたい」 -> `update-adr-status`
-  - 「この差分をレビューしたい」 -> `code-review`
+  - 「この差分をレビューしたい」 -> `quality-reviewer`
+  - 「セキュリティ観点で差分を見たい」 -> `security-reviewer`
   - 「レビュー findings を整理したい」 -> `review-findings-summary`
   - 「この依頼をどの分類で扱うべきか迷う」 -> `task-classification`
   - 「バグ修正の結果を確認したい」 -> `change-verification`
 
-### 8. docs-only 依頼が `docs-update` に導かれる
+### 8. `docs/README.md` が主要 knowledge と ADR の入口を維持する
+
+- 例: 「repo-level の知見一覧をひと目で見たい」
+- 期待:
+  - `docs/README.md` から主要な knowledge 文書と ADR 群へ辿れる
+  - knowledge / ADR の追加や整理があったときも、README 側の一覧が放置されない
+  - 多少の並び替えや説明文の更新は許容しつつ、入口としての役割が失われていない
+
+### 9. docs-only 依頼が `docs-update` に導かれる
 
 - 例: 「README の手順だけ更新したい」「既存の運用 docs を実装に合わせて直したい」
 - 期待:
@@ -95,7 +107,7 @@
   - 主分類を増やさず、既存ドキュメント更新の専用入口として扱われる
   - 知識の置き場判断と混同されない
 
-### 9. 知識の置き場相談は knowledge 系導線に残る
+### 10. 知識の置き場相談は knowledge 系導線に残る
 
 - 例: 「今回の知見をどこに残すべきか」「通常知見か ADR かを決めたい」
 - 期待:
@@ -103,7 +115,7 @@
   - 通常知見なら `write-knowledge-note`、判断記録なら `write-adr` に渡される
   - `docs-update` が知識の置き場判断を奪わない
 
-### 10. ADR が状態付き台帳として扱われる
+### 11. ADR が状態付き台帳として扱われる
 
 - 例: 「この判断を ADR として残したい」「この ADR はもう置き換えられた」
 - 期待:
@@ -114,7 +126,7 @@
   - 新 ADR 側に一致する `Supersedes` がなければ、旧 ADR は `Superseded` にならない
   - 手順メモや落とし穴は ADR へ押し込まず `docs/knowledge/` に分けられる
 
-### 11. 変更後知見化が `skip / knowledge / adr` で振り分けられる
+### 12. 変更後知見化が `skip / knowledge / adr` で振り分けられる
 
 - 例: 「このコミット後に何を残すべきか判断したい」
 - 期待:
@@ -123,7 +135,7 @@
   - 判断理由が明示された change だけが `write-adr` へ渡される
   - diff だけから判断を推測して ADR を作らない
 
-### 12. ADR acceptance policy と direct ADR commit が一貫する
+### 13. ADR acceptance policy と direct ADR commit が一貫する
 
 - 例: 「ADR だけをコミットした」「`adr_acceptance_policy` が未設定や不正値のときどうなるか」
 - 期待:
@@ -135,7 +147,7 @@
   - `default_branch` policy でも、受理対象の新 ADR に `Supersedes` があれば旧 ADR まで反映される
   - それ以外の docs-only commit は従来どおり知見化も ADR 受理も起こさない
 
-### 13. `update-adr-status` direct entry が policy 契約に従う
+### 14. `update-adr-status` direct entry が policy 契約に従う
 
 - 例: 「この ADR を Accepted にしたい」「project policy が未設定や不正値のときの direct entry」
 - 期待:
@@ -144,39 +156,40 @@
   - 不正値なら `skipped(invalid-adr-acceptance-policy)` になる
   - `Superseded` は引き続き新 ADR 側の明示 `Supersedes` がある場合だけ許可される
 
-### 14. 既存の主要導線が壊れていない
+### 15. 既存の主要導線が壊れていない
 
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 期待:
   - bugfix は `bug-diagnosis -> code-implementation-loop -> change-verification`
-  - maintenance は `maintenance-analysis -> code-implementation-loop -> change-testing -> code-review`
-  - feature は `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> code-review`
+  - maintenance は `maintenance-analysis -> code-implementation-loop -> change-testing -> quality-reviewer`
+  - feature は `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> quality-reviewer`
   - `docs-update` 追加後も、既存の skill 導線が別用途へ押し流されない
 
-### 15. planning reviewer が skill-first 導線を壊さない
+### 16. planning skill が整理専用のまま保たれる
 
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
 - 期待:
   - 正式入口は引き続き `product-planning` / `implementation-planning` として案内される
-  - `product-planning-reviewer` / `implementation-planning-reviewer` は内部補助 reviewer として扱われる
-  - reviewer の raw JSON をそのままユーザー向けの最終返答に流さない
-  - planning reviewer の追加後も、`code-review` は `quality-reviewer` / `security-reviewer` 中心のままで説明と起動条件が崩れない
+  - `product-planning` / `implementation-planning` の本文に reviewer 自動起動前提が残っていない
+  - 要件 draft review は `product-planning-reviewer`、実装計画 draft review は `implementation-planning-reviewer` に分離されている
+  - planning skill は整理結果を reviewer agent へ渡せる粒度で出力するが、自分では review を行わない
 
-### 16. review summary helper が reviewer 起動元へ昇格しない
+### 17. review summary helper が reviewer 起動元へ昇格しない
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 期待:
   - `review-findings-summary` は reviewer 結果の統合と整形に専念し、自分では reviewer を起動しない
-  - 差分レビューの reviewer 起動は `code-review` が担う
-  - 要件 draft reviewer の起動は `product-planning` が担う
-  - 実装計画 draft reviewer の起動は `implementation-planning` が担う
+  - `review-findings-summary` は review 判断を代行しない
+  - `review-findings-summary` は agent 出力だけを入力として受け付ける
+  - reviewer 結果がない場合は fail closed で止まり、適切な reviewer agent へ誘導される
 - 代表プロンプト:
   - 「レビュー findings を整理したい」 -> `review-findings-summary`
-  - 「この差分をレビューして結果までまとめたい」 -> `code-review`
-  - 「要件 draft の抜け漏れを見たい」 -> `product-planning`
-  - 「実装計画 draft の危ない点を見たい」 -> `implementation-planning`
+  - 「この差分をレビューして結果までまとめたい」 -> `quality-reviewer`
+  - 「要件 draft の抜け漏れを見たい」 -> `product-planning-reviewer`
+  - 「実装計画 draft の危ない点を見たい」 -> `implementation-planning-reviewer`
 
 ## 関連文書
 
 - [Harness Design Principles](./harness-design-principles.md)
 - [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
+- [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
