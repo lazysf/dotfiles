@@ -30,10 +30,10 @@ metadata:
 ## 基本方針
 
 - evidence packet には、会話、change、実行結果で明示された事実だけを入れる。
-- docs-only の change や一過性の change は `skip` にする。
+- 一時的な実験やその場限りの cleanup は `skip` にする。
 - diff だけから durable decision を推測して ADR を作らない。
 - project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は `skipped(invalid-adr-acceptance-policy)` にする。
-- direct `write-adr` による `ADR-only commit` の受理を進めたい時は `git-commit` スキルの例外導線を使い、この skill では docs-only skip を維持する。
+- direct `write-adr` による `ADR-only commit` の受理を進めたい時は `git-commit` スキルの例外導線を使い、この skill では triage を重ねない。
 - ADR が作られた場合だけ、project policy に応じて `update-adr-status` スキルを使う。
 
 ## 手順
@@ -45,7 +45,6 @@ metadata:
 
 ### 2) skip 条件を確認する
 
-- docs-only の change なら `skip` にする。
 - 一時的な実験やその場限りの cleanup だけなら `skip` にする。
 - 既に knowledge / ADR 更新の follow-up だけなら `skip` にする。
 

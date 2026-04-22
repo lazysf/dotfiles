@@ -133,7 +133,7 @@
 
 - 例: 「このコミット後に何を残すべきか判断したい」
 - 期待:
-  - `capture-change-knowledge` は docs-only や一過性 change を `skip` にできる
+  - `capture-change-knowledge` は一過性 change や knowledge / ADR 更新の follow-up だけを `skip` にできる
   - 手順や確認ポイントは `write-knowledge-note` へ渡される
   - 判断理由が明示された change だけが `write-adr` へ渡される
   - diff だけから判断を推測して ADR を作らない
@@ -148,7 +148,6 @@
   - `新規 ADR 1 件 + 任意の docs/README.md 変更` だけの commit は `ADR-only commit` として `commit` policy の受理対象になる
   - `ADR-only commit` の新 ADR に `Supersedes` がある場合は、受理後に旧 ADR も `Superseded` になる
   - `default_branch` policy でも、受理対象の新 ADR に `Supersedes` があれば旧 ADR まで反映される
-  - それ以外の docs-only commit は従来どおり知見化も ADR 受理も起こさない
 
 ### 14. `update-adr-status` direct entry が policy 契約に従う
 
