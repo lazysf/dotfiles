@@ -30,10 +30,14 @@ RULE_PATTERN_RE = re.compile(r"prefix_rule\s*\(")
 PROJECT_DOT_CODEX_RE = re.compile(r"(^|[`\s(])\./\.codex/?")
 LEGACY_SKILL_DIR_PREFIXES = ("core-", "phase-")
 LEGACY_SKILL_NAME_RE = re.compile(r"^name:\s*(core-|phase-|entry-)", re.MULTILINE)
-REVIEW_DOC_PATHS = (
+REVIEW_FULL_ENTRY_PATHS = (
     DOT_CODEX / "AGENTS.md",
     DOCS / "knowledge" / "classification-driven-workflow-surface.md",
     DOCS / "knowledge" / "harness-regression-checks.md",
+)
+REVIEW_INDEX_PATHS = (
+    DOCS_README,
+    DOCS / "knowledge" / "harness-design-principles.md",
 )
 PLANNING_SKILL_PATHS = (
     DOT_CODEX / "skills" / "product-planning" / "SKILL.md",
@@ -45,6 +49,13 @@ REQUIRED_REVIEW_ENTRIES = (
     "product-planning-reviewer",
     "implementation-planning-reviewer",
     "review-findings-summary",
+)
+REVIEW_REMOVED_ENTRYPOINTS = ("code-review",)
+AUTO_SECURITY_PATTERNS = (
+    "security-reviewer を追加する",
+    "security-reviewer` を追加する",
+    "必要な場合だけ `security-reviewer` を追加する",
+    "必要時だけ `security-reviewer` を追加する",
 )
 
 
@@ -115,6 +126,8 @@ def check_docs_readme_index() -> None:
         missing = sorted(existing_docs - linked_docs)
         if missing:
             fail(f"{DOCS_README.relative_to(ROOT)} is missing links to: {', '.join(missing)}")
+    if "`dot_codex/agents/`" not in DOCS_README.read_text():
+        fail(f"{DOCS_README.relative_to(ROOT)} must mention `dot_codex/agents/` as a review surface")
 
 
 def check_skill_surface() -> None:
@@ -138,13 +151,27 @@ def check_review_surface() -> None:
     if code_review_skill.exists():
         fail(f"{code_review_skill.relative_to(ROOT)} must be removed")
 
-    for path in REVIEW_DOC_PATHS:
+    for path in REVIEW_FULL_ENTRY_PATHS:
         text = path.read_text()
-        if "code-review" in text:
-            fail(f"{path.relative_to(ROOT)} still references removed review skill `code-review`")
         for entry in REQUIRED_REVIEW_ENTRIES:
             if entry not in text:
                 fail(f"{path.relative_to(ROOT)} must mention review entry `{entry}`")
+        for removed in REVIEW_REMOVED_ENTRYPOINTS:
+            if removed in text:
+                fail(f"{path.relative_to(ROOT)} still references removed review skill `{removed}`")
+        for pattern in AUTO_SECURITY_PATTERNS:
+            if pattern in text:
+                fail(f"{path.relative_to(ROOT)} must not imply automatic security escalation via `{pattern}`")
+
+    for path in REVIEW_INDEX_PATHS:
+        text = path.read_text()
+        if "`dot_codex/agents/`" not in text:
+            fail(f"{path.relative_to(ROOT)} must mention `dot_codex/agents/` as the review surface")
+        if "agent-first" not in text and "明示的" not in text:
+            fail(f"{path.relative_to(ROOT)} must describe explicit agent selection for review")
+        for removed in REVIEW_REMOVED_ENTRYPOINTS:
+            if removed in text:
+                fail(f"{path.relative_to(ROOT)} still references removed review skill `{removed}`")
 
     for path in PLANNING_SKILL_PATHS:
         text = path.read_text()
@@ -159,8 +186,16 @@ def check_review_surface() -> None:
         fail(f"{review_summary.relative_to(ROOT)} must require agent output as input")
     if "fail closed" not in review_summary_text:
         fail(f"{review_summary.relative_to(ROOT)} must describe fail-closed behavior")
-    if "code-review" in review_summary_text:
-        fail(f"{review_summary.relative_to(ROOT)} must not reference removed review skill `code-review`")
+    for removed in REVIEW_REMOVED_ENTRYPOINTS:
+        if removed in review_summary_text:
+            fail(f"{review_summary.relative_to(ROOT)} must not reference removed review skill `{removed}`")
+
+    review_scan_paths = [*sorted(DOT_CODEX.rglob("*.md")), *sorted(KNOWLEDGE_DIR.glob("*.md")), DOCS_README]
+    for path in review_scan_paths:
+        text = path.read_text()
+        for removed in REVIEW_REMOVED_ENTRYPOINTS:
+            if removed in text:
+                fail(f"{path.relative_to(ROOT)} must not reintroduce removed review skill `{removed}`")
 
 
 def main() -> None:

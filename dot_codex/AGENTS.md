@@ -49,8 +49,9 @@
 - `capture-change-knowledge` は `git-commit` に隣接する change-to-knowledge helper として使う
 - `update-adr-status` は ADR の状態遷移と supersede 関係更新を担う helper として使う
 - review の出口整形が必要な場合だけ `review-findings-summary` を使う
-- 差分 review は `quality-reviewer` を既定とし、セキュリティ観点が必要な場合だけ `security-reviewer` を追加する
-- 要件 draft review は `product-planning-reviewer`、実装計画 draft review は `implementation-planning-reviewer` を直接使う
+- generic な差分 review は `quality-reviewer` を明示的に呼ぶ
+- セキュリティ観点の review は `security-reviewer` を明示的に呼ぶ
+- 要件 draft review は `product-planning-reviewer`、実装計画 draft review は `implementation-planning-reviewer` を明示的に呼ぶ
 - `rules` は隣接して使う補助役であり、review 本体の代替にはしない
 
 ## 置き場の原則

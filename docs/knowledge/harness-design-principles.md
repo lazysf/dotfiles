@@ -61,6 +61,12 @@
 - 機械的に止めたい操作は `rules/` を優先する
 - reviewer などの定型的な read-only の見立ては `agents/` に分ける
 
+### 6. review は agent-first の明示選択で扱う
+
+- generic な差分 review は `quality-reviewer` を、セキュリティ観点の review は `security-reviewer` を利用者が明示的に選ぶ
+- review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
+- `review-findings-summary` は review 本体や reviewer 選択を担わず、agent 出力の整形だけに留める
+
 ## 関連文書
 
 - [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
