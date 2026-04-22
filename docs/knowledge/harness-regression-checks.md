@@ -196,6 +196,17 @@
   - 自動検査は agent metadata、rule metadata、Markdown 相対リンク、project-local `.codex` directory の推奨禁止だけを扱う
   - docs index の網羅性や legacy surface の残骸確認は、この文書側の手動回帰に残る
 
+### 19. reviewer 設定 tier が役割分担に沿って保たれる
+
+- 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
+- 期待:
+  - 親エージェントの既定は引き続き `gpt-5.4` と高めの推論労力で、広い整理と最終判断を担う
+  - `01-product-planning-reviewer` と `02-implementation-planning-reviewer` は既定で `gpt-5.4-mini` と `medium` を維持し、狭い read-only review を安定して返す
+  - `03-quality-reviewer` は generic diff review の既定として `gpt-5.4` と `medium` を維持する
+  - `04-security-reviewer` は見落としコストの高さに合わせて `gpt-5.4` と `medium` を維持する
+  - reviewer の精度改善は、まず対象 reviewer の model tier 見直しを候補にし、`model_reasoning_effort` の一律引き上げや planning reviewer の同時重量化を既定にしない
+  - `03-quality-reviewer` の見直しを再検討するときは、`critical` / `high` の再現率、ノイズ指摘数、応答時間で評価し、`model_reasoning_effort` より先に model tier を比較する
+
 ## 関連文書
 
 - [Harness Design Principles](./harness-design-principles.md)
