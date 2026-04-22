@@ -6,7 +6,7 @@
 ## Surface の責務
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
-- `task-classification`, `review-findings-summary`: 補助 skill。入口整理や出口整形に責務を絞る
+- `capture-change-knowledge`, `update-adr-status`, `task-classification`, `review-findings-summary`: 補助 skill。routing、lifecycle update、入口整理、出口整形に責務を絞る
 - `agents/`: 専門 reviewer などの補助役。read-only reviewer はここに残す
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
 
@@ -37,6 +37,8 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - `docs-only artifact`: `docs-update`
 - `knowledge`: `capture-knowledge-triage -> write-knowledge-note` または `write-adr`
 - `git`: `git-commit`, `git-push`
+- `change-to-knowledge helper`: `capture-change-knowledge`
+- `adr lifecycle helper`: `update-adr-status`
 - `classification helper`: `task-classification`
 - `review summary helper`: `review-findings-summary`
 

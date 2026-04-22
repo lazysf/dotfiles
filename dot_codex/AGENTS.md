@@ -46,6 +46,8 @@
 ### 3. 補助導線
 
 - 主分類に迷う場合だけ `task-classification` を使う
+- `capture-change-knowledge` は `git-commit` に隣接する change-to-knowledge helper として使う
+- `update-adr-status` は ADR の状態遷移と supersede 関係更新を担う helper として使う
 - review の出口整形が必要な場合だけ `review-findings-summary` を使う
 - reviewer 起動は `code-review`、`product-planning`、`implementation-planning` の隣接 skill で行う
 - `reviewer` や `rules` は隣接して使う補助役であり、入口や本体導線にはしない

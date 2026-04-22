@@ -3,6 +3,7 @@
 この `docs/` は、この dotfiles repo を保守するときに参照する知見の置き場です。
 
 - `docs/knowledge/`: repo-level の通常知見を置く
+  - [adr-ledger-model.md](./knowledge/adr-ledger-model.md): ADR を状態付き判断台帳として扱う運用
   - [classification-driven-workflow-surface.md](./knowledge/classification-driven-workflow-surface.md): prefix なし skill surface の扱い
   - [harness-design-principles.md](./knowledge/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./knowledge/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
