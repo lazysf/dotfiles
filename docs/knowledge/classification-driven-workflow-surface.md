@@ -49,6 +49,8 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - セキュリティレビューの正式入口は `security-reviewer`
 - 要件 draft review の正式入口は `product-planning-reviewer`
 - 実装計画 draft review の正式入口は `implementation-planning-reviewer`
+- review は利用者が対象に応じて適切な reviewer agent を明示的に呼んで実施する
+- generic review から `security-reviewer` への自動昇格は行わない
 - `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
 - `review-findings-summary` は reviewer 非起動、agent 出力限定の出口整理 helper として使う
 
