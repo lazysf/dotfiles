@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」といった要件確定後の依頼で使う。既存実装と規約に沿って、触る範囲、変更単位、実装順序、各ステップの検証方法を整理する。要件や成功条件がまだ曖昧なら `task-intake` / `product-planning` を優先し、計画 draft のレビュー自体は `implementation-planning-reviewer` を使う。
+description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」といった要件確定後の依頼で使う。既存実装と規約に沿って、触る範囲、変更単位、実装順序、各ステップの検証方法を整理する。要件や成功条件がまだ曖昧なら `task-intake` / `product-planning` を優先し、計画 draft のレビュー自体は `02-implementation-planning-reviewer` を使う。
 metadata:
   short-description: 技術計画
 ---
@@ -29,7 +29,7 @@ metadata:
 - 不要な抽象化や大規模設計を前提にしない。
 - 要件が未確定なら、要件整理へ戻す。
 - この skill 自体は review を行わず、実装計画の整理に専念する。
-- 計画 draft の危険箇所を見たい場合は、整理した結果を `implementation-planning-reviewer` へ明示的に渡す。
+- 計画 draft の危険箇所を見たい場合は、整理した結果を `02-implementation-planning-reviewer` へ明示的に渡す。
 
 ## 対象
 

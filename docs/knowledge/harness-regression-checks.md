@@ -86,8 +86,8 @@
   - 「この判断を ADR 草案にしたい」 -> `write-adr`
   - 「コミット後の変更から残すべき知見を拾いたい」 -> `capture-change-knowledge`
   - 「この ADR を Accepted にしたい」 -> `update-adr-status`
-  - 「この差分をレビューしたい」 -> `quality-reviewer`
-  - 「セキュリティ観点で差分を見たい」 -> `security-reviewer`
+  - 「この差分をレビューしたい」 -> `03-quality-reviewer`
+  - 「セキュリティ観点で差分を見たい」 -> `04-security-reviewer`
   - 「レビュー findings を整理したい」 -> `review-findings-summary`
   - 「この依頼をどの分類で扱うべきか迷う」 -> `task-classification`
   - 「バグ修正の結果を確認したい」 -> `change-verification`
@@ -170,7 +170,7 @@
 - 期待:
   - 正式入口は引き続き `product-planning` / `implementation-planning` として案内される
   - `product-planning` / `implementation-planning` の本文に reviewer 自動起動前提が残っていない
-  - 要件 draft review は `product-planning-reviewer`、実装計画 draft review は `implementation-planning-reviewer` に分離されている
+  - 要件 draft review は `01-product-planning-reviewer`、実装計画 draft review は `02-implementation-planning-reviewer` に分離されている
   - planning skill は整理結果を reviewer agent へ渡せる粒度で出力するが、自分では review を行わない
 
 ### 17. review summary helper が reviewer 起動元へ昇格しない
@@ -181,13 +181,13 @@
   - `review-findings-summary` は review 判断を代行しない
   - `review-findings-summary` は agent 出力だけを入力として受け付ける
   - reviewer 結果がない場合は fail closed で止まり、適切な reviewer agent へ誘導される
-  - `quality-reviewer` から `security-reviewer` への自動昇格を前提にしない
+  - `03-quality-reviewer` から `04-security-reviewer` への自動昇格を前提にしない
 - 代表プロンプト:
   - 「レビュー findings を整理したい」 -> `review-findings-summary`
-  - 「この差分をレビューして結果までまとめたい」 -> `quality-reviewer`
-  - 「この差分をセキュリティ観点でレビューしたい」 -> `security-reviewer`
-  - 「要件 draft の抜け漏れを見たい」 -> `product-planning-reviewer`
-  - 「実装計画 draft の危ない点を見たい」 -> `implementation-planning-reviewer`
+  - 「この差分をレビューして結果までまとめたい」 -> `03-quality-reviewer`
+  - 「この差分をセキュリティ観点でレビューしたい」 -> `04-security-reviewer`
+  - 「要件 draft の抜け漏れを見たい」 -> `01-product-planning-reviewer`
+  - 「実装計画 draft の危ない点を見たい」 -> `02-implementation-planning-reviewer`
 
 ### 18. `scripts/verify-codex-harness.py` が ADR 0005 の守備範囲に留まる
 

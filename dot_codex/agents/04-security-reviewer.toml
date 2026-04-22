@@ -1,4 +1,4 @@
-name = "security-reviewer"
+name = "04-security-reviewer"
 description = "Read-only security reviewer for focused diff-based reviews."
 model = "gpt-5.4"
 model_reasoning_effort = "medium"

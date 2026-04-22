@@ -63,7 +63,7 @@
 
 ### 6. review は agent-first の明示選択で扱う
 
-- generic な差分 review は `quality-reviewer` を、セキュリティ観点の review は `security-reviewer` を利用者が明示的に選ぶ
+- generic な差分 review は `03-quality-reviewer` を、セキュリティ観点の review は `04-security-reviewer` を利用者が明示的に選ぶ
 - review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
 - `review-findings-summary` は review 本体や reviewer 選択を担わず、agent 出力の整形だけに留める
 

@@ -1,4 +1,4 @@
-name = "implementation-planning-reviewer"
+name = "02-implementation-planning-reviewer"
 description = "Read-only reviewer for implementation plan drafts."
 model = "gpt-5.4-mini"
 model_reasoning_effort = "medium"

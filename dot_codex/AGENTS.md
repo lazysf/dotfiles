@@ -31,10 +31,10 @@
 
 - `research`: `research`
 - `bugfix`: `bug-diagnosis -> code-implementation-loop -> change-verification`
-- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> quality-reviewer`
+- `feature`: `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> 03-quality-reviewer`
 - `security`: `security-scan -> code-implementation-loop -> change-verification`
 - `quality`: `quality-analysis -> code-implementation-loop -> change-verification`
-- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> quality-reviewer`
+- `maintenance`: `maintenance-analysis -> code-implementation-loop -> change-testing -> 03-quality-reviewer`
 - `compat`: `compat-assessment -> code-implementation-loop -> change-verification`
 - 実装方針や原因が未確定なら、まず `research` に倒す
 
