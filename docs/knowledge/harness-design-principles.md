@@ -30,10 +30,17 @@
 ### 2. knowledge は runtime surface ごとに昇格先を分ける
 
 - 通常知見は `docs/knowledge/`
-- 判断記録は `docs/adr/`
+- 判断記録は `docs/adr/` の状態付き ADR 台帳として置く
 - 繰り返し使う手順は `dot_codex/skills/`
 - 機械的に守らせたい制約は `dot_codex/rules/`
 - read-only の専門化した補助役は `dot_codex/agents/`
+
+### 2.5. ADR は状態付き台帳として扱う
+
+- ADR は通常知見ではなく、採用された判断とその履歴関係の正本として扱う
+- 新規 ADR の作成と、既存 ADR の状態更新は別の責務として分ける
+- `Accepted` のタイミングは current project の `adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は skip にする
+- direct `write-adr` で作った ADR も、`commit` policy では `ADR-only commit` 例外で `Accepted` に進められるようにする
 
 ### 3. defaults は大きく動かさない
 

@@ -80,6 +80,8 @@
   - 「今回の知見をどこに残すか決めたい」 -> `capture-knowledge-triage`
   - 「通常知見メモの草案を書きたい」 -> `write-knowledge-note`
   - 「この判断を ADR 草案にしたい」 -> `write-adr`
+  - 「コミット後の変更から残すべき知見を拾いたい」 -> `capture-change-knowledge`
+  - 「この ADR を Accepted にしたい」 -> `update-adr-status`
   - 「この差分をレビューしたい」 -> `code-review`
   - 「レビュー findings を整理したい」 -> `review-findings-summary`
   - 「この依頼をどの分類で扱うべきか迷う」 -> `task-classification`
@@ -101,7 +103,48 @@
   - 通常知見なら `write-knowledge-note`、判断記録なら `write-adr` に渡される
   - `docs-update` が知識の置き場判断を奪わない
 
-### 10. 既存の主要導線が壊れていない
+### 10. ADR が状態付き台帳として扱われる
+
+- 例: 「この判断を ADR として残したい」「この ADR はもう置き換えられた」
+- 期待:
+  - 新規 ADR は `write-adr` が `Proposed` として作成する
+  - 既存 ADR の `Accepted` / `Superseded` / `Rejected` は `update-adr-status` が担当する
+  - `Supersedes` / `Superseded-By` は明示根拠があるときだけ更新される
+  - 新 ADR 側の `Supersedes` は `write-adr` 入力で明示され、`update-adr-status` が不足分を補完しない
+  - 新 ADR 側に一致する `Supersedes` がなければ、旧 ADR は `Superseded` にならない
+  - 手順メモや落とし穴は ADR へ押し込まず `docs/knowledge/` に分けられる
+
+### 11. 変更後知見化が `skip / knowledge / adr` で振り分けられる
+
+- 例: 「このコミット後に何を残すべきか判断したい」
+- 期待:
+  - `capture-change-knowledge` は docs-only や一過性 change を `skip` にできる
+  - 手順や確認ポイントは `write-knowledge-note` へ渡される
+  - 判断理由が明示された change だけが `write-adr` へ渡される
+  - diff だけから判断を推測して ADR を作らない
+
+### 12. ADR acceptance policy と direct ADR commit が一貫する
+
+- 例: 「ADR だけをコミットした」「`adr_acceptance_policy` が未設定や不正値のときどうなるか」
+- 期待:
+  - policy の読み元は current project の設定として一貫している
+  - key 未設定なら `commit` fallback になる
+  - 不正値なら push / commit 自体は成功扱いのまま、自動 `Accepted` 化だけが skip される
+  - `新規 ADR 1 件 + 任意の docs/README.md 変更` だけの commit は `ADR-only commit` として `commit` policy の受理対象になる
+  - `ADR-only commit` の新 ADR に `Supersedes` がある場合は、受理後に旧 ADR も `Superseded` になる
+  - `default_branch` policy でも、受理対象の新 ADR に `Supersedes` があれば旧 ADR まで反映される
+  - それ以外の docs-only commit は従来どおり知見化も ADR 受理も起こさない
+
+### 13. `update-adr-status` direct entry が policy 契約に従う
+
+- 例: 「この ADR を Accepted にしたい」「project policy が未設定や不正値のときの direct entry」
+- 期待:
+  - `Accepted` 遷移でも policy の読み元は current project の設定として一貫している
+  - key 未設定なら `commit` fallback になる
+  - 不正値なら `skipped(invalid-adr-acceptance-policy)` になる
+  - `Superseded` は引き続き新 ADR 側の明示 `Supersedes` がある場合だけ許可される
+
+### 14. 既存の主要導線が壊れていない
 
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 期待:
@@ -110,7 +153,7 @@
   - feature は `request-shaping` / `task-intake` / `product-planning` / `implementation-planning -> code-implementation-loop -> change-testing -> code-review`
   - `docs-update` 追加後も、既存の skill 導線が別用途へ押し流されない
 
-### 11. planning reviewer が skill-first 導線を壊さない
+### 15. planning reviewer が skill-first 導線を壊さない
 
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
 - 期待:
@@ -119,7 +162,7 @@
   - reviewer の raw JSON をそのままユーザー向けの最終返答に流さない
   - planning reviewer の追加後も、`code-review` は `quality-reviewer` / `security-reviewer` 中心のままで説明と起動条件が崩れない
 
-### 12. review summary helper が reviewer 起動元へ昇格しない
+### 16. review summary helper が reviewer 起動元へ昇格しない
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 期待:

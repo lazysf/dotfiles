@@ -28,6 +28,7 @@ RULE_DECISION_RE = re.compile(r'decision\s*=\s*"(allow|prompt|forbidden)"')
 RULE_PATTERN_RE = re.compile(r"prefix_rule\s*\(")
 PROJECT_DOT_CODEX_RE = re.compile(r"(^|[`\s(])\./\.codex/?")
 EXPECTED_KNOWLEDGE_DOCS = {
+    "adr-ledger-model.md",
     "classification-driven-workflow-surface.md",
     "harness-design-principles.md",
     "harness-regression-checks.md",
