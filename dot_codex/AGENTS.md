@@ -43,6 +43,7 @@
 - `docs-only`: 成果物が既存ドキュメント更新に限られる場合は、主分類を増やさず `docs-update` へ直接入る
 - `knowledge`: `capture-knowledge-triage -> write-knowledge-note` または `write-adr`
 - `git`: `git-commit`, `git-push`
+- Git 導線では各 skill に書かれた手順を正本にし、`rules` は補助ガードとして扱う
 
 ### 3. 補助導線
 
