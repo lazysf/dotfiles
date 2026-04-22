@@ -46,6 +46,9 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - 1 文目で、ユーザーが言いそうな依頼語を優先して「どんな依頼で使うか」を自然文で示す
 - 2 文目で、その skill が何を整理 / 実行 / 出力するかを示す
 - 3 文目で、近接 skill との差分、渡し先、または対象外を明示する
+- 他 skill や agent を案内する時は、`〜したい時は \`skill-name\` スキルを使う`、`レビューしたい時は \`03-quality-reviewer\` reviewer agent を使う` のように surface 種別まで prose で書く
+- `\`skill-name\` で扱う`、`\`skill-name\` に委ねる`、`\`skill-name\` へ handoff する`、`writer skill` のような抽象表現は避ける
+- skill 名の裸参照だけで意味を持たせず、何をしたい時に使うのかを文の中で明示する
 - 主役 skill と補助 skill の違いは prefix や内部用語ではなく prose で表現する
 - `metadata.short-description` は UI 向けの短い説明であり、trigger surface の正本としては扱わない
 - 旧 implicit invocation、wrapper、legacy surface を前提にした言い回しは `description` に持ち込まない

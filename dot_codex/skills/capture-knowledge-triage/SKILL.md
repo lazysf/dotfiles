@@ -1,6 +1,6 @@
 ---
 name: capture-knowledge-triage
-description: 「今回の知見をどこに残すべきか決めたい」「通常知見か ADR かを分けたい」といった依頼で使う。残す価値の有無を判断し、`skip | knowledge | adr` と根拠を返して置き場を決める。既存 docs 更新は `docs-update`、新規 knowledge / ADR 作成は `write-knowledge-note` / `write-adr` で扱う。
+description: 「今回の知見をどこに残すべきか決めたい」「通常知見か ADR かを分けたい」といった依頼で使う。残す価値の有無を判断し、`skip | knowledge | adr` と根拠を返して置き場を決める。既存 docs を更新したい時は `docs-update` スキルを使い、通常知見メモを作りたい時は `write-knowledge-note` スキルを使い、ADR を作りたい時は `write-adr` スキルを使う。
 metadata:
   short-description: 知識の仕分け
 ---
@@ -40,12 +40,12 @@ metadata:
 ### 3) 既存の置き場を探す
 
 - 通常知見として残す場合は、`root docs/knowledge/` を置き先にする。
-- 通常知見として残す場合の次の具体作業は `write-knowledge-note` に渡す。
+- 通常知見として残したい時は、次に `write-knowledge-note` スキルを使う。
 - 判断記録として残す場合は、`root docs/adr/` を置き先にする。
-- 判断記録として残す場合の次の具体作業は `write-adr` に渡す。
+- 判断記録として残したい時は、次に `write-adr` スキルを使う。
 - 既存 docs、コードコメント、設定や成果物で十分かを確認する。
 - 追加が必要なら既存構造のどこへ置くかを決める。
-- 既存 docs 更新だけで足りる場合は `docs-update` に渡す。
+- 既存 docs の更新だけで足りる時は `docs-update` スキルを使う。
 
 ### 4) 重複を避ける
 

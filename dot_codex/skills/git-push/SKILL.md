@@ -1,6 +1,6 @@
 ---
 name: git-push
-description: 「今のブランチを push したい」「upstream を設定してリモートへ出したい」といった Git の依頼で使う。push 対象、push 先、upstream 設定の有無を確認し、通常 push を安全に実行する。コミット作成やメッセージ整備は `git-commit`、強制 push はこの skill の対象外とする。
+description: 「今のブランチを push したい」「upstream を設定してリモートへ出したい」といった Git の依頼で使う。push 対象、push 先、upstream 設定の有無を確認し、通常 push を安全に実行する。コミットを作りたい時は `git-commit` スキルを使い、強制 push はこの skill の対象外とする。
 metadata:
   short-description: Git push
 ---
@@ -14,7 +14,7 @@ metadata:
 
 - push はユーザーの明示的な依頼がある場合のみ行う。
 - commit 作成やメッセージ整備はこのスキルの責務に含めない。
-- project policy `adr_acceptance_policy = "default_branch"` の場合だけ、採用確定後の ADR 状態更新に `update-adr-status` を隣接して使う。
+- project policy `adr_acceptance_policy = "default_branch"` の場合だけ、採用確定後の ADR 状態更新をしたい時は `update-adr-status` スキルを使う。
 - project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は ADR 状態更新だけ skip にする。
 - この skill では、手順に明示した Git コマンドだけを使う。
 - 通常 push は引き続き approval / `prompt` 前提で扱う。
@@ -61,7 +61,7 @@ metadata:
 - 明示指示がある場合のみ行う。
 - タグ数が多い場合は確認する。
 
-### 6) 必要なら ADR 状態更新へ渡す
+### 6) 必要なら ADR 状態更新に進む
 
 - current project の `[projects."<repo-root>"].adr_acceptance_policy` を読み、key がない場合は `commit` として扱う。
 - 値が `commit | default_branch` 以外なら、push 自体は成功扱いのまま ADR 状態更新だけ `skipped(invalid-adr-acceptance-policy)` にする。

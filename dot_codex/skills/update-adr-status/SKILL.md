@@ -1,6 +1,6 @@
 ---
 name: update-adr-status
-description: 「ADR を Accepted にしたい」「supersede に合わせて旧 ADR を更新したい」といった判断台帳の更新で使う。対象 ADR の `Status` と `Supersedes / Superseded-By` を一次情報に沿って更新する。新規 ADR の作成は `write-adr`、既存 docs 本文の一般更新は `docs-update` で扱う。
+description: 「ADR を Accepted にしたい」「supersede に合わせて旧 ADR を更新したい」といった判断台帳の更新で使う。対象 ADR の `Status` と `Supersedes / Superseded-By` を一次情報に沿って更新する。新規 ADR を作りたい時は `write-adr` スキル、既存 docs 本文を更新したい時は `docs-update` スキルを使う。
 metadata:
   short-description: ADR 状態更新
 ---
