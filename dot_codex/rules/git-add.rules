@@ -1,7 +1,7 @@
 prefix_rule(
   pattern = ["git", "add"],
   decision = "allow",
-  justification = "合意済みの対象に限ったパス指定の git add のみ許可する。",
+  justification = "`git-commit` skill の手順で使う `git add <paths>` を許可する。",
   match = [
     "git add README.md",
     "git add path/to/file",
@@ -18,7 +18,7 @@ prefix_rule(
 prefix_rule(
   pattern = ["git", "add", [".", "-A", "--all", "-u", "--update", "-p", "--patch"]],
   decision = "prompt",
-  justification = "広域 staging や対話的 staging は意図しない対象を含めやすいため都度確認する。",
+  justification = "`git-commit` skill の手順外になる broad add や対話的 staging は都度確認する。",
   match = [
     "git add .",
     "git add -A",
