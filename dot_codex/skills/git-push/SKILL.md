@@ -14,16 +14,16 @@ metadata:
 
 - push はユーザーの明示的な依頼がある場合のみ行う。
 - commit 作成やメッセージ整備はこのスキルの責務に含めない。
-- 強制 push は対象外とし、自動実行しない。
 - project policy `adr_acceptance_policy = "default_branch"` の場合だけ、採用確定後の ADR 状態更新に `update-adr-status` を隣接して使う。
 - project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は ADR 状態更新だけ skip にする。
-- `git push --force`、`git push --force-with-lease`、`git push origin main --force-with-lease` のような後置フラグ形も含めて扱わない。
+- この skill では、手順に明示した Git コマンドだけを使う。
+- 通常 push は引き続き approval / `prompt` 前提で扱う。
 
 ## 対象外
 
 - コミット作成やコミットメッセージ整備のみが目的の依頼。
 - pull / rebase で履歴調整が必要だが、調整指示がない状態。
-- 強制プッシュの実行。
+- 手順に明示していない push 操作。
 
 ## 手順
 
@@ -78,12 +78,5 @@ metadata:
 ## 結果報告
 
 - 最終返答では、push 結果を通常の返答文の中で簡潔に報告する。
-- 固定テンプレートやキー順は要求しない。
-- prose でも短い箇条書きでもよいが、次の事実は漏らさない。
-  - `remote`
-  - `branch`
-  - `upstream` 設定の有無
-  - 実行内容（通常 push / tag push など）
-  - 結果
-  - 失敗時の次アクション
+- 最低限、`remote`、`branch`、`upstream` 設定の有無、実行内容、結果、必要なら次アクションを含める。
 - 失敗時はエラー本文を丸ごと貼るのではなく、原因の要点と次に確認すべき点を短く示す。

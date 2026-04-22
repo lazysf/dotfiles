@@ -26,6 +26,40 @@ RULE_DECISION_RE = re.compile(r'decision\s*=\s*"(allow|prompt|forbidden)"')
 RULE_PATTERN_RE = re.compile(r"prefix_rule\s*\(")
 PROJECT_DOT_CODEX_RE = re.compile(r"(^|[`\s(])\./\.codex/?")
 
+GIT_COMMIT_SKILL_EXPECTED = (
+    "この skill では、手順に明示した Git コマンドだけを使う。",
+    "`git status -sb`",
+    "`git diff`",
+    "`git diff --staged`",
+    "`git add <paths>`",
+    '`git commit -m "<header>"`',
+    "`git commit -F <file>`",
+)
+
+GIT_PUSH_SKILL_EXPECTED = (
+    "この skill では、手順に明示した Git コマンドだけを使う。",
+    "通常 push は引き続き approval / `prompt` 前提で扱う。",
+    "`git status -sb`",
+    "`git branch -vv`",
+    "`git remote -v`",
+    "`git push`",
+    "`git push -u <remote> <branch>`",
+    "`git push <remote> <branch>`",
+)
+
+GIT_RULE_EXPECTED = {
+    DOT_CODEX / "rules" / "git-add.rules": (
+        'pattern = ["git", "add"]',
+        "`git-commit` skill",
+        '"git add ."',
+    ),
+    DOT_CODEX / "rules" / "git-push.rules": (
+        'pattern = ["git", "push"]',
+        "`git-push` skill",
+        '"git push --force"',
+    ),
+}
+
 
 def fail(message: str) -> None:
     print(f"FAIL: {message}")
@@ -74,10 +108,29 @@ def check_markdown_links() -> None:
                 resolve_markdown_link(path, match.group(1))
 
 
+def check_git_command_surface() -> None:
+    git_commit = (DOT_CODEX / "skills" / "git-commit" / "SKILL.md").read_text()
+    for token in GIT_COMMIT_SKILL_EXPECTED:
+        if token not in git_commit:
+            fail(f"dot_codex/skills/git-commit/SKILL.md is missing: {token}")
+
+    git_push = (DOT_CODEX / "skills" / "git-push" / "SKILL.md").read_text()
+    for token in GIT_PUSH_SKILL_EXPECTED:
+        if token not in git_push:
+            fail(f"dot_codex/skills/git-push/SKILL.md is missing: {token}")
+
+    for path, tokens in GIT_RULE_EXPECTED.items():
+        text = path.read_text()
+        for token in tokens:
+            if token not in text:
+                fail(f"{path.relative_to(ROOT)} is missing: {token}")
+
+
 def main() -> None:
     check_agents()
     check_rules()
     check_markdown_links()
+    check_git_command_surface()
     print("Codex harness verification passed.")
 
 
