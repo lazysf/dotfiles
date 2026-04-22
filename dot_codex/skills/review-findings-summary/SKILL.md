@@ -1,6 +1,6 @@
 ---
 name: review-findings-summary
-description: 「レビュー結果を findings-first でまとめたい」「reviewer の出力を人間向けに整理したい」といった出口整理で使う。reviewer agent の出力だけを入力として受け取り、レビュー対象、確認済み事実、実施済み検証、findings、未確認論点、残リスクを人間向けに整える。review 本体は `quality-reviewer` / `security-reviewer` / `product-planning-reviewer` / `implementation-planning-reviewer` が担い、この skill は agent を起動しない。
+description: 「レビュー結果を findings-first でまとめたい」「reviewer の出力を人間向けに整理したい」といった出口整理で使う。reviewer agent の出力だけを入力として受け取り、レビュー対象、確認済み事実、実施済み検証、findings、未確認論点、残リスクを人間向けに整える。review 本体は `01-product-planning-reviewer` / `02-implementation-planning-reviewer` / `03-quality-reviewer` / `04-security-reviewer` が担い、この skill は agent を起動しない。
 metadata:
   short-description: レビュー要約
 ---
@@ -26,7 +26,7 @@ review 本体は各 reviewer agent が担い、このスキルは findings-first
 
 - 実装後の最終確認。
 - reviewer agent の結果を人間向けに整理して返す場面。
-- `quality-reviewer`、`security-reviewer`、`product-planning-reviewer`、`implementation-planning-reviewer` の結果を出口整理する場面。
+- `01-product-planning-reviewer`、`02-implementation-planning-reviewer`、`03-quality-reviewer`、`04-security-reviewer` の結果を出口整理する場面。
 - 次に修正プランを依頼しやすい形へ要約したい場面。
 
 ## 対象外
