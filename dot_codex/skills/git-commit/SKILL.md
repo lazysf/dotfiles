@@ -19,6 +19,7 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - 未追跡ファイルや機密情報が含まれる場合は対象を確認する。
 - `git add .`、`git add -A`、`git add --all` のような broad add は既定手段にしない。
 - `--amend` や履歴の書き換えは行わない。
+- 実コミット後に durable change の知見化が必要なら `capture-change-knowledge` へ渡す。
 
 ## コミット分割の原則
 
@@ -97,6 +98,21 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 
 - `git status -sb` でコミット後の状態を確認する。
 
+### 10) 必要なら変更後知見化または ADR 状態更新へ渡す
+
+- 実際に commit が成功した場合だけ後段へ進む。
+- project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にする。
+- key がない場合は `commit` として扱う。
+- 値が `commit | default_branch` 以外なら、自動 `Accepted` 化だけを抑止し `notes` に `skipped(invalid-adr-acceptance-policy)` を残す。
+- `ADR-only commit` は、新規 `docs/adr/NNNN-*.md` 1 件と任意の `docs/README.md` 変更だけを含む commit とする。
+- `ADR-only commit` では `capture-change-knowledge` を使わず、policy が `commit` のときだけ新 ADR を `update-adr-status` で `Accepted` に進める。
+- `ADR-only commit` の新 ADR に `Supersedes` が明示されている場合だけ、続けて旧 ADR に対して `update-adr-status(target_adr=<old>, new_status=Superseded, related_adrs=<new>, event_basis=commit)` を別更新として行う。
+- `ADR-only commit` で policy が `default_branch` のときは、新 ADR を `Proposed` に留める。
+- `ADR-only commit` で policy が不正値なら、新 ADR を更新せず `notes` に skip 理由を残す。
+- それ以外の docs-only のコミットや、一過性の change だけなら知見化しない。
+- 上記以外の durable change は `capture-change-knowledge` に渡す。
+- `capture-change-knowledge` が ADR を作り、policy が `commit` なら `update-adr-status` で `Accepted` に進める。
+
 ## 結果報告
 
 - 文面案だけ返す場合は、通常の返答文の中で `final`、`header`、`body_text`、`footer_text` を簡潔に示す。
@@ -107,6 +123,7 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
   - `commit`
   - `message`
   - `body` の有無
+  - `knowledge_capture` の有無または要約
   - `remaining` の有無または要約
   - `notes` が必要な場合の補足
 - 失敗時は、失敗理由と次に確認すべき点を短く示す。

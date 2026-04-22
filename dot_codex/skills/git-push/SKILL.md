@@ -15,6 +15,8 @@ metadata:
 - push はユーザーの明示的な依頼がある場合のみ行う。
 - commit 作成やメッセージ整備はこのスキルの責務に含めない。
 - 強制 push は対象外とし、自動実行しない。
+- project policy `adr_acceptance_policy = "default_branch"` の場合だけ、採用確定後の ADR 状態更新に `update-adr-status` を隣接して使う。
+- project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は ADR 状態更新だけ skip にする。
 - `git push --force`、`git push --force-with-lease`、`git push origin main --force-with-lease` のような後置フラグ形も含めて扱わない。
 
 ## 対象外
@@ -59,7 +61,16 @@ metadata:
 - 明示指示がある場合のみ行う。
 - タグ数が多い場合は確認する。
 
-### 6) 失敗時の扱い
+### 6) 必要なら ADR 状態更新へ渡す
+
+- current project の `[projects."<repo-root>"].adr_acceptance_policy` を読み、key がない場合は `commit` として扱う。
+- 値が `commit | default_branch` 以外なら、push 自体は成功扱いのまま ADR 状態更新だけ `skipped(invalid-adr-acceptance-policy)` にする。
+- policy が `commit` なら、`git-push` 側で ADR 状態更新は行わない。
+- policy が `default_branch` で、今回の push 先が current project の default branch と確認できる場合だけ、今回の push に含まれる新規 `Proposed` ADR を 1 件ずつ `update-adr-status` で `Accepted` に進める。
+- その新 ADR に `Supersedes` が明示されている場合だけ、続けて旧 ADR に対して `update-adr-status(target_adr=<old>, new_status=Superseded, related_adrs=<new>, event_basis=default_branch)` を別更新として行う。
+- push 先や branch が採用確定条件を満たすか不明なら、ADR 状態は変えない。
+
+### 7) 失敗時の扱い
 
 - 認証エラー、non-fast-forward、保護ブランチなどのエラーは止めて確認する。
 - 自動で解決策を実行しない。
