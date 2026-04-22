@@ -21,9 +21,9 @@
 
 ## 採用している考え方
 
-### 1. `AGENTS.md` は長文知識の正本ではなく契約と導線を置く
+### 1. `AGENTS.md` は長文知識の正本ではなく契約と薄い surface 案内を置く
 
-- `dot_codex/AGENTS.md` は、共通ハーネスの運用契約と開発フローの surface を扱う
+- `dot_codex/AGENTS.md` は、共通ハーネスの運用契約と薄い runtime surface 案内を扱う
 - repo-level の詳しい背景や判断理由は `docs/knowledge/` や `docs/adr/` に分ける
 - project 側では、root `AGENTS.md` を短いポインタとして使い、詳細は project の `docs/` に寄せる
 

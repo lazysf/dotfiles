@@ -9,7 +9,7 @@
 - 期待から外れた場合は、`docs/knowledge/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - `scripts/verify-codex-harness.py` で見なくなった docs 網羅性や移行残骸の観点は、この文書で手動確認する
-- 導線の正本説明は `dot_codex/AGENTS.md`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
+- 全体契約と薄い surface 案内は `dot_codex/AGENTS.md`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
 
 ## チェック項目
 
@@ -46,12 +46,12 @@
   - 機械的ガードなら `rules/`
   - 専門化した補助役なら `agents/`
 
-### 5. `AGENTS.md` が契約と導線の surface として機能する
+### 5. `AGENTS.md` が契約と薄い surface 案内として機能する
 
 - 例: 「ハーネスの詳細知識はどこを読めばよいか」
 - 期待:
-  - `dot_codex/AGENTS.md` は契約と導線の入口として案内される
-  - 代表導線は `dot_codex/AGENTS.md` の説明と矛盾しない
+  - `dot_codex/AGENTS.md` は契約と薄い surface 案内の入口として案内される
+  - `skills / agents / rules / docs` の役割分担は `dot_codex/AGENTS.md` の説明と矛盾しない
   - 補助 skill は主役 skill と混同せずに案内される
   - repo-level の詳細知識は `docs/knowledge/` に誘導される
   - 判断理由は `docs/adr/` に誘導される
@@ -159,12 +159,12 @@
   - 不正値なら `skipped(invalid-adr-acceptance-policy)` になる
   - `Superseded` は引き続き新 ADR 側の明示 `Supersedes` がある場合だけ許可される
 
-### 15. 既存の主要導線が壊れていない
+### 15. 既存の主要入口が壊れていない
 
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 期待:
-  - 代表導線の確認は `dot_codex/AGENTS.md` を正本として行う
-  - docs 更新後も、主分類から正式入口へ進む導線が別用途へ押し流されない
+  - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
+  - `dot_codex/AGENTS.md` の薄い surface 案内、各 `SKILL.md` の description、reviewer agent の役割分担が矛盾しない
 
 ### 16. planning skill が整理専用のまま保たれる
 
