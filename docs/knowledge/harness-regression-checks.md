@@ -161,7 +161,18 @@
   - `ADR-only commit` の新 ADR に `Supersedes` がある場合は、受理後に旧 ADR も `Superseded` になる
   - `default_branch` policy でも、受理対象の新 ADR に `Supersedes` があれば旧 ADR まで反映される
 
-### 14. `update-adr-status` direct entry が policy 契約に従う
+### 14. `git-push` の返答が最小契約を保つ
+
+- 例: 「このブランチを push して」「upstream を設定して push して」「push 対象がない」
+- 期待:
+  - `git-push` の全結果で `remote` / `branch` / `upstream` / `action` / `result` が見える
+  - upstream 既存の push 成功では `result = pushed` と実行した `action` が分かる
+  - upstream 未設定で `-u` を使う push では `upstream` が今回設定されたことが分かる
+  - ahead 0 の no-op では `result = nothing-to-push` でも `remote` / `branch` / `upstream` / `action` が残る
+  - behind / diverged / 認証失敗では `result = skipped | failed` でも attempted `remote` / `branch` / `action` が残る
+  - behind / diverged / 認証失敗では、必要に応じて `next_action` または `notes` が返る
+
+### 15. `update-adr-status` direct entry が policy 契約に従う
 
 - 例: 「この ADR を Accepted にしたい」「project policy が未設定や不正値のときの direct entry」
 - 期待:
@@ -170,14 +181,14 @@
   - 不正値なら `skipped(invalid-adr-acceptance-policy)` になる
   - `Superseded` は引き続き新 ADR 側の明示 `Supersedes` がある場合だけ許可される
 
-### 15. 既存の主要入口が壊れていない
+### 16. 既存の主要入口が壊れていない
 
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 期待:
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
   - `dot_codex/AGENTS.md` の薄い surface 案内、各 `SKILL.md` の description、reviewer agent の役割分担が矛盾しない
 
-### 16. planning skill が整理専用のまま保たれる
+### 17. planning skill が整理専用のまま保たれる
 
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
 - 期待:
@@ -186,7 +197,7 @@
   - 要件 draft review は `01-product-planning-reviewer`、実装計画 draft review は `02-implementation-planning-reviewer` に分離されている
   - planning skill は整理結果を reviewer agent へ渡せる粒度で出力するが、自分では review を行わない
 
-### 17. review summary helper が reviewer 起動元へ昇格しない
+### 18. review summary helper が reviewer 起動元へ昇格しない
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 期待:
@@ -202,14 +213,14 @@
   - 「要件 draft の抜け漏れを見たい」 -> `01-product-planning-reviewer`
   - 「実装計画 draft の危ない点を見たい」 -> `02-implementation-planning-reviewer`
 
-### 18. `scripts/verify-codex-harness.py` が ADR 0005 の守備範囲に留まる
+### 19. `scripts/verify-codex-harness.py` が ADR 0005 の守備範囲に留まる
 
 - 例: 「自動検査で docs index や legacy surface 残骸まで失敗させていないか」
 - 期待:
   - 自動検査は agent metadata、rule metadata、Markdown 相対リンク、project-local `.codex` directory の推奨禁止だけを扱う
   - docs index の網羅性や legacy surface の残骸確認は、この文書側の手動回帰に残る
 
-### 19. reviewer 設定 tier が役割分担に沿って保たれる
+### 20. reviewer 設定 tier が役割分担に沿って保たれる
 
 - 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
 - 期待:
