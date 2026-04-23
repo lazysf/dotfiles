@@ -1,5 +1,14 @@
-# Repo-only files
+# OS files
 .DS_Store
+
+# Python cache
+**/*.pyc
+**/__pycache__
+
+# Local env
+.venv
+
+# Repo-only files
 .gitattributes
 .gitignore
 .markdownlint.jsonc
@@ -11,11 +20,7 @@ README.md
 nvim.yml
 pyproject.toml
 selene.toml
-tmp
 uv.lock
-.venv
-**/__pycache__
-**/*.pyc
 
 # Windows only
 {{- if ne .chezmoi.os "windows" }}
