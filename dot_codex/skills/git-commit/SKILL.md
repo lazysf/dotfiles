@@ -84,17 +84,26 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - 実際に commit が成功した場合だけ後段へ進む。
 - project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にする。
 - key がない場合は `commit` として扱う。
+- 成功した commit の最終返答では、`knowledge_capture` を必ず含める。
+- `knowledge_capture.status` は `skipped` / `knowledge_created` / `adr_created` だけを使い、新しい分類は増やさない。
+- 通常フローで `capture-change-knowledge` スキルが `skipped` を返したら、`knowledge_capture = { status: skipped, reason: <triage reason> }` として返す。
+- 通常フローで `capture-change-knowledge` スキルが `knowledge_created` または `adr_created` を返したら、`knowledge_capture = { status: <status>, path: <created path>, reason: <optional> }` として返す。
 - 値が `commit | default_branch` 以外なら、自動 `Accepted` 化だけを抑止し `notes` に `skipped(invalid-adr-acceptance-policy)` を残す。
 - `ADR-only commit` は、新規 `docs/adr/NNNN-*.md` 1 件と任意の `docs/README.md` 変更だけを含む commit とする。
-- `ADR-only commit` では `capture-change-knowledge` スキルを使わず、policy が `commit` のときだけ新 ADR を `update-adr-status` スキルで `Accepted` に進める。
+- `ADR-only commit` では `capture-change-knowledge` スキルを使わず、`knowledge_capture = { status: skipped, reason: adr-only-commit }` を返したうえで、policy が `commit` のときだけ新 ADR を `update-adr-status` スキルで `Accepted` に進める。
 - `ADR-only commit` の新 ADR に `Supersedes` が明示されている場合だけ、続けて旧 ADR に対して `update-adr-status(target_adr=<old>, new_status=Superseded, related_adrs=<new>, event_basis=commit)` を別更新として行う。
 - `ADR-only commit` で policy が `default_branch` のときは、新 ADR を `Proposed` に留める。
 - `ADR-only commit` で policy が不正値なら、新 ADR を更新せず `notes` に skip 理由を残す。
 - 上記以外の commit 後の知見判断は `capture-change-knowledge` スキルを使う。
 - `capture-change-knowledge` スキルが ADR を作り、policy が `commit` なら `update-adr-status` スキルで `Accepted` に進める。
+- `adr_acceptance_policy` の不正値など、知見化とは別の後段状態更新スキップは `knowledge_capture.status` へ混ぜず、引き続き `notes` に残す。
 
 ## 結果報告
 
 - 最終返答では、コミット結果を通常の返答文の中で簡潔に報告する。
-- 最低限、`branch`、`commit`、`message`、必要なら `knowledge_capture` または `notes` を含める。
+- 成功した commit では、最低限 `branch`、`commit`、`message`、`knowledge_capture` を含める。
+- `knowledge_capture.reason` は、`capture-change-knowledge` の根拠または `adr-only-commit` のような user-facing な短い理由をそのまま返してよい。
+- `notes` は `knowledge_capture` の代替ではなく、ADR acceptance policy の補足や後段状態更新スキップを伝える用途に限る。
+- `skipped` の例: `knowledge_capture = { status: skipped, reason: cleanup-only-change }`
+- `created` の例: `knowledge_capture = { status: knowledge_created, path: docs/knowledge/git-commit-knowledge-capture.md }`
 - 失敗時は、失敗理由と次に確認すべき点を短く示す。

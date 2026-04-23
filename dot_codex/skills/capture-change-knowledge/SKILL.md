@@ -52,6 +52,7 @@ metadata:
 
 - `capture-knowledge-triage` を使い、`skip | knowledge | adr` を判定する。
 - `reason` と `evidence_used` を残す。
+- `reason` は `git-commit` の最終返答にそのまま渡せる、user-facing な短い根拠として扱う。
 
 ### 4) 次に使うスキルを決める
 
