@@ -78,5 +78,14 @@ metadata:
 ## 結果報告
 
 - 最終返答では、push 結果を通常の返答文の中で簡潔に報告する。
-- 最低限、`remote`、`branch`、`upstream` 設定の有無、実行内容、結果、必要なら次アクションを含める。
+- `git-push` の結果報告では常に、最低限 `remote`、`branch`、`upstream`、`action`、`result` を含める。
+- `remote` は実際に使った push 先をそのまま返す。
+- `branch` は push 対象ブランチを返す。
+- `upstream` は既存 upstream を使ったのか、今回設定したのか、未設定のまま push しなかったのかが分かる user-facing な短い値で返す。
+- `action` は `git push`、`git push -u <remote> <branch>`、`git push <remote> <branch>` のどれを実行したか、または no-op / 事前停止で判定した push 操作を返す。
+- `result` は最低でも `pushed` / `nothing-to-push` / `skipped` / `failed` を表現できるようにする。
+- `notes` と `next_action` は任意にし、ADR 状態更新の補足、behind / diverged、認証失敗などの追加説明が必要な場合だけ使う。
+- `success` の例: `remote=origin, branch=main, upstream=existing, action=git push, result=pushed`
+- `nothing-to-push` の例: `remote=origin, branch=main, upstream=existing, action=git push, result=nothing-to-push`
+- `skipped` の例: `remote=origin, branch=main, upstream=existing, action=git push, result=skipped, next_action=sync-with-remote`
 - 失敗時はエラー本文を丸ごと貼るのではなく、原因の要点と次に確認すべき点を短く示す。
