@@ -30,9 +30,9 @@ fi
 # -----------------------------------------
 # mise
 # -----------------------------------------
-# Add interactive-shell integration for day-to-day shell usage.
-if command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate zsh)"
+# Expose mise shims for non-login interactive zsh without full activation.
+if command -v mise >/dev/null 2>&1 && [[ ":${PATH}:" != *":${HOME}/.local/share/mise/shims:"* ]]; then
+  eval "$(mise activate zsh --shims)"
 fi
 
 # -----------------------------------------

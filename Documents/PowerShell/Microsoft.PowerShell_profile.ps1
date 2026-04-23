@@ -37,8 +37,8 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
 # Tool activation (mise)
 # -----------------------------
 if (Get-Command mise -ErrorAction SilentlyContinue) {
-  # Apply mise-managed PATH/env settings to this pwsh session.
-  (& mise activate pwsh) | Out-String | Invoke-Expression
+  # Expose mise shims in this pwsh session without full environment activation.
+  (& mise activate pwsh --shims) | Out-String | Invoke-Expression
 }
 
 # -----------------------------
