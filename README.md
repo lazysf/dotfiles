@@ -69,7 +69,8 @@ uv run python scripts/verify-codex-harness.py
 ```
 
 通常の確認入口は引き続き `mise run test` です。
-`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`dot_config/terminal/Main.terminal` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
+`scripts/` は repo 保守用スクリプトの置き場で、repo 内から実行します。`docs/` は repo-level knowledge の置き場で、どちらも `.chezmoiignore` により dotfiles の配布対象から外しています。
+`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`dot_config/terminal/Main.terminal`、`docs/`、`scripts/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
 
 ## Repo-Level Knowledge
 
