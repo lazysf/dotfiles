@@ -150,6 +150,10 @@
 
 - 例: 「ADR だけをコミットした」「`adr_acceptance_policy` が未設定や不正値のときどうなるか」
 - 期待:
+  - 成功した `git-commit` の結果では常に `knowledge_capture` が見える
+  - 一過性 change では `knowledge_capture.status = skipped` と `reason` が返る
+  - durable change を knowledge / ADR へ残した場合は `knowledge_capture.status = knowledge_created | adr_created` と `path` が返る
+  - `ADR-only commit` では `knowledge_capture.status = skipped` かつ `reason = adr-only-commit` になり、ADR acceptance の補足は `notes` に残る
   - policy の読み元は current project の設定として一貫している
   - key 未設定なら `commit` fallback になる
   - 不正値なら push / commit 自体は成功扱いのまま、自動 `Accepted` 化だけが skip される
