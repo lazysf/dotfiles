@@ -1,6 +1,6 @@
 # 0007: ハーネス検証専用スクリプトを廃止する
 
-- Status: Proposed
+- Status: Accepted
 - Supersedes: 0005
 
 ## Context
