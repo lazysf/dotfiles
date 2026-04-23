@@ -76,31 +76,11 @@
 ### 7. skill の発火条件と説明が一致する
 
 - 例: 「要件を詰めたい」「レビューしたい」「コミットしたい」
-- 期待:
-  - `classification-driven-workflow-surface.md` の命名規約と frontmatter 説明ルールに沿って、依頼内容に近い skill が案内される
-  - 旧 implicit invocation 前提の説明が残っていない
-  - 旧導線向けの内部専用表現が skill の入口説明に残っていない
-  - 他 skill / agent の案内が `〜したい時は \`skill-name\` スキルを使う`、`〜したい時は \`agent-name\` reviewer agent を使う` の形で自然に読める
-  - `writer skill`、`handoff`、skill 名の裸参照だけで意味を持たせる表現が再導入されていない
-  - 近接 skill の境界が自然文プロンプトでも崩れない
-  - 旧 skill prefix や deprecated wrapper の歴史説明は ADR に閉じ、現行 surface に再混入していない
-  - `dot_codex/skills/` に旧 skill ディレクトリや frontmatter 名が再導入されていない
-- 代表プロンプト:
-  - 「依頼文が散らばっているので整えたい」 -> `request-shaping`
-  - 「今回どこまでやるか先に軽く決めたい」 -> `task-intake`
-  - 「成功条件と非目的を詰めたい」 -> `product-planning`
-  - 「実装順序と影響範囲を決めたい」 -> `implementation-planning`
-  - 「README だけ更新したい」 -> `docs-update`
-  - 「今回の知見をどこに残すか決めたい」 -> `capture-knowledge-triage`
-  - 「通常知見メモの草案を書きたい」 -> `write-knowledge-note`
-  - 「この判断を ADR 草案にしたい」 -> `write-adr`
-  - 「コミット後の変更から残すべき知見を拾いたい」 -> `capture-change-knowledge`
-  - 「この ADR を Accepted にしたい」 -> `update-adr-status`
-  - 「この差分をレビューしたい」 -> `03-quality-reviewer`
-  - 「セキュリティ観点で差分を見たい」 -> `04-security-reviewer`
-  - 「レビュー findings を整理したい」 -> `review-findings-summary`
-  - 「この依頼をどの分類で扱うべきか迷う」 -> `task-classification`
-  - 「バグ修正の結果を確認したい」 -> `change-verification`
+- 観測ポイント:
+  - 依頼内容に近い skill / reviewer が案内される
+  - 旧導線向けの語彙や内部用語が再導入されていない
+  - skill / reviewer の役割分担が自然文でも崩れていない
+  - 具体的な導線、命名規約、frontmatter 説明ルールは [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) を正本にする
 
 ### 8. `docs/README.md` が主要 knowledge と ADR の入口を維持する
 
@@ -121,118 +101,97 @@
 ### 10. 知識の置き場相談は knowledge 系導線に残る
 
 - 例: 「今回の知見をどこに残すべきか」「通常知見か ADR かを決めたい」
-- 期待:
-  - 入口は `capture-knowledge-triage` に導かれる
-  - 通常知見なら `write-knowledge-note`、判断記録なら `write-adr` に渡される
-  - `docs-update` が知識の置き場判断を奪わない
+- 観測ポイント:
+  - 入口は知識の置き場判断 helper に残り、docs 更新専用入口と混同されない
+  - 通常知見と判断記録の置き場が混ざらない
+  - 詳細な routing や skill の役割分担は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と各 `SKILL.md` を正本にする
 
 ### 11. ADR が状態付き台帳として扱われる
 
 - 例: 「この判断を ADR として残したい」「この ADR はもう置き換えられた」
-- 期待:
-  - 新規 ADR は `write-adr` が `Proposed` として作成する
-  - 既存 ADR の `Accepted` / `Superseded` / `Rejected` は `update-adr-status` が担当する
-  - `Supersedes` / `Superseded-By` は明示根拠があるときだけ更新される
-  - 新 ADR 側の `Supersedes` は `write-adr` 入力で明示され、`update-adr-status` が不足分を補完しない
-  - 新 ADR 側に一致する `Supersedes` がなければ、旧 ADR は `Superseded` にならない
-  - 手順メモや落とし穴は ADR へ押し込まず `docs/knowledge/` に分けられる
+- 観測ポイント:
+  - ADR が通常知見と混ざらず、状態付き台帳として扱われる
+  - 新規作成と状態更新の責務が分離されたまま保たれている
+  - 手順メモや運用メモが ADR に再流入していない
+  - 状態モデルやメタデータ、運用フローの詳細は [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 12. 変更後知見化が `skip / knowledge / adr` で振り分けられる
 
 - 例: 「このコミット後に何を残すべきか判断したい」
-- 期待:
-  - `capture-change-knowledge` は一過性 change や knowledge / ADR 更新の follow-up だけを `skip` にできる
-  - 手順や確認ポイントは `write-knowledge-note` へ渡される
-  - 判断理由が明示された change だけが `write-adr` へ渡される
+- 観測ポイント:
+  - 一過性 change と durable な知見化対象が切り分けられる
+  - 通常知見と判断記録の送り先が混ざらない
   - diff だけから判断を推測して ADR を作らない
+  - triage の詳細は関連 skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 13. ADR acceptance policy と direct ADR commit が一貫する
 
-- 例: 「ADR だけをコミットした」「`adr_acceptance_policy` が未設定や不正値のときどうなるか」
-- 期待:
-  - 成功した `git-commit` の結果では常に `knowledge_capture` が見える
-  - 一過性 change では `knowledge_capture.status = skipped` と `reason` が返る
-  - durable change を knowledge / ADR へ残した場合は `knowledge_capture.status = knowledge_created | adr_created` と `path` が返る
-  - `ADR-only commit` では `knowledge_capture.status = skipped` かつ `reason = adr-only-commit` になり、ADR acceptance の補足は `notes` に残る
-  - policy の読み元は current project の設定として一貫している
-  - key 未設定なら `commit` fallback になる
-  - 不正値なら push / commit 自体は成功扱いのまま、自動 `Accepted` 化だけが skip される
-  - `新規 ADR 1 件 + 任意の docs/README.md 変更` だけの commit は `ADR-only commit` として `commit` policy の受理対象になる
-  - `ADR-only commit` の新 ADR に `Supersedes` がある場合は、受理後に旧 ADR も `Superseded` になる
-  - `default_branch` policy でも、受理対象の新 ADR に `Supersedes` があれば旧 ADR まで反映される
+- 例: 「ADR だけをコミットした」「project policy が未設定や不正値のときどうなるか」
+- 観測ポイント:
+  - ADR の受理タイミングが current project の policy と矛盾しない
+  - direct ADR commit を含む例外導線が他の知見化フローと競合していない
+  - 受理や supersede の扱いが状態付き台帳モデルと整合している
+  - policy や例外導線の詳細は [ADR Ledger Model](./adr-ledger-model.md) と関連 skill を正本にする
 
 ### 14. `git-push` の返答が最小契約を保つ
 
 - 例: 「このブランチを push して」「upstream を設定して push して」「push 対象がない」
-- 期待:
-  - `git-push` の全結果で `remote` / `branch` / `upstream` / `action` / `result` が見える
-  - upstream 既存の push 成功では `result = pushed` と実行した `action` が分かる
-  - upstream 未設定で `-u` を使う push では `upstream` が今回設定されたことが分かる
-  - ahead 0 の no-op では `result = nothing-to-push` でも `remote` / `branch` / `upstream` / `action` が残る
-  - behind / diverged / 認証失敗では `result = skipped | failed` でも attempted `remote` / `branch` / `action` が残る
-  - behind / diverged / 認証失敗では、必要に応じて `next_action` または `notes` が返る
+- 観測ポイント:
+  - `git-push` の結果報告で、push 先と実行結果が利用者に分かる
+  - upstream の既存利用、設定、未設定停止などの違いが埋もれない
+  - behind / diverged / 認証失敗のような停止理由が必要十分に伝わる
+  - 結果フォーマットの詳細は `git-push` skill を正本にする
 
 ### 15. `update-adr-status` direct entry が policy 契約に従う
 
 - 例: 「この ADR を Accepted にしたい」「project policy が未設定や不正値のときの direct entry」
-- 期待:
-  - `Accepted` 遷移でも policy の読み元は current project の設定として一貫している
-  - key 未設定なら `commit` fallback になる
-  - 不正値なら `skipped(invalid-adr-acceptance-policy)` になる
-  - `Superseded` は引き続き新 ADR 側の明示 `Supersedes` がある場合だけ許可される
+- 観測ポイント:
+  - direct entry の状態更新が current project の policy と矛盾しない
+  - supersede 更新が明示根拠のある場合だけ行われる
+  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `update-adr-status` skill を正本にする
 
 ### 16. 既存の主要入口が壊れていない
 
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
-- 期待:
+- 観測ポイント:
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
-  - `dot_codex/AGENTS.md` の薄い surface 案内、各 `SKILL.md` の description、reviewer agent の役割分担が矛盾しない
+  - `dot_codex/AGENTS.md`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
 
 ### 17. planning skill が整理専用のまま保たれる
 
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
-- 期待:
-  - 正式入口は引き続き `product-planning` / `implementation-planning` として案内される
-  - `product-planning` / `implementation-planning` の本文に reviewer 自動起動前提が残っていない
-  - 要件 draft review は `01-product-planning-reviewer`、実装計画 draft review は `02-implementation-planning-reviewer` に分離されている
-  - planning skill は整理結果を reviewer agent へ渡せる粒度で出力するが、自分では review を行わない
+- 観測ポイント:
+  - planning skill が整理専用のまま保たれ、review 本体を抱え込んでいない
+  - 要件 review と実装計画 review の責務が分離されたまま維持されている
+  - 導線の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と各 `SKILL.md` / agent 定義を正本にする
 
 ### 18. review summary helper が reviewer 起動元へ昇格しない
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
-- 期待:
-  - `review-findings-summary` は reviewer 結果の統合と整形に専念し、自分では reviewer を起動しない
-  - `review-findings-summary` は review 判断を代行しない
-  - `review-findings-summary` は agent 出力だけを入力として受け付ける
-  - reviewer 結果がない場合は fail closed で止まり、適切な reviewer agent へ誘導される
-  - `03-quality-reviewer` から `04-security-reviewer` への自動昇格を前提にしない
-- 代表プロンプト:
-  - 「レビュー findings を整理したい」 -> `review-findings-summary`
-  - 「この差分をレビューして結果までまとめたい」 -> `03-quality-reviewer`
-  - 「この差分をセキュリティ観点でレビューしたい」 -> `04-security-reviewer`
-  - 「要件 draft の抜け漏れを見たい」 -> `01-product-planning-reviewer`
-  - 「実装計画 draft の危ない点を見たい」 -> `02-implementation-planning-reviewer`
+- 観測ポイント:
+  - review summary helper が reviewer 結果の整形に責務を絞ったまま保たれている
+  - review 本体や reviewer 選択を代行しない
+  - 導線と役割分担の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と関連 skill / agent 定義を正本にする
 
 ### 19. `scripts/verify-codex-harness.py` が ADR 0005 の守備範囲に留まる
 
 - 例: 「自動検査で docs index や legacy surface 残骸まで失敗させていないか」
-- 期待:
-  - 自動検査は agent metadata、rule metadata、Markdown 相対リンク、project-local `.codex` directory の推奨禁止だけを扱う
-  - docs index の網羅性や legacy surface の残骸確認は、この文書側の手動回帰に残る
+- 観測ポイント:
+  - 自動検査が repo 固有契約の最小範囲に留まっている
+  - docs index の網羅性や移行残骸確認が自動検査へ再流入していない
+  - 守備範囲の詳細は [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md) を正本にする
 
 ### 20. reviewer 設定 tier が役割分担に沿って保たれる
 
 - 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
-- 期待:
-  - 親エージェントの既定は引き続き `gpt-5.4` と高めの推論労力で、広い整理と最終判断を担う
-  - `01-product-planning-reviewer` と `02-implementation-planning-reviewer` は既定で `gpt-5.4-mini` と `medium` を維持し、狭い read-only review を安定して返す
-  - `03-quality-reviewer` は generic diff review の既定として `gpt-5.4` と `medium` を維持する
-  - `04-security-reviewer` は見落としコストの高さに合わせて `gpt-5.4` と `medium` を維持する
-  - reviewer の精度改善は、まず対象 reviewer の model tier 見直しを候補にし、`model_reasoning_effort` の一律引き上げや planning reviewer の同時重量化を既定にしない
-  - `03-quality-reviewer` の見直しを再検討するときは、`critical` / `high` の再現率、ノイズ指摘数、応答時間で評価し、`model_reasoning_effort` より先に model tier を比較する
+- 観測ポイント:
+  - reviewer 設定が役割分担と矛盾せず、不要な一律変更になっていない
+  - planning 系 reviewer と差分 review 系 reviewer の責務差が保たれている
+  - 具体的な tier や既定値は agent 定義と runtime config を正本にする
 
 ## 関連文書
 
+- [ADR Ledger Model](./adr-ledger-model.md)
 - [Harness Design Principles](./harness-design-principles.md)
 - [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
 - [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
