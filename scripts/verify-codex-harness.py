@@ -34,6 +34,7 @@ GIT_COMMIT_SKILL_EXPECTED = (
     "`git add <paths>`",
     '`git commit -m "<header>"`',
     "`git commit -F <file>`",
+    "成功した commit では、最低限 `branch`、`commit`、`message`、`knowledge_capture` を含める。",
 )
 
 GIT_PUSH_SKILL_EXPECTED = (
