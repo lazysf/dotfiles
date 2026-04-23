@@ -22,6 +22,10 @@ run = "markdownlint-cli2 \"**/*.{md,markdown}\""
 description = "Format TOML files"
 run = "taplo fmt"
 
+[tasks."lint:toml"]
+description = "Lint TOML files"
+run = "taplo lint --colors never"
+
 [tasks."format:yaml"]
 description = "Format YAML files"
 run = "prettier --write \"**/*.{yaml,yml}\""
@@ -44,12 +48,16 @@ depends = ["format:markdown", "format:toml", "format:yaml", "format:lua"]
 
 [tasks.lint]
 description = "Run linters"
-depends = ["lint:markdown", "lint:yaml", "lint:lua"]
+depends = ["lint:markdown", "lint:yaml", "lint:lua", "lint:toml"]
 
 [tasks."test:harness"]
 description = "Verify Codex harness docs and metadata"
 run = "uv run python scripts/verify-codex-harness.py"
 
+[tasks."test:taplo-parser"]
+description = "Verify Taplo stderr parser"
+run = "nvim -u NONE -i NONE --headless -l scripts/verify_taplo_parser.lua"
+
 [tasks.test]
 description = "Run tests"
-depends = ["test:harness"]
+depends = ["test:harness", "test:taplo-parser"]
