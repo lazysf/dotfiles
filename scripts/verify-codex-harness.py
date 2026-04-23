@@ -51,7 +51,11 @@ GIT_RULE_EXPECTED = {
     DOT_CODEX / "rules" / "git-add.rules": (
         'pattern = ["git", "add"]',
         "`git-commit` skill",
+        '"git add README.md"',
+        '"git add dir/file1 dir/file2"',
         '"git add ."',
+        '"git add -A"',
+        '"git add --patch"',
     ),
     DOT_CODEX / "rules" / "git-push.rules": (
         'pattern = ["git", "push"]',
