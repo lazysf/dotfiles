@@ -25,7 +25,7 @@
 
 - `dot_codex/AGENTS.md` は、共通ハーネスの運用契約と薄い runtime surface 案内を扱う
 - repo-level の詳しい背景や判断理由は `docs/knowledge/` や `docs/adr/` に分ける
-- project 側では、root `AGENTS.md` を短いポインタとして使い、詳細は project の `docs/` に寄せる
+- `AGENTS.md` の責務境界や導線設計の詳細は、関連 ADR や surface 文書を正本にする
 
 ### 2. knowledge は runtime surface ごとに昇格先を分ける
 
@@ -39,8 +39,7 @@
 
 - ADR は通常知見ではなく、採用された判断とその履歴関係の正本として扱う
 - 新規 ADR の作成と、既存 ADR の状態更新は別の責務として分ける
-- `Accepted` のタイミングは current project の `adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は skip にする
-- direct `write-adr` で作った ADR も、`commit` policy では `ADR-only commit` 例外で `Accepted` に進められるようにする
+- `Accepted` のタイミングや project policy などの具体契約は ADR 台帳の運用文書を正本にする
 
 ### 3. defaults は大きく動かさない
 
@@ -63,21 +62,20 @@
 
 ### 6. review は agent-first の明示選択で扱う
 
-- generic な差分 review は `03-quality-reviewer` を、セキュリティ観点の review は `04-security-reviewer` を利用者が明示的に選ぶ
 - review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
-- `review-findings-summary` は review 本体や reviewer 選択を担わず、agent 出力の整形だけに留める
+- review 本体と結果整形 helper は責務を分ける
+- 具体的な reviewer 名や review 導線は surface 文書と agent 定義を正本にする
 
 ### 7. reviewer の model tier は役割ごとに分ける
 
-- 親エージェントは `gpt-5.4` と高めの推論労力で広い整理や最終判断を担い、reviewer は read-only の狭い責務に絞る
-- `01-product-planning-reviewer` と `02-implementation-planning-reviewer` は `gpt-5.4-mini` と `medium` を基本にし、論点を絞った安定したレビューを優先する
-- `03-quality-reviewer` は generic diff review の精度を優先して `gpt-5.4` と `medium` を既定にする
-- `04-security-reviewer` は見落としコストが高いため `gpt-5.4` と `medium` を基本にする
-- reviewer の品質を上げたい場合は、まず対象 reviewer の model を見直し、`model_reasoning_effort` を一律に重くしない
-- planning reviewer 2 種まで同時に重くせず、generic diff review の改善はまず `03-quality-reviewer` 単体で調整する
+- 親エージェントと reviewer では、担う責務に応じて model tier や reasoning effort を分ける
+- reviewer の調整は一律変更ではなく、対象 role に限定して行う
+- 具体的な model 設定や reviewer ごとの既定値は agent 定義と runtime config を正本にする
 
 ## 関連文書
 
+- [dot_codex/AGENTS.md](../../dot_codex/AGENTS.md)
+- [ADR Ledger Model](./adr-ledger-model.md)
 - [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
 - [Harness Regression Checks](./harness-regression-checks.md)
 - [ADR 0001](../adr/0001-common-codex-harness-lives-in-dot_codex.md)
