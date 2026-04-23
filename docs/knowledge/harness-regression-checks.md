@@ -36,6 +36,14 @@
   - 破壊的操作や外部影響のある操作は approval または prompt 前提で扱う
   - allow 済みの読み取り操作と区別して説明される
 
+### 3.5. `git add` friction を rule mismatch と誤診しない
+
+- 例: 「`git add docs dot_codex scripts/verify-codex-harness.py` で承認が必要になった」
+- 期待:
+  - まず `.git/index.lock` と `Operation not permitted` の有無を確認し、sandbox 書き込み失敗かどうかを切り分ける
+  - explicit-path の `git add` が一度止まっても、即座に `git-add.rules` の緩和案へ飛ばない
+  - 詳細は [git-add-approval-friction-diagnosis.md](./git-add-approval-friction-diagnosis.md) を参照する
+
 ### 4. 知見の昇格先を切り分けられる
 
 - 例: 「毎回同じ整理をしているので残したい」

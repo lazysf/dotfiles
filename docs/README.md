@@ -7,6 +7,7 @@
   - [adr-workflow-review-pitfalls.md](./knowledge/adr-workflow-review-pitfalls.md): ADR 台帳フロー拡張時の review 観点
   - [classification-driven-workflow-surface.md](./knowledge/classification-driven-workflow-surface.md): prefix なし skill surface の扱い
   - [codex-harness-audit-findings.md](./knowledge/codex-harness-audit-findings.md): 2026-04 の監査 findings と是正内容
+  - [git-add-approval-friction-diagnosis.md](./knowledge/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./knowledge/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./knowledge/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
 - `docs/adr/`: repo-level の判断記録を置く
