@@ -11,6 +11,7 @@
 # Repo-only files
 .gitattributes
 .gitignore
+.vscode
 .markdownlint.jsonc
 .mise.toml
 docs
