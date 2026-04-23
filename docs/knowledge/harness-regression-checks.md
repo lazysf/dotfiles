@@ -8,7 +8,7 @@
 - 変更内容に近いシナリオを優先して回す
 - 期待から外れた場合は、`docs/knowledge/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
-- `scripts/verify-codex-harness.py` で見なくなった docs 網羅性や移行残骸の観点は、この文書で手動確認する
+- 汎用 lint で拾わない repo 固有契約や導線の観点は、この文書で手動確認する
 - 全体契約と薄い surface 案内は `dot_codex/AGENTS.md`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
 
 ## チェック項目
@@ -38,7 +38,7 @@
 
 ### 3.5. `git add` friction を rule mismatch と誤診しない
 
-- 例: 「`git add docs dot_codex scripts/verify-codex-harness.py` で承認が必要になった」
+- 例: 「`git add docs dot_codex scripts/verify_taplo_parser.lua` で承認が必要になった」
 - 期待:
   - まず `.git/index.lock` と `Operation not permitted` の有無を確認し、sandbox 書き込み失敗かどうかを切り分ける
   - explicit-path の `git add` が一度止まっても、即座に `git-add.rules` の緩和案へ飛ばない
@@ -173,13 +173,15 @@
   - review 本体や reviewer 選択を代行しない
   - 導線と役割分担の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と関連 skill / agent 定義を正本にする
 
-### 19. `scripts/verify-codex-harness.py` が ADR 0005 の守備範囲に留まる
+### 19. repo 固有契約の軽い確認を手動回帰で補う
 
-- 例: 「自動検査で docs index や legacy surface 残骸まで失敗させていないか」
+- 例: 「agent metadata や rule metadata の欠落、リンク切れ、`.codex` 推奨文言を見落としていないか」
 - 観測ポイント:
-  - 自動検査が repo 固有契約の最小範囲に留まっている
-  - docs index の網羅性や移行残骸確認が自動検査へ再流入していない
-  - 守備範囲の詳細は [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md) を正本にする
+  - `dot_codex/agents/*.toml` の必須 metadata が欠けていない
+  - `dot_codex/rules/*.rules` の説明責務が崩れていない
+  - `dot_codex/` と `docs/` 配下の参照先が実在する
+  - knowledge の置き場として project-local `.codex` を勧める文面が再流入していない
+  - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
 
 ### 20. reviewer 設定 tier が役割分担に沿って保たれる
 
@@ -195,3 +197,4 @@
 - [Harness Design Principles](./harness-design-principles.md)
 - [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
 - [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
+- [ADR 0007](../adr/0007-retire-harness-verifier-script.md)

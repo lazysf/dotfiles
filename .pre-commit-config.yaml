@@ -12,10 +12,3 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
         exclude: \.(md|markdown)$
-  - repo: local
-    hooks:
-      - id: verify-codex-harness
-        name: verify codex harness
-        entry: mise run test:harness
-        language: system
-        pass_filenames: false
