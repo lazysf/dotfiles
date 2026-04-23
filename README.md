@@ -35,6 +35,13 @@ chezmoi apply
 chezmoi diff
 ```
 
+## macOS Terminal プロファイル
+
+macOS 標準 `Terminal` 用のプロファイルは repo 内の [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) で管理しています。
+このファイルは Git では管理しますが、`.chezmoiignore` により `chezmoi apply` の配布対象からは外しています。
+
+利用するときは、repo 内の `dot_config/terminal/Main.terminal` を Finder か `open` で開いて `Terminal` に import し、必要なら `Main` をデフォルトプロファイルに設定してください。
+
 ## 整形と lint
 
 repo 内の整形と lint は `mise` task 経由で実行します。
@@ -62,7 +69,7 @@ uv run python scripts/verify-codex-harness.py
 ```
 
 通常の確認入口は引き続き `mise run test` です。
-`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
+`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`dot_config/terminal/Main.terminal` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
 
 ## Repo-Level Knowledge
 
