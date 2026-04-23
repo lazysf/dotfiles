@@ -1,6 +1,7 @@
 # 0005: ハーネス検証は repo 固有契約に絞る
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0007
 
 ## Context
 

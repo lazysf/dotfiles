@@ -50,14 +50,10 @@ depends = ["format:markdown", "format:toml", "format:yaml", "format:lua"]
 description = "Run linters"
 depends = ["lint:markdown", "lint:yaml", "lint:lua", "lint:toml"]
 
-[tasks."test:harness"]
-description = "Verify Codex harness docs and metadata"
-run = "uv run python scripts/verify-codex-harness.py"
-
 [tasks."test:taplo-parser"]
 description = "Verify Taplo stderr parser"
 run = "nvim -u NONE -i NONE --headless -l scripts/verify_taplo_parser.lua"
 
 [tasks.test]
 description = "Run tests"
-depends = ["test:harness", "test:taplo-parser"]
+depends = ["test:taplo-parser"]
