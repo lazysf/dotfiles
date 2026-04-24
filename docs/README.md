@@ -10,6 +10,7 @@
   - [git-add-approval-friction-diagnosis.md](./knowledge/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./knowledge/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./knowledge/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
+  - [mise-tool-matrix.md](./knowledge/mise-tool-matrix.md): mise と nvim の formatter / linter 対応表
 - `docs/adr/`: repo-level の判断記録を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
   - [0002-project-specific-knowledge-lives-in-project-docs.md](./adr/0002-project-specific-knowledge-lives-in-project-docs.md)
