@@ -51,19 +51,18 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 3. その判断が採用されたら `update-adr-status` で新 ADR を `Accepted` に更新する
 4. 新 ADR 側に明示 `Supersedes` がある場合だけ、続けて別の `update-adr-status` で旧 ADR を `Superseded` にする
 
-## Acceptance Policy
+## Acceptance Timing
 
-ADR の `Accepted` 化は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にして決める。
+ADR の `Accepted` 化は commit 時採用に固定する。
+project config や private config による切り替えは行わない。
 
-- `commit`: その project で判断がコミット時点で採用扱いなら、commit 後に `Accepted` へ進める
-- `default_branch`: default branch 反映時点を採用扱いにするなら、commit 後は `Proposed` に留め、後段で `Accepted` にする
-- key がない場合は `commit` として扱う
-- 値が `commit | default_branch` 以外なら、自動 `Accepted` 化を行わず `skipped(invalid-adr-acceptance-policy)` にする
-- `commit` policy では `新規 ADR 1 件 + 任意の docs/README.md 変更` だけの commit も `ADR-only commit` として受理対象に含める
+- 新規 ADR は `write-adr` でいったん `Proposed` として作る
+- 新規 ADR を含む commit が成功したら、`update-adr-status` で `Accepted` に進める
+- `新規 ADR 1 件 + 任意の docs/README.md 変更` だけの commit は `ADR-only commit` として受理対象に含める
 - 新 ADR に `Supersedes` がある場合は、受理後に旧 ADR を別更新で `Superseded` に進める
 
-この repo の既定値は `commit` とする。
-project ごとの設定は `adr_acceptance_policy = "commit" | "default_branch"` で持つ。
+push 前には、前回 push 以降の outgoing commit 群を `capture-push-knowledge` で集約確認する。
+この確認は commit 時の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る。
 
 ## Skill Mapping
 
@@ -72,3 +71,4 @@ project ごとの設定は `adr_acceptance_policy = "commit" | "default_branch"`
 - 新規 ADR 作成: `write-adr`
 - 既存 ADR の状態更新と関係更新: `update-adr-status`
 - 変更後知見化 helper: `capture-change-knowledge`
+- push 前知見集約 helper: `capture-push-knowledge`

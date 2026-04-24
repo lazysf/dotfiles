@@ -14,8 +14,8 @@ metadata:
 
 - push はユーザーの明示的な依頼がある場合のみ行う。
 - commit 作成やメッセージ整備はこのスキルの責務に含めない。
-- project policy `adr_acceptance_policy = "default_branch"` の場合だけ、採用確定後の ADR 状態更新をしたい時は `update-adr-status` スキルを使う。
-- project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は ADR 状態更新だけ skip にする。
+- push 実行前に outgoing range を確認し、`capture-push-knowledge` で知見の重複整理、状態整合、集約要否を判定する。
+- `consolidation_required` の場合は push せず、必要な次アクションを返す。
 - この skill では、手順に明示した Git コマンドだけを使う。
 - 通常 push は引き続き approval / `prompt` 前提で扱う。
 
@@ -50,25 +50,31 @@ metadata:
 - upstream 未設定で単一リモートなら `origin` と現在ブランチを既定にする。
 - upstream 未設定かつ複数リモートがある場合は、自動で決めずに確認する。
 
-### 4) プッシュ実行
+### 4) push 前知見集約
+
+- push 実行前に outgoing range を作る。
+- upstream がある場合は `@{u}..HEAD` を使う。
+- upstream 未設定で push 先 branch が一意に決められる場合は、その remote branch と `HEAD` の差分を使う。
+- upstream 未設定で push 先 remote branch がまだ存在しない新規ブランチの場合は、`knowledge_preflight = { status: skipped, reason: no-upstream-new-branch }` として push 実行へ進める。
+- range が安全に決められない場合は push せず、確認すべき upstream / remote / branch を返す。
+- `git log <range>` 相当で outgoing commit 群を集める。
+- `git diff --name-only <range>` 相当で変更 path を集約する。
+- `docs/knowledge/` または `docs/adr/` の path が含まれる場合は `knowledge_or_adr_paths_in_range` に入れる。
+- `capture-push-knowledge` に evidence packet を渡し、`skipped | ready | consolidation_required` を判定する。
+- `skipped` または `ready` なら push 実行へ進む。
+- `consolidation_required` なら push せず、必要な `write-knowledge-note`、`docs-update`、`write-adr`、`update-adr-status` の次アクションを返す。
+- この skill は push 前整理のための docs 更新 commit を自動作成しない。
+
+### 5) プッシュ実行
 
 - upstream 未設定なら `git push -u <remote> <branch>` を使う。
 - upstream 済みなら `git push` を使う。
 - 明示指定がある場合は `git push <remote> <branch>` を使う。
 
-### 5) タグのプッシュ
+### 6) タグのプッシュ
 
 - 明示指示がある場合のみ行う。
 - タグ数が多い場合は確認する。
-
-### 6) 必要なら ADR 状態更新に進む
-
-- current project の `[projects."<repo-root>"].adr_acceptance_policy` を読み、key がない場合は `commit` として扱う。
-- 値が `commit | default_branch` 以外なら、push 自体は成功扱いのまま ADR 状態更新だけ `skipped(invalid-adr-acceptance-policy)` にする。
-- policy が `commit` なら、`git-push` 側で ADR 状態更新は行わない。
-- policy が `default_branch` で、今回の push 先が current project の default branch と確認できる場合だけ、今回の push に含まれる新規 `Proposed` ADR を 1 件ずつ `update-adr-status` で `Accepted` に進める。
-- その新 ADR に `Supersedes` が明示されている場合だけ、続けて旧 ADR に対して `update-adr-status(target_adr=<old>, new_status=Superseded, related_adrs=<new>, event_basis=default_branch)` を別更新として行う。
-- push 先や branch が採用確定条件を満たすか不明なら、ADR 状態は変えない。
 
 ### 7) 失敗時の扱い
 
@@ -78,14 +84,16 @@ metadata:
 ## 結果報告
 
 - 最終返答では、push 結果を通常の返答文の中で簡潔に報告する。
-- `git-push` の結果報告では常に、最低限 `remote`、`branch`、`upstream`、`action`、`result` を含める。
+- `git-push` の結果報告では常に、最低限 `remote`、`branch`、`upstream`、`action`、`result`、`knowledge_preflight` を含める。
 - `remote` は実際に使った push 先をそのまま返す。
 - `branch` は push 対象ブランチを返す。
 - `upstream` は既存 upstream を使ったのか、今回設定したのか、未設定のまま push しなかったのかが分かる user-facing な短い値で返す。
 - `action` は `git push`、`git push -u <remote> <branch>`、`git push <remote> <branch>` のどれを実行したか、または no-op / 事前停止で判定した push 操作を返す。
 - `result` は最低でも `pushed` / `nothing-to-push` / `skipped` / `failed` を表現できるようにする。
-- `notes` と `next_action` は任意にし、ADR 状態更新の補足、behind / diverged、認証失敗などの追加説明が必要な場合だけ使う。
-- `success` の例: `remote=origin, branch=main, upstream=existing, action=git push, result=pushed`
-- `nothing-to-push` の例: `remote=origin, branch=main, upstream=existing, action=git push, result=nothing-to-push`
-- `skipped` の例: `remote=origin, branch=main, upstream=existing, action=git push, result=skipped, next_action=sync-with-remote`
+- `knowledge_preflight` は `skipped` / `ready` / `consolidation_required` と理由を返す。
+- `notes` と `next_action` は任意にし、push 前集約、behind / diverged、認証失敗などの追加説明が必要な場合だけ使う。
+- `success` の例: `remote=origin, branch=main, upstream=existing, action=git push, result=pushed, knowledge_preflight={status: ready, reason: no-consolidation-needed}`
+- `nothing-to-push` の例: `remote=origin, branch=main, upstream=existing, action=no-op, result=nothing-to-push, knowledge_preflight={status: skipped, reason: no-outgoing-commits}`
+- `new-branch` の例: `remote=origin, branch=feature-x, upstream=set, action=git push -u origin feature-x, result=pushed, knowledge_preflight={status: skipped, reason: no-upstream-new-branch}`
+- `skipped` の例: `remote=origin, branch=main, upstream=existing, action=no-op, result=skipped, knowledge_preflight={status: consolidation_required, reason: adr-status-update-needed}, next_action=update-adr-status`
 - 失敗時はエラー本文を丸ごと貼るのではなく、原因の要点と次に確認すべき点を短く示す。

@@ -124,40 +124,51 @@
   - diff だけから判断を推測して ADR を作らない
   - triage の詳細は関連 skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
-### 13. ADR acceptance policy と direct ADR commit が一貫する
+### 13. ADR commit 時採用と direct ADR commit が一貫する
 
-- 例: 「ADR だけをコミットした」「project policy が未設定や不正値のときどうなるか」
+- 例: 「ADR だけをコミットした」「ADR 作成 commit 後に Accepted へ進めたい」
 - 観測ポイント:
-  - ADR の受理タイミングが current project の policy と矛盾しない
+  - ADR の受理タイミングが commit 時採用として扱われる
   - direct ADR commit を含む例外導線が他の知見化フローと競合していない
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
-  - policy や例外導線の詳細は [ADR Ledger Model](./adr-ledger-model.md) と関連 skill を正本にする
+  - commit 時採用や例外導線の詳細は [ADR Ledger Model](./adr-ledger-model.md) と関連 skill を正本にする
 
-### 14. `git-push` の返答が最小契約を保つ
+### 14. `git-push` が push 前知見集約を行う
+
+- 例: 「このブランチを push して」「前回 push 以降の知見整理が必要な状態で push して」
+- 観測ポイント:
+  - push 実行前に outgoing range が確認される
+  - range が安全に決められない場合は push せず停止する
+  - `capture-push-knowledge` が `skipped | ready | consolidation_required` を返せる
+  - `consolidation_required` の場合は push せず、必要な次アクションが返る
+  - push 前集約は commit 時の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る
+
+### 15. `git-push` の返答が最小契約を保つ
 
 - 例: 「このブランチを push して」「upstream を設定して push して」「push 対象がない」
 - 観測ポイント:
   - `git-push` の結果報告で、push 先と実行結果が利用者に分かる
   - upstream の既存利用、設定、未設定停止などの違いが埋もれない
   - behind / diverged / 認証失敗のような停止理由が必要十分に伝わる
+  - `knowledge_preflight` の結果が push 結果と混ざらず伝わる
   - 結果フォーマットの詳細は `git-push` skill を正本にする
 
-### 15. `update-adr-status` direct entry が policy 契約に従う
+### 16. `update-adr-status` direct entry が commit 時採用契約に従う
 
-- 例: 「この ADR を Accepted にしたい」「project policy が未設定や不正値のときの direct entry」
+- 例: 「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」
 - 観測ポイント:
-  - direct entry の状態更新が current project の policy と矛盾しない
+  - direct entry の状態更新が commit 時採用契約と矛盾しない
   - supersede 更新が明示根拠のある場合だけ行われる
   - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `update-adr-status` skill を正本にする
 
-### 16. 既存の主要入口が壊れていない
+### 17. 既存の主要入口が壊れていない
 
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 観測ポイント:
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
   - `dot_codex/AGENTS.md`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
 
-### 17. planning skill が整理専用のまま保たれる
+### 18. planning skill が整理専用のまま保たれる
 
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
 - 観測ポイント:
@@ -165,7 +176,7 @@
   - 要件 review と実装計画 review の責務が分離されたまま維持されている
   - 導線の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と各 `SKILL.md` / agent 定義を正本にする
 
-### 18. review summary helper が reviewer 起動元へ昇格しない
+### 19. review summary helper が reviewer 起動元へ昇格しない
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 観測ポイント:
