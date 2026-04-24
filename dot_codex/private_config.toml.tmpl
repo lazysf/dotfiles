@@ -22,9 +22,26 @@ trust_level = "trusted"
 adr_acceptance_policy = "commit"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-04-20T11:26:15Z"
+last_updated = "2026-04-24T01:38:30Z"
 source_type = "local"
 source = "{{ joinPath .chezmoi.homeDir ".codex" ".tmp" "bundled-marketplaces" "openai-bundled" }}"
 
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-04-23T23:23:31Z"
+source_type = "local"
+source = "{{ joinPath .chezmoi.homeDir ".cache" "codex-runtimes" "codex-primary-runtime" "plugins" "openai-primary-runtime" }}"
+
 [plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."browser-use@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
 enabled = true
