@@ -21,12 +21,12 @@
 ## 置き場の原則
 
 - この節は、知見、手順、補助役をどこに置くかと、各 surface が何を担うかだけを短く案内する
-- `AGENTS.md`: 全体契約と runtime surface の要約を置く。線形フロー、長い背景、詳細手順、テンプレートは置かない
-- `docs/knowledge/`: repo-level の通常知見を置く
-- `docs/adr/`: repo-level の判断記録を置く
-- `dot_codex/skills/`: 再利用する作業手順と通常作業の正式入口を置く。詳細手順、判断基準、停止条件、出力フォーマットの正本もここに置く。チェックリスト、テンプレート、例外規則などの詳細は各 skill 配下の `references/` に置く
-- `dot_codex/agents/`: 専門化した read-only の補助役や review 入口を置く
-- `dot_codex/rules/`: 機械的なガードを置く。運用フロー本体は置かない
+- `~/.codex/AGENTS.md`: 全体契約と `~/.codex/` 配下の surface の要約を置く。線形フロー、長い背景、詳細手順、テンプレートは置かない
+- 作業対象プロジェクトの repo root 配下の `docs/knowledge/`: repo-level の通常知見や背景の正本を置く
+- 作業対象プロジェクトの repo root 配下の `docs/adr/`: repo-level の判断記録の正本を置く
+- `~/.codex/skills/`: 再利用する作業手順と通常作業の正式入口を置く。詳細手順、判断基準、停止条件、出力フォーマットの正本もここに置く。チェックリスト、テンプレート、例外規則などの詳細は各 skill 配下の `references/` に置く
+- `~/.codex/agents/`: 専門化した read-only の補助役や review 入口を置く
+- `~/.codex/rules/`: 機械的なガードを置く。運用フロー本体は置かない
 - `task-classification`、`review-findings-summary` などの補助 skill は、入口整理や出口整形の責務に絞る
-- 詳細な使い分けや発火条件は各 `SKILL.md`、agent 定義、`docs/knowledge/classification-driven-workflow-surface.md` などの関連知識を正本にし、このファイルには持ち込まない
-- 置き場が曖昧でもトップレベルに新しい運用ファイルを増やさない
+- 作業手順や補助役の詳細な使い分け、発火条件は `~/.codex/skills/` 配下の各 `SKILL.md` と `~/.codex/agents/` 配下の agent 定義を正本にし、このファイルには持ち込まない
+- 置き場が曖昧でも `~/.codex/` 直下や作業対象プロジェクトの repo root 直下に新しい運用ファイルを増やさない
