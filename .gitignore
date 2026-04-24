@@ -5,6 +5,9 @@
 *.pyc
 __pycache__/
 
+# Local cache
+.cache/
+
 # Local env
 .venv/
 

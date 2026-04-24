@@ -4,11 +4,8 @@ local special_filetypes = {
 	checkhealth = true,
 	help = true,
 	lazy = true,
-	lspinfo = true,
 	man = true,
-	mason = true,
 	qf = true,
-	trouble = true,
 }
 
 local special_buftypes = {

@@ -50,10 +50,16 @@ depends = ["format:markdown", "format:toml", "format:yaml", "format:lua"]
 description = "Run linters"
 depends = ["lint:markdown", "lint:yaml", "lint:lua", "lint:toml"]
 
-[tasks."test:taplo-parser"]
-description = "Verify Taplo stderr parser"
-run = "nvim -u NONE -i NONE --headless -l scripts/verify_taplo_parser.lua"
+[tasks."test:nvim-load"]
+description = "Verify Neovim core config loads without plugin bootstrap"
+run = "nvim --cmd 'set runtimepath^=dot_config/nvim' -u dot_config/nvim/init.lua -i NONE --headless '+qall!'"
+
+[tasks."test:nvim-load".env]
+CHEZMOI_NVIM_SKIP_LAZY = "1"
+XDG_CACHE_HOME = ".cache/nvim/cache"
+XDG_DATA_HOME = ".cache/nvim/data"
+XDG_STATE_HOME = ".cache/nvim/state"
 
 [tasks.test]
 description = "Run tests"
-depends = ["test:taplo-parser"]
+depends = ["test:nvim-load"]
