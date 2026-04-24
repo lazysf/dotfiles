@@ -72,7 +72,7 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 
 - タイトルだけで十分なら `git commit -m "<header>"` を使う。
 - 本文やフッターが必要なら `git commit -F <file>` を使う。
-- 失敗時はエラー内容をそのまま示し、原因確認を優先する。
+- 失敗時はエラー本文を丸ごと貼らず、原因の要点と次に確認すべき点を短く示す。
 
 ### 8) 事後確認
 
@@ -94,10 +94,24 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 
 ## 結果報告
 
-- 最終返答では、コミット結果を通常の返答文の中で簡潔に報告する。
-- 成功した commit では、最低限 `branch`、`commit`、`message`、`knowledge_capture` を含める。
+- 最終返答では、コミット結果を短い見出しと固定箇条書きで簡潔に報告する。
+- 成功した commit では、次の形を使う。
+
+```md
+コミットしました。
+
+- branch: `<branch>`
+- commit: `<short-sha>`
+- message: `<commit message>`
+- knowledge_capture: `<status> (<reason or path>)`
+- notes: `<none or short note>`
+```
+
+- 失敗、no-op、事前停止でも同じ箇条書き構造を使い、見出しだけを `コミットできませんでした。` のように変える。
+- `branch`、`commit`、`message`、`knowledge_capture`、`notes` は常に表示する。
+- `commit` は短縮 SHA を返す。commit が作成されなかった場合は `none` を返す。
+- `message` は実際に使った、または使おうとした commit message を返す。該当しない場合は `none` を返す。
+- `knowledge_capture` は `status` と、理由または作成 path を丸括弧で短く返す。該当しない場合も `skipped (<reason>)` の形で返す。
 - `knowledge_capture.reason` は、`capture-change-knowledge` の根拠または `adr-only-commit` のような user-facing な短い理由をそのまま返してよい。
-- `notes` は `knowledge_capture` の代替ではなく、後段状態更新スキップなどの追加説明が必要な場合だけ使う。
-- `skipped` の例: `knowledge_capture = { status: skipped, reason: cleanup-only-change }`
-- `created` の例: `knowledge_capture = { status: knowledge_created, path: docs/knowledge/git-commit-knowledge-capture.md }`
-- 失敗時は、失敗理由と次に確認すべき点を短く示す。
+- `notes` は hook 警告、後段状態更新スキップ、失敗理由などの追加説明を一文で返す。補足がない場合は `none` を返す。
+- 失敗時はエラー本文を丸ごと貼るのではなく、原因の要点と次に確認すべき点を `notes` に短く示す。
