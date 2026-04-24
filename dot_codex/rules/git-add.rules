@@ -7,10 +7,6 @@ prefix_rule(
     "git add path/to/file",
     "git add dir/file1 dir/file2",
   ],
-  not_match = [
-    "git add .",
-    "git add --all",
-  ],
 )
 
 # This intentionally overlaps with the rule above.
