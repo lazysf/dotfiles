@@ -1,4 +1,8 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if vim.env.CHEZMOI_NVIM_SKIP_LAZY == "1" then
+	return
+end
+
 if vim.fn.isdirectory(lazypath) == 0 then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
 	local out = vim.fn.system({
