@@ -1,21 +1,8 @@
 prefix_rule(
   pattern = ["git", "remote", "-v"],
   decision = "allow",
-  justification = "push 先確認に必要な読み取り専用の git remote 操作のみ許可する。",
+  justification = "`git-push` skill の remote 確認に必要な `git remote -v` のみ許可する。",
   match = [
     "git remote -v",
-  ],
-)
-
-prefix_rule(
-  pattern = ["git", "remote", ["show", "add", "remove", "set-url", "rename"]],
-  decision = "prompt",
-  justification = "remote の参照や更新は接続先や push 先に影響するため都度確認する。",
-  match = [
-    "git remote show origin",
-    "git remote add origin git@github.com:owner/repo.git",
-    "git remote remove origin",
-    "git remote set-url origin git@github.com:owner/repo.git",
-    "git remote rename origin upstream",
   ],
 )

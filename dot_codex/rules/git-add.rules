@@ -1,27 +1,10 @@
 prefix_rule(
   pattern = ["git", "add"],
   decision = "allow",
-  justification = "`git-commit` skill の手順で使う `git add <paths>` を許可する。",
+  justification = "`git-commit` skill の手順で使う `git add` を許可する。",
   match = [
     "git add README.md",
     "git add path/to/file",
     "git add dir/file1 dir/file2",
-  ],
-)
-
-# This intentionally overlaps with the rule above.
-# Codex applies the most restrictive decision when multiple rules match.
-prefix_rule(
-  pattern = ["git", "add", [".", "-A", "--all", "-u", "--update", "-p", "--patch"]],
-  decision = "prompt",
-  justification = "`git-commit` skill の手順外になる broad add や対話的 staging は都度確認する。",
-  match = [
-    "git add .",
-    "git add -A",
-    "git add --all",
-    "git add -u",
-    "git add --update",
-    "git add -p",
-    "git add --patch",
   ],
 )
