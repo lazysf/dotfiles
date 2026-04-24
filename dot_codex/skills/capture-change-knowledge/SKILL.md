@@ -7,7 +7,7 @@ metadata:
 
 # Capture Change Knowledge
 
-コミット後の change から、共有知見として残すべきものを拾う。
+コミット後の単一 change から、共有知見として残すべきものを拾う。
 この skill は evidence packet の整理と振り分けに責務を絞る。
 本文を書きたい時は `write-knowledge-note` スキルまたは `write-adr` スキルを使う。
 
@@ -32,9 +32,9 @@ metadata:
 - evidence packet には、会話、change、実行結果で明示された事実だけを入れる。
 - 一時的な実験やその場限りの cleanup は `skip` にする。
 - diff だけから durable decision を推測して ADR を作らない。
-- project policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にし、未設定は `commit`、不正値は `skipped(invalid-adr-acceptance-policy)` にする。
 - direct `write-adr` による `ADR-only commit` の受理を進めたい時は `git-commit` スキルの例外導線を使い、この skill では triage を重ねない。
-- ADR が作られた場合だけ、project policy に応じて `update-adr-status` スキルを使う。
+- ADR が作られた場合は、commit 時採用として `update-adr-status` スキルで `Accepted` に進める。
+- push 前の重複整理、状態整合、集約確認は `capture-push-knowledge` に委ね、この skill では扱わない。
 
 ## 手順
 
@@ -60,13 +60,10 @@ metadata:
 - `adr` なら `write-adr` スキルを使う。
 - `skip` ならここで終了する。
 
-### 5) policy を解決して ADR 状態を進める
+### 5) ADR 状態を進める
 
-- current project の `[projects."<repo-root>"].adr_acceptance_policy` を読み、key がない場合は `commit` として扱う。
-- 値が `commit | default_branch` 以外なら、作成結果は保持したまま自動 `Accepted` 化だけを進めず `reason` に `skipped(invalid-adr-acceptance-policy)` を残す。
-- ADR が作成され、project policy `adr_acceptance_policy = "commit"` なら `update-adr-status` スキルを使って `Accepted` に進める。
+- ADR が作成された場合は、commit 時採用として `update-adr-status` スキルを使って `Accepted` に進める。
 - 新 ADR に `Supersedes` が明示されている場合だけ、受理後に旧 ADR へ `Superseded` 更新を別で行う。
-- project policy `adr_acceptance_policy = "default_branch"` なら、新 ADR は `Proposed` に留める。
 - supersede 更新が必要な場合は、新 ADR 側に `Supersedes` が明示されているときだけ `update-adr-status` スキルを使う。
 
 ## 完了条件

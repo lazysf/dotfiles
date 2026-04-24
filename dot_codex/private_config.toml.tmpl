@@ -17,9 +17,6 @@ multi_agent = true
 
 [projects."{{ .chezmoi.sourceDir }}"]
 trust_level = "trusted"
-# Missing key falls back to "commit".
-# Values other than "commit" or "default_branch" disable automatic ADR acceptance.
-adr_acceptance_policy = "commit"
 
 [marketplaces.openai-bundled]
 last_updated = "2026-04-24T01:38:30Z"
