@@ -33,7 +33,7 @@ metadata:
 ## 基本方針
 
 - 明示された根拠なしに状態を変えない。
-- `Accepted` の policy は current project の `[projects."<repo-root>"].adr_acceptance_policy` を正本にし、key がない場合は `commit`、不正値は `skipped(invalid-adr-acceptance-policy)` にする。
+- `Accepted` は commit 時採用を根拠に進める。project config による切り替えは行わない。
 - `Superseded` は、新 ADR 側に `Supersedes` が明示されている場合だけ更新する。
 - `Rejected` は明示的な不採用判断がある場合だけ更新する。
 - 新 ADR 側の `Supersedes` は検証対象であり、この skill が補完しない。
@@ -49,9 +49,7 @@ metadata:
 
 ### 2) 遷移根拠を確認する
 
-- `Accepted` は current project の `[projects."<repo-root>"].adr_acceptance_policy` を読み、key がない場合は `commit` として扱う。
-- `Accepted` は policy が `commit | default_branch` のどちらかで、`event_basis` がその policy に合う場合だけ進める。
-- `Accepted` は policy が不正値なら進めず、`reason=skipped(invalid-adr-acceptance-policy)` を返す。
+- `Accepted` は `event_basis=commit`、または利用者の明示的な採用根拠がある場合だけ進める。
 - `Rejected` は明示的な不採用判断がある場合だけ進める。
 - `Superseded` は `related_adrs` が示す新 ADR 側に、`target_adr` と一致する `Supersedes` が既にある場合だけ進める。
 

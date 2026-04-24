@@ -2,10 +2,11 @@
 
 ADR 台帳フローを拡張するときは、次を先にそろえる。
 
-## Acceptance policy
+## Acceptance timing
 
-- `adr_acceptance_policy` の読み元は current project の `[projects."<repo-root>"]` に固定する。
-- key 未設定時の fallback と不正値時の扱いを、`capture-change-knowledge`、`git-commit`、`git-push`、`update-adr-status` で一致させる。
+- ADR の `Accepted` 化は commit 時採用に固定し、config key で切り替えない。
+- `capture-change-knowledge`、`git-commit`、`update-adr-status` の commit 時採用契約を一致させる。
+- `git-push` は ADR を採用状態へ進めず、push 前の重複整理、状態整合、集約漏れだけを確認する。
 - direct entry だけ別契約にしない。
 
 ## Supersede contract
@@ -16,13 +17,13 @@ ADR 台帳フローを拡張するときは、次を先にそろえる。
 
 ## Direct ADR flows
 
-- `write-adr` で作る差分は docs-only になりやすいので、既定 `commit` policy では `ADR-only commit` 例外が必要になる。
-- `ADR-only commit` や `default_branch` reconcile では、新 ADR の `Accepted` だけで終わらせず、必要なら旧 ADR の `Superseded` まで別更新で進める。
+- `write-adr` で作る差分は docs-only になりやすいので、`ADR-only commit` 例外が必要になる。
+- `ADR-only commit` では、新 ADR の `Accepted` だけで終わらせず、必要なら旧 ADR の `Superseded` まで別更新で進める。
 - `Accepted` と `Superseded` は 1 回の更新に詰め込まず、2 段階更新として明示した方が契約がぶれにくい。
 
 ## Review checklist
 
-- policy source / fallback / invalid handling は全導線で一致しているか
+- commit 時採用の契約は全導線で一致しているか
 - direct `write-adr` 導線でも `Accepted` に到達できるか
 - `Supersedes` がある場合、旧 ADR が退役する後段があるか
-- `default_branch` policy でも commit policy と同じ整合が保たれるか
+- push 前集約が commit 時 routing を再分類せず、重複整理、状態整合、集約漏れに責務を絞っているか
