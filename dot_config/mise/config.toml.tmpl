@@ -1,12 +1,10 @@
 [tools]
-# runtimes
-go = "latest"
+# language runtimes
+go = "latest" # includes gofmt and go vet
 node = "latest"
 python = "latest"
-rust = "latest"
-
-# tooling
-uv = "latest"
+powershell = "latest"
+rust = "latest" # uses rustfmt and clippy from toolchain
 
 # formatters
 biome = "latest" # formatter + linter
@@ -14,9 +12,9 @@ dprint = "latest"
 ruff = "latest" # formatter + linter
 shfmt = "latest"
 taplo = "latest" # formatter + linter
-"cargo:stylua" = "latest"
 "npm:prettier" = "latest"
 "pipx:sqlfluff" = "latest" # formatter + linter
+"cargo:stylua" = "latest"
 
 # linters
 golangci-lint = "latest"
@@ -25,6 +23,9 @@ markdownlint-cli2 = "latest"
 shellcheck = "latest"
 "cargo:selene" = "latest"
 "pipx:yamllint" = "latest"
+
+# other tools
+uv = "latest"
 
 [settings]
 python.uv_venv_auto = "create|source"
