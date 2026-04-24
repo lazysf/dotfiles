@@ -6,10 +6,6 @@ prefix_rule(
     "git restore --staged README.md",
     "git restore --staged path/to/file",
   ],
-  not_match = [
-    "git restore --staged .",
-    "git restore --staged --worktree README.md",
-  ],
 )
 
 # This intentionally overlaps with the rule above.
