@@ -23,22 +23,21 @@ $env:YAZI_CONFIG_HOME = Join-Path $HOME ".config/yazi"
 # -----------------------------
 # PSReadLine options (history / completion)
 # -----------------------------
-if (Get-Module -ListAvailable -Name PSReadLine) {
-  Set-PSReadLineOption -HistoryNoDuplicates
-  Set-PSReadLineOption -BellStyle None
-  try {
-    Set-PSReadLineOption -PredictionSource History
-  } catch {
-    # Ignore when the installed PSReadLine does not support prediction.
-  }
-}
-
-# -----------------------------
-# Tool activation (mise)
-# -----------------------------
-if (Get-Command mise -ErrorAction SilentlyContinue) {
-  # Expose mise shims in this pwsh session without full environment activation.
-  (& mise activate pwsh --shims) | Out-String | Invoke-Expression
+if (-not $global:ProfilePSReadLineOptionsRegistered) {
+  Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
+    try {
+      Set-PSReadLineOption -HistoryNoDuplicates
+      Set-PSReadLineOption -BellStyle None
+      try {
+        Set-PSReadLineOption -PredictionSource History
+      } catch {
+        # Ignore when the installed PSReadLine does not support prediction.
+      }
+    } catch {
+      # Ignore when PSReadLine is unavailable in this host.
+    }
+  } | Out-Null
+  $global:ProfilePSReadLineOptionsRegistered = $true
 }
 
 # -----------------------------
@@ -47,7 +46,7 @@ if (Get-Command mise -ErrorAction SilentlyContinue) {
 $starship = Get-Command -Name starship -CommandType Application -ErrorAction SilentlyContinue
 if ($starship) {
   # Initialize starship prompt only when executable is available.
-  Invoke-Expression (& $starship.Source init powershell)
+  Invoke-Expression (& $starship.Source init powershell --print-full-init | Out-String)
 }
 
 # -----------------------------
@@ -73,10 +72,6 @@ if (Get-Command eza -ErrorAction SilentlyContinue) {
   function lt {
     eza --icons --git --tree @args
   }
-}
-
-function reload {
-  . $PROFILE
 }
 
 if (Get-Command nvim -ErrorAction SilentlyContinue) {
