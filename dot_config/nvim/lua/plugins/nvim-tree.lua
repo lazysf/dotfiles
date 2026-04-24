@@ -30,10 +30,6 @@ return {
 			},
 			sync_root_with_cwd = true,
 			respect_buf_cwd = true,
-			diagnostics = {
-				enable = true,
-				show_on_dirs = true,
-			},
 			git = {
 				enable = true,
 			},

@@ -1,29 +1,30 @@
 # mise tool matrix
 
-このメモは、mise で導入する runtime / formatter / linter と、nvim の filetype 割り当ての対応をまとめる。
+このメモは、mise で導入する runtime / formatter / linter と、nvim の扱いをまとめる。
 
 正本:
 
 - [`dot_config/mise/config.toml.tmpl`](../../dot_config/mise/config.toml.tmpl): mise で導入する CLI
-- [`dot_config/nvim/lua/plugins/conform.lua`](../../dot_config/nvim/lua/plugins/conform.lua): nvim formatter 割り当て
-- [`dot_config/nvim/lua/plugins/nvim-lint.lua`](../../dot_config/nvim/lua/plugins/nvim-lint.lua): nvim linter 割り当て
+- [`dot_config/nvim/lua/core/encoding_map.lua`](../../dot_config/nvim/lua/core/encoding_map.lua): nvim のファイル別 encoding / fileformat 設定
 
-| 対象 | runtime / toolchain | formatter | linter | nvim filetype | 備考 |
+VSCode を主 IDE とし、nvim はテキスト編集用に寄せる。formatter / linter は `mise` task から実行し、nvim には formatter / linter / LSP / DAP / 補完エンジンを割り当てない。
+
+| 対象 | runtime / toolchain | formatter | linter | nvim での扱い | 備考 |
 | --- | --- | --- | --- | --- | --- |
-| Go | `go` | `gofmt` | `golangci-lint` | `go` | `gofmt` と `go vet` は Go toolchain 側の標準ツールとして扱う |
-| JavaScript / TypeScript | `node` | `biome` | `biome` | `javascript`, `javascriptreact`, `typescript`, `typescriptreact` | JSX / TSX も同じ割り当て |
-| JSON / JSONC | `node` | `npm:prettier` | `biome` | `json`, `jsonc` | formatter と linter で別 CLI を使う |
-| Python | `python` | `ruff` | `ruff` | `python` | Python 補助 tooling として `uv` も導入する |
-| PowerShell | `powershell` | 未設定 | 未設定 | 未設定 | `PSScriptAnalyzer` は未導入の外部候補で、本体内蔵ではない |
-| Rust | `rust` | `rustfmt` | `clippy` | `rust` | `rustfmt` と `clippy` は Rust toolchain 側の標準コンポーネントとして扱う |
-| Shell | なし | `shfmt` | `shellcheck` | `bash`, `sh` | nvim では bash / sh に `shellcheck` を使う |
-| Zsh | なし | `shfmt` | `zsh -n` | `zsh` | nvim では `shellcheck` ではなく zsh の syntax check を使う |
-| TOML | なし | `taplo` | `taplo` | `toml` | Taplo LSP は LSP のみに使い、format / lint は CLI を使う |
-| Markdown | なし | `npm:prettier` | `markdownlint-cli2` | `markdown` | repo task でも prettier / markdownlint-cli2 を使う |
-| YAML | なし | `npm:prettier` | `pipx:yamllint` | `yaml`, `yml` | repo task でも prettier / yamllint を使う |
-| SQL | なし | `pipx:sqlfluff` | `pipx:sqlfluff` | `sql` | formatter と linter を同じ CLI で担う |
-| Lua | なし | `cargo:stylua` | `cargo:selene` | `lua` | Cargo 経由で導入する Lua 用ツール |
-| Dockerfile | なし | `dprint` | `hadolint` | `dockerfile` | 現状 nvim では Dockerfile formatter として `dprint` を使う |
+| Go | `go` | `gofmt` | `golangci-lint` | テキスト編集のみ | `gofmt` と `go vet` は Go toolchain 側の標準ツールとして扱う |
+| JavaScript / TypeScript | `node` | `biome` | `biome` | テキスト編集のみ | JSX / TSX も同じ CLI を使う |
+| JSON / JSONC | `node` | `npm:prettier` | `biome` | テキスト編集のみ | formatter と linter で別 CLI を使う |
+| Python | `python` | `ruff` | `ruff` | テキスト編集のみ | Python 補助 tooling として `uv` も導入する |
+| PowerShell | `powershell` | 未設定 | 未設定 | UTF-8 / LF | `*.ps1` は BOM なし UTF-8 と LF で扱う |
+| Rust | `rust` | `rustfmt` | `clippy` | テキスト編集のみ | `rustfmt` と `clippy` は Rust toolchain 側の標準コンポーネントとして扱う |
+| Shell | なし | `shfmt` | `shellcheck` | テキスト編集のみ | nvim からは lint しない |
+| Zsh | なし | `shfmt` | なし | テキスト編集のみ | nvim からは syntax check しない |
+| TOML | なし | `taplo` | `taplo` | テキスト編集のみ | format / lint は CLI を使う |
+| Markdown | なし | `npm:prettier` | `markdownlint-cli2` | テキスト編集のみ | repo task で prettier / markdownlint-cli2 を使う |
+| YAML | なし | `npm:prettier` | `pipx:yamllint` | テキスト編集のみ | repo task で prettier / yamllint を使う |
+| SQL | なし | `pipx:sqlfluff` | `pipx:sqlfluff` | テキスト編集のみ | formatter と linter を同じ CLI で担う |
+| Lua | なし | `cargo:stylua` | `cargo:selene` | テキスト編集のみ | Cargo 経由で導入する Lua 用ツール |
+| Dockerfile | なし | `dprint` | `hadolint` | テキスト編集のみ | nvim からは format / lint しない |
 
 `npm:*`、`pipx:*`、`cargo:*` の prefix は導入元を示すだけで、対象言語そのものを示すとは限らない。
-nvim 側の adapter / linter ID は CLI 名と表記が異なる場合があるが、別ツールとしては扱わない。
+nvim 側の filetype 判定や Tree-sitter は構文表示のために残すが、外部 CLI とは接続しない。
