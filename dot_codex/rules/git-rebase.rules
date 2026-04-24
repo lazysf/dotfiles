@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["git", "rebase"],
-  decision = "prompt",
-  justification = "git rebase は履歴を書き換えるため都度確認する。",
-  match = [
-    "git rebase main",
-    "git rebase --continue",
-  ],
-)
