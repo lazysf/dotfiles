@@ -44,6 +44,17 @@
   - explicit-path の `git add` が一度止まっても、即座に `git-add.rules` の緩和案へ飛ばない
   - 詳細は [git-add-approval-friction-diagnosis.md](./git-add-approval-friction-diagnosis.md) を参照する
 
+### 3.6. Git rules は最小 allow だけで整理される
+
+- 例: 「Git rules を見直した」「read-only Git 操作を allow へ寄せた」
+- 期待:
+  - `decision = "prompt"` と `decision = "forbidden"` は置かない
+  - allow 対象は `git status`、`git diff`、`git branch -vv`、`git remote -v`、`git log`、`git add`、`git commit -m|-F` だけにする
+  - `git add` は broad allow とし、`not_match` や prompt carveout は置かない
+  - 通常 push は allow せず、既定 prompt に任せる
+  - force push、hard reset、ignored file を含む clean も個別 rule を置かず、既定 prompt と skill 停止線に任せる
+  - その他の Git 変更操作は rule を置かず、既定 prompt に任せる
+
 ### 4. 知見の昇格先を切り分けられる
 
 - 例: 「毎回同じ整理をしているので残したい」

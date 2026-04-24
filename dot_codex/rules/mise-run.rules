@@ -16,16 +16,3 @@ prefix_rule(
     "mise settings ls",
   ],
 )
-
-# This intentionally overlaps with the rule above.
-# Codex applies the most restrictive decision when multiple rules match.
-prefix_rule(
-  pattern = ["mise", "run"],
-  decision = "prompt",
-  justification = "allowlist 外の mise run タスクは副作用が読みにくいため都度確認する。",
-  match = [
-    "mise run",
-    "mise run deploy",
-    "mise run release",
-  ],
-)

@@ -17,5 +17,7 @@
 
 ## 運用メモ
 
-- `git add .`、`git add -A`、`git add --all`、`git add -u`、`git add --update`、`git add -p`、`git add --patch` は引き続き broad add / 対話的 staging として prompt 側に残す。
+- Git rules は最小の `allow` だけで整理し、未定義コマンドは既定 prompt に任せる。
+- `git add` は `git-commit` に必要な mutation allow として broad allow にする。
+- `git add` の `not_match` や prompt carveout は置かず、staging 範囲の安全性は `git-commit` skill の合意済み範囲確認と `git diff --staged` 確認で担保する。
 - explicit-path の `git add` friction を見つけても、先に sandbox 失敗を除外しないまま `git-add.rules` を広げない。

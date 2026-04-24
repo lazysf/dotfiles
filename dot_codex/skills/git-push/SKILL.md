@@ -16,14 +16,12 @@ metadata:
 - commit 作成やメッセージ整備はこのスキルの責務に含めない。
 - push 実行前に outgoing range を確認し、`capture-push-knowledge` で知見の重複整理、状態整合、集約要否を判定する。
 - `consolidation_required` の場合は push せず、必要な次アクションを返す。
-- この skill では、手順に明示した Git コマンドだけを使う。
-- 通常 push は引き続き approval / `prompt` 前提で扱う。
+- 強制 push や広域 push はこの skill の対象外とする。
 
 ## 対象外
 
 - コミット作成やコミットメッセージ整備のみが目的の依頼。
 - pull / rebase で履歴調整が必要だが、調整指示がない状態。
-- 手順に明示していない push 操作。
 
 ## 手順
 
