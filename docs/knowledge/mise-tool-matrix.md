@@ -15,7 +15,7 @@ VSCode を主 IDE とし、nvim はテキスト編集用に寄せる。formatter
 | JavaScript / TypeScript | `node` | `biome` | `biome` | テキスト編集のみ | JSX / TSX も同じ CLI を使う |
 | JSON / JSONC | `node` | `npm:prettier` | `biome` | テキスト編集のみ | formatter と linter で別 CLI を使う |
 | Python | `python` | `ruff` | `ruff` | テキスト編集のみ | Python 補助 tooling として `uv` も導入する |
-| PowerShell | `powershell` | 未設定 | 未設定 | UTF-8 / LF | `*.ps1` は BOM なし UTF-8 と LF で扱う |
+| PowerShell | `powershell` | 未設定 | 未設定 | BOM 付き UTF-8 / LF | `*.ps1` は Windows PowerShell 5.1 互換のため BOM 付き UTF-8 と LF で扱う |
 | Rust | `rust` | `rustfmt` | `clippy` | テキスト編集のみ | `rustfmt` と `clippy` は Rust toolchain 側の標準コンポーネントとして扱う |
 | Shell | なし | `shfmt` | `shellcheck` | テキスト編集のみ | nvim からは lint しない |
 | Zsh | なし | `shfmt` | なし | テキスト編集のみ | nvim からは syntax check しない |
