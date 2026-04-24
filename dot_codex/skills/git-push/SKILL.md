@@ -17,6 +17,7 @@ metadata:
 - push 実行前に outgoing range を確認し、`capture-push-knowledge` で知見の重複整理、状態整合、集約要否を判定する。
 - `consolidation_required` の場合は push せず、必要な次アクションを返す。
 - 強制 push や広域 push はこの skill の対象外とする。
+- sandbox / network / 権限により承認が必要な場合は、承認要求を正規手順として扱い、承認を避けるための別経路や副作用のある代替操作を使わない。
 
 ## 対象外
 
@@ -76,7 +77,9 @@ metadata:
 
 ### 7) 失敗時の扱い
 
-- 認証エラー、non-fast-forward、保護ブランチなどのエラーは止めて確認する。
+- `git push` 失敗時は force push、pull / rebase、GitHub API などで回避しない。
+- 失敗時は約30秒待ってから、同じ push 前確認を再実行し、同じ push command を1回だけ再実行する。
+- 2回目も失敗した場合は停止し、認証、権限、non-fast-forward、保護ブランチなどの原因要点と次に確認すべき点を `notes` に短く示す。
 - 自動で解決策を実行しない。
 
 ## 結果報告
