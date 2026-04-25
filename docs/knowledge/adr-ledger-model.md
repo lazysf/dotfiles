@@ -53,16 +53,15 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 
 ## Acceptance Timing
 
-ADR の `Accepted` 化は commit 時採用に固定する。
-project config や private config による切り替えは行わない。
+ADR の `Accepted` 化は Git commit とは切り離し、採用判断が明示された時だけ `update-adr-status` で行う。
+project config や private config による自動切り替えは行わない。
 
 - 新規 ADR は `write-adr` でいったん `Proposed` として作る
-- 新規 ADR を含む commit が成功したら、`update-adr-status` で `Accepted` に進める
-- `新規 ADR 1 件 + 任意の docs/README.md 変更` だけの commit は `ADR-only commit` として受理対象に含める
-- 新 ADR に `Supersedes` がある場合は、受理後に旧 ADR を別更新で `Superseded` に進める
+- 採用判断が明示されたら、`update-adr-status` で `Accepted` に進める
+- 新 ADR に `Supersedes` がある場合は、採用後に旧 ADR を別更新で `Superseded` に進める
 
 push 前には、前回 push 以降の outgoing commit 群を `capture-push-knowledge` で集約確認する。
-この確認は commit 時の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る。
+この確認は個別 change の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る。
 
 ## Skill Mapping
 
