@@ -1,6 +1,6 @@
 ---
 name: git-push
-description: 「今のブランチを push したい」「upstream を設定してリモートへ出したい」といった Git の依頼で使う。push 対象、push 先、upstream 設定の有無を確認し、通常 push を安全に実行する。コミットを作りたい時は `git-commit` スキルを使い、強制 push はこの skill の対象外とする。
+description: Git の commit を push したい、現在ブランチをリモートへ出したい、upstream を設定して push したい依頼で使う。push 先、upstream、outgoing range、push 前知見集約を確認してから通常 push する。commit 作成や commit message 整備が目的なら `git-commit` スキルを使い、force push は対象外とする。
 metadata:
   short-description: Git push
 ---
@@ -9,6 +9,21 @@ metadata:
 
 現在のブランチのローカルコミットをリモートへプッシュし、必要なら upstream を設定する。
 このスキルは、Git 導線のうち push 実行と upstream 判定の責務を担う。
+
+## Stop conditions
+
+次の状態では push せず、状況を確認する。
+commit 作成や commit message 整備は `git-commit` スキルに委ねる。
+
+- detached HEAD で、現在ブランチが確定していない場合。
+- rebase、merge、cherry-pick、revert の途中で、履歴操作が完了していない場合。
+- コンフリクトが残っていて、作業ツリーや index が未解決の場合。
+- 複数リモートがあり、push 先が一意に決められない場合。
+- upstream の設定先とユーザー意図が食い違う、または `git branch -vv` 上で upstream mismatch が疑われる場合。
+- behind または diverged の状態で、同期方針が確認できていない場合。
+- 保護ブランチ運用により、現在ブランチへの直接 push が禁止されている前提が分かっている場合。
+- force push や広域 push が必要な場合。
+- pull / rebase による履歴調整が必要だが、明示指示がない場合。
 
 ## 基本方針
 
@@ -29,13 +44,7 @@ metadata:
 ### 1) 状況確認
 
 - `git status -sb`、`git branch -vv`、`git remote -v` を確認する。
-- 次の条件では push せず停止して確認する。
-- detached HEAD で、現在ブランチが確定していない場合。
-- rebase、merge、cherry-pick、revert の途中で、履歴操作が完了していない場合。
-- コンフリクトが残っていて、作業ツリーや index が未解決の場合。
-- 複数リモートがあり、push 先が一意に決められない場合。
-- upstream の設定先とユーザー意図が食い違う、または `git branch -vv` 上で upstream mismatch が疑われる場合。
-- 保護ブランチ運用により、現在ブランチへの直接 push が禁止されている前提が分かっている場合。
+- Stop conditions に該当する場合は push せず停止して確認する。
 
 ### 2) プッシュ対象の判定
 
@@ -64,6 +73,19 @@ metadata:
 - `consolidation_required` なら push せず、必要な `write-knowledge-note`、`docs-update`、`write-adr`、`update-adr-status` の次アクションを返す。
 - この skill は push 前整理のための docs 更新 commit を自動作成しない。
 
+Evidence packet は、推測ではなく確認済みの事実だけで次の最小項目をそろえる。
+`recent_execution_context` には、直近のエラー、承認、検証結果を短く要約し、トークン、認証 URL、詳細な承認文面などの秘密情報は含めない。
+
+```yaml
+branch: <current branch>
+remote: <push remote>
+upstream_ref: <upstream ref or none>
+outgoing_commits: <short sha, subject, and range summary>
+changed_paths_summary: <paths or grouped path summary>
+knowledge_or_adr_paths_in_range: <docs/knowledge or docs/adr paths, or none>
+recent_execution_context: <short summary of recent errors, approvals, test/check results, or none>
+```
+
 ### 5) プッシュ実行
 
 - upstream 未設定なら `git push -u <remote> <branch>` を使う。
@@ -78,9 +100,9 @@ metadata:
 ### 7) 失敗時の扱い
 
 - `git push` 失敗時は force push、pull / rebase、GitHub API などで回避しない。
-- 失敗時は約30秒待ってから、同じ push 前確認を再実行し、同じ push command を1回だけ再実行する。
-- 2回目も失敗した場合は停止し、認証、権限、non-fast-forward、保護ブランチなどの原因要点と次に確認すべき点を `notes` に短く示す。
-- 自動で解決策を実行しない。
+- 失敗時は約30秒待ってから、状態を再確認し、同じ push command を1回だけ再実行する。
+- 再確認では `git status -sb`、`git branch -vv`、`git remote -v` と push 前知見集約に使った前提が変わっていないかを見る。
+- 2回目も失敗した場合は停止し、回避策を実行せず、認証、権限、non-fast-forward、保護ブランチなどの原因要点と次に確認すべき点を `notes` に短く示す。
 
 ## 結果報告
 
@@ -107,5 +129,7 @@ metadata:
 - `upstream` は `existing` / `set` / `not-set` / `skipped` のいずれかを返す。
 - `action` は `git push`、`git push -u <remote> <branch>`、`git push <remote> <branch>` のどれを実行したか、または no-op / 事前停止で判定した push 操作を返す。
 - `knowledge_preflight` は `skipped` / `ready` / `consolidation_required` と理由を丸括弧で短く返す。
+- 新規ブランチで remote branch がまだ存在しないため outgoing range を作れない場合は、`knowledge_preflight: skipped (no-upstream-new-branch)` とする。
+- no-op や事前停止では `action: no-op` または判定した push 操作を返し、`upstream` は実態に合わせて `existing` / `not-set` / `skipped` を選ぶ。
 - `notes` は push 前集約、behind / diverged、認証失敗、次アクションなどの追加説明を一文で返す。補足がない場合は `none` を返す。
 - 失敗時はエラー本文を丸ごと貼るのではなく、原因の要点と次に確認すべき点を `notes` に短く示す。
