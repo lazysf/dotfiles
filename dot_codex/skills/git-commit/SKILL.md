@@ -1,46 +1,70 @@
 ---
 name: git-commit
-description: Git の変更を commit したい、staging 範囲を整理して安全に commit したい、commit message を整えたい依頼で使う。1 コミット 1 変更の粒度を守り、staged diff を確認してから commit する。push だけが目的の依頼では使わず、`git-push` スキルを使う。
+description: Git の変更を安全に commit したい依頼で使う。1コミット1変更を守り、ステージ範囲とステージ済み差分を確認してから通常 commit を作成する。push が目的の依頼では `git-push` スキルを使う。
 metadata:
   short-description: Git commit
 ---
 
 # Git Commit
 
-Git の変更を安全にコミットし、必要ならコミットメッセージを整えたうえで commit を実行する。
-このスキルは、Git 導線のうち `1コミット1変更` を守りながら commit を実行する責務を担う。
+Git の変更を安全に 1 つの commit として作成する。
+このスキルは、変更範囲の確認、明示的なステージ、ステージ済み差分の確認、コミットメッセージ作成、通常 commit 実行だけを扱う。
 
-## Stop conditions
+## 停止条件
 
 次の状態では commit せず、状況を確認する。
-この停止線は local の commit 作成に関わる条件に限定し、remote / upstream / behind / diverged / 複数 remote の判定は `git-push` スキルに委ねる。
 
 - detached HEAD で、現在ブランチが確定していない場合。
 - rebase、merge、cherry-pick、revert の途中で、履歴操作が完了していない場合。
 - コンフリクトが残っていて、作業ツリーや index が未解決の場合。
-- 未追跡ファイルや機密情報が含まれ、commit 対象としてよいか確認できていない場合。
-- 複数の変更が混在し、単一の commit message で自然に説明できない場合。
+- 複数の変更が混在し、単一のコミットメッセージで自然に説明できない場合。
 
-## 基本方針
+## 安全ルール
 
-- 対象が不明なら確認する。
-- Git の書き込み系操作は逐次実行する。
+- ステージと commit は順に実行する。
 - 1コミット1変更を原則とし、単一のコミットメッセージで自然に説明できる最小単位に分ける。
 - sandbox / network / 権限により承認が必要な場合は、承認要求を正規手順として扱い、承認を避けるための別経路や副作用のある代替操作を使わない。
-- 実コミット後に単一 commit の durable change を知見化したい時は `capture-change-knowledge` スキルを使う。
-- ADR は commit 時採用に固定し、新規 ADR が作られた場合は `update-adr-status` スキルで `Accepted` に進める。
+- `git add .` と `git add -A` は使わない。
+- 無関係なファイルや hunk はステージしない。
+- 未追跡ファイル、機密情報、env/local/editor/temp/debug/build/generated files、lockfiles、migrations、config changes は、意図が確認できる場合だけ commit 対象にする。
+- `commit the changes` や `commit everything` と言われても、差分を確認せずに全てをステージ / commit しない。
+- push は扱わない。
+- rebase、amend、squash など、通常 commit 以外の履歴操作は扱わない。
 
-## 対象外
+## コミットメッセージ
 
-- プッシュだけしたい時は `git-push` スキルを使う。
-- 変更が存在しない状態でのコミット要求。
+- repo に commit message 規約があればそれを優先する。
 
-## コミットメッセージの扱い
+repo 規約がなければ、commit message は次の形式にする。
 
-- リポジトリに別規約がなければ Conventional Commits を既定とする。
-- 言語はリポジトリ規約を優先し、規約がなければ英語を既定とする。
-- 本文やフッターの有無は、ユーザー指定、リポジトリ規約、変更の分かりやすさをもとに判断する。
-- type / body / footer の詳細は `references/commit-message-format.md` を参照する。
+```txt
+<type>: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- `title` は commit message の 1 行目で、commit list に表示される短い要約に相当する。repo 規約がなければ `<type>: <description>` にする。
+- `body` は任意。理由、内容、影響などを `title` だけで表しきれない場合に使う。
+- `footer(s)` は任意。issue refs や `BREAKING CHANGE` などの trailer に使う。
+- `title` は 1 行のみで書き、可能なら 72 文字以内にする。
+- `type` は変更の主目的に合わせて選ぶ。迷ったら、ユーザー-visible な挙動への影響を優先して判断する。
+- `description` は変更内容を短く表す動詞句にし、repo 規約がなければ英語で書く。
+- `body` / `footer(s)` の詳細が必要な場合は `references/commit-message-format.md` を参照する。
+
+| type | 使う場面 |
+| --- | --- |
+| `fix` | 期待どおりに動いていない挙動や不具合を直す。 |
+| `feat` | 新しい機能、設定、選択肢などを追加する。 |
+| `docs` | README、手順書、設計メモなど、ドキュメントだけを変える。 |
+| `test` | テストコード、fixtures、snapshots など、テストだけを変える。 |
+| `refactor` | 外から見える挙動を変えずに、コード構造を整理する。 |
+| `chore` | 利用者向け挙動に直接関係しない保守作業を行う。 |
+| `style` | 挙動を変えずに、コード整形や lint 指摘だけを直す。 |
+| `perf` | 挙動を保ったまま、速度やメモリ使用量などを改善する。 |
+| `build` | build system、package manager、依存関係、lockfile を変える。 |
+| `ci` | CI workflow、job、runner、release automation を変える。 |
 
 ## 手順
 
@@ -51,81 +75,48 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 ### 2) 状態確認
 
 - `git status -sb` で状態を確認する。
+- 既にステージ済み変更がある場合は、`git diff --staged --stat` と `git diff --staged` で未ステージ変更と分けて確認する。
 - 異常状態があれば停止して確認する。
 
 ### 3) 変更内容の確認
 
+- `git diff --stat` で変更規模を確認する。
 - `git diff` で変更内容を確認する。
+- 必要なら `git diff --check` で whitespace error や conflict marker を軽く確認する。
 - 複数の変更が混在している場合は、コミットを停止して分割方針を確認する。
 
-### 4) 整合性 preflight
+### 4) コミットメッセージを決める
 
-- `git diff --name-status` と `git diff` で、整合性 preflight の対象かを確認する。
-- ファイル追加、rename、削除が含まれる場合は `consistency-audit` スキルを使う。
-- `docs/`、`README`、`AGENTS.md`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/` が変わる場合は `consistency-audit` スキルを使う。
-- `.gitignore`、`.chezmoiignore`、設定ファイル、一覧、index に関わる変更がある場合は `consistency-audit` スキルを使う。
-- 対象外なら `skipped` として通常の commit 手順へ進む。
-- `consistency-audit` が `fixed` を返した場合は、`git status -sb` と `git diff` を再確認し、1コミット1変更が崩れていないか見直す。
-- `consistency-audit` が `needs_confirmation` を返した場合は、commit せず停止して確認する。
-- preflight の要点は、必要な場合だけ最終返答の `notes` に短く入れる。
+- repo 規約がある場合は、その形式で `title` を決める。
+- repo 規約がない場合は、確認した差分をもとに `<type>: <description>` を作る。
+- `body` / `footer(s)` が必要な場合だけ `references/commit-message-format.md` を参照する。
+- 変更の識別は `title` を優先し、必要なら `body` や `footer(s)` で補足する。
 
-### 5) コミットメッセージを決める
-
-- ユーザー指定の文面があれば、それを優先して整形確認する。
-- 文面未指定なら、確認した差分をもとにコミットメッセージを組み立てる。
-- まず `type: description` の形で type と description を決定する。
-- 本文が必要なら body を追加する。
-- 変更の識別は description を優先し、必要なら body や footer で補足する。
-
-### 6) ステージ
+### 5) ステージ
 
 - 合意した 1 変更の範囲のみを `git add <paths>` でステージする。
 - `git add <paths>` は単一ファイル、複数ファイル、ディレクトリ指定を含む。
 - 非対話で安全に分離できない場合は停止して確認する。
 
-### 7) ステージ内容の確認
+### 6) ステージ済み差分の確認
 
+- `git diff --staged --stat` でステージ済み差分の規模を確認する。
 - `git diff --staged` でステージ内容を確認する。
+- 無関係なファイル、意図しない削除、debug log、コメントアウトされたコード、機密情報、想定外に大きい差分、無関係な formatting が含まれていないか見る。
 - 想定と違う場合はコミットせずに見直す。
 
-### 8) コミット
+### 7) コミット
 
-- タイトルだけで十分なら `git commit -m "<header>"` を使う。
-- 本文やフッターが必要なら `git commit -F <file>` を使う。
+- `title` だけで十分なら `git commit -m "<message>"` を使う。
+- `body` や `footer(s)` が必要なら `git commit -F <file>` を使う。
 - `git commit` 失敗時は `--no-verify`、別の commit 方法、直接 refs 操作などで回避しない。
-- 失敗時は約30秒待ってから、状態を再確認し、同じ commit command を1回だけ再実行する。
-- 再確認では `git status -sb` と `git diff --staged` で、作業ツリーと staged diff が想定どおりかを見る。
+- 失敗時は約30秒待ってから、状態を再確認し、同じ commit command を 1 回だけ再実行する。
+- 再確認では `git status -sb` と `git diff --staged` で、作業ツリーとステージ済み差分が想定どおりかを見る。
 - 2回目も失敗した場合は停止し、回避策を実行せず、原因の要点と次に確認すべき点を `notes` に短く示す。
 
-### 9) 事後確認
+### 8) 事後確認
 
 - `git status -sb` でコミット後の状態を確認する。
-
-### 10) 必要なら次に使うスキルを決める
-
-- 実際に commit が成功した場合だけ後段へ進む。
-- 成功した commit の最終返答では、`knowledge_capture` を必ず含める。
-- `knowledge_capture.status` は `skipped` / `knowledge_created` / `adr_created` だけを使い、新しい分類は増やさない。
-- push 前の重複整理、状態整合、集約確認は `git-push` 側の `capture-push-knowledge` に委ねる。
-
-#### 通常 commit
-
-- `ADR-only commit` 以外の commit 後の知見判断は `capture-change-knowledge` スキルを使う。
-- `capture-change-knowledge` スキルが `skipped` を返したら、`knowledge_capture = { status: skipped, reason: <triage reason> }` として返す。
-- `capture-change-knowledge` スキルが `knowledge_created` を返したら、`knowledge_capture = { status: knowledge_created, path: <created path>, reason: <optional> }` として返す。
-
-#### ADR-only commit
-
-- `ADR-only commit` は、新規 `docs/adr/NNNN-*.md` 1 件と任意の `docs/README.md` 変更だけを含む commit とする。
-- `ADR-only commit` では `capture-change-knowledge` スキルを使わない。
-- `knowledge_capture = { status: skipped, reason: adr-only-commit }` を返したうえで、新 ADR を `update-adr-status` スキルで `Accepted` に進める。
-- 新 ADR に `Supersedes` が明示されている場合だけ、続けて旧 ADR に対して `update-adr-status(target_adr=<old>, new_status=Superseded, related_adrs=<new>, event_basis=commit)` を別更新として行う。
-
-#### capture-change-knowledge が ADR を作った場合
-
-- `capture-change-knowledge` スキルが `adr_created` を返したら、`knowledge_capture = { status: adr_created, path: <created path>, reason: <optional> }` として返す。
-- 作成された ADR は commit 時採用として `update-adr-status` スキルで `Accepted` に進める。
-- 新 ADR に `Supersedes` が明示されている場合だけ、旧 ADR の `Superseded` 更新を別更新として扱う。
 
 ## 結果報告
 
@@ -138,16 +129,19 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - branch: `<branch>`
 - commit: `<short-sha>`
 - message: `<commit message>`
-- knowledge_capture: `<status> (<reason or path>)`
+- files: `<included paths summary>`
+- verification: `<passed / skipped / not run / already run>`
+- left_unstaged: `<none or short summary>`
 - notes: `<none or short note>`
 ```
 
 - 失敗、no-op、事前停止でも同じ箇条書き構造を使い、見出しだけを `コミットできませんでした。` のように変える。
-- `branch`、`commit`、`message`、`knowledge_capture`、`notes` は常に表示する。
+- `branch`、`commit`、`message`、`files`、`verification`、`left_unstaged`、`notes` は常に表示する。
 - `commit` は短縮 SHA を返す。commit が作成されなかった場合は `none` を返す。
 - `message` は実際に使った、または使おうとした commit message を返す。該当しない場合は `none` を返す。
-- `knowledge_capture` は `status` と、理由または作成 path を丸括弧で短く返す。該当しない場合も `skipped (<reason>)` の形で返す。
-- `knowledge_capture.reason` は、`capture-change-knowledge` の根拠または `adr-only-commit` のような user-facing な短い理由をそのまま返してよい。
-- no-op や事前停止では `commit: none`、該当する message がなければ `message: none`、`knowledge_capture: skipped (<reason>)` とする。
-- `notes` は hook 警告、後段状態更新スキップ、失敗理由、停止理由などの追加説明を一文で返す。補足がない場合は `none` を返す。
-- 失敗時はエラー本文を丸ごと貼るのではなく、原因の要点と次に確認すべき点を `notes` に短く示す。
+- no-op や事前停止では `commit: none`、該当する message がなければ `message: none` とする。
+- `files` は commit に含めた path の要約を返す。commit が作成されなかった場合は `none` を返す。
+- `verification` は検証状況として、実行済み、未実行、skipped、または既存実行結果を短く返す。
+- `left_unstaged` は未ステージのまま残した無関係 / 曖昧 / 危険または要確認のファイルを短く返す。なければ `none` を返す。
+- `notes` は hook 警告、失敗理由、停止理由、次に確認すべき点だけを一文で返す。補足がない場合は `none` を返す。
+- 失敗時はエラー全文を丸ごと貼るのではなく、原因の要点と次に確認すべき点を `notes` に短く示す。
