@@ -63,8 +63,8 @@ uv sync
 ```
 
 通常の確認入口は `mise run test` です。
-`scripts/` は repo 保守用スクリプトの置き場で、repo 内から実行します。`docs/` は repo-level knowledge の置き場で、どちらも `.chezmoiignore` により dotfiles の配布対象から外しています。
-`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`dot_config/terminal/Main.terminal`、`docs/`、`scripts/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
+`docs/` は repo-level knowledge の置き場で、`.chezmoiignore` により dotfiles の配布対象から外しています。
+`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`dot_config/terminal/Main.terminal`、`docs/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
 
 ## Repo-Level Knowledge
 
