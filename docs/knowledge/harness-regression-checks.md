@@ -195,7 +195,16 @@
   - review 本体や reviewer 選択を代行しない
   - 導線と役割分担の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と関連 skill / agent 定義を正本にする
 
-### 19. repo 固有契約の軽い確認を手動回帰で補う
+### 20. reviewer agent 起動契約が AGENTS に残る
+
+- 例: 「01/02 の計画レビューを reviewer agent で起動したい」「03/04 に差分レビューを依頼したい」
+- 観測ポイント:
+  - `dot_codex/AGENTS.md` に、reviewer agent を `agent_type` で明示起動する場合は `fork_context=true` を併用しない契約がある
+  - reviewer 定義側の `model` / `sandbox_mode` / instructions を有効にする目的が崩れていない
+  - 01/02 reviewer には計画本文、03/04 reviewer には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を `message` に明示して渡す契約がある
+  - docs / skills に、reviewer role と `fork_context=true` の併用を推奨する記述が再流入していない
+
+### 21. repo 固有契約の軽い確認を手動回帰で補う
 
 - 例: 「agent metadata や rule metadata の欠落、リンク切れ、`.codex` 推奨文言を見落としていないか」
 - 観測ポイント:
@@ -205,7 +214,7 @@
   - knowledge の置き場として project-local `.codex` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
 
-### 20. reviewer 設定 tier が役割分担に沿って保たれる
+### 22. reviewer 設定 tier が役割分担に沿って保たれる
 
 - 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
 - 観測ポイント:

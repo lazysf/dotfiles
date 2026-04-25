@@ -18,6 +18,12 @@
 - 公開インターフェース、永続化、認証認可、権限、秘密情報に触れる場合は確認を優先する
 - 削除や上書きなどの破壊的操作を伴う場合は、ユーザーの明示的な意図なしに進めない
 
+## Reviewer agent 起動
+
+- reviewer agent を `agent_type` で明示起動する場合は、reviewer 定義側の `model`、`sandbox_mode`、instructions を有効にするため、`fork_context=true` を併用しない
+- レビュー対象は `message` に明示して渡す
+- 01/02 reviewer には計画本文、03/04 reviewer には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を含める
+
 ## 置き場の原則
 
 - この節は、知見、手順、補助役をどこに置くかと、各 surface が何を担うかだけを短く案内する
