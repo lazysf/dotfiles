@@ -135,24 +135,25 @@
   - diff だけから判断を推測して ADR を作らない
   - triage の詳細は関連 skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
-### 13. ADR commit 時採用と direct ADR commit が一貫する
+### 13. ADR 採用判断と状態更新が一貫する
 
-- 例: 「ADR だけをコミットした」「ADR 作成 commit 後に Accepted へ進めたい」
+- 例: 「この ADR を採用済みにしたい」「ADR 作成後に Accepted へ進めたい」
 - 観測ポイント:
-  - ADR の受理タイミングが commit 時採用として扱われる
-  - direct ADR commit を含む例外導線が他の知見化フローと競合していない
+  - ADR の `Accepted` 化が commit 作成と切り離されている
+  - 採用判断が明示された場合だけ `update-adr-status` で状態更新される
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
-  - commit 時採用や例外導線の詳細は [ADR Ledger Model](./adr-ledger-model.md) と関連 skill を正本にする
+  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と関連 skill を正本にする
 
-### 13.5. `git-commit` が条件付き整合性 preflight を行う
+### 13.5. `consistency-audit` が明示依頼で整合性を確認する
 
-- 例: 「docs-only の変更をコミットしたい」「ファイルを rename した変更をコミットしたい」「`.chezmoiignore` を変更したのでコミットしたい」
+- 例: 「この変更の整合性を確認したい」「ファイルを rename したので参照漏れを確認したい」「`.chezmoiignore` 変更の影響を見たい」
 - 観測ポイント:
-  - docs-only commit でも、README、docs、index、一覧、参照リンクの追従漏れが疑われる場合は整合性 preflight の対象になり得る
-  - ファイル追加、rename、削除、ignore 変更では `consistency-audit` が案内される
+  - `git-commit` は commit 作成に責務を絞り、条件付き整合性 preflight を自動実行しない
+  - README、docs、index、一覧、参照リンクの追従漏れ確認は `consistency-audit` の明示導線で扱われる
+  - ファイル追加、rename、削除、ignore 変更の参照追従確認は `consistency-audit` の対象になる
   - `.gitignore` は Git 追跡対象、`.chezmoiignore` は chezmoi 配布対象として独立に確認される
-  - `consistency-audit` が `needs_confirmation` を返す場合、commit は止まり、確認すべき点が返る
-  - `consistency-audit` が修正を加えた場合、staging 前に差分と 1 コミット 1 変更のまとまりが再確認される
+  - `consistency-audit` が判断を要する事項を見つけた場合、確認すべき点が返る
+  - `consistency-audit` が修正を加えた場合、次の commit 導線で差分と 1 コミット 1 変更のまとまりが確認される
 
 ### 14. `git-push` が push 前知見集約を行う
 
@@ -162,7 +163,7 @@
   - range が安全に決められない場合は push せず停止する
   - `capture-push-knowledge` が `skipped | ready | consolidation_required` を返せる
   - `consolidation_required` の場合は push せず、必要な次アクションが返る
-  - push 前集約は commit 時の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る
+  - push 前集約は個別 change の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る
 
 ### 15. `git-push` の返答が最小契約を保つ
 
@@ -174,11 +175,11 @@
   - `knowledge_preflight` の結果が push 結果と混ざらず伝わる
   - 結果フォーマットの詳細は `git-push` skill を正本にする
 
-### 16. `update-adr-status` direct entry が commit 時採用契約に従う
+### 16. `update-adr-status` direct entry が明示根拠に従う
 
 - 例: 「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」
 - 観測ポイント:
-  - direct entry の状態更新が commit 時採用契約と矛盾しない
+  - direct entry の状態更新が明示された採用判断や supersede 根拠に沿っている
   - supersede 更新が明示根拠のある場合だけ行われる
   - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `update-adr-status` skill を正本にする
 
