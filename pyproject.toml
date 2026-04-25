@@ -4,4 +4,6 @@ version = "0.1.0"
 description = "Python execution environment for maintaining this chezmoi repo"
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
-dependencies = []
+dependencies = [
+    "pyyaml>=6.0.3",
+]
