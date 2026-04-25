@@ -16,7 +16,7 @@ metadata:
 - 通常の知見メモではなく、判断記録として残す内容だけを扱う。
 - 新規 ADR は常に `Proposed` で作成する。
 - 新 ADR が旧 ADR を置き換える場合は、新 ADR 側にだけ `Supersedes` を書き、後段での自動補完は前提にしない。
-- `Accepted` 化は commit 時採用として `git-commit` と `update-adr-status` で行う。
+- `Accepted` 化は採用判断が明示された時に `update-adr-status` で行う。
 - `Supersedes` を含む場合は、受理後の後段導線で旧 ADR を別更新して `Superseded` に進める。
 - 代替案は長文化せず、判断理由に必要な範囲だけを書く。
 
