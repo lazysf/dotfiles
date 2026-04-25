@@ -6,7 +6,7 @@
 ## Surface の責務
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
-- `capture-change-knowledge`, `capture-push-knowledge`, `update-adr-status`, `task-classification`, `review-findings-summary`: 補助 skill。commit 後の単一 change routing、push 前の outgoing commit 集約、lifecycle update、入口整理、出口整形に責務を絞る
+- `capture-change-knowledge`, `capture-push-knowledge`, `consistency-audit`, `update-adr-status`, `task-classification`, `review-findings-summary`: 補助 skill。commit 後の単一 change routing、push 前の outgoing commit 集約、変更後の整合性精査、lifecycle update、入口整理、出口整形に責務を絞る
 - `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
 

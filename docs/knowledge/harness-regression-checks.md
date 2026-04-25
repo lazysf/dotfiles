@@ -144,6 +144,16 @@
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
   - commit 時採用や例外導線の詳細は [ADR Ledger Model](./adr-ledger-model.md) と関連 skill を正本にする
 
+### 13.5. `git-commit` が条件付き整合性 preflight を行う
+
+- 例: 「docs-only の変更をコミットしたい」「ファイルを rename した変更をコミットしたい」「`.chezmoiignore` を変更したのでコミットしたい」
+- 観測ポイント:
+  - docs-only commit でも、README、docs、index、一覧、参照リンクの追従漏れが疑われる場合は整合性 preflight の対象になり得る
+  - ファイル追加、rename、削除、ignore 変更では `consistency-audit` が案内される
+  - `.gitignore` は Git 追跡対象、`.chezmoiignore` は chezmoi 配布対象として独立に確認される
+  - `consistency-audit` が `needs_confirmation` を返す場合、commit は止まり、確認すべき点が返る
+  - `consistency-audit` が修正を加えた場合、staging 前に差分と 1 コミット 1 変更のまとまりが再確認される
+
 ### 14. `git-push` が push 前知見集約を行う
 
 - 例: 「このブランチを push して」「前回 push 以降の知見整理が必要な状態で push して」
