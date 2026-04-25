@@ -1,21 +1,12 @@
 # Commit Message Format Reference
 
-## 目次
-
-- body template
-- title notes
-- body
-- footer(s)
-- BREAKING CHANGE
-- 例
-
 この reference は `body` / `footer(s)` / `BREAKING CHANGE` が必要な場合の詳細として使う。
 commit message の形式と `title` の既定ルールは `../SKILL.md` の `## コミットメッセージ` を正本にする。
 
 ## body template
 
-`body` は次の3点を簡潔に含める。
-ラベルは `Why:`、`What:`、`Impact:` をそのまま英語で使う。
+`body` は、必要に応じて理由、内容、影響を簡潔に説明する。
+構造化した方が明確な場合は、次のラベルをそのまま英語で使う。
 
 - Why: この変更が必要な理由
 - What: 何を変更したか
@@ -31,18 +22,13 @@ What: ...
 Impact: ...
 ```
 
-## title notes
-
-- `<type>: <description>` は commit の `title` として扱う。
-- `description` に詳細を書ききれない場合は、`title` を短く保ち、`body` に理由や影響を書く。
-- `feat` と `fix` は Semantic Versioning に対応する。その他の type は、BREAKING CHANGE を含まない限り version への暗黙的な効果を持たない。
-
 ## body
 
 - 形式の `[optional body]` に相当する。
 - 通常は任意。`body` が必要な場合は必須とする。
 - 記載する場合は、`title` の後に1行空けて書く。
-- 改行で区切った複数段落にできる。
+- 通常の文章で書いてよい。構造化した方が明確な場合は `Why:` / `What:` / `Impact:` を使う。
+- ラベルを使う場合、各ラベルの値が長ければ読みやすい位置で折り返せる。
 - 通常の英文で記載する（先頭1文字が英大文字）。
 - 変更理由や影響、代替案を簡潔に記す。
 - 1行の長さは概ね72文字程度を目安にする。
@@ -103,7 +89,7 @@ docs: correct spelling of CHANGELOG
 feat: add Polish language
 ```
 
-複数段落からなる `body` と複数の `footer(s)` を持った commit message
+通常の文章による `body` と複数の `footer(s)` を持った commit message
 
 ```txt
 fix: prevent racing of requests
@@ -113,6 +99,19 @@ incoming responses other than from latest request.
 
 Remove timeouts which were used to mitigate the racing issue but are
 obsolete now.
+
+Reviewed-by: Z
+Refs: #123
+```
+
+構造化した `body` と複数の `footer(s)` を持った commit message
+
+```txt
+fix: prevent racing of requests
+
+Why: Concurrent requests can return out of order and show stale data.
+What: Track the latest request id and ignore older responses.
+Impact: Removes obsolete timeout mitigation without changing the public API.
 
 Reviewed-by: Z
 Refs: #123
