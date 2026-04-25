@@ -8,20 +8,23 @@
 # Local env
 .venv
 
+# Repo-only directories
+.vscode
+docs
+dot_config/terminal
+scripts
+
 # Repo-only files
 .gitattributes
 .gitignore
-.vscode
 .markdownlint.jsonc
 .mise.toml
-docs
-dot_config/terminal
-nvim.log
 .pre-commit-config.yaml
 .python-version
-scripts
+AGENTS.md
 LICENSE
 README.md
+nvim.log
 nvim.yml
 pyproject.toml
 selene.toml
