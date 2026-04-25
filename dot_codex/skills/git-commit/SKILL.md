@@ -51,6 +51,8 @@ repo 規約がなければ、commit message は次の形式にする。
 - `title` は 1 行のみで書き、可能なら 72 文字以内にする。
 - `type` は変更の主目的に合わせて選ぶ。迷ったら、ユーザー-visible な挙動への影響を優先して判断する。
 - `description` は変更内容を短く表す動詞句にし、repo 規約がなければ英語で書く。
+- `description` に詳細を書ききれない場合は、`title` を短く保ち、理由や影響を `body` に書く。
+- `feat` と `fix` は Semantic Versioning に対応する。その他の type は、`BREAKING CHANGE` を含まない限り version への暗黙的な効果を持たない。
 - `body` / `footer(s)` の詳細が必要な場合は `references/commit-message-format.md` を参照する。
 
 | type | 使う場面 |
