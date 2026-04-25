@@ -53,7 +53,7 @@ push 実行前に、前回 push 以降の outgoing commit 群を集約して、�
 - 同じテーマの knowledge が複数箇所に分散しているなら `consolidation_required` にする。
 - 既存 docs を更新すべき内容が新規 note として重複しているなら `consolidation_required` にする。
 - ADR に `Supersedes` があるのに旧 ADR 側の `Superseded` 更新が見当たらないなら `consolidation_required` にする。
-- 新規 ADR が `Proposed` のまま outgoing range に含まれ、commit 時採用の更新漏れが疑われるなら `consolidation_required` にする。
+- 新規 ADR が `Proposed` のまま outgoing range に含まれ、明示された採用判断の反映漏れが疑われるなら `consolidation_required` にする。
 - 追加整理が不要なら `ready` にする。
 
 ### 4) 次に使うスキルを決める

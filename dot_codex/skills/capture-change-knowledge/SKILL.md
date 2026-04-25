@@ -32,8 +32,8 @@ metadata:
 - evidence packet には、会話、change、実行結果で明示された事実だけを入れる。
 - 一時的な実験やその場限りの cleanup は `skip` にする。
 - diff だけから durable decision を推測して ADR を作らない。
-- direct `write-adr` による `ADR-only commit` の受理を進めたい時は `git-commit` スキルの例外導線を使い、この skill では triage を重ねない。
-- ADR が作られた場合は、commit 時採用として `update-adr-status` スキルで `Accepted` に進める。
+- direct `write-adr` による ADR の採用判断が明示されている場合は、`update-adr-status` スキルを使う。
+- ADR が作られた場合でも、この skill だけでは `Accepted` に進めない。
 - push 前の重複整理、状態整合、集約確認は `capture-push-knowledge` に委ね、この skill では扱わない。
 
 ## 手順
@@ -52,7 +52,7 @@ metadata:
 
 - `capture-knowledge-triage` を使い、`skip | knowledge | adr` を判定する。
 - `reason` と `evidence_used` を残す。
-- `reason` は `git-commit` の最終返答にそのまま渡せる、user-facing な短い根拠として扱う。
+- `reason` は user-facing な短い根拠として扱う。
 
 ### 4) 次に使うスキルを決める
 
@@ -60,10 +60,10 @@ metadata:
 - `adr` なら `write-adr` スキルを使う。
 - `skip` ならここで終了する。
 
-### 5) ADR 状態を進める
+### 5) ADR 状態更新の要否を確認する
 
-- ADR が作成された場合は、commit 時採用として `update-adr-status` スキルを使って `Accepted` に進める。
-- 新 ADR に `Supersedes` が明示されている場合だけ、受理後に旧 ADR へ `Superseded` 更新を別で行う。
+- ADR の採用判断が明示されている場合だけ、`update-adr-status` スキルを使って `Accepted` に進める。
+- 新 ADR に `Supersedes` が明示されている場合だけ、採用後に旧 ADR へ `Superseded` 更新を別で行う。
 - supersede 更新が必要な場合は、新 ADR 側に `Supersedes` が明示されているときだけ `update-adr-status` スキルを使う。
 
 ## 完了条件
