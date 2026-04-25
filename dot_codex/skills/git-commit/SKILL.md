@@ -58,7 +58,18 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - `git diff` で変更内容を確認する。
 - 複数の変更が混在している場合は、コミットを停止して分割方針を確認する。
 
-### 4) コミットメッセージを決める
+### 4) 整合性 preflight
+
+- `git diff --name-status` と `git diff` で、整合性 preflight の対象かを確認する。
+- ファイル追加、rename、削除が含まれる場合は `consistency-audit` スキルを使う。
+- `docs/`、`README`、`AGENTS.md`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/` が変わる場合は `consistency-audit` スキルを使う。
+- `.gitignore`、`.chezmoiignore`、設定ファイル、一覧、index に関わる変更がある場合は `consistency-audit` スキルを使う。
+- 対象外なら `skipped` として通常の commit 手順へ進む。
+- `consistency-audit` が `fixed` を返した場合は、`git status -sb` と `git diff` を再確認し、1コミット1変更が崩れていないか見直す。
+- `consistency-audit` が `needs_confirmation` を返した場合は、commit せず停止して確認する。
+- preflight の要点は、必要な場合だけ最終返答の `notes` に短く入れる。
+
+### 5) コミットメッセージを決める
 
 - ユーザー指定の文面があれば、それを優先して整形確認する。
 - 文面未指定なら、確認した差分をもとにコミットメッセージを組み立てる。
@@ -66,18 +77,18 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - 本文が必要なら body を追加する。
 - 変更の識別は description を優先し、必要なら body や footer で補足する。
 
-### 5) ステージ
+### 6) ステージ
 
 - 合意した 1 変更の範囲のみを `git add <paths>` でステージする。
 - `git add <paths>` は単一ファイル、複数ファイル、ディレクトリ指定を含む。
 - 非対話で安全に分離できない場合は停止して確認する。
 
-### 6) ステージ内容の確認
+### 7) ステージ内容の確認
 
 - `git diff --staged` でステージ内容を確認する。
 - 想定と違う場合はコミットせずに見直す。
 
-### 7) コミット
+### 8) コミット
 
 - タイトルだけで十分なら `git commit -m "<header>"` を使う。
 - 本文やフッターが必要なら `git commit -F <file>` を使う。
@@ -86,11 +97,11 @@ Git の変更を安全にコミットし、必要ならコミットメッセー�
 - 再確認では `git status -sb` と `git diff --staged` で、作業ツリーと staged diff が想定どおりかを見る。
 - 2回目も失敗した場合は停止し、回避策を実行せず、原因の要点と次に確認すべき点を `notes` に短く示す。
 
-### 8) 事後確認
+### 9) 事後確認
 
 - `git status -sb` でコミット後の状態を確認する。
 
-### 9) 必要なら次に使うスキルを決める
+### 10) 必要なら次に使うスキルを決める
 
 - 実際に commit が成功した場合だけ後段へ進む。
 - 成功した commit の最終返答では、`knowledge_capture` を必ず含める。
