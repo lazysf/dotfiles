@@ -6,7 +6,7 @@
 ## 使い方
 
 - 変更内容に近いシナリオを優先して回す
-- 期待から外れた場合は、`docs/knowledge/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
+- 期待から外れた場合は、`docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - 汎用 lint で拾わない repo 固有契約や導線の観点は、この文書で手動確認する
 - 全体契約と薄い surface 案内は `dot_codex/AGENTS.md`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
@@ -17,7 +17,7 @@
 
 - 例: 「ハーネスエンジニアリングの知見はどこに残すべきか」
 - 期待:
-  - repo-level の通常知見は `docs/knowledge/` に案内される
+  - repo-level の通常知見は `docs/notes/` に案内される
   - 判断記録は `docs/adr/` に案内される
   - deployable artifact は `dot_codex/` に案内される
   - project-specific knowledge は project 側 `docs/` に案内される
@@ -59,7 +59,7 @@
 
 - 例: 「毎回同じ整理をしているので残したい」
 - 期待:
-  - 通常知見なら `docs/knowledge/`
+  - 通常知見なら `docs/notes/`
   - 判断記録なら `docs/adr/`
   - 繰り返し手順なら `skills/`
   - 機械的ガードなら `rules/`
@@ -72,7 +72,7 @@
   - `dot_codex/AGENTS.md` は契約と薄い surface 案内の入口として案内される
   - `skills / agents / rules / docs` の役割分担は `dot_codex/AGENTS.md` の説明と矛盾しない
   - 補助 skill は主役 skill と混同せずに案内される
-  - repo-level の詳細知識は `docs/knowledge/` に誘導される
+  - repo-level の詳細知識は `docs/notes/` に誘導される
   - 判断理由は `docs/adr/` に誘導される
   - project-specific knowledge は project 側 `docs/` に誘導される
 
@@ -93,12 +93,12 @@
   - skill / reviewer の役割分担が自然文でも崩れていない
   - 具体的な導線、命名規約、frontmatter 説明ルールは [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) を正本にする
 
-### 8. `docs/README.md` が主要 knowledge と ADR の入口を維持する
+### 8. `docs/README.md` が主要 note と ADR の入口を維持する
 
 - 例: 「repo-level の知見一覧をひと目で見たい」
 - 期待:
-  - `docs/README.md` から主要な knowledge 文書と ADR 群へ辿れる
-  - knowledge / ADR の追加や整理があったときも、README 側の一覧が放置されない
+  - `docs/README.md` から主要な note と ADR 群へ辿れる
+  - note / ADR の追加や整理があったときも、README 側の一覧が放置されない
   - 多少の並び替えや説明文の更新は許容しつつ、入口としての役割が失われていない
 
 ### 9. docs-only 依頼が `docs-update` に導かれる

@@ -56,7 +56,7 @@
 ## 置き場の原則
 
 - `~/.codex/AGENTS.md`: 全体契約と `~/.codex/` 配下の薄い surface 案内を置く
-- 作業対象プロジェクトの `docs/knowledge/`: repo-level の通常知見や背景を置く
+- 作業対象プロジェクトの `docs/notes/`: repo-level の通常知見や背景を置く
 - 作業対象プロジェクトの `docs/adr/`: repo-level の判断記録を置く
 - `~/.codex/skills/`: 再利用する作業手順と通常作業の正式入口を置く
 - `~/.codex/agents/`: 専門化した read-only の補助役や review 入口を置く

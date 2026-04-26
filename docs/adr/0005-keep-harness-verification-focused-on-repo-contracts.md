@@ -16,7 +16,7 @@
 - `scripts/verify-codex-harness.py` は、repo 固有契約の自動検知に必要な最小チェックだけを担当する
 - 維持する自動検査は、agent metadata 必須キー、rule metadata 必須項目、`dot_codex/` と `docs/` 配下 Markdown の相対リンク切れ、knowledge の置き場として project-local `.codex` を勧める文面の禁止とする
 - `docs/README.md` の掲載網羅、旧 skill surface 文言、旧 skill ディレクトリ残骸の確認は自動検査から外す
-- 自動検査から外した観点は `docs/knowledge/harness-regression-checks.md` に手動回帰チェックとして残す
+- 自動検査から外した観点は `docs/notes/harness-regression-checks.md` に手動回帰チェックとして残す
 
 ## Consequences
 

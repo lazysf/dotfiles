@@ -70,7 +70,7 @@ uv sync
 
 この repo を保守するときの知見は `docs/` に置きます。
 
-- `docs/knowledge/`: repo-level の通常知見
+- `docs/notes/`: repo-level の通常知見
 - `docs/adr/`: 今も有効な判断記録
 
 共通ハーネスの deployable artifact は `dot_codex/` に置き、運用契約と導線は `dot_codex/AGENTS.md` を参照します。
