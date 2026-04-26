@@ -11,11 +11,13 @@
 ## Codex スキルの追加・編集
 
 - Codex のスキルを追加または編集する依頼では、必ず `skill-creator` スキルを使用する
-- スキル作成・更新時は、Agent Skills 公式情報を参照する
+- スキル作成・更新時は、計画または編集前に Agent Skills 公式情報を開いて確認する
   - [Overview](https://agentskills.io/)
   - [Specification](https://agentskills.io/specification)
   - [Best practices](https://agentskills.io/skill-creation/best-practices)
   - [Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
+- 公式情報を確認できない場合は、確認できなかった事実と理由をユーザーに明示し、進め方を相談する
+- 最終返答では、参照した公式ページ、または公式情報を確認できなかった事実を簡潔に明示する
 - `SKILL.md` へ仕様や長い手順を転載せず、必要な詳細は `references/` などの progressive disclosure に分ける
 
 ## 置き場の原則
