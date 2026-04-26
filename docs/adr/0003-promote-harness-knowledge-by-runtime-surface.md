@@ -13,13 +13,13 @@
 
 ハーネス知見は、次の順で昇格先を判断する。
 
-`repo-level の通常知見 -> root docs/knowledge/ -> 判断記録は root docs/adr/ -> 繰り返し手順は skills/ -> 機械的ガードは rules/ -> 専門化した補助役は agents/`
+`repo-level の通常知見 -> root docs/notes/ -> 判断記録は root docs/adr/ -> 繰り返し手順は skills/ -> 機械的ガードは rules/ -> 専門化した補助役は agents/`
 
 ## Consequences
 
-- `docs/knowledge/` には、この repo を保守するための通常知見を置く
+- `docs/notes/` には、この repo を保守するための通常知見を置く
 - `docs/adr/` には、選択理由ごと残す判断記録を置く
 - `dot_codex/skills/` には、再利用する作業手順を置く
 - `dot_codex/rules/` には、破壊的操作や広域操作を機械的にガードする制約を置く
 - `dot_codex/agents/` には、reviewer のような read-only の専門化した補助役を置く
-- `docs/knowledge/classification-driven-workflow-surface.md` を、`core-*` 正式入口と deprecated wrapper の参照基準として扱う
+- `docs/notes/classification-driven-workflow-surface.md` を、`core-*` 正式入口と deprecated wrapper の参照基準として扱う

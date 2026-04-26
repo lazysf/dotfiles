@@ -20,6 +20,6 @@
 ## Consequences
 
 - `dot_codex/skills/` は prefix なし skill だけを置く単純な surface になる
-- `dot_codex/AGENTS.md` と `docs/knowledge/` は、prefix の意味を説明せずに現行導線だけを案内できる
+- `dot_codex/AGENTS.md` と `docs/notes/` は、prefix の意味を説明せずに現行導線だけを案内できる
 - 旧名称への互換性は提供しないため、過去の呼び方に依存する導線は更新が必要になる
 - 将来 skill を追加するときも、役割の区別は prefix ではなく prose と配置で表現する前提になる

@@ -7,7 +7,7 @@
 
 - deployable artifact は `dot_codex/` に置き、repo-level knowledge は `docs/` に置く
 - project-specific knowledge は各 project の `docs/` を正本にする
-- 知見は `docs/knowledge/`, `docs/adr/`, `skills/`, `rules/`, `agents/` のどこへ置くかを分ける
+- 知見は `docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/` のどこへ置くかを分ける
 - defaults は明確な効果と回帰検証なしに大きく動かさない
 - preview / unstable feature は安易に既定採用しない
 - 破壊的操作や外部影響のある操作は allow ではなく prompt / forbidden を基本にする
@@ -24,12 +24,12 @@
 ### 1. `AGENTS.md` は長文知識の正本ではなく契約と薄い surface 案内を置く
 
 - `dot_codex/AGENTS.md` は、共通ハーネスの運用契約と薄い runtime surface 案内を扱う
-- repo-level の詳しい背景や判断理由は `docs/knowledge/` や `docs/adr/` に分ける
+- repo-level の詳しい背景や判断理由は `docs/notes/` や `docs/adr/` に分ける
 - `AGENTS.md` の責務境界や導線設計の詳細は、関連 ADR や surface 文書を正本にする
 
 ### 2. knowledge は runtime surface ごとに昇格先を分ける
 
-- 通常知見は `docs/knowledge/`
+- 通常知見は `docs/notes/`
 - 判断記録は `docs/adr/` の状態付き ADR 台帳として置く
 - 繰り返し使う手順は `dot_codex/skills/`
 - 機械的に守らせたい制約は `dot_codex/rules/`
