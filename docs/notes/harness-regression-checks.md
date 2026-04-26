@@ -93,6 +93,15 @@
   - skill / reviewer の役割分担が自然文でも崩れていない
   - 具体的な導線、命名規約、frontmatter 説明ルールは [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) を正本にする
 
+### 7.5. 入口整理と変更後確認が統合後 surface に乗る
+
+- 例: 「依頼文が散らばっているので今回どこまでやるか整理したい」「新機能の受け入れ確認をしたい」「バグ修正が効いたか確認したい」
+- 観測ポイント:
+  - 散らばった依頼や軽い停止線整理は `task-intake` が正式入口として案内される
+  - feature / maintenance の受け入れ確認は `change-verification` の `acceptance` mode として扱われる
+  - bugfix / security / quality / compat の修正効果確認は `change-verification` の `verification` mode として扱われる
+  - 要求分類そのものを user-facing workflow として案内しない
+
 ### 8. `docs/README.md` が主要 note と ADR の入口を維持する
 
 - 例: 「repo-level の知見一覧をひと目で見たい」

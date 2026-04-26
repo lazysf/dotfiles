@@ -1,33 +1,43 @@
 ---
 name: change-verification
-description: 「バグ修正が効いたか確かめたい」「追従や hardening の結果を検証したい」といった bugfix / security / quality / compat の依頼で使う。修正前症状や追従前ギャップに対する verification plan、結果、回帰観点、残リスクを整理する。feature / maintenance の受け入れ確認をしたい時は `change-testing` スキルを使う。
+description: 「変更後の確認項目を決めたい」「新機能やリファクタを受け入れ確認したい」「バグ修正、追従、hardening の結果を検証したい」といった依頼で使う。acceptance mode では成功条件や保護したい既存挙動を確認し、verification mode では修正前症状や追従前ギャップに対する結果と回帰観点を整理する。実装前の確認方法を置いて最小差分で進めたい時は `code-implementation-loop` スキルを使う。
 metadata:
   short-description: 検証手順
 ---
 
 # Change Verification
 
-bugfix / security / quality / compat 案件で、修正や追従の効果を確認する。
-このスキルは修正結果と回帰確認を担う。
-feature / maintenance の受け入れ確認をしたい時は `change-testing` スキルを使う。
+変更後に、何をどう確認し、何が残リスクかを整理する。
+このスキルは feature / maintenance の受け入れ確認と、bugfix / security / quality / compat の修正効果検証を担う。
 
 ## 基本方針
 
-- 修正前症状や追従前ギャップに最も近い確認を先に置く。
-- 回帰観点は修正効果と分けて整理する。
+- `acceptance` と `verification` のどちらの mode で確認するかを先に決める。
+- 変更意図に最も近い確認を先に置く。
+- 保護したい既存挙動や回帰観点は、変更意図の確認と分けて整理する。
 - 直接確認できない場合は、代替確認と未確認理由を明示する。
-- 未確認や結果のぶれは `residual_risks` に残す。
+- 未確認や結果のぶれは `remaining_risks` に残す。
+
+## Mode の選び方
+
+- `acceptance`: feature / maintenance の確認で使う。成功条件、期待挙動、保護したい既存挙動に対して確認する。
+- `verification`: bugfix / security / quality / compat の確認で使う。修正前症状、対象リスク、品質ギャップ、外部変化への追従前ギャップに対して確認する。
+- 迷う場合は、ユーザーが「新しい価値や整理の受け入れ」を見たいなら `acceptance`、既にあった問題や外部変化への「修正効果」を見たいなら `verification` に倒す。
 
 ## 手順
 
-1. 修正前症状または追従前ギャップに対応する確認を `verification_plan` に置く
-2. 直接確認できない項目には、代替確認と未確認理由を添える
-3. 実行結果を `verification_result` に整理する
-4. 回帰観点を `regression_check` に整理する
-5. 未確認や残リスクを `residual_risks` に残す
+1. 変更意図から `check_mode` を決める
+2. `acceptance` では成功条件と保護したい既存挙動、`verification` では修正前症状や追従前ギャップを確認対象にする
+3. 確認項目を `check_plan` に並べる
+4. 直接確認できない項目には、代替確認と未確認理由を添える
+5. 実行した確認を `executed_checks` に記録する
+6. 保護したい既存挙動または回帰観点を `regression_or_protected_behavior` に整理する
+7. 未確認や残リスクを `remaining_risks` に残す
 
 ## 判断基準
 
+- feature は成功条件に対応する確認を優先する
+- maintenance は守るべき既存挙動の保護を優先する
 - bugfix は再現手順が解消したかを見る
 - security は hardening が効いたかと副作用を見る
 - quality は改善対象の品質特性に変化があるかを見る
@@ -37,11 +47,13 @@ feature / maintenance の受け入れ確認をしたい時は `change-testing` �
 
 ## 出力フォーマット
 
-- `verification_plan`
-- `verification_result`
-- `regression_check`
-- `residual_risks`
+- `check_mode`
+- `check_plan`
+- `executed_checks`
+- `regression_or_protected_behavior`
+- `remaining_risks`
 
 ## 停止条件
 
-- 修正前の症状や追従前ギャップが曖昧で、何を検証すべきか定まらない
+- `acceptance` で成功条件や保護したい挙動が不明で、確認項目を作れない
+- `verification` で修正前症状や追従前ギャップが曖昧で、何を検証すべきか定まらない

@@ -8,7 +8,9 @@
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
 - `capture-knowledge`: 知見蓄積 workflow の user-facing 入口。明示された evidence をもとに、既存 docs 更新、note 作成、ADR 作成、ADR metadata 更新までを扱い、commit 前の差分確認と commit 作成は `git-commit` に任せる
 - `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成は `capture-knowledge` に送る
-- `consistency-audit`, `task-classification`, `review-findings-summary`: 補助 skill。明示依頼時の整合性精査、入口整理、出口整形に責務を絞る
+- `task-intake`: 散らばった依頼や日常的な曖昧依頼の入口整理。今回の対象、成功条件、非目的、制約や仮定、先に確認すべき点を軽く固定する
+- `change-verification`: 変更後確認の入口。feature / maintenance の受け入れ確認と、bugfix / security / quality / compat の修正効果検証を扱う
+- `consistency-audit`, `review-findings-summary`: 補助 skill。明示依頼時の整合性精査、出口整形に責務を絞る
 - `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
 
@@ -16,6 +18,8 @@
 docs-only の依頼で、成果物が既存ドキュメント更新に限られる場合は、主分類を増やさず `docs-update` を直接入口として使ってよい。
 
 ## 要求分類の見方
+
+この分類表は、依頼の主目的を読むための背景メモであり、分類ごとの routing skill を持つ運用ではない。
 
 | 主分類        | 主目的                           | 主に含むもの                                               | ひとことで言うと         | 境界の扱い                                         |
 | ------------- | -------------------------------- | ---------------------------------------------------------- | ------------------------ | -------------------------------------------------- |
