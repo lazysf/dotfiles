@@ -14,7 +14,7 @@ repo 固有契約のうち汎用 lint で拾えない観点も、少人数での
 ## Decision
 
 - `scripts/verify-codex-harness.py` は repo から削除する
-- `.mise.toml` の `test:harness` と pre-commit の `verify codex harness` hook は削除する
+- `mise.toml` の `test:harness` と pre-commit の `verify codex harness` hook は削除する
 - repo 固有契約の軽い確認は `docs/notes/harness-regression-checks.md` の手動回帰観点へ移す
 - 既存の lint / format / test と review で拾える内容は専用スクリプトへ戻さない
 
