@@ -1,7 +1,7 @@
 prefix_rule(
   pattern = ["git", "log"],
   decision = "allow",
-  justification = "`git-push` skill の outgoing commit 群確認に必要な `git log` を許可する。",
+  justification = "commit range や履歴確認に必要な読み取り専用の `git log` を許可する。",
   match = [
     "git log @{u}..HEAD",
     "git log --oneline origin/main..HEAD",

@@ -29,6 +29,7 @@ Git の変更を安全に 1 つの commit として作成する。
 - 未追跡ファイル、機密情報、env/local/editor/temp/debug/build/generated files、lockfiles、migrations、config changes は、意図が確認できる場合だけ commit 対象にする。
 - `commit the changes` や `commit everything` と言われても、差分を確認せずに全てをステージ / commit しない。
 - push は扱わない。
+- 知見蓄積は自動実行しない。作業後に知見整理が必要だと明示されている場合でも、必要な次アクションとして `capture-knowledge` を示すだけにする。
 - rebase、amend、squash など、通常 commit 以外の履歴操作は扱わない。
 
 ## コミットメッセージ
