@@ -1,6 +1,7 @@
 # 0004: legacy workflow skill prefix を廃止する
 
 - Status: Accepted
+- Supersedes: 0003
 
 ## Context
 
