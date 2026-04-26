@@ -313,7 +313,7 @@
 	<key>VisualBell</key>
 	<false/>
 	<key>columnCount</key>
-	<integer>55</integer>
+	<integer>155</integer>
 	<key>name</key>
 	<string>Main</string>
 	<key>rowCount</key>
