@@ -1,6 +1,7 @@
 # 0003: ハーネス知見は runtime surface ごとに昇格先を分ける
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0004
 
 ## Context
 
