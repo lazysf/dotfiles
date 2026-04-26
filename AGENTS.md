@@ -8,10 +8,10 @@
 - 事実に基づいて判断する
 - 推測や憶測で処理を進めない
 
-## Codex スキルの追加・編集
+## Codex スキルに関する作業
 
-- Codex のスキルを追加または編集する依頼では、必ず `skill-creator` スキルを使用する
-- スキル作成・更新時は、計画または編集前に Agent Skills 公式情報を開いて確認する
+- Codex のスキルに関する相談、方針整理、計画作成、実装、編集、レビュー前確認では、判断前に必ず `skill-creator` スキルを使用する
+- スキルに関する判断や作業を行う時は、相談、計画、実装、編集の各段階で必要に応じて Agent Skills 公式情報を開いて確認する
   - [Overview](https://agentskills.io/)
   - [Specification](https://agentskills.io/specification)
   - [Best practices](https://agentskills.io/skill-creation/best-practices)
