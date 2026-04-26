@@ -35,7 +35,7 @@ commit 前の差分確認と commit 作成は扱わない。
 主な action:
 
 - `update_existing_docs`
-- `create_knowledge_note` (`docs/knowledge/` に置く note を作成する action)
+- `create_knowledge_note` (`docs/notes/` に置く note を作成する action)
 - `create_adr`
 - `accept_adr`
 - `supersede_old_adr`
@@ -58,9 +58,9 @@ commit 前の差分確認と commit 作成は扱わない。
 
 ### note
 
-note は `docs/knowledge/` に置く durable な通常知見メモを指す。
+note は `docs/notes/` に置く durable な通常知見メモを指す。
 短命な作業メモは note に含めない。
-note は `docs/knowledge/kebab-case-title.md` に作成し、1 ファイル 1 テーマの短い Markdown にする。
+note は `docs/notes/kebab-case-title.md` に作成し、1 ファイル 1 テーマの短い Markdown にする。
 次の形は必須テンプレートではなく、迷ったときの default shape として使う。
 
 ```markdown
@@ -88,7 +88,7 @@ note は `docs/knowledge/kebab-case-title.md` に作成し、1 ファイル 1 �
 
 ### ADR
 
-ADR は `docs/adr/NNNN-kebab-case-title.md` に作成し、`docs/knowledge/adr-ledger-model.md` のメタデータ形式に合わせる。
+ADR は `docs/adr/NNNN-kebab-case-title.md` に作成し、`docs/notes/adr-ledger-model.md` のメタデータ形式に合わせる。
 新規 ADR の基本形は次の通り。
 
 ```markdown
@@ -167,6 +167,6 @@ ADR は `docs/adr/NNNN-kebab-case-title.md` に作成し、`docs/knowledge/adr-l
 - `decision` が根拠付きで説明できる
 - `actions` が必要な順序で並んでいる
 - `changed_paths` と `evidence_used` が説明できる
-- 推測で docs / knowledge / ADR / ADR metadata を更新していない
+- 推測で docs / note / ADR / ADR metadata を更新していない
 - 秘密情報を durable artifact に残していない
 - commit 境界を越えていない

@@ -39,7 +39,7 @@ docs-only の依頼で、成果物が既存ドキュメント更新に限られ�
 - generic review から `04-security-reviewer` への自動昇格は行わない
 - `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
 - `review-findings-summary` は reviewer 非起動、agent 出力限定の出口整理 helper として使う
-- `docs/README.md` は index、`dot_codex/AGENTS.md` は運用契約と薄い surface 案内、`docs/knowledge/harness-regression-checks.md` は手動回帰シナリオを担当する
+- `docs/README.md` は index、`dot_codex/AGENTS.md` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
 
 ## Frontmatter Description 設計ルール
 
