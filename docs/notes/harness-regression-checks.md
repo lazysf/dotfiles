@@ -115,6 +115,7 @@
 - 観測ポイント:
   - user-facing 入口は `capture-knowledge` に集約され、docs 更新専用入口と混同されない
   - evidence 収集、置き場判断、必要な existing docs / note / ADR / ADR metadata 更新が 1 workflow として扱われる
+  - docs / note / ADR / ADR metadata は別 workflow ではなく、同じ知見蓄積 workflow の action として扱われる
   - 通常知見と判断記録の置き場が混ざらない
   - 詳細な workflow は `capture-knowledge` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
