@@ -38,7 +38,7 @@ chezmoi diff
 ## macOS Terminal プロファイル
 
 macOS 標準 `Terminal` 用のプロファイルは repo 内の [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) で管理しています。
-このファイルは Git では管理しますが、`.chezmoiignore` により `chezmoi apply` の配布対象からは外しています。
+このファイルは macOS では `chezmoi apply` の展開対象にし、非 macOS では `.chezmoiignore` により配布対象から外しています。
 
 利用するときは、repo 内の `dot_config/terminal/Main.terminal` を Finder か `open` で開いて `Terminal` に import し、必要なら `Main` をデフォルトプロファイルに設定してください。
 
@@ -64,7 +64,8 @@ uv sync
 
 通常の確認入口は `mise run test` です。
 `docs/` は repo-level knowledge の置き場で、`.chezmoiignore` により dotfiles の配布対象から外しています。
-`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`dot_config/terminal/Main.terminal`、`docs/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
+`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`docs/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
+`dot_config/terminal/Main.terminal` は macOS では展開対象、非 macOS では `.chezmoiignore` により配布対象外です。
 
 ## Repo-Level Knowledge
 
