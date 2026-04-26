@@ -1,6 +1,6 @@
 ---
 name: capture-knowledge
-description: 「今回の知見を整理したい」「作業で得た知見を残したい」「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」といった依頼で使う。明示された evidence をもとに、残す価値、置き場、必要な docs / knowledge / ADR / ADR metadata 更新を判断し、必要な差分を作成する。commit 前の差分確認や commit 作成をしたい時は `git-commit` スキルを使う。
+description: 「今回の知見を整理したい」「作業で得た知見を残したい」「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」といった依頼で使う。明示された evidence をもとに、残す価値、置き場、必要な docs / note / ADR / ADR metadata 更新を判断し、必要な差分を作成する。commit 前の差分確認や commit 作成をしたい時は `git-commit` スキルを使う。
 metadata:
   short-description: 知見蓄積
 ---
@@ -8,7 +8,7 @@ metadata:
 # Capture Knowledge
 
 知見蓄積を 1 つの workflow として扱う。
-この skill は evidence 収集、知見化要否の判断、既存 docs 更新、knowledge note 作成、ADR 作成、ADR 状態更新までを扱う。
+この skill は evidence 収集、知見化要否の判断、既存 docs 更新、note 作成、ADR 作成、ADR 状態更新までを扱う。
 commit 前の差分確認と commit 作成は扱わない。
 
 ## 入力
@@ -35,7 +35,7 @@ commit 前の差分確認と commit 作成は扱わない。
 主な action:
 
 - `update_existing_docs`
-- `create_knowledge_note`
+- `create_knowledge_note` (`docs/knowledge/` に置く note を作成する action)
 - `create_adr`
 - `accept_adr`
 - `supersede_old_adr`
@@ -56,9 +56,11 @@ commit 前の差分確認と commit 作成は扱わない。
 
 ## 成果物の形式
 
-### 通常知見
+### note
 
-knowledge note は `docs/knowledge/kebab-case-title.md` に作成し、1 ファイル 1 テーマの短い Markdown にする。
+note は `docs/knowledge/` に置く durable な通常知見メモを指す。
+短命な作業メモは note に含めない。
+note は `docs/knowledge/kebab-case-title.md` に作成し、1 ファイル 1 テーマの短い Markdown にする。
 次の形は必須テンプレートではなく、迷ったときの default shape として使う。
 
 ```markdown
@@ -134,14 +136,14 @@ ADR は `docs/adr/NNNN-kebab-case-title.md` に作成し、`docs/knowledge/adr-l
 ### 3) 置き場と action を決める
 
 - 既存 docs に自然な置き場があるなら `update_existing_docs` にする。
-- 新しい通常知見が必要なら `create_knowledge_note` にする。
+- 新しい note が必要なら `create_knowledge_note` にする。
 - 判断記録が必要なら `create_adr` にする。
 - ADR の採用判断や supersede 反映が明示されているなら、必要に応じて `accept_adr`、`supersede_old_adr` を後続 action にする。
 
 ### 4) 差分を作る
 
 - 既存 docs 更新は既存の章構成、用語、粒度に寄せる。
-- knowledge note と ADR は、成果物の形式に従って作成する。
+- note と ADR は、成果物の形式に従って作成する。
 - 既存ファイルを上書きする必要があるが根拠が足りない場合は、変更せず `needs_user_input` にする。
 
 ### 5) 結果を返す

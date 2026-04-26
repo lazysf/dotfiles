@@ -114,7 +114,7 @@
 - 例: 「今回の知見をどこに残すべきか」「通常知見か ADR かを決めたい」「今回の知見を整理して」
 - 観測ポイント:
   - user-facing 入口は `capture-knowledge` に集約され、docs 更新専用入口と混同されない
-  - evidence 収集、置き場判断、必要な docs / knowledge / ADR / ADR metadata 更新が 1 workflow として扱われる
+  - evidence 収集、置き場判断、必要な existing docs / note / ADR / ADR metadata 更新が 1 workflow として扱われる
   - 通常知見と判断記録の置き場が混ざらない
   - 詳細な workflow は `capture-knowledge` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
@@ -134,7 +134,7 @@
   - 一過性 change と durable な知見化対象が切り分けられる
   - `decision` が `skip | captured | needs_user_input` のいずれかで返る
   - `actions` が必要な順序で返り、ADR 作成と状態更新の順序が崩れない
-  - 通常知見と判断記録の送り先が混ざらない
+  - note と ADR の送り先が混ざらない
   - diff だけから判断を推測して ADR を作らない
   - 詳細は `capture-knowledge` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
