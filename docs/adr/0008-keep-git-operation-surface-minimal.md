@@ -17,7 +17,7 @@ commit と push は手順、停止条件、結果報告が必要なので `git-c
 
 - Git 操作の正式 skill は `git-commit` と `git-push` だけにする。
 - `git-push` は push 実行と upstream 判定だけを扱い、知見整理や ADR 状態更新の導線を持たない。
-- push 前の知見集約を Git 操作 surface の一部として扱わない。
+- push に紐づく知見集約を Git 操作 surface の一部として扱わない。
 - Git rule は `allow` だけで整理し、未定義コマンドは既定の prompt に任せる。
 - `prompt` / `forbidden` rule は置かない。
 - Git rule の allow は、`git-commit` / `git-push` skill の手順で必要な読み取り専用操作と、`git-commit` skill に必要な変更操作に限定する。

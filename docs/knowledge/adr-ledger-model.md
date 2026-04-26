@@ -41,33 +41,31 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 - `- Supersedes: 0003`
 - `- Superseded-By: 0005`
 
-`Superseded-By` は新規 ADR 作成時に推測で書かず、`update-adr-status` による明示更新でだけ付ける。
-`Supersedes` も新規 ADR 作成時に明示されたものだけを使い、`update-adr-status` が後から補わない。
+`Superseded-By` は新規 ADR 作成時に推測で書かず、`capture-knowledge` の明示根拠に基づく更新でだけ付ける。
+`Supersedes` も新規 ADR 作成時に明示されたものだけを使い、後段の状態更新が推測で補わない。
 
 ## 運用フロー
 
-1. 判断か通常知見かが未確定なら `capture-knowledge-triage` で `skip | knowledge | adr` を決める
-2. 新しい判断記録が必要なら `write-adr` で `docs/adr/NNNN-*.md` を `Proposed` として作る
-3. その判断が採用されたら `update-adr-status` で新 ADR を `Accepted` に更新する
-4. 新 ADR 側に明示 `Supersedes` がある場合だけ、続けて別の `update-adr-status` で旧 ADR を `Superseded` にする
+1. 知見蓄積が必要なら `capture-knowledge` で evidence を集める
+2. `capture-knowledge` で `skip | captured | needs_user_input` を決め、必要な action を順序付きで並べる
+3. 新しい判断記録が必要なら `docs/adr/NNNN-*.md` を `Proposed` として作る
+4. その判断が採用済みと明示されている場合だけ、新 ADR を `Accepted` に更新する
+5. 新 ADR 側に明示 `Supersedes` がある場合だけ、続けて旧 ADR を `Superseded` にする
 
 ## Acceptance Timing
 
-ADR の `Accepted` 化は Git commit とは切り離し、採用判断が明示された時だけ `update-adr-status` で行う。
+ADR の `Accepted` 化は Git commit とは切り離し、採用判断が明示された時だけ `capture-knowledge` の action として行う。
 project config や private config による自動切り替えは行わない。
 
-- 新規 ADR は `write-adr` でいったん `Proposed` として作る
-- 採用判断が明示されたら、`update-adr-status` で `Accepted` に進める
-- 新 ADR に `Supersedes` がある場合は、採用後に旧 ADR を別更新で `Superseded` に進める
+- 新規 ADR はいったん `Proposed` として作る
+- 採用判断が明示されたら、後続 action で `Accepted` に進める
+- 新 ADR に `Supersedes` がある場合は、採用後に旧 ADR を後続 action で `Superseded` に進める
 
-push 前には、前回 push 以降の outgoing commit 群を `capture-push-knowledge` で集約確認する。
-この確認は個別 change の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る。
+知見蓄積は Git push と切り離し、作業の締めや明示依頼で `capture-knowledge` を使う。
+commit 前の差分確認と commit 作成は `git-commit` に任せる。
 
 ## Skill Mapping
 
-- ルーティング: `capture-knowledge-triage`
-- 新規 knowledge 作成: `write-knowledge-note`
-- 新規 ADR 作成: `write-adr`
-- 既存 ADR の状態更新と関係更新: `update-adr-status`
-- 変更後知見化 helper: `capture-change-knowledge`
-- push 前知見集約 helper: `capture-push-knowledge`
+- 知見蓄積 workflow: `capture-knowledge`
+- 既存 docs のみの更新: `docs-update`
+- commit 前の差分確認と commit 作成: `git-commit`

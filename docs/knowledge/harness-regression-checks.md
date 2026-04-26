@@ -109,40 +109,44 @@
   - 主分類を増やさず、既存ドキュメント更新の専用入口として扱われる
   - 知識の置き場判断と混同されない
 
-### 10. 知識の置き場相談は knowledge 系導線に残る
+### 10. 知見蓄積は `capture-knowledge` に集約される
 
-- 例: 「今回の知見をどこに残すべきか」「通常知見か ADR かを決めたい」
+- 例: 「今回の知見をどこに残すべきか」「通常知見か ADR かを決めたい」「今回の知見を整理して」
 - 観測ポイント:
-  - 入口は知識の置き場判断 helper に残り、docs 更新専用入口と混同されない
+  - user-facing 入口は `capture-knowledge` に集約され、docs 更新専用入口と混同されない
+  - evidence 収集、置き場判断、必要な docs / knowledge / ADR / ADR metadata 更新が 1 workflow として扱われる
   - 通常知見と判断記録の置き場が混ざらない
-  - 詳細な routing や skill の役割分担は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と各 `SKILL.md` を正本にする
+  - 詳細な workflow は `capture-knowledge` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 11. ADR が状態付き台帳として扱われる
 
 - 例: 「この判断を ADR として残したい」「この ADR はもう置き換えられた」
 - 観測ポイント:
   - ADR が通常知見と混ざらず、状態付き台帳として扱われる
-  - 新規作成と状態更新の責務が分離されたまま保たれている
+  - 新規作成、採用、旧 ADR の退役が順序付き action として扱われる
   - 手順メモや運用メモが ADR に再流入していない
   - 状態モデルやメタデータ、運用フローの詳細は [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
-### 12. 変更後知見化が `skip / knowledge / adr` で振り分けられる
+### 12. 知見蓄積が `decision` と順序付き `actions` で返る
 
-- 例: 「このコミット後に何を残すべきか判断したい」
+- 例: 「このコミット後に何を残すべきか判断したい」「今回の作業で残すべき知見を整理して」
 - 観測ポイント:
   - 一過性 change と durable な知見化対象が切り分けられる
+  - `decision` が `skip | captured | needs_user_input` のいずれかで返る
+  - `actions` が必要な順序で返り、ADR 作成と状態更新の順序が崩れない
   - 通常知見と判断記録の送り先が混ざらない
   - diff だけから判断を推測して ADR を作らない
-  - triage の詳細は関連 skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
+  - 詳細は `capture-knowledge` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 13. ADR 採用判断と状態更新が一貫する
 
 - 例: 「この ADR を採用済みにしたい」「ADR 作成後に Accepted へ進めたい」
 - 観測ポイント:
   - ADR の `Accepted` 化が commit 作成と切り離されている
-  - 採用判断が明示された場合だけ `update-adr-status` で状態更新される
+  - 採用判断が明示された場合だけ `capture-knowledge` の action で状態更新される
+  - `Superseded` は、新 ADR 側に対象 ADR を指す `Supersedes` が明示されている場合だけ更新される
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
-  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と関連 skill を正本にする
+  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `capture-knowledge` skill を正本にする
 
 ### 13.5. `consistency-audit` が明示依頼で整合性を確認する
 
@@ -155,15 +159,13 @@
   - `consistency-audit` が判断を要する事項を見つけた場合、確認すべき点が返る
   - `consistency-audit` が修正を加えた場合、次の commit 導線で差分と 1 コミット 1 変更のまとまりが確認される
 
-### 14. `git-push` が push 前知見集約を行う
+### 14. `git-push` が知見蓄積を行わない
 
-- 例: 「このブランチを push して」「前回 push 以降の知見整理が必要な状態で push して」
+- 例: 「このブランチを push して」「upstream を設定して push して」
 - 観測ポイント:
-  - push 実行前に outgoing range が確認される
-  - range が安全に決められない場合は push せず停止する
-  - `capture-push-knowledge` が `skipped | ready | consolidation_required` を返せる
-  - `consolidation_required` の場合は push せず、必要な次アクションが返る
-  - push 前集約は個別 change の routing を再分類せず、重複整理、状態整合、集約漏れだけを見る
+  - `git-push` は push 実行と upstream 判定だけを扱う
+  - 知見蓄積、ADR 作成、ADR 状態更新を開始しない
+  - 知見整理が必要な場合でも push 結果と混ぜず、必要なら別 action として `capture-knowledge` を案内する
 
 ### 15. `git-push` の返答が最小契約を保つ
 
@@ -172,16 +174,16 @@
   - `git-push` の結果報告で、push 先と実行結果が利用者に分かる
   - upstream の既存利用、設定、未設定停止などの違いが埋もれない
   - behind / diverged / 認証失敗のような停止理由が必要十分に伝わる
-  - `knowledge_preflight` の結果が push 結果と混ざらず伝わる
+  - 知見蓄積の結果が push 結果に混ざらない
   - 結果フォーマットの詳細は `git-push` skill を正本にする
 
-### 16. `update-adr-status` direct entry が明示根拠に従う
+### 16. ADR 状態更新が明示根拠に従う
 
 - 例: 「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」
 - 観測ポイント:
-  - direct entry の状態更新が明示された採用判断や supersede 根拠に沿っている
+  - `capture-knowledge` の状態更新 action が明示された採用判断や supersede 根拠に沿っている
   - supersede 更新が明示根拠のある場合だけ行われる
-  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `update-adr-status` skill を正本にする
+  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `capture-knowledge` skill を正本にする
 
 ### 17. 既存の主要入口が壊れていない
 
