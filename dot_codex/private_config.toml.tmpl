@@ -1,5 +1,5 @@
 model = "gpt-5.5"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
@@ -20,12 +20,12 @@ multi_agent = true
 trust_level = "trusted"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-04-24T01:38:30Z"
+last_updated = "2026-04-25T06:19:15Z"
 source_type = "local"
 source = "{{ joinPath .chezmoi.homeDir ".codex" ".tmp" "bundled-marketplaces" "openai-bundled" }}"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-04-23T23:23:31Z"
+last_updated = "2026-04-24T06:08:56Z"
 source_type = "local"
 source = "{{ joinPath .chezmoi.homeDir ".cache" "codex-runtimes" "codex-primary-runtime" "plugins" "openai-primary-runtime" }}"
 
