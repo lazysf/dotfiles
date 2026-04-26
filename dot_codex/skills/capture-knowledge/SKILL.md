@@ -1,14 +1,15 @@
 ---
 name: capture-knowledge
-description: 「今回の知見を整理したい」「作業で得た知見を残したい」「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」といった依頼で使う。明示された evidence をもとに、残す価値、置き場、必要な docs / note / ADR / ADR metadata 更新を判断し、必要な差分を作成する。commit 前の差分確認や commit 作成をしたい時は `git-commit` スキルを使う。
+description: 「今回の知見を整理したい」「作業で得た知見を残したい」「この判断を ADR として残したい」「この ADR を Accepted にしたい」といった依頼で使う。明示された evidence をもとに、durable knowledge として残す価値と置き場を判断し、既存 docs 更新 / note 作成 / ADR 作成 / ADR 状態更新を 1 つの知見蓄積 workflow 内の順序付き action として扱う。commit 前の差分確認や commit 作成は `git-commit` スキルを使う。
 metadata:
   short-description: 知見蓄積
 ---
 
 # Capture Knowledge
 
-知見蓄積を 1 つの workflow として扱う。
-この skill は evidence 収集、知見化要否の判断、既存 docs 更新、note 作成、ADR 作成、ADR 状態更新までを扱う。
+明示された evidence から、durable knowledge として残すか、どこに残すか、どの action を実行するかを決める 1 つの知見蓄積 workflow として扱う。
+この skill は evidence 収集、知見化要否の判断、既存 docs 更新、note 作成、ADR 作成、ADR 状態更新までを同じ workflow 内の action として扱う。
+成果物や metadata 更新の種類が分かれても、別 workflow には分けない。
 commit 前の差分確認と commit 作成は扱わない。
 
 ## 入力
@@ -41,6 +42,7 @@ commit 前の差分確認と commit 作成は扱わない。
 - `supersede_old_adr`
 
 `actions` は実行順に並べる。
+これらの action は独立した workflow 名ではなく、同じ知見蓄積 workflow の中で必要に応じて選ばれる実行単位として扱う。
 未確定な mutation がある場合は、その mutation を実行せず `needs_user_input` にする。
 すでに安全に作成済みの差分がある場合は、`changed_paths` と残りの確認事項を返す。
 
