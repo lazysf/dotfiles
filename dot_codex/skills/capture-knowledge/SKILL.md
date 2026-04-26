@@ -34,7 +34,7 @@ commit 前の差分確認と commit 作成は扱わない。
 
 主な action:
 
-- `update_existing_docs`
+- `update_existing_docs` (置き場判断を伴う知見蓄積 workflow 内で既存 docs を更新する action)
 - `create_knowledge_note` (`docs/notes/` に置く note を作成する action)
 - `create_adr`
 - `accept_adr`
