@@ -54,6 +54,71 @@ commit 前の差分確認と commit 作成は扱わない。
 - 秘密情報、認証情報、private config、未公開個人情報が evidence に含まれる場合は、必要に応じて redact するか `needs_user_input` で止める。
 - commit は作らない。commit したい時は後続の `git-commit` に渡す。
 
+## 成果物の形式
+
+### 通常知見
+
+knowledge note は `docs/knowledge/kebab-case-title.md` に作成し、1 ファイル 1 テーマの短い Markdown にする。
+次の形は必須テンプレートではなく、迷ったときの default shape として使う。
+
+```markdown
+# [短いタイトル]
+
+このメモは、[何についての知見か] をまとめる。
+
+## Context
+
+[確認済みの背景・前提・根拠]
+
+## Guidance
+
+[次回以降に使う判断、手順、注意点]
+
+## References
+
+- [正本や関連ファイルがある場合だけ列挙]
+```
+
+- 空の見出しは作らない。
+- 既存ファイルに自然な形式がある場合は、既存形式を優先する。
+- 表、チェックリスト、短い箇条書きの方が読みやすい場合は使ってよい。
+- `References` は、明示できる正本、関連ファイル、実行結果がある場合だけ置く。
+
+### ADR
+
+ADR は `docs/adr/NNNN-kebab-case-title.md` に作成し、`docs/knowledge/adr-ledger-model.md` のメタデータ形式に合わせる。
+新規 ADR の基本形は次の通り。
+
+```markdown
+# NNNN: [短い判断タイトル]
+
+- Status: Proposed
+
+## Context
+
+[判断が必要になった確認済み背景]
+
+## Decision
+
+[今回の判断]
+
+## Consequences
+
+[この判断による影響、制約、残る注意点]
+```
+
+明示された置き換え関係がある場合だけ、メタ行に `- Supersedes: 0003` を追加する。
+
+- `Status` は必須にする。
+- 新規 ADR は常に `Proposed` で作成する。
+- `Supersedes` は、明示された関係がある場合だけ ADR 番号で書く。
+- 空の `Supersedes`、`Superseded-By`、`Alternatives`、`References` は作らない。
+- `Superseded-By` は新規 ADR には推測で書かず、旧 ADR を `Superseded` に更新する action でだけ扱う。
+- `Context` には確認済み事実だけを書く。
+- `Decision` には選んだ方針を書く。
+- `Consequences` には影響、制約、残リスクを書く。
+- 新規 ADR 作成時は、`docs/README.md` の ADR 一覧へリンクを追加する。
+
 ## 手順
 
 ### 1) evidence をそろえる
@@ -76,8 +141,7 @@ commit 前の差分確認と commit 作成は扱わない。
 ### 4) 差分を作る
 
 - 既存 docs 更新は既存の章構成、用語、粒度に寄せる。
-- knowledge note は `docs/knowledge/kebab-case-title.md` に作成し、短い Markdown にする。
-- ADR は `docs/adr/NNNN-kebab-case-title.md` に作成し、`docs/README.md` の ADR 一覧へリンクを追加する。
+- knowledge note と ADR は、成果物の形式に従って作成する。
 - 既存ファイルを上書きする必要があるが根拠が足りない場合は、変更せず `needs_user_input` にする。
 
 ### 5) 結果を返す
