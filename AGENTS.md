@@ -16,6 +16,15 @@
   - [Specification](https://agentskills.io/specification)
   - [Best practices](https://agentskills.io/skill-creation/best-practices)
   - [Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
+- `docs-update` スキルは、README、既存 docs、運用手順、設計メモなど、説明文書本文の更新に限って使用する
+- 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
+- `docs-update` 単独で進めない代表例:
+  - root `AGENTS.md` と `dot_codex/AGENTS.md`
+  - `dot_codex/skills/**/SKILL.md`
+  - `dot_codex/skills/**/references/`、`scripts/`、`assets/` のうち skill の判断や実行に影響するもの
+  - `dot_codex/agents/*.toml`
+  - `dot_codex/rules/*.rules`
+  - `dot_codex/private_config.toml.tmpl` など Codex runtime 設定
 - 誤字修正、単純な diff 確認、commit / push、合意済み文言の機械的反映、パスや現状確認だけの場合は、`skill-creator` や公式情報確認を必須とはしない。ただし、scripts / references / trigger / 権限 / secret / 外部 I/O / 実行挙動に触れる変更は除く
 - 公式情報を確認できない場合は、確認できなかった事実と理由をユーザーに明示し、進め方を相談する
 - Agent Skills 公式情報を確認した場合は、最終返答で参照した公式ページを簡潔に明示する。確認が必要だったが確認できなかった場合は、その事実と理由を明示する
