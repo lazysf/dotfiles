@@ -34,6 +34,14 @@ run = "prettier --write \"**/*.{yaml,yml}\""
 description = "Lint YAML files"
 run = "yamllint -d '{extends: default, rules: {line-length: disable, document-start: disable}}' ."
 
+[tasks."format:shell"]
+description = "Format shell files"
+run = "shfmt -w dot_zshenv dot_config/zsh/dot_zshenv dot_config/zsh/dot_zprofile dot_config/zsh/dot_zshrc dot_config/zsh/functions.zsh dot_config/zsh/aliases.zsh"
+
+[tasks."format:json"]
+description = "Format JSON files"
+run = "prettier --write \".markdownlint.jsonc\""
+
 [tasks."format:lua"]
 description = "Format Lua files"
 run = "stylua ."
@@ -44,7 +52,14 @@ run = "selene dot_config/nvim"
 
 [tasks.format]
 description = "Run formatters"
-depends = ["format:markdown", "format:toml", "format:yaml", "format:lua"]
+depends = [
+  "format:markdown",
+  "format:toml",
+  "format:yaml",
+  "format:shell",
+  "format:json",
+  "format:lua",
+]
 
 [tasks.lint]
 description = "Run linters"
