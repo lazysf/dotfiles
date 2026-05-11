@@ -10,7 +10,7 @@
 - 知見は `docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/` のどこへ置くかを分ける
 - defaults は明確な効果と回帰検証なしに大きく動かさない
 - preview / unstable feature は安易に既定採用しない
-- 破壊的操作や外部影響のある操作は allow ではなく prompt / forbidden を基本にする
+- 破壊的操作や外部影響のある操作は allow せず、既定 prompt と skill 停止線に任せる
 
 ## この repo で優先すること
 
@@ -83,3 +83,6 @@
 - [ADR 0003](../adr/0003-promote-harness-knowledge-by-runtime-surface.md)
 - [ADR 0004](../adr/0004-retire-legacy-workflow-prefixes.md)
 - [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
+- [ADR 0006](../adr/0006-keep-agents-thin-and-surface-oriented.md)
+- [ADR 0007](../adr/0007-retire-harness-verifier-script.md)
+- [ADR 0008](../adr/0008-keep-git-operation-surface-minimal.md)
