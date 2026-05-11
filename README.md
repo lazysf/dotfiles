@@ -42,10 +42,9 @@ macOS 標準 `Terminal` 用のプロファイルは repo 内の [`dot_config/ter
 
 利用するときは、repo 内の `dot_config/terminal/Main.terminal` を Finder か `open` で開いて `Terminal` に import し、必要なら `Main` をデフォルトプロファイルに設定してください。
 
-## 整形と lint
+## 整形、lint、検証
 
-repo 内の整形と lint は `mise` task 経由で実行します。
-Markdown を含む対象ファイルをまとめて処理するには、次を使います。
+repo 内の整形、lint、検証は `mise` task 経由で実行します。
 
 ```sh
 mise run format
@@ -63,15 +62,21 @@ uv sync
 ```
 
 通常の確認入口は `mise run test` です。
-`docs/` は repo-level knowledge の置き場で、`.chezmoiignore` により dotfiles の配布対象から外しています。
-`.python-version`、`pyproject.toml`、`uv.lock`、`.venv/`、`docs/` は repo 保守専用のため、`.chezmoiignore` により dotfiles の配布対象から外しています。
-`dot_config/terminal/Main.terminal` は macOS では展開対象、非 macOS では `.chezmoiignore` により配布対象外です。
+
+## 管理対象と配布対象
+
+`.chezmoiignore` は、chezmoi で home directory へ配布しない repo 保守用ファイルを定義します。
+`docs/`、`README.md`、`AGENTS.md`、`mise.toml`、`pyproject.toml`、`uv.lock` などは repo 保守専用のため配布対象外です。
+`dot_config/terminal/Main.terminal` は macOS では展開対象、非 macOS では配布対象外です。
+
+`.gitignore` は、この repo で Git 管理しないローカル生成物を定義します。
+`.cache/`、`.venv/`、`nvim.log` などは Git 管理対象外です。
 
 ## Repo-Level Knowledge
 
 この repo を保守するときの知見は `docs/` に置きます。
 
 - `docs/notes/`: repo-level の通常知見
-- `docs/adr/`: 今も有効な判断記録
+- `docs/adr/`: `Accepted` や `Superseded` を含む状態付き判断台帳
 
 共通ハーネスの deployable artifact は `dot_codex/` に置き、運用契約と導線は `dot_codex/AGENTS.md` を参照します。
