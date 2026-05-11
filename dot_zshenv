@@ -16,5 +16,5 @@ export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
 # Load the actual .zshenv (the real configuration)
 # -----------------------------------------
 if [ -r "${ZDOTDIR}/.zshenv" ]; then
-  . "${ZDOTDIR}/.zshenv"
+	. "${ZDOTDIR}/.zshenv"
 fi

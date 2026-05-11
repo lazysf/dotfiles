@@ -56,18 +56,18 @@ repo 規約がなければ、commit message は次の形式にする。
 - `feat` と `fix` は Semantic Versioning に対応する。その他の type は、`BREAKING CHANGE` を含まない限り version への暗黙的な効果を持たない。
 - `body` / `footer(s)` の詳細が必要な場合は `references/commit-message-format.md` を参照する。
 
-| type | 使う場面 |
-| --- | --- |
-| `fix` | 期待どおりに動いていない挙動や不具合を直す。 |
-| `feat` | 新しい機能、設定、選択肢などを追加する。 |
-| `docs` | README、手順書、設計メモなど、ドキュメントだけを変える。 |
-| `test` | テストコード、fixtures、snapshots など、テストだけを変える。 |
-| `refactor` | 外から見える挙動を変えずに、コード構造を整理する。 |
-| `chore` | 利用者向け挙動に直接関係しない保守作業を行う。 |
-| `style` | 挙動を変えずに、コード整形や lint 指摘だけを直す。 |
-| `perf` | 挙動を保ったまま、速度やメモリ使用量などを改善する。 |
-| `build` | build system、package manager、依存関係、lockfile を変える。 |
-| `ci` | CI workflow、job、runner、release automation を変える。 |
+| type       | 使う場面                                                     |
+| ---------- | ------------------------------------------------------------ |
+| `fix`      | 期待どおりに動いていない挙動や不具合を直す。                 |
+| `feat`     | 新しい機能、設定、選択肢などを追加する。                     |
+| `docs`     | README、手順書、設計メモなど、ドキュメントだけを変える。     |
+| `test`     | テストコード、fixtures、snapshots など、テストだけを変える。 |
+| `refactor` | 外から見える挙動を変えずに、コード構造を整理する。           |
+| `chore`    | 利用者向け挙動に直接関係しない保守作業を行う。               |
+| `style`    | 挙動を変えずに、コード整形や lint 指摘だけを直す。           |
+| `perf`     | 挙動を保ったまま、速度やメモリ使用量などを改善する。         |
+| `build`    | build system、package manager、依存関係、lockfile を変える。 |
+| `ci`       | CI workflow、job、runner、release automation を変える。      |
 
 ## 手順
 
