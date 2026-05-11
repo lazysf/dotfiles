@@ -250,5 +250,7 @@
 - [ADR Ledger Model](./adr-ledger-model.md)
 - [Harness Design Principles](./harness-design-principles.md)
 - [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
+- [ADR 0006](../adr/0006-keep-agents-thin-and-surface-oriented.md)
 - [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
 - [ADR 0007](../adr/0007-retire-harness-verifier-script.md)
+- [ADR 0008](../adr/0008-keep-git-operation-surface-minimal.md)
