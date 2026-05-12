@@ -10,6 +10,7 @@
 - `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成は `capture-knowledge` に送る
 - `task-intake`: 散らばった依頼や日常的な曖昧依頼の入口整理。今回の対象、成功条件、非目的、制約や仮定、先に確認すべき点を軽く固定する
 - `change-verification`: 変更後確認の入口。feature / maintenance の受け入れ確認と、bugfix / security / quality / compat の修正効果検証を扱う
+- `coding-standards`: コード作業に言語別の制約やベストプラクティスを足す補助 skill。実装、調査、計画、レビュー本体は担わず、対象言語の reference を必要時に読む
 - `consistency-audit`, `review-findings-summary`: 補助 skill。明示依頼時の整合性精査、出口整形に責務を絞る
 - `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
