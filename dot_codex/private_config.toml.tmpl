@@ -4,7 +4,9 @@ approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
 web_search = "live"
-
+{{ if eq .chezmoi.os "darwin" }}
+notify = ["{{ joinPath .chezmoi.homeDir ".codex" "computer-use" "Codex Computer Use.app" "Contents" "SharedSupport" "SkyComputerUseClient.app" "Contents" "MacOS" "SkyComputerUseClient" | replace "\\" "/" }}", "turn-ended"]
+{{ end }}
 [agents]
 max_threads = 6
 max_depth = 1
