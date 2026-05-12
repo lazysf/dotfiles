@@ -3,7 +3,9 @@
 go = "latest" # includes gofmt and go vet
 node = "latest"
 python = "latest"
+{{ if ne .chezmoi.os "windows" -}}
 powershell = "latest"
+{{ end -}}
 rust = "latest" # uses rustfmt and clippy from toolchain
 
 # formatters
