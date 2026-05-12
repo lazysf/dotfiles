@@ -1,1 +1,3 @@
+[files]
+include = ["**/*.toml"]
 exclude = ["dot_config/starship.toml"]
