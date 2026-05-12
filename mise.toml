@@ -1,7 +1,7 @@
 [tools]
 # formatters
 shfmt = "latest"
-taplo = "latest"
+tombi = "latest"
 "cargo:stylua" = "latest"
 "npm:prettier" = "latest"
 
@@ -20,11 +20,11 @@ run = "markdownlint-cli2 \"**/*.{md,markdown}\""
 
 [tasks."format:toml"]
 description = "Format TOML files"
-run = "taplo fmt"
+run = "tombi format . --offline"
 
 [tasks."lint:toml"]
 description = "Lint TOML files"
-run = "taplo lint --colors never"
+run = "tombi lint . --offline"
 
 [tasks."format:yaml"]
 description = "Format YAML files"
