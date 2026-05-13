@@ -234,6 +234,7 @@
   - `dot_codex/agents/*.toml` の必須 metadata が欠けていない
   - `dot_codex/rules/*.rules` の説明責務が崩れていない
   - `dot_codex/` と `docs/` 配下の参照先が実在する
+  - `dot_codex/private_config.toml.tmpl` の macOS 向け `notify` 設定が残っている
   - knowledge の置き場として project-local `.codex` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
 
