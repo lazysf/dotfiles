@@ -202,6 +202,15 @@
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
   - `dot_codex/AGENTS.md`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
 
+### 17.5. 単純化リファクタの入口が近接 skill と混ざらない
+
+- 例: 「過剰な分岐を減らして既存挙動を守りたい」「どこまで整理するか決めたい」「性能を改善したい」「実装に入りたい」
+- 観測ポイント:
+  - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす依頼は `refactor-simplification` に案内される
+  - リファクタ境界そのものを決める依頼は `maintenance-analysis` に案内される
+  - 性能や安定性など品質特性の改善は `quality-analysis` に案内される
+  - 実装開始や確認方法先行の最小差分は `code-implementation-loop` に案内される
+
 ### 18. planning skill が整理専用のまま保たれる
 
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
