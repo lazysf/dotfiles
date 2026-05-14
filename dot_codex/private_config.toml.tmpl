@@ -3,6 +3,7 @@
 {{- if stat $codexConfigPath -}}
 {{- $codexConfig = include $codexConfigPath | fromToml -}}
 {{- end -}}
+{{- $codexProjects := dig "projects" (dict) $codexConfig -}}
 model = "gpt-5.5"
 model_reasoning_effort = "medium"
 approval_policy = "on-request"
@@ -25,6 +26,15 @@ multi_agent = true
 
 [projects."{{ .chezmoi.sourceDir }}"]
 trust_level = "trusted"
+{{- /* Keep only trust_level for target-only projects so nested tables cannot escape [projects.<path>] scope. */ -}}
+{{- range $projectPath, $projectConfig := $codexProjects }}
+{{- $trustLevel := dig "trust_level" "" $projectConfig -}}
+{{- if and (ne $projectPath $.chezmoi.sourceDir) $trustLevel }}
+
+[projects.{{ $projectPath | quote }}]
+{{ dict "trust_level" $trustLevel | toToml | trimSuffix "\n" }}
+{{- end }}
+{{- end }}
 
 [marketplaces.openai-bundled]
 last_updated = "{{ dig "marketplaces" "openai-bundled" "last_updated" "2026-05-13T02:02:40Z" $codexConfig }}"
