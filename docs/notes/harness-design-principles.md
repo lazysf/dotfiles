@@ -7,7 +7,8 @@
 
 - deployable artifact は `dot_codex/` に置き、repo-level knowledge は `docs/` に置く
 - project-specific knowledge は各 project の `docs/` を正本にする
-- 知見は `docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/` のどこへ置くかを分ける
+- multi-context repo では root `CONTEXT-MAP.md` を入口にし、各 `CONTEXT.md` は対象 context の近くに置く
+- 知見は `CONTEXT.md`, `docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/` のどこへ置くかを分ける
 - defaults は明確な効果と回帰検証なしに大きく動かさない
 - preview / unstable feature は安易に既定採用しない
 - 破壊的操作や外部影響のある操作は allow せず、既定 prompt と skill 停止線に任せる
@@ -31,6 +32,7 @@
 
 - 通常知見は `docs/notes/`
 - 判断記録は `docs/adr/` の状態付き ADR 台帳として置く
+- context 固有の用語は `CONTEXT.md` に置く
 - 繰り返し使う手順は `dot_codex/skills/`
 - 機械的に守らせたい制約は `dot_codex/rules/`
 - read-only の専門化した補助役は `dot_codex/agents/`
@@ -38,6 +40,8 @@
 ### 2.5. ADR は状態付き台帳として扱う
 
 - ADR は通常知見ではなく、採用された判断とその履歴関係の正本として扱う
+- ADR 本文は軽量でよいが、状態は必ず持つ
+- ADR は、あとから変えにくく、文脈なしでは驚きがあり、実際の trade-off がある判断だけに使う
 - 新規 ADR の作成と、既存 ADR の状態更新は同じ知見蓄積 workflow 内でも別 action / 別判断境界として扱う
 - `Accepted` のタイミングや知見蓄積の具体契約は ADR 台帳の運用文書を正本にする
 
@@ -86,3 +90,4 @@
 - [ADR 0006](../adr/0006-keep-agents-thin-and-surface-oriented.md)
 - [ADR 0007](../adr/0007-retire-harness-verifier-script.md)
 - [ADR 0008](../adr/0008-keep-git-operation-surface-minimal.md)
+- [ADR 0009](../adr/0009-adopt-context-aware-upstream-planning.md)

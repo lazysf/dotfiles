@@ -1,6 +1,6 @@
 ---
 name: maintenance-analysis
-description: 「リファクタ境界を決めたい」「保守性改善でどの挙動を守るか整理したい」といった maintenance 案件で使う。最小のリファクタ境界、今回の整理範囲、保護すべき既存挙動、重点確認点を整理する。性能や安定性を改善したい時は `quality-analysis` スキルを使い、新機能追加が主題の時は `task-intake`、`product-planning`、`implementation-planning` のうち状況に合うスキルを使う。
+description: 「リファクタ境界を決めたい」「保守性改善でどの挙動を守るか整理したい」といった maintenance 案件で使う。最小のリファクタ境界、今回の整理範囲、保護すべき既存挙動、重点確認点を整理する。目的や成功条件が未確定なら `product-planning` スキル、性能や安定性を改善したい時は `quality-analysis` スキルを使う。
 metadata:
   short-description: Maintenance 分析
 ---
@@ -9,6 +9,7 @@ metadata:
 
 maintenance 案件で、どこまで整理し、どの挙動を守るかを決める。
 変更容易性を主目的に、切り戻しやすい最小のリファクタ境界を置く。
+目的や成功条件が曖昧な場合は、境界決めへ進む前に `product-planning` スキルへ戻す。
 
 ## 手順
 

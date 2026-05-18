@@ -66,7 +66,7 @@ uv sync
 ## 管理対象と配布対象
 
 `.chezmoiignore` は、chezmoi で home directory へ配布しない repo 保守用ファイルを定義します。
-`docs/`、`README.md`、`AGENTS.md`、`mise.toml`、`pyproject.toml`、`uv.lock` などは repo 保守専用のため配布対象外です。
+`docs/`、`README.md`、`AGENTS.md`、`CONTEXT-MAP.md`、CONTEXT 系ファイル、`mise.toml`、`pyproject.toml`、`uv.lock` などは repo 保守専用のため配布対象外です。
 `dot_config/terminal/Main.terminal` は macOS では展開対象、非 macOS では配布対象外です。
 
 `.gitignore` は、この repo で Git 管理しないローカル生成物を定義します。

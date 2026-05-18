@@ -2,6 +2,8 @@
 
 この `docs/` は、この dotfiles repo を保守するときに参照する知見の置き場です。
 
+- [../CONTEXT-MAP.md](../CONTEXT-MAP.md): multi-context repo としての context 一覧
+- [CONTEXT.md](./CONTEXT.md): repo-level durable knowledge の用語
 - `docs/notes/`: repo-level の通常知見を置く
   - [adr-ledger-model.md](./notes/adr-ledger-model.md): ADR を状態付き判断台帳として扱う運用
   - [adr-workflow-review-pitfalls.md](./notes/adr-workflow-review-pitfalls.md): ADR 台帳フロー拡張時の review 観点
@@ -20,6 +22,7 @@
   - [0006-keep-agents-thin-and-surface-oriented.md](./adr/0006-keep-agents-thin-and-surface-oriented.md)
   - [0007-retire-harness-verifier-script.md](./adr/0007-retire-harness-verifier-script.md)
   - [0008-keep-git-operation-surface-minimal.md](./adr/0008-keep-git-operation-surface-minimal.md)
+  - [0009-adopt-context-aware-upstream-planning.md](./adr/0009-adopt-context-aware-upstream-planning.md)
 - `dot_codex/AGENTS.md`: 運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: review の正式入口になる reviewer agent を置く。review はここから明示的に呼び出す
