@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「既存 context / docs / code / ADR と照合して実装計画を固めたい」といった要件確定後の依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を問いで 1 つずつ詰め、実行可能な技術計画へ落とし込む。目的や成功条件が未確定なら `product-planning` スキル、計画 draft をレビューしたい時は `02-implementation-planning-reviewer` reviewer agent を使う。
+description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「要件確定後に技術計画を固めたい」といった依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を問いで 1 つずつ詰め、実行可能な技術計画へ落とし込む。plan / design を横断的に stress-test したい時は `grill-me` スキル、既存 docs や ADR と照合して inline 更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: 技術計画
 ---
@@ -21,6 +21,7 @@ metadata:
 - 既存 context / docs / code / ADR に沿った実装計画を作る。
 - 最初に通すべき最小スライスを決め、書き込み範囲を広げすぎない。
 - 変更境界、依存関係、検証入口、既存パターンとの矛盾を先に潰す。
+- 技術計画全体の pressure test や inline docs 更新が主目的の場合は、`grill-me` または `grill-with-docs` に切り替える。
 
 ## 対象
 
@@ -51,7 +52,7 @@ metadata:
 4. 最も計画を左右する未確定事項を 1 つ選び、推奨回答つきで質問する。
 5. 回答を受けたら、計画、リスク、未確定事項を更新する。
 6. 最小スライス、後続ステップ、検証方法を並べる。
-7. 判断が ADR 条件を満たす場合だけ、状態付き軽量 ADR の候補にする。
+7. 判断が ADR 条件を満たし、inline で記録したい場合は `grill-with-docs` へ切り替える。
 
 ## 確認観点
 
@@ -74,5 +75,6 @@ metadata:
 - `open_questions`
 - `next_step`
 
-必要なら `adr_candidates` を添える。
+必要なら `docs_update_candidates` を添える。
+ただし inline 更新や ADR 作成まで行う場合は `grill-with-docs` スキルを使う。
 review を求める場合は、この出力を `02-implementation-planning-reviewer` reviewer agent に渡せる粒度で整理する。

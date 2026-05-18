@@ -1,6 +1,6 @@
 ---
 name: product-planning
-description: 「計画を深掘りしたい」「要件を固めたい」「既存 context / docs / code / ADR と照合して上流の曖昧さを潰したい」といった重めの要件定義で使う。問いを 1 つずつ立て、探索で答えられることは先に確認し、目的、成功条件、非目的、制約、用語、未確定事項を実装可能な要件へ落とし込む。軽い入口整理だけなら `task-intake` スキル、事実調査だけなら `research` スキル、要件 draft をレビューしたい時は `01-product-planning-reviewer` reviewer agent を使う。
+description: 「計画を深掘りしたい」「要件を固めたい」「目的や成功条件を整理したい」といった重めの要件定義で使う。問いを 1 つずつ立て、探索で答えられることは先に確認し、目的、成功条件、非目的、制約、用語、未確定事項を実装可能な要件へ落とし込む。plan / design を横断的に stress-test したい時は `grill-me` スキル、既存 docs や ADR と照合して inline 更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: プロダクト計画
 ---
@@ -22,6 +22,7 @@ metadata:
 - 目的、成功条件、非目的、制約、用語、優先順位、未確定事項を明確にする。
 - context / docs / code / ADR と照合し、既存の言葉や判断と矛盾したまま進むのを避ける。
 - 実装タスクではなく、ユーザー価値や運用上の完了条件を定義する。
+- plan / design 全体の pressure test や inline docs 更新が主目的の場合は、`grill-me` または `grill-with-docs` に切り替える。
 
 ## 対象
 
@@ -47,15 +48,15 @@ metadata:
 - 技術設計の詳細には踏み込みすぎない。
 - この skill 自体は review を行わず、要件整理に専念する。
 
-## Grilling Loop
+## Planning Loop
 
 1. 依頼を短く言い換え、今回の主題と停止線を置く。
 2. `CONTEXT-MAP.md` / `CONTEXT.md`、関連 docs、ADR、近傍 code から、先に確認できる事実を集める。
 3. 既存用語と違う言葉、曖昧な言葉、複数意味を持つ言葉を見つけたら、その場で正す。
 4. 最も影響が大きい未確定事項を 1 つ選び、推奨回答つきで質問する。
 5. 回答を受けたら、確定事項、仮定、未確定事項を分けて要件 draft に反映する。
-6. 用語が明示的に確定したら、対象 context の `CONTEXT.md` へ追記する候補として扱う。
-7. 判断が ADR 条件を満たす場合だけ、状態付き軽量 ADR の候補にする。
+6. 用語や判断を inline で docs に反映する必要が出たら、`grill-with-docs` へ切り替える。
+7. 判断が ADR 条件を満たしそうな場合は、`grill-with-docs` で扱う候補として分離する。
 8. 目的、成功条件、非目的、制約が説明できるまで 3-7 を繰り返す。
 
 ## CONTEXT の扱い
@@ -89,5 +90,6 @@ ADR を作る場合は `Status` を必須にし、本文は必要十分に短く
 - `open_questions`
 - `next_step`
 
-必要なら `context_updates` と `adr_candidates` を添える。
+必要なら `docs_update_candidates` を添える。
+ただし inline 更新や ADR 作成まで行う場合は `grill-with-docs` スキルを使う。
 review を求める場合は、この出力を `01-product-planning-reviewer` reviewer agent に渡せる粒度で整理する。
