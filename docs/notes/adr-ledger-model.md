@@ -2,6 +2,7 @@
 
 この文書は、この repo で ADR をどう扱うかの正本をまとめる。
 ADR は通常知見の置き場ではなく、採用された判断とその履歴関係を残す状態付き台帳として扱う。
+ただし本文は重いテンプレートを必須にせず、短い判断なら 1-3 文で残せる状態付き軽量 ADR として扱う。
 
 ## ADR に入れるもの
 
@@ -9,6 +10,12 @@ ADR は通常知見の置き場ではなく、採用された判断とその履�
 - なぜその判断が必要だったか
 - その判断が今も有効か
 - どの ADR を置き換えたか、または何に置き換えられたか
+
+ADR を新規作成する条件は次の 3 つをすべて満たす場合に限る。
+
+- あとから変えるコストが意味を持つ
+- 文脈なしに見ると将来の読み手が驚く
+- 実際の trade-off から選ばれた判断である
 
 次の内容は ADR に混ぜず、`docs/notes/` に送る。
 
@@ -44,11 +51,17 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 `Superseded-By` は新規 ADR 作成時に推測で書かず、`capture-knowledge` の明示根拠に基づく更新でだけ付ける。
 `Supersedes` も新規 ADR 作成時に明示されたものだけを使い、後段の状態更新が推測で補わない。
 
+## 本文の形
+
+新規 ADR は、見出し直下のメタ行に続けて 1-3 文で文脈、決定、理由を書くだけでもよい。
+必要な場合だけ、既存 ADR と同じ `Context` / `Decision` / `Consequences` 見出しを使う。
+具体的な形式は [capture-knowledge の ADR format](../../dot_codex/skills/capture-knowledge/references/adr-format.md) を参照する。
+
 ## 運用フロー
 
 1. 知見蓄積が必要なら `capture-knowledge` で evidence を集める
 2. `capture-knowledge` で `skip | captured | needs_user_input` を決め、必要な action を順序付きで並べる
-3. 新しい判断記録が必要なら `docs/adr/NNNN-*.md` を `Proposed` として作る
+3. 新しい判断記録が ADR 条件を満たすなら `docs/adr/NNNN-*.md` を `Proposed` として作る
 4. その判断が採用済みと明示されている場合だけ、新 ADR を `Accepted` に更新する
 5. 新 ADR 側に明示 `Supersedes` がある場合だけ、続けて旧 ADR を `Superseded` にする
 

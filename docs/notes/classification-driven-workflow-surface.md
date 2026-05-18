@@ -6,9 +6,11 @@
 ## Surface の責務
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
-- `capture-knowledge`: 知見蓄積 workflow の user-facing 入口。明示された evidence をもとに、既存 docs 更新、note 作成、ADR 作成、ADR metadata 更新までを扱い、commit 前の差分確認と commit 作成は `git-commit` に任せる
+- `capture-knowledge`: 知見蓄積 workflow の user-facing 入口。明示された evidence をもとに、CONTEXT 更新、既存 docs 更新、note 作成、ADR 作成、ADR metadata 更新までを扱い、commit 前の差分確認と commit 作成は `git-commit` に任せる
 - `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成は `capture-knowledge` に送る
-- `task-intake`: 散らばった依頼や日常的な曖昧依頼の入口整理。今回の対象、成功条件、非目的、制約や仮定、先に確認すべき点を軽く固定する
+- `task-intake`: 散らばった依頼や日常的な曖昧依頼の入口整理。今回の対象、成功条件、非目的、制約や仮定、先に確認すべき点を軽く固定し、深掘りが必要なら `product-planning` に戻す
+- `product-planning`: 要件定義の中核。計画を問いで鍛え、context / docs / code / ADR と照合し、目的、成功条件、非目的、制約、用語、未確定事項を整理する
+- `implementation-planning`: 技術計画の中核。要件確定後、変更境界、依存関係、検証入口、既存パターンとの矛盾を context / docs / code / ADR と照合する
 - `change-verification`: 変更後確認の入口。feature / maintenance の受け入れ確認と、bugfix / security / quality / compat の修正効果検証を扱う
 - `coding-standards`: コード作業に言語別の制約やベストプラクティスを足す補助 skill。実装、調査、計画、レビュー本体は担わず、対象言語の reference を必要時に読む
 - `refactor-simplification`: 過剰実装や不要な抽象化を削り、既存挙動を保ったまま実装を単純にする maintenance 近傍の独立入口。リファクタ境界そのものを広く決める場合は `maintenance-analysis` を使う
@@ -18,6 +20,8 @@
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
 docs-only の依頼で、成果物が既存ドキュメント更新に限られる場合は、主分類を増やさず `docs-update` を直接入口として使ってよい。
+root `CONTEXT-MAP.md` は multi-context の入口、各 `CONTEXT.md` は glossary を担当する。
+CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 ## 要求分類の見方
 

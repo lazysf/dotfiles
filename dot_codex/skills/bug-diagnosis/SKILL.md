@@ -1,6 +1,6 @@
 ---
 name: bug-diagnosis
-description: 「バグを切り分けたい」「再現条件と修正対象を先に固めたい」といった bugfix 前の依頼で使う。症状、再現条件、原因候補、最小の failing check、今回触る修正対象を整理する。修正実装を進めたい時は `code-implementation-loop` スキルを使い、修正後の効果検証をしたい時は `change-verification` スキルを使う。
+description: 「バグを切り分けたい」「再現条件と修正対象を先に固めたい」といった bugfix 前の依頼で使う。症状、再現条件、原因候補、最小の failing check、今回触る修正対象を整理する。期待状態や成功条件が未確定なら `product-planning` スキル、修正実装を進めたい時は `code-implementation-loop` スキルを使う。
 metadata:
   short-description: 診断手順
 ---
@@ -9,6 +9,7 @@ metadata:
 
 bugfix 前に、何が壊れていてどこを直すべきかを整理する。
 観測事実と仮説を分け、最小の failing check と修正対象を先に固める。
+期待状態や成功条件が曖昧な場合は、診断を進めすぎず `product-planning` スキルへ戻す。
 
 ## 手順
 
