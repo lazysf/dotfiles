@@ -38,8 +38,10 @@ Use relationship metadata only when explicitly known:
 
 - `- Supersedes: 0003`
 - `- Superseded-By: 0005`
+- `- Amends: 0003`
+- `- Amended by: 0005`
 
-Do not infer supersede relationships.
+Do not infer relationship metadata. Use `Supersedes` only when a decision replaces an older ADR. Use `Amends` only when a decision keeps an older ADR valid but corrects or extends part of it.
 
 ## Optional Sections
 
@@ -74,4 +76,5 @@ Other optional sections, such as considered options, are allowed only when the r
 - Move an ADR to `Accepted` only when the user explicitly says the decision is adopted.
 - Move an ADR to `Rejected` only when the user explicitly rejects the decision.
 - Move an older ADR to `Superseded` only when a newer ADR explicitly lists it in `Supersedes`.
+- Add `Amended by` only when a newer ADR explicitly lists the older ADR in `Amends`.
 - Do not backfill `Supersedes` or `Superseded-By` by guesswork.
