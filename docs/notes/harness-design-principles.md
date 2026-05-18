@@ -91,3 +91,4 @@
 - [ADR 0007](../adr/0007-retire-harness-verifier-script.md)
 - [ADR 0008](../adr/0008-keep-git-operation-surface-minimal.md)
 - [ADR 0009](../adr/0009-adopt-context-aware-upstream-planning.md)
+- [ADR 0011](../adr/0011-prune-codex-skill-and-reviewer-surface.md)

@@ -1,6 +1,6 @@
 ---
 name: code-implementation-loop
-description: 「実装に入りたい」「確認方法を先に置いて最小差分で進めたい」といった変更実装の依頼で使う。テストや再現手順を先に置き、最小実装、必要な場合だけの整理、再確認の順で小さく実装を進める。原因調査から始めたい時は `research` スキルを使い、要件や計画を先に固めたい時は `task-intake`、`product-planning`、`implementation-planning` のうち状況に合うスキルを使う。
+description: 「実装に入りたい」「確認方法を先に置いて最小差分で進めたい」といった変更実装の依頼で使う。テストや再現手順を先に置き、最小実装、必要な場合だけの整理、再確認の順で小さく実装を進める。原因調査から始めたい時は `research` スキルを使い、要件や計画を先に固めたい時は `product-planning` または `implementation-planning` スキルを使う。
 metadata:
   short-description: 実装ループ
 ---
