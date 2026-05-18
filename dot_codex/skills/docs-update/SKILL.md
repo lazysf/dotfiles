@@ -1,6 +1,6 @@
 ---
 name: docs-update
-description: 「README だけ直したい」「既存 docs を実装や運用に合わせて更新したい」といった docs-only の依頼で使う。README、運用手順、設計メモなど既存ドキュメントの更新内容を、一次情報と既存文脈に沿って必要十分に反映する。CONTEXT 更新、知識の置き場判断、note 作成、ADR 作成、ADR 状態更新を docs-aware な grilling と一緒に扱いたい時は `grill-with-docs` スキルを使う。
+description: 「README だけ直したい」「既存 docs を実装や運用に合わせて更新したい」といった docs-only の依頼で使う。README、運用手順、設計メモを一次情報と既存文脈に沿って必要十分に更新する。CONTEXT 更新、置き場判断、note / ADR 作成や状態更新は `grill-with-docs` スキルを使う。
 metadata:
   short-description: 文書更新
 ---
@@ -8,8 +8,6 @@ metadata:
 # Docs Update
 
 既存のドキュメントを、実装事実と運用前提に沿って更新する。
-この skill は既存ドキュメントの更新に責務を絞る。
-CONTEXT 更新、知識の置き場判断、新しい note / ADR の作成まで扱いたい時は `grill-with-docs` スキルを使う。
 
 ## 対象
 

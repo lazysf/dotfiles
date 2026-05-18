@@ -1,6 +1,6 @@
 ---
 name: product-planning
-description: 「依頼文が散らばっている」「今回どこまでやるか決めたい」「計画を深掘りしたい」「要件を固めたい」といった要件整理で使う。問いを 1 つずつ立て、探索で答えられることは先に確認し、目的、成功条件、非目的、制約、用語、未確定事項を実装可能な要件へ落とし込む。plan / design を横断的に stress-test したい時は `grill-me` スキル、既存 docs や ADR と照合して inline 更新したい時は `grill-with-docs` スキルを使う。
+description: 「依頼文が散らばっている」「今回どこまでやるか決めたい」「計画を深掘りしたい」「要件を固めたい」といった要件整理で使う。探索で答えられる前提を先に確認し、目的、成功条件、非目的、制約、用語、未確定事項を実装可能な要件にする。plan / design を stress-test したい時は `grill-me` スキル、docs や ADR と照合更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: プロダクト計画
 ---
@@ -11,7 +11,6 @@ metadata:
 
 ## 前提
 
-- [AGENTS.md](../../AGENTS.md) の契約と停止線を前提に適用する。
 - root に `CONTEXT-MAP.md` があれば multi-context repo として扱い、対象 context を選んでから該当 `CONTEXT.md` を読む。
 - root に `CONTEXT.md` だけがあれば single-context repo として扱う。
 - CONTEXT は glossary であり、spec、作業メモ、実装判断の置き場にしない。
@@ -90,6 +89,8 @@ ADR を作る場合は `Status` を必須にし、本文は必要十分に短く
 - `open_questions`
 - `next_step`
 
+`confirmed_context` と `open_questions` を混ぜず、未確認事項を確認済み前提として扱わない。
+根拠が弱い前提は `assumptions` または `open_questions` に残し、`confirmed_context` に入れない。
 必要なら `docs_update_candidates` を添える。
 ただし inline 更新や ADR 作成まで行う場合は `grill-with-docs` スキルを使う。
 review を求める場合は、この出力を `01-product-planning-reviewer` reviewer agent に渡せる粒度で整理する。

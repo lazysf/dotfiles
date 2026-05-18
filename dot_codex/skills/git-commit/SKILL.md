@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Git の変更を安全に commit したい依頼で使う。1コミット1変更を守り、ステージ範囲とステージ済み差分を確認してから通常 commit を作成する。push が目的の依頼では `git-push` スキルを使う。
+description: Git の変更を安全に commit したい依頼で使う。1コミット1変更を守り、ステージ範囲とステージ済み差分を確認して通常 commit を作成する。push が目的なら `git-push` スキルを使う。
 metadata:
   short-description: Git commit
 ---

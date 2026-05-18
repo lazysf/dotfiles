@@ -1,6 +1,6 @@
 ---
 name: change-verification
-description: 「変更後の確認項目を決めたい」「新機能やリファクタを受け入れ確認したい」「バグ修正、追従、hardening の結果を検証したい」といった依頼で使う。acceptance mode では成功条件や保護したい既存挙動を確認し、verification mode では修正前症状や追従前ギャップに対する結果と回帰観点を整理する。実装前の確認方法を置いて最小差分で進めたい時は `code-implementation-loop` スキルを使う。
+description: 「変更後の確認項目を決めたい」「新機能やリファクタを受け入れ確認したい」「バグ修正や追従、hardening の結果を検証したい」といった依頼で使う。成功条件、修正前症状、保護したい既存挙動、回帰観点を分け、実行した確認と残リスクを整理する。実装前に確認方法を置いて小さく進めたい時は `code-implementation-loop` スキルを使う。
 metadata:
   short-description: 検証手順
 ---
@@ -8,7 +8,6 @@ metadata:
 # Change Verification
 
 変更後に、何をどう確認し、何が残リスクかを整理する。
-このスキルは feature / maintenance の受け入れ確認と、bugfix / security / quality / compat の修正効果検証を担う。
 
 ## 基本方針
 
@@ -16,7 +15,7 @@ metadata:
 - 変更意図に最も近い確認を先に置く。
 - 保護したい既存挙動や回帰観点は、変更意図の確認と分けて整理する。
 - 直接確認できない場合は、代替確認と未確認理由を明示する。
-- 未確認や結果のぶれは `remaining_risks` に残す。
+- 未確認、未実行、結果のぶれは `remaining_risks` に残す。
 
 ## Mode の選び方
 
