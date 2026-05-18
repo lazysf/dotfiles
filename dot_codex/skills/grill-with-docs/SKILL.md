@@ -1,6 +1,6 @@
 ---
 name: grill-with-docs
-description: 「docs と照らして計画を問い詰めたい」「既存の domain model / CONTEXT / ADR と照合して grill して」といった、plan / design を documented decisions と codebase language に照らして stress-test したい依頼で使う。質問を 1 つずつ行い、用語が確定したら CONTEXT.md を inline 更新し、ADR 条件を満たす判断だけ sparingly に記録する。docs 更新を伴わない純粋な plan / design grilling だけなら `grill-me` スキルを使う。
+description: 「docs と照らして計画を問い詰めたい」「CONTEXT / ADR と照合して grill して」といった、plan / design を既存 docs と codebase language に照らして stress-test したい依頼で使う。質問を 1 つずつ行い、確定した用語や ADR 条件を満たす判断だけ inline 記録する。docs 更新を伴わない純粋な grilling は `grill-me` スキルを使う。
 metadata:
   short-description: docs と照らして問い詰める
 ---
@@ -38,6 +38,7 @@ metadata:
 6. 用語が確定したら `CONTEXT.md` を inline 更新する。
 7. 判断が ADR 条件を満たす場合だけ、ADR 作成や状態更新を提案してから実行する。
 8. 共有理解に到達するまで 3-7 を繰り返す。
+9. 主要な未確定事項が解け、次が実装、調査、commit など別 workflow になる時は、`grill_status: 一段落` と示す。
 
 ## Inline Knowledge Capture
 
@@ -57,4 +58,8 @@ metadata:
 - `updated_docs`
 - `adr_changes`
 - `open_questions`
+- `grill_status`
 - `next_question`
+
+一段落した時は、`grill_status: 一段落`、確定事項、更新した docs / ADR、残る未確認事項、次に進める入口を短く示す。
+まだ問いを続ける必要がある時は、`next_question` を 1 つだけ出す。

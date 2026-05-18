@@ -1,14 +1,13 @@
 ---
 name: consistency-audit
-description: 「変更後の整合性を精査したい」「追従漏れを直したい」「ファイル追加・rename・削除後の参照や docs/config のずれを確認したい」といった依頼で使う。変更差分をもとに、README、docs、参照リンク、.gitignore、.chezmoiignore、設定ファイル、一覧の整合を確認し、事実から明らかな漏れは修正する。実装そのものを進めたい時は `code-implementation-loop` スキル、既存 docs 本文だけを更新したい時は `docs-update` スキルを使う。
+description: 「変更後の整合性を精査したい」「追従漏れを直したい」「rename / 削除後の参照や docs/config のずれを確認したい」といった依頼で使う。差分をもとに README、docs、参照リンク、ignore、設定、一覧の整合を確認し、明らかな漏れだけ修正する。実装したい時は `code-implementation-loop` スキル、既存 docs 本文だけを更新したい時は `docs-update` スキルを使う。
 metadata:
   short-description: 整合性精査
 ---
 
 # Consistency Audit
 
-変更差分から、参照、docs、設定、ignore の追従漏れを確認する。
-この skill は実装や文書作成の主役ではなく、既にある変更の整合性を精査して、明らかな漏れだけを補う。
+変更差分から、参照、docs、設定、ignore の追従漏れを確認し、明らかな漏れだけを補う。
 
 ## 対象
 

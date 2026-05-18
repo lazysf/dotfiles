@@ -1,6 +1,6 @@
 ---
 name: git-push
-description: Git の commit を push したい、現在ブランチをリモートへ出したい、upstream を設定して push したい依頼で使う。push 先、upstream、通常 push の安全条件を確認してから、現在ブランチまたは明示された単一 tag を push する。commit 作成や commit message 整備が目的なら `git-commit` スキルを使い、force push や広域 push は対象外とする。
+description: Git の commit を push したい、現在ブランチをリモートへ出したい、upstream を設定したい依頼で使う。push 先、upstream、安全条件を確認し、現在ブランチまたは明示された単一 tag だけを push する。commit 作成は `git-commit` スキルを使い、force push や広域 push は対象外とする。
 metadata:
   short-description: Git push
 ---

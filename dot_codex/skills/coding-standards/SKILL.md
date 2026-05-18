@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: "「VBA / Excel マクロの .bas / .cls を直したい」「対応済み言語のコーディング標準を確認したい」といった、コード作業で言語固有の制約やベストプラクティスが必要な依頼で使う。現時点では Excel VBA の exported .bas / .cls を対象に、対象ファイルや言語を特定して対応する reference だけを読み、既存の実装・レビュー・調査 skill に言語別ガードレールを足す。実装手順、原因調査、要件整理そのものは扱わず、実装は code-implementation-loop、調査は research、要件や技術計画の整理は product-planning / implementation-planning を使う。"
+description: 「VBA / Excel マクロの .bas / .cls を直したい」「言語固有のコーディング標準を確認したい」といった依頼で使う。対象言語の reference だけを読み、通常の実装・調査・レビューに保存形式、公開面、例外処理などのガードレールを足す。実装したい時は `code-implementation-loop` スキル、調査したい時は `research` スキル、要件や技術計画を整理したい時は `product-planning` / `implementation-planning` スキルを使う。
 metadata:
   short-description: コーディング標準
 ---
@@ -8,7 +8,6 @@ metadata:
 # Coding Standards
 
 言語やファイル形式ごとの制約を、通常の実装・調査・レビュー作業に足す補助 skill。
-この skill は作業の主入口ではなく、対象言語で事故りやすい保存形式、公開面、例外処理、命名、生成ルールを確認するために使う。
 
 ## 基本方針
 

@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「リファクタ境界や品質・互換性・セキュリティの実装前 scope を整理したい」といった依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を問いで 1 つずつ詰め、実行可能な技術計画へ落とし込む。plan / design を横断的に stress-test したい時は `grill-me` スキル、既存 docs や ADR と照合して inline 更新したい時は `grill-with-docs` スキルを使う。
+description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「リファクタ境界や品質・互換性・セキュリティの scope を整理したい」といった依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を詰め、実行可能な技術計画にする。plan / design を stress-test したい時は `grill-me` スキル、docs や ADR と照合更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: 技術計画
 ---
@@ -11,7 +11,6 @@ metadata:
 
 ## 前提
 
-- [AGENTS.md](../../AGENTS.md) の契約と停止線を前提に適用する。
 - 目的、成功条件、非目的、制約が説明できる状態で使う。
 - root に `CONTEXT-MAP.md` があれば対象 context を選び、該当 `CONTEXT.md` を読んでから計画する。
 - CONTEXT は glossary であり、実装判断は ADR または計画本文で扱う。
@@ -81,6 +80,8 @@ metadata:
 - `open_questions`
 - `next_step`
 
+`verification` には実行可能な確認入口を書き、未確認事項や実行後の結果と混ぜない。
+根拠が弱いリスクや前提は、実装手順ではなく `risks` または `open_questions` に残す。
 必要なら `docs_update_candidates` を添える。
 ただし inline 更新や ADR 作成まで行う場合は `grill-with-docs` スキルを使う。
 review を求める場合は、この出力を `02-implementation-planning-reviewer` reviewer agent に渡せる粒度で整理する。
