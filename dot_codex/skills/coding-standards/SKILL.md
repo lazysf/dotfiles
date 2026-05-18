@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: "「VBA / Excel マクロの .bas / .cls を直したい」「対応済み言語のコーディング標準を確認したい」といった、コード作業で言語固有の制約やベストプラクティスが必要な依頼で使う。現時点では Excel VBA の exported .bas / .cls を対象に、対象ファイルや言語を特定して対応する reference だけを読み、既存の実装・レビュー・調査 skill に言語別ガードレールを足す。実装手順、原因調査、要件整理そのものは扱わず、実装は code-implementation-loop、調査は research、計画整理は task-intake / product-planning / implementation-planning を使う。"
+description: "「VBA / Excel マクロの .bas / .cls を直したい」「対応済み言語のコーディング標準を確認したい」といった、コード作業で言語固有の制約やベストプラクティスが必要な依頼で使う。現時点では Excel VBA の exported .bas / .cls を対象に、対象ファイルや言語を特定して対応する reference だけを読み、既存の実装・レビュー・調査 skill に言語別ガードレールを足す。実装手順、原因調査、要件整理そのものは扱わず、実装は code-implementation-loop、調査は research、要件や技術計画の整理は product-planning / implementation-planning を使う。"
 metadata:
   short-description: コーディング標準
 ---
@@ -25,7 +25,7 @@ metadata:
 
 - 実装に入る時は `code-implementation-loop` と併用する。
 - 原因や影響を先に調べる時は `research` と併用する。
-- 計画や要件を固める時は `task-intake`、`product-planning`、`implementation-planning` のうち状況に合う skill と併用する。
+- 要件を固める時は `product-planning`、技術計画を固める時は `implementation-planning` と併用する。
 - 言語別標準に関係しない README、ADR、設定説明だけの更新では使わない。
 
 ## 確認観点

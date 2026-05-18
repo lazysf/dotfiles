@@ -97,7 +97,7 @@
 
 - 例: 「依頼文が散らばっているので今回どこまでやるか整理したい」「新機能の受け入れ確認をしたい」「バグ修正が効いたか確認したい」
 - 観測ポイント:
-  - 散らばった依頼や軽い停止線整理は `task-intake` が正式入口として案内される
+  - 散らばった依頼や軽い停止線整理は `product-planning` が正式入口として案内される
   - feature / maintenance の受け入れ確認は `change-verification` の `acceptance` mode として扱われる
   - bugfix / security / quality / compat の修正効果確認は `change-verification` の `verification` mode として扱われる
   - 要求分類そのものを user-facing workflow として案内しない
@@ -203,13 +203,13 @@
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
   - `dot_codex/AGENTS.md`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
 
-### 17.5. 単純化リファクタの入口が近接 skill と混ざらない
+### 17.5. リファクタや品質改善の入口が統合後 surface に乗る
 
 - 例: 「過剰な分岐を減らして既存挙動を守りたい」「どこまで整理するか決めたい」「性能を改善したい」「実装に入りたい」
 - 観測ポイント:
-  - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす依頼は `refactor-simplification` に案内される
-  - リファクタ境界そのものを決める依頼は `maintenance-analysis` に案内される
-  - 性能や安定性など品質特性の改善は `quality-analysis` に案内される
+  - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす計画は `implementation-planning` に案内される
+  - リファクタ境界そのものを決める依頼は `implementation-planning` に案内される
+  - 性能や安定性など品質特性の事実確認は `research`、実装前 scope は `implementation-planning` に案内される
   - 実装開始や確認方法先行の最小差分は `code-implementation-loop` に案内される
 
 ### 18. planning skill が整理専用のまま保たれる
@@ -230,7 +230,7 @@
   - root `CONTEXT.md` は作らない
   - `CONTEXT.md` は glossary と関係性に限定され、spec、作業メモ、実装判断を混ぜない
   - `CONTEXT-MAP.md` と deploy 先の `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
-  - `grill me` は `grill-me` の発火語として扱われ、planning skill には持ち込まれない
+  - `grill me` は `grill-me` の発火語として扱われ、docs 反映が必要な場合だけ `grill-with-docs` に案内される
 
 ### 20. ADR が状態付き軽量 ADR として扱われる
 
