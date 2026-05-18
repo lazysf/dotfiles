@@ -1,6 +1,6 @@
 ---
 name: quality-analysis
-description: 「性能や安定性を改善したい」「品質改善の焦点と検証観点を決めたい」といった quality 案件で使う。改善対象の品質特性、現状のボトルネックやリスク、今回の改善範囲、検証観点を整理する。変更容易性を改善したい時は `maintenance-analysis` スキル、通常不具合を是正したい時は `bug-diagnosis` スキルを使う。
+description: 「性能や安定性を改善したい」「品質改善の焦点と検証観点を決めたい」といった quality 案件で使う。改善対象の品質特性、現状のボトルネックやリスク、今回の改善範囲、検証観点を整理する。目的や成功条件が未確定なら `product-planning` スキル、変更容易性を改善したい時は `maintenance-analysis` スキルを使う。
 metadata:
   short-description: Quality 分析
 ---
@@ -8,6 +8,7 @@ metadata:
 # Quality Analysis
 
 quality 案件で、どの品質特性をどこまで改善するかを整理する。
+目的や成功条件が曖昧な場合は、品質分析へ進む前に `product-planning` スキルへ戻す。
 
 ## 手順
 

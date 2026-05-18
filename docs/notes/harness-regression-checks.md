@@ -219,7 +219,29 @@
   - 要件 review と実装計画 review の責務が分離されたまま維持されている
   - 導線の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と各 `SKILL.md` / agent 定義を正本にする
 
-### 19. review summary helper が reviewer 起動元へ昇格しない
+### 19. context-aware upstream planning が機能する
+
+- 例: 「計画を深掘りして」「既存 context と docs に照らして要件を固めたい」「実装順序と検証方法を詰めたい」
+- 観測ポイント:
+  - 要件定義の深掘りは `product-planning` に案内される
+  - 実装計画の深掘りは `implementation-planning` に案内される
+  - root `CONTEXT-MAP.md` から `dot_codex/CONTEXT.md` と `docs/CONTEXT.md` へ辿れる
+  - root `CONTEXT.md` は作らない
+  - `CONTEXT.md` は glossary と関係性に限定され、spec、作業メモ、実装判断を混ぜない
+  - `CONTEXT-MAP.md` と deploy 先の `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
+  - `description` に `grill me` を発火語として入れない
+
+### 20. ADR が状態付き軽量 ADR として扱われる
+
+- 例: 「この判断を残したい」「この用語を残したい」
+- 観測ポイント:
+  - 用語は該当 context の `CONTEXT.md` に送られる
+  - 判断は hard to reverse、surprising without context、real trade-off の 3 条件を満たす場合だけ ADR 候補になる
+  - ADR は `Status` を持つ
+  - 短い判断は 1-3 文の本文で残せる
+  - `Context` / `Decision` / `Consequences` は必要な場合だけ使われる
+
+### 21. review summary helper が reviewer 起動元へ昇格しない
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 観測ポイント:
@@ -227,7 +249,7 @@
   - review 本体や reviewer 選択を代行しない
   - 導線と役割分担の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と関連 skill / agent 定義を正本にする
 
-### 20. reviewer agent 起動契約が AGENTS に残る
+### 22. reviewer agent 起動契約が AGENTS に残る
 
 - 例: 「01/02 の計画レビューを reviewer agent で起動したい」「03/04 に差分レビューを依頼したい」
 - 観測ポイント:
@@ -236,7 +258,7 @@
   - 01/02 reviewer には計画本文、03/04 reviewer には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を `message` に明示して渡す契約がある
   - docs / skills に、reviewer role と `fork_context=true` の併用を推奨する記述が再流入していない
 
-### 21. repo 固有契約の軽い確認を手動回帰で補う
+### 23. repo 固有契約の軽い確認を手動回帰で補う
 
 - 例: 「agent metadata や rule metadata の欠落、リンク切れ、`.codex` 推奨文言を見落としていないか」
 - 観測ポイント:
@@ -247,7 +269,7 @@
   - knowledge の置き場として project-local `.codex` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
 
-### 22. reviewer 設定 tier が役割分担に沿って保たれる
+### 24. reviewer 設定 tier が役割分担に沿って保たれる
 
 - 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
 - 観測ポイント:
