@@ -1,6 +1,6 @@
 ---
 name: product-planning
-description: 「依頼文が散らばっている」「今回どこまでやるか決めたい」「計画を深掘りしたい」「要件を固めたい」といった要件整理で使う。探索で答えられる前提を先に確認し、目的、成功条件、非目的、制約、用語、未確定事項を実装可能な要件にする。plan / design を stress-test したい時は `grill-me` スキル、docs や ADR と照合更新したい時は `grill-with-docs` スキルを使う。
+description: 「依頼文が散らばっている」「今回どこまでやるか決めたい」「計画を深掘りしたい」「要件を固めたい」といった要件整理で使う。探索で答えられる前提を先に確認し、目的、成功条件、非目的、制約、用語、未確定事項を実装可能な要件にする。PRD draft にまとめたい時は `to-prd` スキル、plan / design を stress-test したい時は `grill-me` スキル、docs や ADR と照合更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: プロダクト計画
 ---
@@ -21,6 +21,7 @@ metadata:
 - 目的、成功条件、非目的、制約、用語、優先順位、未確定事項を明確にする。
 - context / docs / code / ADR と照合し、既存の言葉や判断と矛盾したまま進むのを避ける。
 - 実装タスクではなく、ユーザー価値や運用上の完了条件を定義する。
+- 整理済みの要件を PRD draft にすることが主目的の場合は、`to-prd` に切り替える。
 - plan / design 全体の pressure test や inline docs 更新が主目的の場合は、`grill-me` または `grill-with-docs` に切り替える。
 
 ## 対象
@@ -33,6 +34,7 @@ metadata:
 ## 対象外
 
 - 事実確認だけが目的の依頼。`research` スキルを使う。
+- 会話や整理済み要件を PRD draft として文書化する依頼。`to-prd` スキルを使う。
 - 実装順序、影響範囲、検証方法を詰める依頼。`implementation-planning` スキルを使う。
 - 要件 draft のレビュー本体。`01-product-planning-reviewer` reviewer agent を使う。
 
