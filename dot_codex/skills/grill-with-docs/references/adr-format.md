@@ -67,3 +67,11 @@ Other optional sections, such as considered options, are allowed only when the r
 - Increment by one.
 - Use a short kebab-case slug.
 - Add new ADRs to `docs/README.md`.
+
+## Lifecycle Updates
+
+- New ADRs start as `Proposed`.
+- Move an ADR to `Accepted` only when the user explicitly says the decision is adopted.
+- Move an ADR to `Rejected` only when the user explicitly rejects the decision.
+- Move an older ADR to `Superseded` only when a newer ADR explicitly lists it in `Supersedes`.
+- Do not backfill `Supersedes` or `Superseded-By` by guesswork.

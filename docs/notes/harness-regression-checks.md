@@ -118,15 +118,15 @@
   - 主分類を増やさず、既存ドキュメント更新の専用入口として扱われる
   - 知識の置き場判断と混同されない
 
-### 10. 知見蓄積は `capture-knowledge` に集約される
+### 10. 知見蓄積は `grill-with-docs` に統合される
 
-- 例: 「今回の知見をどこに残すべきか」「通常知見か ADR かを決めたい」「今回の知見を整理して」
+- 例: 「docs と照らして計画を問い詰めて」「今回の用語を CONTEXT に残して」「この判断を ADR として残したい」
 - 観測ポイント:
-  - user-facing 入口は `capture-knowledge` に集約され、docs 更新専用入口と混同されない
-  - evidence 収集、置き場判断、必要な existing docs / note / ADR / ADR metadata 更新が 1 workflow として扱われる
-  - docs / note / ADR / ADR metadata は別 workflow ではなく、同じ知見蓄積 workflow の action として扱われる
+  - user-facing 入口は `grill-with-docs` に統合され、docs 更新専用入口と混同されない
+  - docs-aware な grilling の中で evidence 収集、置き場判断、必要な CONTEXT / existing docs / note / ADR 更新が扱われる
+  - docs / note / ADR / ADR metadata は、会話中に確定した durable knowledge として扱われる
   - 通常知見と判断記録の置き場が混ざらない
-  - 詳細な workflow は `capture-knowledge` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
+  - 詳細な workflow は `grill-with-docs` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 11. ADR が状態付き台帳として扱われる
 
@@ -137,26 +137,27 @@
   - 手順メモや運用メモが ADR に再流入していない
   - 状態モデルやメタデータ、運用フローの詳細は [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
-### 12. 知見蓄積が `decision` と順序付き `actions` で返る
+### 12. `grill-with-docs` が durable knowledge を inline 更新する
 
-- 例: 「このコミット後に何を残すべきか判断したい」「今回の作業で残すべき知見を整理して」
+- 例: 「docs と照らしてこの設計を grill して」「この用語が固まったので CONTEXT に残して」
 - 観測ポイント:
   - 一過性 change と durable な知見化対象が切り分けられる
-  - `decision` が `skip | captured | needs_user_input` のいずれかで返る
-  - `actions` が必要な順序で返り、ADR 作成と状態更新の順序が崩れない
+  - 用語が確定したら対象 context の `CONTEXT.md` が inline 更新される
+  - 対象 context が曖昧な場合は推測で root `CONTEXT.md` を作らない
+  - ADR 作成と状態更新の順序が崩れない
   - note と ADR の送り先が混ざらない
   - diff だけから判断を推測して ADR を作らない
-  - 詳細は `capture-knowledge` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
+  - 詳細は `grill-with-docs` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 13. ADR 採用判断と状態更新が一貫する
 
 - 例: 「この ADR を採用済みにしたい」「ADR 作成後に Accepted へ進めたい」
 - 観測ポイント:
   - ADR の `Accepted` 化が commit 作成と切り離されている
-  - 採用判断が明示された場合だけ `capture-knowledge` の action で状態更新される
+  - 採用判断が明示された場合だけ `grill-with-docs` で状態更新される
   - `Superseded` は、新 ADR 側に対象 ADR を指す `Supersedes` が明示されている場合だけ更新される
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
-  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `capture-knowledge` skill を正本にする
+  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `grill-with-docs` skill を正本にする
 
 ### 13.5. `consistency-audit` が明示依頼で整合性を確認する
 
@@ -175,7 +176,7 @@
 - 観測ポイント:
   - `git-push` は push 実行と upstream 判定だけを扱う
   - 知見蓄積、ADR 作成、ADR 状態更新を開始しない
-  - 知見整理が必要な場合でも push 結果と混ぜず、必要なら別 action として `capture-knowledge` を案内する
+  - 知見整理が必要な場合でも push 結果と混ぜず、必要なら別 action として `grill-with-docs` を案内する
 
 ### 15. `git-push` の返答が最小契約を保つ
 
@@ -191,9 +192,9 @@
 
 - 例: 「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」
 - 観測ポイント:
-  - `capture-knowledge` の状態更新 action が明示された採用判断や supersede 根拠に沿っている
+  - `grill-with-docs` の状態更新が明示された採用判断や supersede 根拠に沿っている
   - supersede 更新が明示根拠のある場合だけ行われる
-  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `capture-knowledge` skill を正本にする
+  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `grill-with-docs` skill を正本にする
 
 ### 17. 既存の主要入口が壊れていない
 
@@ -229,7 +230,7 @@
   - root `CONTEXT.md` は作らない
   - `CONTEXT.md` は glossary と関係性に限定され、spec、作業メモ、実装判断を混ぜない
   - `CONTEXT-MAP.md` と deploy 先の `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
-  - `description` に `grill me` を発火語として入れない
+  - `grill me` は `grill-me` の発火語として扱われ、planning skill には持ち込まれない
 
 ### 20. ADR が状態付き軽量 ADR として扱われる
 
