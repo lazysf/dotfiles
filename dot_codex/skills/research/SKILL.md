@@ -1,6 +1,6 @@
 ---
 name: research
-description: 「まず調べたい」「バグの原因を切り分けたい」「外部変化や品質・セキュリティ・保守性への影響を事実ベースで整理したい」といった調査依頼で使う。初見 repo の grounding を含め、facts、unknowns、options、recommendation、next_step を整理する。要件や計画を問いで深掘りしたい時は `product-planning` スキル、実装前 scope を決めたい時は `implementation-planning` スキル、調査結果を前提に実装したい時は `code-implementation-loop` スキルを使う。
+description: 「まず調べたい」「バグの原因を切り分けたい」「外部変化や品質・セキュリティ・保守性への影響を事実ベースで整理したい」といった調査依頼で使う。初見 repo の grounding を含め、facts、unknowns、options、recommendation、next_step を整理する。要件整理したい時は `product-planning` スキル、実装前 scope を決めたい時は `implementation-planning` スキル、実装したい時は `code-implementation-loop` スキルを使う。
 metadata:
   short-description: 調査手順
 ---
@@ -68,6 +68,8 @@ metadata:
 - `options`
 - `recommendation`
 - `next_step`
+
+`facts` は確認済み根拠に結び付く判断材料だけに絞り、低価値な網羅や一般論で埋めない。
 
 ## 停止条件
 

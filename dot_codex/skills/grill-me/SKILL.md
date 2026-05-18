@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: 「grill me」「この計画を問い詰めて」「設計を stress-test して」といった、plan / design の穴や未確定事項を会話で詰めたい依頼で使う。質問を 1 つずつ出し、各質問に推奨回答を添え、共有理解に到達するまで decision tree を辿る。既存 docs や code と照合しながら用語や ADR も更新したい時は `grill-with-docs` スキルを使う。
+description: 「grill me」「この計画を問い詰めて」「設計を stress-test して」といった、plan / design の穴や未確定事項を会話で詰めたい依頼で使う。質問を 1 つずつ出し、推奨回答を添えて共有理解まで辿る。既存 docs や code と照合して用語や ADR も更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: 計画を問い詰める
 ---
@@ -25,6 +25,12 @@ metadata:
 4. 推奨回答を添えて質問する。
 5. 回答を受けたら、確定事項と残る未確定事項を短く更新する。
 6. 共有理解に到達するまで 3-5 を繰り返す。
+
+## 一区切りの示し方
+
+- 主要な未確定事項が解け、次が実装、調査、docs 更新、または commit など別 workflow になる時は、`grill_status: 一段落` と示す。
+- 一段落した時は、確定事項、残る未確認事項、次に進める入口を短く分ける。
+- まだ問いを続ける必要がある時は、`next_question` を 1 つだけ出す。
 
 ## 停止線
 
