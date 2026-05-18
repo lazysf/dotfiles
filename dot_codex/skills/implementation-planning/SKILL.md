@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「リファクタ境界や品質・互換性・セキュリティの scope を整理したい」といった依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を詰め、実行可能な技術計画にする。plan / design を stress-test したい時は `grill-me` スキル、docs や ADR と照合更新したい時は `grill-with-docs` スキルを使う。
+description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「リファクタ境界や品質・互換性・セキュリティの scope を整理したい」といった依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を詰め、実行可能な技術計画にする。architecture 改善候補を探して grilling したい時は `improve-codebase-architecture` スキル、plan / design を stress-test したい時は `grill-me` スキル、docs や ADR と照合更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: 技術計画
 ---
@@ -21,6 +21,7 @@ metadata:
 - 最初に通すべき最小スライスを決め、書き込み範囲を広げすぎない。
 - 変更境界、依存関係、検証入口、既存パターンとの矛盾を先に潰す。
 - リファクタ、単純化、品質改善、互換性追従、security hardening の実装前 scope を整理する。
+- architecture 改善候補を探索し、候補選択後に設計を grilling することが主目的の場合は、`improve-codebase-architecture` に切り替える。
 - 技術計画全体の pressure test や inline docs 更新が主目的の場合は、`grill-me` または `grill-with-docs` に切り替える。
 
 ## 対象
@@ -34,6 +35,7 @@ metadata:
 
 - 目的や成功条件がまだ曖昧な依頼。`product-planning` スキルを使う。
 - 事実調査だけが目的の依頼。`research` スキルを使う。
+- architecture 改善候補の探索や候補選択後の grilling が目的の依頼。`improve-codebase-architecture` スキルを使う。
 - 差分の品質 review や security review。`03-quality-reviewer` または `04-security-reviewer` reviewer agent を使う。
 - 計画 draft のレビュー本体。`02-implementation-planning-reviewer` reviewer agent を使う。
 - そのまま実装に入れるほど小さい依頼。

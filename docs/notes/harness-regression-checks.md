@@ -98,6 +98,8 @@
 - 例: 「依頼文が散らばっているので今回どこまでやるか整理したい」「新機能の受け入れ確認をしたい」「バグ修正が効いたか確認したい」
 - 観測ポイント:
   - 散らばった依頼や軽い停止線整理は `product-planning` が正式入口として案内される
+  - 会話や整理済み要件を PRD draft にする依頼は `to-prd` が正式入口として案内される
+  - `to-prd` で生成した PRD は draft として扱われ、正式 docs への保存や issue 化は明示依頼がある時だけ扱われる
   - feature / maintenance の受け入れ確認は `change-verification` の `acceptance` mode として扱われる
   - bugfix / security / quality / compat の修正効果確認は `change-verification` の `verification` mode として扱われる
   - 要求分類そのものを user-facing workflow として案内しない
@@ -207,6 +209,9 @@
 
 - 例: 「過剰な分岐を減らして既存挙動を守りたい」「どこまで整理するか決めたい」「性能を改善したい」「実装に入りたい」
 - 観測ポイント:
+  - architecture 改善候補を見つけたい依頼は `improve-codebase-architecture` に案内される
+  - `zoom-out` 的な codebase 地図化は独立 skill ではなく `improve-codebase-architecture` の探索ステップとして扱われる
+  - `improve-codebase-architecture` は候補出しと候補選択後の grilling までを扱い、実装順序確定は `implementation-planning` に進める
   - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす計画は `implementation-planning` に案内される
   - リファクタ境界そのものを決める依頼は `implementation-planning` に案内される
   - 性能や安定性など品質特性の事実確認は `research`、実装前 scope は `implementation-planning` に案内される

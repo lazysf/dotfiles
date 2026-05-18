@@ -1,14 +1,16 @@
 # Classification-Driven Workflow Surface
 
 この文書は、`dot_codex/AGENTS.md` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
-現在の正式な公開 surface は、`dot_codex/skills/` 配下の 12 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
+現在の正式な公開 surface は、`dot_codex/skills/` 配下の 14 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
 - `research`: 事実確認、原因調査、影響調査、PoC、仕様確認の入口。bug / security / quality / compat / maintenance も、まず観測事実を集める段階ではここで扱う
 - `product-planning`: 要件定義の中核。散らばった依頼や軽い停止線整理も含め、目的、成功条件、非目的、制約、用語、未確定事項を整理する
+- `to-prd`: 会話や整理済み要件を PRD draft に落とす入口。生成時点では draft として扱い、正式 docs への保存や issue 化は明示依頼がある時だけ扱う
 - `implementation-planning`: 技術計画の中核。要件確定後の実装順序、変更境界、検証入口に加え、リファクタ境界、単純化、quality / compat / security の実装前 scope を整理する
+- `improve-codebase-architecture`: architecture 改善候補の探索と候補選択後の grilling の入口。`zoom-out` 的な module / caller / 責務の地図化を含み、実装順序確定は `implementation-planning`、差分作成は `code-implementation-loop` へ進める
 - `code-implementation-loop`: 確認方法先行で、最小差分の実装、必要な整理、再確認を進める
 - `coding-standards`: コード作業に言語別の制約やベストプラクティスを足す補助 skill。実装、調査、計画、レビュー本体は担わず、対象言語の reference を必要時に読む
 - `change-verification`: 既存変更の受け入れ確認や、bugfix / security / quality / compat の修正効果確認を standalone で扱う
@@ -36,7 +38,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 | `feature` | 新しい価値や振る舞いを追加する | 新機能追加、機能拡張、UX改善、新規連携、新業務対応 | できることを増やす案件 | 主目的が追加なら内部整理を伴ってもここ |
 | `security` | セキュリティリスクを下げる | 脆弱性修正、認証/認可強化、入力検証強化、監査ログ強化 | 守りを強くする案件 | 事実確認は `research`、実装前 scope は `implementation-planning`、差分 review は `04-security-reviewer` |
 | `quality` | 品質特性を改善する | 性能改善、安定性向上、可用性向上、可観測性改善、運用性改善 | より良く動かす案件 | 事実確認は `research`、実装前 scope は `implementation-planning`、差分 review は `03-quality-reviewer` |
-| `maintenance` | 将来の保守性・変更容易性を上げる | リファクタ、技術的負債返済、テスト追加、命名整理、重複除去 | 将来の変更を楽にする案件 | リファクタ境界や単純化の計画は `implementation-planning` |
+| `maintenance` | 将来の保守性・変更容易性を上げる | リファクタ、技術的負債返済、テスト追加、命名整理、重複除去 | 将来の変更を楽にする案件 | architecture 改善候補の探索は `improve-codebase-architecture`、リファクタ境界や単純化の計画は `implementation-planning` |
 | `compat` | 外部変化に追従する | 外部 API 変更対応、依存更新、ランタイム更新、EOL 対応 | 外部変化に合わせる案件 | 外部変化の確認は `research`、追従 scope は `implementation-planning` |
 
 固定の代表導線は `dot_codex/AGENTS.md` に持たせず、この文書では分類語と surface 設計の背景だけを扱う。

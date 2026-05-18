@@ -47,9 +47,12 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 
 - `- Supersedes: 0003`
 - `- Superseded-By: 0005`
+- `- Amends: 0003`
+- `- Amended by: 0005`
 
 `Superseded-By` は新規 ADR 作成時に推測で書かず、`grill-with-docs` の明示根拠に基づく更新でだけ付ける。
 `Supersedes` も新規 ADR 作成時に明示されたものだけを使い、後段の状態更新が推測で補わない。
+`Amends` / `Amended by` は、既存 ADR の判断を置き換えずに一部だけ補正または拡張する時だけ使う。
 
 ## 本文の形
 
@@ -64,6 +67,7 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 3. 新しい判断記録が ADR 条件を満たすなら `docs/adr/NNNN-*.md` を `Proposed` として作る
 4. その判断が採用済みと明示されている場合だけ、新 ADR を `Accepted` に更新する
 5. 新 ADR 側に明示 `Supersedes` がある場合だけ、続けて旧 ADR を `Superseded` にする
+6. 新 ADR 側に明示 `Amends` がある場合だけ、続けて旧 ADR に `Amended by` を追記する
 
 ## Acceptance Timing
 
