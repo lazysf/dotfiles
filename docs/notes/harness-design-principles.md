@@ -67,7 +67,7 @@
 ### 6. review は agent-first の明示選択で扱う
 
 - review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
-- review 本体と結果整形 helper は責務を分ける
+- review 本体は reviewer agent が担い、結果の見せ方も agent 定義内で人間向けに調整する
 - 具体的な reviewer 名や review 導線は surface 文書と agent 定義を正本にする
 
 ### 7. reviewer の model tier は役割ごとに分ける

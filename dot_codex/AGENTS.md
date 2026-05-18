@@ -66,11 +66,10 @@
 ## 置き場の原則
 
 - `~/.codex/AGENTS.md`: 全体契約と `~/.codex/` 配下の薄い surface 案内を置く
-- 作業対象プロジェクトの `docs/notes/`: repo-level の通常知見や背景を置く
-- 作業対象プロジェクトの `docs/adr/`: repo-level の判断記録を置く
+- 作業対象 repo の `docs/notes/`: その repo に閉じる通常知見や背景を置く
+- 作業対象 repo の `docs/adr/`: その repo に閉じる判断記録を置く
 - `~/.codex/skills/`: 再利用する作業手順と通常作業の正式入口を置く
 - `~/.codex/agents/`: 専門化した read-only の補助役や review 入口を置く
 - `~/.codex/rules/`: 機械的なガードを置く
-- 通常作業の正式 surface は 13 個の skill と 4 個の reviewer agent に絞り、詳細な背景は repo 側の docs/notes と docs/adr を正本にする
-- 詳細な使い分けや発火条件は、各 `SKILL.md` と agent 定義を正本にし、背景や判断理由は関連 docs を参照する
+- 詳細な使い分けや発火条件は、各 `SKILL.md` と agent 定義を正本にする
 - 置き場が曖昧な場合でも、`~/.codex/` 直下や repo root 直下に新しい運用ファイルを増やさない
