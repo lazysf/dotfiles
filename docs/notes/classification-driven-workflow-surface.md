@@ -1,7 +1,7 @@
 # Classification-Driven Workflow Surface
 
 この文書は、`dot_codex/AGENTS.md` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
-現在の正式な公開 surface は、`dot_codex/skills/` 配下の 13 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
+現在の正式な公開 surface は、`dot_codex/skills/` 配下の 12 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
 
@@ -15,7 +15,7 @@
 - `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成を docs-aware な grilling と一緒に扱う場合は `grill-with-docs` を使う
 - `grill-me`: plan / design の pressure test 入口。質問を 1 つずつ行い、推奨回答を添え、codebase で答えられることは先に探索する
 - `grill-with-docs`: docs-aware な pressure test と inline knowledge capture の入口。`CONTEXT.md`、docs、ADR、code と照合し、確定した用語や判断をその場で反映する
-- `consistency-audit`, `review-findings-summary`: 補助 skill。明示依頼時の整合性精査、出口整形に責務を絞る
+- `consistency-audit`: 補助 skill。明示依頼時の整合性精査に責務を絞る
 - `git-commit`, `git-push`: 通常 commit / push の正式入口。その他の Git 操作は skill を増やさず既定 prompt と停止線で扱う
 - `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
@@ -50,7 +50,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - review は利用者が対象に応じて適切な reviewer agent を明示的に呼んで実施する
 - generic review から `04-security-reviewer` への自動昇格は行わない
 - `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
-- `review-findings-summary` は reviewer 非起動、agent 出力限定の出口整理 helper として使う
+- reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
 - `docs/README.md` は index、`dot_codex/AGENTS.md` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
 
 ## Frontmatter Description 設計ルール

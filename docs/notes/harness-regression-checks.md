@@ -242,13 +242,14 @@
   - 短い判断は 1-3 文の本文で残せる
   - `Context` / `Decision` / `Consequences` は必要な場合だけ使われる
 
-### 21. review summary helper が reviewer 起動元へ昇格しない
+### 21. reviewer agent の返答が JSON 固定へ戻らない
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 観測ポイント:
-  - review summary helper が reviewer 結果の整形に責務を絞ったまま保たれている
-  - review 本体や reviewer 選択を代行しない
-  - 導線と役割分担の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と関連 skill / agent 定義を正本にする
+  - review 本体は 4 つの reviewer agent が担う
+  - reviewer agent が固定の JSON 形式だけを返す指定へ戻っていない
+  - reviewer agent の結果が、親がそのまま利用者へ渡しても読みやすい findings-first の形になっている
+  - 導線と役割分担の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と関連 agent 定義を正本にする
 
 ### 22. reviewer agent 起動契約が AGENTS に残る
 

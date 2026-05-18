@@ -25,6 +25,7 @@
   - [0009-adopt-context-aware-upstream-planning.md](./adr/0009-adopt-context-aware-upstream-planning.md)
   - [0010-absorb-knowledge-capture-into-grill-with-docs.md](./adr/0010-absorb-knowledge-capture-into-grill-with-docs.md)
   - [0011-prune-codex-skill-and-reviewer-surface.md](./adr/0011-prune-codex-skill-and-reviewer-surface.md)
+  - [0012-retire-review-findings-summary-skill.md](./adr/0012-retire-review-findings-summary-skill.md)
 - `dot_codex/AGENTS.md`: 運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: review の正式入口になる reviewer agent を置く。review はここから明示的に呼び出す
