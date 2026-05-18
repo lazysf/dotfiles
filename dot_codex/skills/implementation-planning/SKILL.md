@@ -1,6 +1,6 @@
 ---
 name: implementation-planning
-description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「要件確定後に技術計画を固めたい」といった依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を問いで 1 つずつ詰め、実行可能な技術計画へ落とし込む。plan / design を横断的に stress-test したい時は `grill-me` スキル、既存 docs や ADR と照合して inline 更新したい時は `grill-with-docs` スキルを使う。
+description: 「実装順序を決めたい」「影響範囲と検証方法を詰めたい」「リファクタ境界や品質・互換性・セキュリティの実装前 scope を整理したい」といった依頼で使う。変更境界、依存関係、検証入口、既存パターンとの矛盾を問いで 1 つずつ詰め、実行可能な技術計画へ落とし込む。plan / design を横断的に stress-test したい時は `grill-me` スキル、既存 docs や ADR と照合して inline 更新したい時は `grill-with-docs` スキルを使う。
 metadata:
   short-description: 技術計画
 ---
@@ -21,18 +21,21 @@ metadata:
 - 既存 context / docs / code / ADR に沿った実装計画を作る。
 - 最初に通すべき最小スライスを決め、書き込み範囲を広げすぎない。
 - 変更境界、依存関係、検証入口、既存パターンとの矛盾を先に潰す。
+- リファクタ、単純化、品質改善、互換性追従、security hardening の実装前 scope を整理する。
 - 技術計画全体の pressure test や inline docs 更新が主目的の場合は、`grill-me` または `grill-with-docs` に切り替える。
 
 ## 対象
 
 - 要件がある程度固まり、実装順序や影響範囲を整理したい依頼。
 - 複数ファイルや複数レイヤーにまたがる実装の段取りを詰めたい依頼。
+- 既存挙動を守るリファクタ境界、過剰実装の単純化、quality / compat / security の実装前 scope を決めたい依頼。
 - 既存 context / docs / code / ADR と照合して技術計画を固めたい依頼。
 
 ## 対象外
 
 - 目的や成功条件がまだ曖昧な依頼。`product-planning` スキルを使う。
 - 事実調査だけが目的の依頼。`research` スキルを使う。
+- 差分の品質 review や security review。`03-quality-reviewer` または `04-security-reviewer` reviewer agent を使う。
 - 計画 draft のレビュー本体。`02-implementation-planning-reviewer` reviewer agent を使う。
 - そのまま実装に入れるほど小さい依頼。
 
@@ -42,6 +45,7 @@ metadata:
 - context / docs / code / ADR で答えられる疑問は、ユーザーへ聞く前に探索する。
 - 既存の責務、ファイル配置、テスト配置、命名、用語に寄せる。
 - 不要な抽象化や大規模設計を前提にしない。
+- scope 整理では、対象リスクや品質特性を事実確認し、実装対象と review 対象を混ぜない。
 - この skill 自体は review を行わず、実装計画の整理に専念する。
 
 ## Planning Loop
@@ -62,6 +66,8 @@ metadata:
 - 検証入口: test、lint、build、手動確認のどれで見るか。
 - 切り戻し: 変更が切り戻しやすい単位に分かれているか。
 - 停止線: 公開インターフェース、永続化、認証認可、秘密情報、本番設定に触れないか。
+- 品質/互換性/security: 改善対象、外部変化、脅威境界が実装前に確認されているか。
+- リファクタ/単純化: 守る既存挙動、触らない範囲、削る根拠が説明できるか。
 
 ## 出力ガイド
 
