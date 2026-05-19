@@ -1,80 +1,80 @@
-# ADR Format
+# ADR 形式
 
-ADRs live in `docs/adr/` and use sequential numbering: `0001-slug.md`, `0002-slug.md`, etc.
-This repo uses lightweight ADR bodies with mandatory decision status.
+ADR は `docs/adr/` に置き、`0001-slug.md`、`0002-slug.md` のように連番を使う。
+この repo では、軽量な ADR 本文と必須の decision status を使う。
 
-## When To Create An ADR
+## ADR を作る条件
 
-Create an ADR only when all three are true:
+次の 3 条件をすべて満たす場合だけ ADR を作る。
 
-1. Hard to reverse: the cost of changing direction later is meaningful.
-2. Surprising without context: a future reader would wonder why this path was chosen.
-3. Real trade-off: there were genuine alternatives and one was chosen for specific reasons.
+1. 戻しにくい: あとで方向転換する cost が意味を持つ。
+2. 文脈なしでは意外: 将来の読み手が、なぜこの道を選んだのか疑問に思う。
+3. 実際の trade-off: 実在する代替案があり、特定の理由で 1 つを選んだ。
 
-Skip the ADR if the decision is easy to reverse, obvious, or had no real alternative.
+戻しやすい、明らか、または実質的な代替案がなかった判断では ADR を作らない。
 
-## Minimum Template
+## 最小テンプレート
 
 ```markdown
 # NNNN: [Short decision title]
 
 - Status: Proposed
 
-[1-3 sentences explaining the context, decision, and why.]
+[context、decision、why を 1-3 文で説明する。]
 ```
 
 ## Status
 
-`Status` is mandatory in this repo.
+この repo では `Status` を必須にする。
 
-Allowed values:
+使える値:
 
-- `Proposed`: created but not yet accepted
-- `Accepted`: adopted and currently valid
-- `Superseded`: replaced by a later ADR
-- `Rejected`: kept as a rejected option
+- `Proposed`: 作成済みだが、まだ採用されていない
+- `Accepted`: 採用され、現在も有効
+- `Superseded`: 後続 ADR に置き換えられた
+- `Rejected`: 不採用案として残す
 
-Use relationship metadata only when explicitly known:
+relationship metadata は明示的に分かっている場合だけ使う。
 
 - `- Supersedes: 0003`
 - `- Superseded-By: 0005`
 - `- Amends: 0003`
 - `- Amended by: 0005`
 
-Do not infer relationship metadata. Use `Supersedes` only when a decision replaces an older ADR. Use `Amends` only when a decision keeps an older ADR valid but corrects or extends part of it.
+relationship metadata を推測で補わない。`Supersedes` は古い ADR を置き換える時だけ使う。`Amends` は古い ADR を有効なまま保ちつつ、一部を修正または拡張する時だけ使う。
 
-## Optional Sections
+## 任意セクション
 
-Only add sections when they carry real value:
+実際に価値がある場合だけ section を追加する。
 
 ```markdown
 ## Context
 
-[Confirmed background that explains why the decision was needed.]
+[decision が必要になった確認済み背景。]
 
 ## Decision
 
-[The chosen direction.]
+[選んだ方向。]
 
 ## Consequences
 
-[Non-obvious downstream effects, constraints, or residual risks.]
+[自明ではない downstream effect、constraint、residual risk。]
 ```
 
-Other optional sections, such as considered options, are allowed only when the rejected alternatives are worth remembering.
+検討した options など他の任意 section は、不採用案を残す価値がある場合だけ使う。
 
-## Numbering
+## 採番
 
-- Scan `docs/adr/` for the highest existing number.
-- Increment by one.
-- Use a short kebab-case slug.
-- Add new ADRs to `docs/README.md`.
+- `docs/adr/` を確認し、既存の最大番号を探す。
+- 番号を 1 つ増やす。
+- 短い kebab-case slug を使う。
+- 新しい ADR を `docs/README.md` に追加する。
 
-## Lifecycle Updates
+## Lifecycle 更新
 
-- New ADRs start as `Proposed`.
-- Move an ADR to `Accepted` only when the user explicitly says the decision is adopted.
-- Move an ADR to `Rejected` only when the user explicitly rejects the decision.
-- Move an older ADR to `Superseded` only when a newer ADR explicitly lists it in `Supersedes`.
-- Add `Amended by` only when a newer ADR explicitly lists the older ADR in `Amends`.
-- Do not backfill `Supersedes` or `Superseded-By` by guesswork.
+- 新しい ADR は `Proposed` から始める。
+- ユーザーが採用を明示した場合だけ `Accepted` にする。
+- ユーザーが不採用を明示した場合だけ `Rejected` にする。
+- 新しい ADR が `Supersedes` に古い ADR を明示している場合だけ、古い ADR を `Superseded` にする。
+- 新しい ADR が `Amends` に古い ADR を明示している場合だけ、古い ADR に `Amended by` を追加する。
+- `Supersedes` や `Superseded-By` を推測で backfill しない。

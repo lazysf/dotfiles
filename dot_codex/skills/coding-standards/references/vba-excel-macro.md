@@ -1,4 +1,4 @@
-# Excel VBA `.bas` / `.cls` Coding Standards
+# Excel VBA `.bas` / `.cls` コーディング標準
 
 Excel VBA の exported standard module (`.bas`) と class module (`.cls`) を Codex が作成・編集する時の既定ガード。
 既存挙動や Excel / VBE の互換性を優先すべき場面では、標準から外す理由と影響範囲を明示する。
@@ -69,7 +69,7 @@ Option Explicit
 - 正常終了と error path の両方で、保存した値を cleanup で復元する。
 - `DisplayAlerts = False` や calculation mode の変更は保存・上書き・再計算結果に影響するため、必要な範囲を狭く保つ。
 
-## Error handling
+## エラー処理
 
 - 失敗しうる境界では、どの操作が失敗したか追える error handling を置く。
 - `On Error Resume Next` は、存在確認や optional object access など局所的な用途に限定する。

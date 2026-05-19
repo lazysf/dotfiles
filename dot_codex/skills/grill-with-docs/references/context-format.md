@@ -1,61 +1,61 @@
-# CONTEXT Format
+# CONTEXT 形式
 
-`CONTEXT.md` is a glossary for context-specific language.
-It is not a spec, scratchpad, implementation plan, decision record, or place for secrets.
-In this repo, write `CONTEXT.md` content in Japanese unless preserving an established English term is clearer.
+`CONTEXT.md` は context 固有の言葉の glossary として扱う。
+spec、scratchpad、実装計画、判断記録、秘密情報の置き場ではない。
+この repo では、確立済み英語用語を残す方が明確な場合を除き、`CONTEXT.md` 本文は日本語で書く。
 
-## Structure
+## 構造
 
 ```markdown
-# [Context Name]
+# [Context 名]
 
-[One or two sentences describing what this context is and why it exists.]
+[この context が何で、なぜ存在するかを 1-2 文で説明する。]
 
 ## Language
 
-**Term**: [A concise one-sentence definition of the concept.]
-_Avoid_: [Aliases or overloaded words to avoid]
+**Term**: [概念の短い 1 文定義。]
+_Avoid_: [避ける alias や多義語]
 
 ## Relationships
 
-- **Term A** relates to **Term B**
+- **Term A** は **Term B** と関係する
 
 ## Example dialogue
 
-> **Dev:** "[A question that uses the terms naturally]"
-> **Domain expert:** "[An answer that clarifies the boundary]"
+> **Dev:** "[term を自然に使った質問]"
+> **Domain expert:** "[境界を明確にする回答]"
 
 ## Flagged ambiguities
 
-- "[Ambiguous word]" was used to mean both **A** and **B**. Resolved: [resolution]
+- "[曖昧な語]" が **A** と **B** の両方の意味で使われた。Resolved: [resolution]
 ```
 
-## Rules
+## ルール
 
-- Be opinionated. Pick a canonical term and list aliases to avoid.
-- Write prose in Japanese in this repo. Keep established English domain terms when translating them would make the glossary less precise.
-- Keep definitions tight. One sentence max; define what it is, not implementation behavior.
-- Include only terms specific to this context. General programming concepts do not belong.
-- Show relationships with bold term names and cardinality when obvious.
-- Flag conflicts explicitly in `Flagged ambiguities` with a clear resolution.
-- Group terms under subheadings only when natural clusters emerge.
-- Do not include secrets, credentials, private config values, unpublished personal data, temporary work notes, specs, or implementation decisions.
+- canonical term を選び、避ける alias を明示する。
+- prose は日本語で書く。ただし、翻訳すると glossary の精度が落ちる確立済み英語 domain terms は残す。
+- 定義は短く保つ。最大 1 文で、それが何かを定義し、実装 behavior は書かない。
+- この context 固有の用語だけを入れる。一般的な programming concept は入れない。
+- relationship は太字の term 名で示し、明らかな場合は cardinality も書く。
+- 衝突は `Flagged ambiguities` に明示し、resolution を書く。
+- 自然なまとまりがある場合だけ subheading で group 化する。
+- secrets、credentials、private config values、未公開個人情報、一時的な作業メモ、spec、実装判断を入れない。
 
-## Single vs Multi-Context
+## Single / Multi Context
 
-Single-context repo:
+single-context repo:
 
-- Use one root `CONTEXT.md`.
+- root `CONTEXT.md` を 1 つ使う。
 
-Multi-context repo:
+multi-context repo:
 
-- Use root `CONTEXT-MAP.md`.
-- List each context, where its `CONTEXT.md` lives, and how contexts relate.
-- Place each `CONTEXT.md` near the thing it describes.
+- root `CONTEXT-MAP.md` を使う。
+- 各 context、対応する `CONTEXT.md` の場所、context 間の関係を書く。
+- 各 `CONTEXT.md` は、それが説明する対象の近くに置く。
 
-When updating:
+更新時:
 
-- If `CONTEXT-MAP.md` exists, read it first and choose the relevant context.
-- If only root `CONTEXT.md` exists, update it as the single context.
-- If neither exists, create root `CONTEXT.md` only when the first term is resolved.
-- If multiple contexts exist and the target context is unclear, ask instead of creating a new context by guesswork.
+- `CONTEXT-MAP.md` があれば先に読み、関連する context を選ぶ。
+- root `CONTEXT.md` だけがあれば、single context として更新する。
+- どちらもない場合は、最初の term が解決された時だけ root `CONTEXT.md` を作る。
+- 複数 context があり対象 context が曖昧なら、推測で新しい context を作らず確認する。
