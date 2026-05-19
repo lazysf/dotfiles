@@ -9,7 +9,7 @@
 - 期待から外れた場合は、`docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - 汎用 lint で拾わない repo 固有契約や導線の観点は、この文書で手動確認する
-- 全体契約と薄い surface 案内は `dot_codex/AGENTS.md.tmpl`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
+- 全体契約と薄い surface 案内は `dot_codex/private_AGENTS.md.tmpl`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
 
 ## チェック項目
 
@@ -69,8 +69,8 @@
 
 - 例: 「ハーネスの詳細知識はどこを読めばよいか」
 - 期待:
-  - `dot_codex/AGENTS.md.tmpl` は契約と薄い surface 案内の入口として案内される
-  - `skills / agents / rules / docs` の役割分担は `dot_codex/AGENTS.md.tmpl` の説明と矛盾しない
+  - `dot_codex/private_AGENTS.md.tmpl` は契約と薄い surface 案内の入口として案内される
+  - `skills / agents / rules / docs` の役割分担は `dot_codex/private_AGENTS.md.tmpl` の説明と矛盾しない
   - 補助 skill は主役 skill と混同せずに案内される
   - repo-level の詳細知識は `docs/notes/` に誘導される
   - 判断理由は `docs/adr/` に誘導される
@@ -203,7 +203,7 @@
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 観測ポイント:
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
-  - `dot_codex/AGENTS.md.tmpl`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
+  - `dot_codex/private_AGENTS.md.tmpl`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
 
 ### 17.5. リファクタや品質改善の入口が統合後 surface に乗る
 
@@ -260,7 +260,7 @@
 
 - 例: 「01/02 の計画レビューを reviewer agent で起動したい」「03/04 に差分レビューを依頼したい」
 - 観測ポイント:
-  - `dot_codex/AGENTS.md.tmpl` に、reviewer agent を `agent_type` で明示起動する場合は `fork_context=true` を併用しない契約がある
+  - `dot_codex/private_AGENTS.md.tmpl` に、reviewer agent を `agent_type` で明示起動する場合は `fork_context=true` を併用しない契約がある
   - reviewer 定義側の `model` / `sandbox_mode` / instructions を有効にする目的が崩れていない
   - 01/02 reviewer には計画本文、03/04 reviewer には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を `message` に明示して渡す契約がある
   - docs / skills に、reviewer role と `fork_context=true` の併用を推奨する記述が再流入していない

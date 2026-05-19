@@ -79,4 +79,4 @@ uv sync
 - `docs/notes/`: repo-level の通常知見
 - `docs/adr/`: `Accepted` や `Superseded` を含む状態付き判断台帳
 
-共通ハーネスの deployable artifact は `dot_codex/` に置き、運用契約と導線は `dot_codex/AGENTS.md.tmpl` から展開される `~/.codex/AGENTS.md` を参照します。
+共通ハーネスの deployable artifact は `dot_codex/` に置き、運用契約と導線は `dot_codex/private_AGENTS.md.tmpl` から展開される `~/.codex/AGENTS.md` を参照します。
