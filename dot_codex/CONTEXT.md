@@ -32,7 +32,7 @@ _Avoid_: skill reviewer, automatic review
 **Rule**: 狭い command pattern を許可する、`dot_codex/rules/` 配下の機械的 guard。
 _Avoid_: policy note, prose instruction
 
-**RTK**: shell command の出力を Codex 向けに圧縮するため、`~/.codex/RTK.md` から参照される、approval boundary を変えない CLI proxy。
+**RTK**: shell command の出力を Codex 向けに圧縮するため、`~/.codex/RTK.md` から参照される CLI proxy。
 _Avoid_: Rule, skill, git wrapper
 
 **Deployable Artifact**: chezmoi により `~/.codex` へ展開されることを意図したファイル。
@@ -50,7 +50,7 @@ _Avoid_: preference, reminder
 - **Runtime Output Quality** は **Runtime Precision** と重なるが、正確さに加えて根拠、読みやすさ、十分性、ノイズの少なさを含む。
 - **Reviewer Agent** は draft や diff を review するが、ファイルは変更しない。
 - **Rule** は機械的な command 実行を guard するもので、workflow 判断の代替ではない。
-- **RTK** は **Runtime Surface** の一部だが、**Rule** ではない。
+- **RTK** は **Runtime Surface** の一部だが、**Rule** ではなく、**Operational Boundary** を置き換えない。
 - **Deployable Artifact** は、**Knowledge Ledger** の accepted decision によって形が変わることがある。
 
 ## Example dialogue
