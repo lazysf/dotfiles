@@ -80,7 +80,7 @@
 
 - [dot_codex/private_AGENTS.md.tmpl](../../dot_codex/private_AGENTS.md.tmpl)
 - [ADR Ledger Model](./adr-ledger-model.md)
-- [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
+- [Runtime Surface Guidance](./runtime-surface-guidance.md)
 - [Harness Regression Checks](./harness-regression-checks.md)
 - [ADR 0001](../adr/0001-common-codex-harness-lives-in-dot_codex.md)
 - [ADR 0002](../adr/0002-project-specific-knowledge-lives-in-project-docs.md)
