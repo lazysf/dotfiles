@@ -19,7 +19,7 @@
 - `docs-update` スキルは、README、既存 docs、運用手順、設計メモなど、説明文書本文の更新に限って使用する
 - 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
 - `docs-update` 単独で進めない代表例:
-  - root `AGENTS.md` と `dot_codex/AGENTS.md`
+  - root `AGENTS.md` と `dot_codex/AGENTS.md.tmpl`
   - `dot_codex/skills/**/SKILL.md`
   - `dot_codex/skills/**/references/`、`scripts/`、`assets/` のうち skill の判断や実行に影響するもの
   - `dot_codex/agents/*.toml`
@@ -35,4 +35,4 @@
 - `dot_codex/skills/`: 再利用する作業手順と通常作業の正式入口を置く
 - `docs/notes/`: repo-level の通常知見や背景を置く
 - `docs/adr/`: repo-level の判断記録を置く
-- `dot_codex/AGENTS.md`: deployable artifact 側の運用契約を置く
+- `dot_codex/AGENTS.md.tmpl`: deployable artifact 側の運用契約を置く
