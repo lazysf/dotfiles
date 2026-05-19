@@ -11,7 +11,7 @@
 ## Codex スキルに関する作業
 
 - Codex のスキルを新規作成する、既存スキルの設計を変更する、または description / trigger / 構成 / references / scripts / 品質評価について判断する場合は、判断前に必ず `skill-creator` スキルを使用する
-- Agent Skills の仕様、構造、description、progressive disclosure、best practice に関わる判断を行う時は、Agent Skills 公式情報を開いて確認する
+- Agent Skills 公式情報は、スキル内容の検討・編集として、仕様、構造、description、progressive disclosure、best practice に関わる判断を行う時だけ開いて確認する。既存スキルの内容を読み取るだけの場合は必須としない
   - [Overview](https://agentskills.io/)
   - [Specification](https://agentskills.io/specification)
   - [Best practices](https://agentskills.io/skill-creation/best-practices)
@@ -26,8 +26,7 @@
   - `dot_codex/rules/*.rules`
   - `dot_codex/private_config.toml.tmpl` など Codex runtime 設定
 - 誤字修正、単純な diff 確認、commit / push、合意済み文言の機械的反映、パスや現状確認だけの場合は、`skill-creator` や公式情報確認を必須とはしない。ただし、scripts / references / trigger / 権限 / secret / 外部 I/O / 実行挙動に触れる変更は除く
-- 公式情報を確認できない場合は、確認できなかった事実と理由をユーザーに明示し、進め方を相談する
-- Agent Skills 公式情報を確認した場合は、最終返答で参照した公式ページを簡潔に明示する。確認が必要だったが確認できなかった場合は、その事実と理由を明示する
+- Agent Skills 公式情報を確認した場合は、最終返答で参照した公式ページを簡潔に明示する。確認が必要だったが確認できない場合は、その事実と理由を明示し、進め方を相談する
 - `SKILL.md` へ仕様や長い手順を転載せず、必要な詳細は `references/` などの progressive disclosure に分ける
 
 ## 置き場の原則
