@@ -1,6 +1,7 @@
-# Classification-Driven Workflow Surface
+# Runtime Surface Guidance
 
 この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
+現行運用では要求分類を入口判断の軸にしない。
 現在の正式な公開 surface は、`dot_codex/skills/` 配下の 15 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
@@ -24,25 +25,16 @@
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
-docs-only の依頼で、成果物が既存ドキュメント更新に限られる場合は、主分類を増やさず `docs-update` を直接入口として使ってよい。
+要求分類は user-facing workflow として案内せず、依頼を固定分類へ当てはめるための正本も置かない。
+docs-only の依頼で、成果物が既存ドキュメント更新に限られる場合は、新しい user-facing workflow を増やさず `docs-update` を直接入口として使ってよい。
 root `CONTEXT-MAP.md` は multi-context の入口、各 `CONTEXT.md` は glossary を担当する。
 CONTEXT は spec、作業メモ、実装判断を扱わない。
 
-## 要求分類の見方
+## 導線の考え方
 
-この分類表は、依頼の主目的を読むための背景メモであり、分類ごとの専用 skill を増やす運用ではない。
-
-| 主分類 | 主目的 | 主に含むもの | ひとことで言うと | 境界の扱い |
-| --- | --- | --- | --- | --- |
-| `research` | 事実確認と判断材料の取得 | 原因調査、影響調査、PoC、方式比較、仕様確認 | まず調べる案件 | 実装方針や原因が未確定なら既定でここに倒す |
-| `bugfix` | 既存の期待状態に戻す | バグ修正、仕様逸脱修正、エラー是正、データ不整合修正 | 壊れているものを戻す案件 | 切り分けは `research`、実装は `code-implementation-loop`、修正効果確認は `change-verification` |
-| `feature` | 新しい価値や振る舞いを追加する | 新機能追加、機能拡張、UX改善、新規連携、新業務対応 | できることを増やす案件 | 主目的が追加なら内部整理を伴ってもここ |
-| `security` | セキュリティリスクを下げる | 脆弱性修正、認証/認可強化、入力検証強化、監査ログ強化 | 守りを強くする案件 | 事実確認は `research`、実装前 scope は `implementation-planning`、差分 review は `04-security-reviewer` |
-| `quality` | 品質特性を改善する | 性能改善、安定性向上、可用性向上、可観測性改善、運用性改善 | より良く動かす案件 | 事実確認は `research`、実装前 scope は `implementation-planning`、差分 review は `03-quality-reviewer` |
-| `maintenance` | 将来の保守性・変更容易性を上げる | リファクタ、技術的負債返済、テスト追加、命名整理、重複除去 | 将来の変更を楽にする案件 | architecture 改善候補の探索は `improve-codebase-architecture`、リファクタ境界や単純化の計画は `implementation-planning` |
-| `compat` | 外部変化に追従する | 外部 API 変更対応、依存更新、ランタイム更新、EOL 対応 | 外部変化に合わせる案件 | 外部変化の確認は `research`、追従 scope は `implementation-planning` |
-
-固定の代表導線は `dot_codex/private_AGENTS.md.tmpl` に持たせず、この文書では分類語と surface 設計の背景だけを扱う。
+固定の代表導線は `dot_codex/private_AGENTS.md.tmpl` に持たせない。
+実行時の入口判断は、要求分類表ではなく、各 `SKILL.md` の description、reviewer agent 定義、ユーザーが明示した依頼語、既存 docs / ADR / code で確認できる事実に基づいて行う。
+迷う場合は、観測事実の取得を `research`、要件整理を `product-planning`、実装前の変更境界や検証入口の整理を `implementation-planning`、最小差分の実装を `code-implementation-loop`、変更後確認を `change-verification` に寄せる。
 
 ## review 系 surface の役割分担
 

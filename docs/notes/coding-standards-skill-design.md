@@ -22,4 +22,4 @@
 
 - [coding-standards skill](../../dot_codex/skills/coding-standards/SKILL.md)
 - [Excel VBA reference](../../dot_codex/skills/coding-standards/references/vba-excel-macro.md)
-- [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
+- [Runtime Surface Guidance](./runtime-surface-guidance.md)
