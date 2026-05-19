@@ -23,4 +23,4 @@
 - `dot_codex/skills/` には、再利用する作業手順を置く
 - `dot_codex/rules/` には、破壊的操作や広域操作を機械的にガードする制約を置く
 - `dot_codex/agents/` には、reviewer のような read-only の専門化した補助役を置く
-- `docs/notes/classification-driven-workflow-surface.md` を、`core-*` 正式入口と deprecated wrapper の参照基準として扱う
+- surface guidance note を、`core-*` 正式入口と deprecated wrapper の参照基準として扱う

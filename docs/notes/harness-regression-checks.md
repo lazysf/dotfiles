@@ -9,7 +9,7 @@
 - 期待から外れた場合は、`docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - 汎用 lint で拾わない repo 固有契約や導線の観点は、この文書で手動確認する
-- 全体契約と薄い surface 案内は `dot_codex/private_AGENTS.md.tmpl`、surface 設計の背景は `classification-driven-workflow-surface.md` を参照する
+- 全体契約と薄い surface 案内は `dot_codex/private_AGENTS.md.tmpl`、surface 設計の背景は [Runtime Surface Guidance](./runtime-surface-guidance.md) を参照する
 
 ## チェック項目
 
@@ -91,7 +91,7 @@
   - 依頼内容に近い skill / reviewer が案内される
   - 旧導線向けの語彙や内部用語が再導入されていない
   - skill / reviewer の役割分担が自然文でも崩れていない
-  - 具体的な導線、命名規約、frontmatter 説明ルールは [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) を正本にする
+  - 具体的な導線、命名規約、frontmatter 説明ルールは [Runtime Surface Guidance](./runtime-surface-guidance.md) を正本にする
 
 ### 7.5. 入口整理と変更後確認が統合後 surface に乗る
 
@@ -117,7 +117,7 @@
 - 例: 「README の手順だけ更新したい」「既存の運用 docs を実装に合わせて直したい」
 - 期待:
   - docs-only の依頼では `docs-update` が正式入口として案内される
-  - 主分類を増やさず、既存ドキュメント更新の専用入口として扱われる
+  - 新しい user-facing workflow を増やさず、既存ドキュメント更新の専用入口として扱われる
   - 知識の置き場判断と混同されない
 
 ### 10. 知見蓄積は `grill-with-docs` に統合される
@@ -223,7 +223,7 @@
 - 観測ポイント:
   - planning skill が整理専用のまま保たれ、review 本体を抱え込んでいない
   - 要件 review と実装計画 review の責務が分離されたまま維持されている
-  - 導線の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と各 `SKILL.md` / agent 定義を正本にする
+  - 導線の詳細は [Runtime Surface Guidance](./runtime-surface-guidance.md) と各 `SKILL.md` / agent 定義を正本にする
 
 ### 19. context-aware upstream planning が機能する
 
@@ -254,7 +254,7 @@
   - review 本体は 4 つの reviewer agent が担う
   - reviewer agent が固定の JSON 形式だけを返す指定へ戻っていない
   - reviewer agent の結果が、親がそのまま利用者へ渡しても読みやすい findings-first の形になっている
-  - 導線と役割分担の詳細は [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md) と関連 agent 定義を正本にする
+  - 導線と役割分担の詳細は [Runtime Surface Guidance](./runtime-surface-guidance.md) と関連 agent 定義を正本にする
 
 ### 22. reviewer agent 起動契約が AGENTS に残る
 
@@ -288,7 +288,7 @@
 
 - [ADR Ledger Model](./adr-ledger-model.md)
 - [Harness Design Principles](./harness-design-principles.md)
-- [Classification-Driven Workflow Surface](./classification-driven-workflow-surface.md)
+- [Runtime Surface Guidance](./runtime-surface-guidance.md)
 - [ADR 0006](../adr/0006-keep-agents-thin-and-surface-oriented.md)
 - [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
 - [ADR 0007](../adr/0007-retire-harness-verifier-script.md)
