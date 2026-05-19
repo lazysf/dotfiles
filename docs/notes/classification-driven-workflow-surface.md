@@ -1,6 +1,6 @@
 # Classification-Driven Workflow Surface
 
-この文書は、`dot_codex/AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
+この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現在の正式な公開 surface は、`dot_codex/skills/` 配下の 14 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
@@ -41,7 +41,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 | `maintenance` | 将来の保守性・変更容易性を上げる | リファクタ、技術的負債返済、テスト追加、命名整理、重複除去 | 将来の変更を楽にする案件 | architecture 改善候補の探索は `improve-codebase-architecture`、リファクタ境界や単純化の計画は `implementation-planning` |
 | `compat` | 外部変化に追従する | 外部 API 変更対応、依存更新、ランタイム更新、EOL 対応 | 外部変化に合わせる案件 | 外部変化の確認は `research`、追従 scope は `implementation-planning` |
 
-固定の代表導線は `dot_codex/AGENTS.md.tmpl` に持たせず、この文書では分類語と surface 設計の背景だけを扱う。
+固定の代表導線は `dot_codex/private_AGENTS.md.tmpl` に持たせず、この文書では分類語と surface 設計の背景だけを扱う。
 
 ## review 系 surface の役割分担
 
@@ -53,7 +53,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - generic review から `04-security-reviewer` への自動昇格は行わない
 - `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
 - reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
-- `docs/README.md` は index、`dot_codex/AGENTS.md.tmpl` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
+- `docs/README.md` は index、`dot_codex/private_AGENTS.md.tmpl` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
 
 ## Frontmatter Description 設計ルール
 
