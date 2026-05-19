@@ -1,7 +1,7 @@
 # Classification-Driven Workflow Surface
 
 この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
-現在の正式な公開 surface は、`dot_codex/skills/` 配下の 14 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
+現在の正式な公開 surface は、`dot_codex/skills/` 配下の 15 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
 
@@ -14,6 +14,7 @@
 - `code-implementation-loop`: 確認方法先行で、最小差分の実装、必要な整理、再確認を進める
 - `coding-standards`: コード作業に言語別の制約やベストプラクティスを足す補助 skill。実装、調査、計画、レビュー本体は担わず、対象言語の reference を必要時に読む
 - `change-verification`: 既存変更の受け入れ確認や、bugfix / security / quality / compat の修正効果確認を standalone で扱う
+- `caveman`: 出力を短く圧縮したい依頼で使う補助 skill。応答文体だけを変え、調査、計画、実装、レビュー、commit / push の責務は持たない
 - `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成を docs-aware な grilling と一緒に扱う場合は `grill-with-docs` を使う
 - `grill-me`: plan / design の pressure test 入口。質問を 1 つずつ行い、推奨回答を添え、codebase で答えられることは先に探索する
 - `grill-with-docs`: docs-aware な pressure test と inline knowledge capture の入口。`CONTEXT.md`、docs、ADR、code と照合し、確定した用語や判断をその場で反映する
