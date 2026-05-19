@@ -1,55 +1,55 @@
-# PRD Template
+# PRD テンプレート
 
-Use this template when the user asks for a PRD draft. Keep unknowns visible instead of inventing answers.
+PRD draft を求められた時に使う。未確認事項は作り込まず、見える形で残す。
 
-## Title
+## タイトル
 
-A short name for the requested product change or feature.
+依頼された product change または feature を短く表す名前。
 
-## Problem
+## 課題
 
-Describe the user-facing problem, workflow pain, or opportunity.
+ユーザーに見える問題、workflow の痛み、または機会を説明する。
 
-## Goals
+## 目的
 
-- What the PRD is trying to achieve.
+- この PRD で達成したいこと。
 
-## Success Criteria
+## 成功条件
 
-- Observable outcomes that show the request is satisfied.
+- 依頼が満たされたと判断できる、観測可能な結果。
 
-## Scope
+## 範囲
 
-- What is included in this PRD.
+- この PRD に含めること。
 
-## Non-goals
+## 非範囲
 
-- What is intentionally out of scope.
+- 意図的に扱わないこと。
 
 ## User Stories
 
-Use natural language and keep stories tied to confirmed goals.
+自然な言葉で書き、確認済みの目的に結び付ける。
 
-1. As a [user or role], I want [capability], so that [outcome].
+1. [user / role] として、[capability] したい。そうすることで [outcome] を得たい。
 
-## Requirements
+## 要求
 
-- Functional or behavioral requirements.
-- Include priority only when the conversation established it.
+- 機能または振る舞いの要求。
+- 優先度は、会話で確定している場合だけ書く。
 
-## Constraints
+## 制約
 
-- Compatibility, operational, policy, UX, data, or rollout constraints.
+- 互換性、運用、policy、UX、data、rollout の制約。
 
-## Implementation Notes
+## 実装メモ
 
-- Confirmed implementation-relevant decisions.
-- Avoid volatile file paths and code snippets unless they are the clearest expression of a decision.
+- 実装に関係する確認済み判断。
+- 判断を最も明確に表せる場合を除き、変わりやすい file path や code snippet は避ける。
 
-## Testing Notes
+## 検証メモ
 
-- Behaviors, modules, or prior art that should guide later testing.
+- 後続の test 方針に効く振る舞い、module、既存例。
 
 ## Open Questions
 
-- Unresolved questions that should not be silently assumed.
+- 暗黙に仮定してはいけない未解決事項。

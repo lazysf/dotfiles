@@ -1,4 +1,4 @@
-# Architect Planning Heuristics
+# 技術計画の補助観点
 
 `implementation-planning` 本文だけでは判断しづらい場面のための補助資料。
 ここに書く内容は必須ルールではなく、迷ったときの目安。
