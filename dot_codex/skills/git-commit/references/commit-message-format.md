@@ -1,4 +1,4 @@
-# Commit Message Format Reference
+# Commit message 形式 reference
 
 この reference は `body` / `footer(s)` / `BREAKING CHANGE` が必要な場合の詳細として使う。
 commit message の形式と `title` の既定ルールは `../SKILL.md` の `## コミットメッセージ` を正本にする。

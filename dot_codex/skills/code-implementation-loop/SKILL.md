@@ -5,7 +5,7 @@ metadata:
   short-description: 実装ループ
 ---
 
-# Code Implementation Loop
+# 実装ループ
 
 テスト可能な変更を、確認方法先行の小さなループで進める。
 
@@ -21,36 +21,22 @@ metadata:
 
 ## 手順
 
-### 1) 先に確認方法を置く
-
-- テストを追加または更新する。
-- テスト化しにくい場合は、再現手順や比較観点を明示する。
-
-### 2) 最小実装で通す
-
-- いま必要な振る舞いだけを満たす。
-- 近傍実装の流儀と責務の切り方に寄せる。
+- 先にテスト、再現手順、比較観点のいずれかを置く。
+- いま必要な振る舞いだけを、近傍実装の流儀と責務に寄せて満たす。
 - 将来前提の抽象化や拡張ポイントは混ぜない。
-
-### 3) 必要な場合だけ整える
-
-- テストが通る状態を保ったまま、読みやすさ、単純さ、既存文脈との整合が改善する場合だけ整える。
-- 片方だけを戻したくなりそうな整理は別差分として扱う。
+- テストが通る状態を保ったまま、読みやすさや単純さが改善する場合だけ整える。
 - コメントは、見れば分かることではなく制約や意図が必要な場所にだけ置く。
+- 追加した確認を再実行し、通ったこと、実行できなかったこと、未確認事項を分けて残す。
 
-### 4) 再確認する
+## 境界
 
-- 追加した確認方法をもう一度回す。
-- 変更意図に対して何が通ったかを短く残す。
-- 実行できなかった確認や未確認事項は、成功扱いにせず理由と代替確認を分けて残す。
+- 原因調査は `research` スキルを使う。
+- 要件整理は `product-planning`、技術計画は `implementation-planning` スキルを使う。
+- 原則判断の詳細が必要な時は [references/implementation-guardrails.md](references/implementation-guardrails.md) を読む。
+- テスト化しにくい変更では [references/verification-fallbacks.md](references/verification-fallbacks.md) を読む。
 
 ## 完了条件
 
 - 変更意図に対応する確認方法がある
 - 実装後に確認が通っている
 - 整理した場合は、整理後も同じ確認が通っている
-
-## 参照先
-
-- 原則の詳細判断: [references/implementation-guardrails.md](references/implementation-guardrails.md)
-- 確認の代替手段: [references/verification-fallbacks.md](references/verification-fallbacks.md)

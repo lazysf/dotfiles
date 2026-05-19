@@ -5,46 +5,35 @@ metadata:
   short-description: 検証手順
 ---
 
-# Change Verification
+# 変更検証
 
 変更後に、何をどう確認し、何が残リスクかを整理する。
 
-## 基本方針
+## 手順
 
-- `acceptance` と `verification` のどちらの mode で確認するかを先に決める。
-- 変更意図に最も近い確認を先に置く。
-- 保護したい既存挙動や回帰観点は、変更意図の確認と分けて整理する。
-- 直接確認できない場合は、代替確認と未確認理由を明示する。
+- 変更意図から `check_mode` を決める。
+- `acceptance` では成功条件、期待挙動、保護したい既存挙動を確認対象にする。
+- `verification` では修正前症状、対象リスク、品質ギャップ、外部変化への追従前ギャップを確認対象にする。
+- 変更意図に最も近い確認を先に置き、回帰観点は分けて `check_plan` に並べる。
+- 直接確認できない項目には、代替確認と未確認理由を添える。
+- 実行した確認を `executed_checks`、保護したい既存挙動や回帰観点を `regression_or_protected_behavior` に整理する。
 - 未確認、未実行、結果のぶれは `remaining_risks` に残す。
 
-## Mode の選び方
+## 確認モード
 
 - `acceptance`: feature / maintenance の確認で使う。成功条件、期待挙動、保護したい既存挙動に対して確認する。
 - `verification`: bugfix / security / quality / compat の確認で使う。修正前症状、対象リスク、品質ギャップ、外部変化への追従前ギャップに対して確認する。
 - 迷う場合は、ユーザーが「新しい価値や整理の受け入れ」を見たいなら `acceptance`、既にあった問題や外部変化への「修正効果」を見たいなら `verification` に倒す。
 
-## 手順
+## 境界
 
-1. 変更意図から `check_mode` を決める
-2. `acceptance` では成功条件と保護したい既存挙動、`verification` では修正前症状や追従前ギャップを確認対象にする
-3. 確認項目を `check_plan` に並べる
-4. 直接確認できない項目には、代替確認と未確認理由を添える
-5. 実行した確認を `executed_checks` に記録する
-6. 保護したい既存挙動または回帰観点を `regression_or_protected_behavior` に整理する
-7. 未確認や残リスクを `remaining_risks` に残す
+- feature は成功条件、maintenance は守るべき既存挙動、bugfix は再現手順の解消を優先する。
+- security は hardening の効果と副作用、quality は対象品質特性の変化、compat は外部変化への追従成立を見る。
+- 実行できない確認は、理由と代替確認をセットで残す。
+- 同一条件で結果がぶれる場合は、未解消リスクとして扱う。
+- 実装前に確認方法を置いて小さく進める時は `code-implementation-loop` スキルを使う。
 
-## 判断基準
-
-- feature は成功条件に対応する確認を優先する
-- maintenance は守るべき既存挙動の保護を優先する
-- bugfix は再現手順が解消したかを見る
-- security は hardening が効いたかと副作用を見る
-- quality は改善対象の品質特性に変化があるかを見る
-- compat は外部変化への追従が成立したかを見る
-- 実行できない確認は、理由と代替確認をセットで残す
-- 同一条件で結果がぶれる場合は、未解消リスクとして扱う
-
-## 出力フォーマット
+## 出力
 
 - `check_mode`
 - `check_plan`
@@ -54,5 +43,5 @@ metadata:
 
 ## 停止条件
 
-- `acceptance` で成功条件や保護したい挙動が不明で、確認項目を作れない
-- `verification` で修正前症状や追従前ギャップが曖昧で、何を検証すべきか定まらない
+- `acceptance` で成功条件や保護したい挙動が不明で、確認項目を作れない。
+- `verification` で修正前症状や追従前ギャップが曖昧で、何を検証すべきか定まらない。
