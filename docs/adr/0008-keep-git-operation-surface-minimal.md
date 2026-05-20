@@ -1,6 +1,7 @@
 # 0008: Git 操作 surface を最小に保つ
 
 - Status: Accepted
+- Amended by: 0018
 
 ## Context
 
