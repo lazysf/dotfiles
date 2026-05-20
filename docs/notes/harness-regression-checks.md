@@ -97,11 +97,10 @@
 
 - 例: 「依頼文が散らばっているので今回どこまでやるか整理したい」「新機能の受け入れ確認をしたい」「バグ修正が効いたか確認したい」
 - 観測ポイント:
-  - 散らばった依頼や軽い停止線整理は `product-planning` が正式入口として案内される
-  - 会話や整理済み要件を PRD draft にする依頼は `to-prd` が正式入口として案内される
-  - `to-prd` で生成した PRD は draft として扱われ、正式 docs への保存や issue 化は明示依頼がある時だけ扱われる
-  - feature / maintenance の受け入れ確認は `change-verification` の `acceptance` mode として扱われる
-  - bugfix / security / quality / compat の修正効果確認は `change-verification` の `verification` mode として扱われる
+  - 散らばった依頼、軽い停止線整理、PRD draft 作成は `planning` が正式入口として案内される
+  - `planning` で生成した PRD は draft として扱われ、正式 docs への保存や issue 化は明示依頼がある時だけ扱われる
+  - feature / maintenance の受け入れ確認は `verification` の `acceptance` mode として扱われる
+  - bugfix / security / quality / compat の修正効果確認は `verification` の `verification` mode として扱われる
   - 要求分類そのものを user-facing workflow として案内しない
 
 ### 8. `docs/README.md` が主要 note と ADR の入口を維持する
@@ -120,15 +119,15 @@
   - 新しい user-facing workflow を増やさず、既存ドキュメント更新の専用入口として扱われる
   - 知識の置き場判断と混同されない
 
-### 10. 知見蓄積は `grill-with-docs` に統合される
+### 10. 知見蓄積は `planning` に統合される
 
 - 例: 「docs と照らして計画を問い詰めて」「今回の用語を CONTEXT に残して」「この判断を ADR として残したい」
 - 観測ポイント:
-  - user-facing 入口は `grill-with-docs` に統合され、docs 更新専用入口と混同されない
+  - user-facing 入口は `planning` に統合され、docs 更新専用入口と混同されない
   - docs-aware な grilling の中で evidence 収集、置き場判断、必要な CONTEXT / existing docs / note / ADR 更新が扱われる
   - docs / note / ADR / ADR metadata は、会話中に確定した durable knowledge として扱われる
   - 通常知見と判断記録の置き場が混ざらない
-  - 詳細な workflow は `grill-with-docs` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
+  - 詳細な workflow は `planning` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 11. ADR が状態付き台帳として扱われる
 
@@ -139,7 +138,7 @@
   - 手順メモや運用メモが ADR に再流入していない
   - 状態モデルやメタデータ、運用フローの詳細は [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
-### 12. `grill-with-docs` が durable knowledge を inline 更新する
+### 12. `planning` が durable knowledge を inline 更新する
 
 - 例: 「docs と照らしてこの設計を grill して」「この用語が固まったので CONTEXT に残して」
 - 観測ポイント:
@@ -149,28 +148,28 @@
   - ADR 作成と状態更新の順序が崩れない
   - note と ADR の送り先が混ざらない
   - diff だけから判断を推測して ADR を作らない
-  - 詳細は `grill-with-docs` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
+  - 詳細は `planning` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 13. ADR 採用判断と状態更新が一貫する
 
 - 例: 「この ADR を採用済みにしたい」「ADR 作成後に Accepted へ進めたい」
 - 観測ポイント:
   - ADR の `Accepted` 化が commit 作成と切り離されている
-  - 採用判断が明示された場合だけ `grill-with-docs` で状態更新される
+  - 採用判断が明示された場合だけ `planning` で状態更新される
   - `Superseded` は、新 ADR 側に対象 ADR を指す `Supersedes` が明示されている場合だけ更新される
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
-  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `grill-with-docs` skill を正本にする
+  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `planning` skill を正本にする
 
-### 13.5. `consistency-audit` が明示依頼で整合性を確認する
+### 13.5. `verification` が明示依頼で整合性を確認する
 
 - 例: 「この変更の整合性を確認したい」「ファイルを rename したので参照漏れを確認したい」「`.chezmoiignore` 変更の影響を見たい」
 - 観測ポイント:
   - `git-commit` は commit 作成に責務を絞り、条件付き整合性 preflight を自動実行しない
-  - README、docs、index、一覧、参照リンクの追従漏れ確認は `consistency-audit` の明示導線で扱われる
-  - ファイル追加、rename、削除、ignore 変更の参照追従確認は `consistency-audit` の対象になる
+  - README、docs、index、一覧、参照リンクの追従漏れ確認は `verification` の `consistency` mode で扱われる
+  - ファイル追加、rename、削除、ignore 変更の参照追従確認は `verification` の対象になる
   - `.gitignore` は Git 追跡対象、`.chezmoiignore` は chezmoi 配布対象として独立に確認される
-  - `consistency-audit` が判断を要する事項を見つけた場合、確認すべき点が返る
-  - `consistency-audit` が修正を加えた場合、次の commit 導線で差分と 1 コミット 1 変更のまとまりが確認される
+  - `verification` が判断を要する事項を見つけた場合、確認すべき点が返る
+  - `verification` が修正を加えた場合、次の commit 導線で差分と 1 コミット 1 変更のまとまりが確認される
 
 ### 14. `git-push` が知見蓄積を行わない
 
@@ -178,7 +177,7 @@
 - 観測ポイント:
   - `git-push` は push 実行と upstream 判定だけを扱う
   - 知見蓄積、ADR 作成、ADR 状態更新を開始しない
-  - 知見整理が必要な場合でも push 結果と混ぜず、必要なら別 action として `grill-with-docs` を案内する
+  - 知見整理が必要な場合でも push 結果と混ぜず、必要なら別 action として `planning` を案内する
 
 ### 15. `git-push` の返答が最小契約を保つ
 
@@ -194,9 +193,9 @@
 
 - 例: 「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」
 - 観測ポイント:
-  - `grill-with-docs` の状態更新が明示された採用判断や supersede 根拠に沿っている
+  - `planning` の状態更新が明示された採用判断や supersede 根拠に沿っている
   - supersede 更新が明示根拠のある場合だけ行われる
-  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `grill-with-docs` skill を正本にする
+  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `planning` skill を正本にする
 
 ### 17. 既存の主要入口が壊れていない
 
@@ -209,13 +208,13 @@
 
 - 例: 「過剰な分岐を減らして既存挙動を守りたい」「どこまで整理するか決めたい」「性能を改善したい」「実装に入りたい」
 - 観測ポイント:
-  - architecture 改善候補を見つけたい依頼は `improve-codebase-architecture` に案内される
-  - `zoom-out` 的な codebase 地図化は独立 skill ではなく `improve-codebase-architecture` の探索ステップとして扱われる
-  - `improve-codebase-architecture` は候補出しと候補選択後の grilling までを扱い、実装順序確定は `implementation-planning` に進める
-  - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす計画は `implementation-planning` に案内される
-  - リファクタ境界そのものを決める依頼は `implementation-planning` に案内される
-  - 性能や安定性など品質特性の事実確認は `research`、実装前 scope は `implementation-planning` に案内される
-  - 実装開始や確認方法先行の最小差分は `code-implementation-loop` に案内される
+  - architecture 改善候補を見つけたい依頼は `architecture` に案内される
+  - `zoom-out` 的な codebase 地図化は独立 skill ではなく `architecture` の探索ステップとして扱われる
+  - `architecture` は候補出しと候補選択後の grilling までを扱い、実装順序確定は `planning` に進める
+  - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす計画は `planning` に案内される
+  - リファクタ境界そのものを決める依頼は `planning` に案内される
+  - 性能や安定性など品質特性の事実確認は `research`、実装前 scope は `planning` に案内される
+  - 実装開始や確認方法先行の最小差分は `implementation` に案内される
 
 ### 18. planning skill が整理専用のまま保たれる
 
@@ -229,13 +228,13 @@
 
 - 例: 「計画を深掘りして」「既存 context と docs に照らして要件を固めたい」「実装順序と検証方法を詰めたい」
 - 観測ポイント:
-  - 要件定義の深掘りは `product-planning` に案内される
-  - 実装計画の深掘りは `implementation-planning` に案内される
+  - 要件定義の深掘りは `planning` に案内される
+  - 実装計画の深掘りは `planning` に案内される
   - root `CONTEXT-MAP.md` から `dot_codex/CONTEXT.md` と `docs/CONTEXT.md` へ辿れる
   - root `CONTEXT.md` は作らない
   - `CONTEXT.md` は glossary と関係性に限定され、spec、作業メモ、実装判断を混ぜない
   - `CONTEXT-MAP.md` と deploy 先の `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
-  - `grill me` は `grill-me` の発火語として扱われ、docs 反映が必要な場合だけ `grill-with-docs` に案内される
+  - `grill me` は `planning` の発火語として扱われ、docs 反映が不要な場合は質問だけを 1 つずつ進める
 
 ### 20. ADR が状態付き軽量 ADR として扱われる
 

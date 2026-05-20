@@ -23,7 +23,7 @@ _Avoid_: docs index, README
 **Context**: repo language の境界づけられた領域に対する `CONTEXT.md` glossary。
 _Avoid_: specification, work log, implementation plan
 
-**Grill With Docs**: plan / design を docs、ADRs、code、context language と照合しながら問い詰め、確定した durable knowledge を inline 更新する workflow。
+**Planning**: 実装前の plan / design を一問ずつ問い詰め、必要に応じて docs、ADRs、code、context language と照合しながら、確定した durable knowledge を inline 更新する workflow。
 _Avoid_: docs-only update, commit step
 
 ## Relationships
@@ -32,7 +32,7 @@ _Avoid_: docs-only update, commit step
 - **Context** は language を定義し、implementation decisions は定義しない。
 - **Note** は decision record ではない durable guidance を記録する。
 - **ADR** は意味のある decision を記録し、**Decision Status** を持つ。
-- **Grill With Docs** は、どの durable artifact を変更するべきかを会話中に判断し、必要な更新を inline で扱う。
+- **Planning** は、どの durable artifact を変更するべきかを会話中に判断し、必要な更新を inline で扱う。
 
 ## Example dialogue
 

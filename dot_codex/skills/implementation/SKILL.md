@@ -1,6 +1,6 @@
 ---
-name: code-implementation-loop
-description: 「実装に入りたい」「確認方法を先に置いて最小差分で進めたい」といった変更実装で使う。テストや再現手順を先に置き、最小実装、必要な整理、再確認を小さく回す。原因調査は `research` スキル、要件整理や実装計画は `product-planning` / `implementation-planning` スキルを使う。
+name: implementation
+description: 「実装に入りたい」「確認方法を先に置いて最小差分で進めたい」といった変更実装で使う。テストや再現手順を先に置き、最小実装、必要な整理、再確認を小さく回す。原因調査は `research` スキル、要件整理や実装計画は `planning` スキルを使う。
 metadata:
   short-description: 実装ループ
 ---
@@ -31,7 +31,8 @@ metadata:
 ## 境界
 
 - 原因調査は `research` スキルを使う。
-- 要件整理は `product-planning`、技術計画は `implementation-planning` スキルを使う。
+- 要件整理や技術計画は `planning` スキルを使う。
+- Excel VBA の exported `.bas` / `.cls` を作成・編集する時は [references/vba-excel-macro.md](references/vba-excel-macro.md) を読む。
 - 原則判断の詳細が必要な時は [references/implementation-guardrails.md](references/implementation-guardrails.md) を読む。
 - テスト化しにくい変更では [references/verification-fallbacks.md](references/verification-fallbacks.md) を読む。
 
