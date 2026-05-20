@@ -19,8 +19,9 @@
 
 ## Commit Message
 
-- repo の規約がある場合はそれを優先する。
-- 規約がない場合は `<type>: <description>` を使う。
+- commit message は `<type>: <description>` を使う。
+- `<type>(<scope>): <description>` のような scope は使わない。
+- repo の規約が scope を要求する場合は、scope 付き message を作らず停止して報告する。
 - title は 1 行にする。実用上可能なら 72 characters 以下を優先する。
 - body は title だけで理由や影響を説明できない場合だけ使う。
 - body や footer の詳細が必要な時は `references/commit-message-format.md` を読む。
