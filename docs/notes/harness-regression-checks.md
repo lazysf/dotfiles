@@ -49,8 +49,8 @@
 - 例: 「Git rules を見直した」「read-only Git 操作を allow へ寄せた」
 - 期待:
   - `decision = "prompt"` と `decision = "forbidden"` は置かない
-  - allow 対象は `git status`、`git diff`、`git branch -vv`、`git remote -v`、`git log`、`git add`、`git commit -m|-F` だけにする
-  - `git add` は broad allow とし、`not_match` や prompt carveout は置かない
+  - allow 対象は `git status`、`git diff`、`git branch -vv`、`git remote -v`、`git log` だけにする
+  - `git add` / `git commit` は allow せず、既定 prompt と `git-commit` skill の停止線に任せる
   - 通常 push は allow せず、既定 prompt に任せる
   - force push、hard reset、ignored file を含む clean も個別 rule を置かず、既定 prompt と skill 停止線に任せる
   - その他の Git 変更操作は rule を置かず、既定 prompt に任せる
@@ -294,3 +294,4 @@
 - [ADR 0005](../adr/0005-keep-harness-verification-focused-on-repo-contracts.md)
 - [ADR 0007](../adr/0007-retire-harness-verifier-script.md)
 - [ADR 0008](../adr/0008-keep-git-operation-surface-minimal.md)
+- [ADR 0018](../adr/0018-keep-git-mutation-rules-prompted.md)
