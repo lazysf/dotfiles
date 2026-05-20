@@ -34,7 +34,7 @@ metadata:
 - 具体的な不具合原因や外部変化の調査だけなら `research` スキルを使う。
 - 実装順序、変更境界、検証方法を確定する段階では `implementation-planning` スキルを使う。
 - 差分作成やテスト修正に入る段階では `code-implementation-loop` スキルを使う。
-- 既存差分の品質 review は `03-quality-reviewer`、security boundary review は `04-security-reviewer` reviewer agent を使う。
+- 既存差分の品質 review は `quality-reviewer`、security boundary review は `security-reviewer` reviewer agent を使う。
 - `CONTEXT.md` や ADR 更新が必要になった時は `grill-with-docs` スキルを使う。
 
 ## 出力

@@ -25,8 +25,7 @@ metadata:
 - 事実調査だけなら `research` スキルを使う。
 - architecture 改善候補の探索なら `improve-codebase-architecture` スキルを使う。
 - 差分作成は `code-implementation-loop` スキルを使う。
-- 計画 review は `02-implementation-planning-reviewer` reviewer agent を使う。
-- 品質 review は `03-quality-reviewer`、security review は `04-security-reviewer` reviewer agent を使う。
+- 品質 review は `quality-reviewer`、security review は `security-reviewer` reviewer agent を使う。
 - inline docs 更新や ADR 作成まで行う場合は `grill-with-docs` スキルを使う。
 
 ## 確認観点

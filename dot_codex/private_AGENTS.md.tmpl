@@ -62,7 +62,7 @@
 
 - reviewer agent を `agent_type` で明示起動する場合は、reviewer 定義側の `model`、`sandbox_mode`、instructions を有効にするため、`fork_context=true` を併用しない
 - レビュー対象は `message` に明示して渡す
-- 01/02 reviewer には計画本文、03/04 reviewer には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を含める
+- `quality-reviewer` / `security-reviewer` には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を含める
 
 ## 置き場の原則
 
