@@ -1,9 +1,0 @@
-prefix_rule(
-  pattern = ["git", "commit", ["-m", "-F"]],
-  decision = "allow",
-  justification = "`git-commit` skill の手順で使う非対話の通常 commit のみ許可する。",
-  match = [
-    "git commit -m \"chore: update\"",
-    "git commit -F /tmp/git-commit-message.txt",
-  ],
-)
