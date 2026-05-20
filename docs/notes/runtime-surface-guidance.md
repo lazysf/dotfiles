@@ -3,6 +3,7 @@
 この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
 現在の正式な公開 surface は、`dot_codex/skills/` 配下の prefix なし skill 名と、`dot_codex/agents/` 配下の 2 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
+`caveman`、`git-commit`、`git-push` は明示依頼で使う手動入口とし、それ以外の skill は文脈上必要なら自動使用する入口として扱う。
 
 ## Surface の責務
 
@@ -45,6 +46,8 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 - skill の発火面は `SKILL.md` frontmatter の `name` と `description` であり、特に `description` を主な自然文入口として扱う
 - `description` は原則 3 文でそろえる
+- 自動使用する skill の 1 文目は、明示的な skill 名指定がなくても文脈から使えるように「文脈上、...必要な時に自動使用する」と書く
+- `caveman`、`git-commit`、`git-push` の 1 文目は、明示依頼で使う手動入口として読める形にする
 - 1 文目で、ユーザーが言いそうな依頼語を優先して「どんな依頼で使うか」を自然文で示す
 - 2 文目で、その skill が何を整理 / 実行 / 出力するかを示す
 - 3 文目で、近接 skill との差分、渡し先、または対象外を明示する

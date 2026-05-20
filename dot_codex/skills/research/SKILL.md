@@ -1,6 +1,6 @@
 ---
 name: research
-description: 「まず調べたい」「原因を切り分けたい」「再現条件を確認したい」「外部変化や品質・セキュリティ・保守性の影響を事実で整理したい」といった調査で使う。facts、unknowns、options、recommendation、next_step を分ける。要件、設計、実装順序、検証方法を固める時は `planning` スキルを使う。
+description: 文脈上、まず調べる必要、原因切り分け、再現条件確認、外部変化や品質・セキュリティ・保守性の影響整理が必要な時に自動使用する。確認した事実、未確認事項、選択肢、推奨、次の確認を分ける。要件、設計、実装順序、検証方法を固める時は `planning` スキルを使う。
 metadata:
   short-description: 調査手順
 ---
