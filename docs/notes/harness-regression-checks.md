@@ -251,18 +251,18 @@
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 観測ポイント:
-  - review 本体は 4 つの reviewer agent が担う
+  - 差分 review 本体は `quality-reviewer` / `security-reviewer` が担う
   - reviewer agent が固定の JSON 形式だけを返す指定へ戻っていない
   - reviewer agent の結果が、親がそのまま利用者へ渡しても読みやすい findings-first の形になっている
   - 導線と役割分担の詳細は [Runtime Surface Guidance](./runtime-surface-guidance.md) と関連 agent 定義を正本にする
 
 ### 22. reviewer agent 起動契約が AGENTS に残る
 
-- 例: 「01/02 の計画レビューを reviewer agent で起動したい」「03/04 に差分レビューを依頼したい」
+- 例: 「計画レビューを親 Codex で扱いたい」「quality-reviewer に差分レビューを依頼したい」
 - 観測ポイント:
   - `dot_codex/private_AGENTS.md.tmpl` に、reviewer agent を `agent_type` で明示起動する場合は `fork_context=true` を併用しない契約がある
   - reviewer 定義側の `model` / `sandbox_mode` / instructions を有効にする目的が崩れていない
-  - 01/02 reviewer には計画本文、03/04 reviewer には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を `message` に明示して渡す契約がある
+  - `quality-reviewer` / `security-reviewer` には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を `message` に明示して渡す契約がある
   - docs / skills に、reviewer role と `fork_context=true` の併用を推奨する記述が再流入していない
 
 ### 23. repo 固有契約の軽い確認を手動回帰で補う

@@ -24,7 +24,6 @@ metadata:
 - 実装順序や検証方法を詰める段階では `implementation-planning` スキルを使う。
 - 整理済みの要件を PRD draft にする時は `to-prd` スキルを使う。
 - plan / design 全体の pressure test は `grill-me`、docs / ADR 反映まで進める時は `grill-with-docs` スキルを使う。
-- 要件 draft の review は `01-product-planning-reviewer` reviewer agent を使う。
 - 差分作成や review 本体は扱わない。
 
 ## 出力

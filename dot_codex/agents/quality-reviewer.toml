@@ -1,4 +1,4 @@
-name = "03-quality-reviewer"
+name = "quality-reviewer"
 description = "Read-only quality reviewer for focused diff-based reviews."
 model = "gpt-5.5"
 model_reasoning_effort = "medium"
