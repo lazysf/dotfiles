@@ -28,6 +28,7 @@
   - [0012-retire-review-findings-summary-skill.md](./adr/0012-retire-review-findings-summary-skill.md)
   - [0013-add-prd-and-architecture-skill-surfaces.md](./adr/0013-add-prd-and-architecture-skill-surfaces.md)
   - [0014-adopt-rtk-as-codex-shell-proxy.md](./adr/0014-adopt-rtk-as-codex-shell-proxy.md)
+  - [0015-retire-rtk-as-codex-shell-proxy.md](./adr/0015-retire-rtk-as-codex-shell-proxy.md)
 - `dot_codex/private_AGENTS.md.tmpl`: 運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: review の正式入口になる reviewer agent を置く。review はここから明示的に呼び出す
