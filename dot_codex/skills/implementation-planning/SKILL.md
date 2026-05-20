@@ -16,7 +16,10 @@ metadata:
 - 変更境界、依存関係、検証入口、既存パターンとの矛盾を洗い出す。
 - 質問は 1 つずつ行い、推奨回答を添える。
 - 回答を受けたら、計画、リスク、未確定事項を更新する。
-- 最小スライス、後続ステップ、検証方法を並べる。
+- 最小スライス、後続ステップ、検証方法を並べる。`TASK-*` の採番や実行 task の粒度調整は `task-decomposition` に渡す。
+- 実装計画を成果物として保存する場合は、既定で `docs/IMPLEMENTATION_PLAN.md` に対象 `FR-001` などの章を追記する。明示されるまで plan 用フォルダは作らない。
+- 要件、設計、タスク、テストとの対応関係が必要な場合は `docs/TRACEABILITY_MATRIX.md` の更新候補を分ける。
+- 実装計画から実行 task に落とす段階では `task-decomposition`、test case を作る段階では `test-case-planning` に渡す。
 - 計画の粒度や確認順で迷う時だけ [references/architect-planning-heuristics.md](references/architect-planning-heuristics.md) を読む。
 
 ## 境界
@@ -27,6 +30,7 @@ metadata:
 - 差分作成は `code-implementation-loop` スキルを使う。
 - 品質 review は `quality-reviewer`、security review は `security-reviewer` reviewer agent を使う。
 - inline docs 更新や ADR 作成まで行う場合は `grill-with-docs` スキルを使う。
+- 基本設計、詳細設計、`TASK-*` 採番、test case、traceability matrix の本文を作る段階は、この skill の前後工程として扱い、実装計画に混ぜ込まない。
 
 ## 確認観点
 
