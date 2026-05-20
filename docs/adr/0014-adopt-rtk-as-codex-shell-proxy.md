@@ -1,6 +1,6 @@
 # 0014: RTK を Codex shell proxy として採用する
 
-- Status: Accepted
+- Status: Superseded by [0015](./0015-retire-rtk-as-codex-shell-proxy.md)
 
 ## Context
 
