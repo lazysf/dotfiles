@@ -1,6 +1,6 @@
 ---
-name: improve-codebase-architecture
-description: 「architecture 改善」「リファクタ候補」「密結合や浅い module 整理」といった構造改善の検討で使う。対象領域を zoom out し、map、friction、改善候補を整理する。事実調査は `research`、実装計画は `implementation-planning`、実装は `code-implementation-loop`。
+name: architecture
+description: 「architecture 改善」「リファクタ候補」「密結合や浅い module 整理」といった構造改善の検討で使う。対象領域を zoom out し、map、friction、改善候補を整理する。事実調査は `research` スキル、実装計画は `planning` スキル、実装は `implementation` スキルを使う。
 metadata:
   short-description: architecture 改善
 ---
@@ -19,7 +19,7 @@ metadata:
 - architecture 用語の補助が必要な時だけ [references/architecture-language.md](references/architecture-language.md) を読む。
 - friction を探し、改善候補を番号付きで提示する。
 - ユーザーが候補を選んだら、制約、守る既存挙動、module shape、interface、tests、移行順序を 1 つずつ grilling する。
-- 実装計画に進める状態になったら、`implementation-planning` へ渡せる粒度で整理する。
+- 実装計画に進める状態になったら、`planning` へ渡せる粒度で整理する。
 
 ## 確認観点
 
@@ -32,10 +32,10 @@ metadata:
 ## 境界
 
 - 具体的な不具合原因や外部変化の調査だけなら `research` スキルを使う。
-- 実装順序、変更境界、検証方法を確定する段階では `implementation-planning` スキルを使う。
-- 差分作成やテスト修正に入る段階では `code-implementation-loop` スキルを使う。
+- 実装順序、変更境界、検証方法を確定する段階では `planning` スキルを使う。
+- 差分作成やテスト修正に入る段階では `implementation` スキルを使う。
 - 既存差分の品質 review は `quality-reviewer`、security boundary review は `security-reviewer` reviewer agent を使う。
-- `CONTEXT.md` や ADR 更新が必要になった時は `grill-with-docs` スキルを使う。
+- `CONTEXT.md` や ADR 更新が必要になった時は `planning` スキルを使う。
 
 ## 出力
 
