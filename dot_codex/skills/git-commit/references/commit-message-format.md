@@ -1,7 +1,7 @@
 # Commit message 形式 reference
 
 この reference は `body` / `footer(s)` / `BREAKING CHANGE` が必要な場合の詳細として使う。
-commit message の形式と `title` の既定ルールは `../SKILL.md` の `## コミットメッセージ` を正本にする。
+commit message の形式と `title` の既定ルールは `../SKILL.md` の手順を正本にする。
 
 ## body template
 
@@ -21,6 +21,8 @@ Why: ...
 What: ...
 Impact: ...
 ```
+
+scope は使わない。`<type>(<scope>): <summary>` 形式が必要に見える場合は、message を作らず停止して報告する。
 
 ## body
 
