@@ -1,6 +1,6 @@
 ---
 name: planning
-description: 実装、機能追加、リファクタ、設定変更、設計変更、振る舞い変更に入る前に必ず使う。ユーザー意図、目的、成功条件、要件、制約、設計、実装順序、検証方法を一問ずつ確認し、合意済みの計画、成果物、durable knowledge へ整理する。バグ原因や外部変化の事実調査は `research` スキル、差分作成は `implementation` スキルを使う。
+description: 文脈上、実装、機能追加、リファクタ、設定変更、設計変更、振る舞い変更に入る前に自動使用する。ユーザー意図、目的、成功条件、要件、制約、設計、実装順序、検証方法を一問ずつ確認し、合意済みの計画、成果物、durable knowledge へ整理する。バグ原因や外部変化の事実調査は `research`、差分作成は `implementation` スキルを使う。
 metadata:
   short-description: 計画作成
 ---

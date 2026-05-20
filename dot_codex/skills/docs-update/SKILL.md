@@ -1,6 +1,6 @@
 ---
 name: docs-update
-description: 「README だけ直したい」「既存文書を更新したい」「実装や運用に合わせて説明を直したい」といった、文書更新だけの依頼で使う。既存文書を一次情報と既存文脈に沿って必要十分に更新する。CONTEXT 更新、置き場判断、note / ADR 作成や状態更新は `planning` スキルを使う。
+description: 文脈上、README、既存 docs、運用手順、設計メモなど既存文書だけを更新する必要がある時に自動使用する。一次情報と既存文脈に沿って、文書本文を必要十分に更新する。CONTEXT 更新、置き場判断、新規 note / ADR 作成や状態更新は `planning` スキルを使う。
 metadata:
   short-description: 文書更新
 ---

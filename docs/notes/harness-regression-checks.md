@@ -86,8 +86,10 @@
 
 ### 7. skill の発火条件と説明が一致する
 
-- 例: 「要件を詰めたい」「レビューしたい」「コミットしたい」
+- 例: 「要件を詰めたい」「変更後の参照漏れも見て」「コミットしたい」
 - 観測ポイント:
+  - `caveman`、`git-commit`、`git-push` 以外の skill は、明示的な skill 名指定がなくても文脈に応じて自動使用される
+  - `caveman`、`git-commit`、`git-push` は、ユーザーの明示依頼で使う手動入口として保たれる
   - 依頼内容に近い skill / reviewer が案内される
   - 旧導線向けの語彙や内部用語が再導入されていない
   - skill / reviewer の役割分担が自然文でも崩れていない
@@ -111,11 +113,11 @@
   - note / ADR の追加や整理があったときも、README 側の一覧が放置されない
   - 多少の並び替えや説明文の更新は許容しつつ、入口としての役割が失われていない
 
-### 9. docs-only 依頼が `docs-update` に導かれる
+### 9. docs-only 依頼が `docs-update` に乗る
 
 - 例: 「README の手順だけ更新したい」「既存の運用 docs を実装に合わせて直したい」
 - 期待:
-  - docs-only の依頼では `docs-update` が正式入口として案内される
+  - docs-only の依頼では `docs-update` が文脈に応じて自動使用される
   - 新しい user-facing workflow を増やさず、既存ドキュメント更新の専用入口として扱われる
   - 知識の置き場判断と混同されない
 
@@ -160,7 +162,7 @@
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
   - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `planning` skill を正本にする
 
-### 13.5. `verification` が明示依頼で整合性を確認する
+### 13.5. `verification` が整合性を確認する
 
 - 例: 「この変更の整合性を確認したい」「ファイルを rename したので参照漏れを確認したい」「`.chezmoiignore` 変更の影響を見たい」
 - 観測ポイント:

@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: 「architecture 改善」「リファクタ候補」「密結合や浅い module 整理」といった構造改善の検討で使う。対象領域を zoom out し、map、friction、改善候補を整理する。事実調査は `research` スキル、実装計画は `planning` スキル、実装は `implementation` スキルを使う。
+description: 文脈上、architecture 改善、リファクタ候補探索、密結合・浅い module・責務分散の整理が必要な時に自動使用する。対象領域を zoom out し、module / caller / responsibility の map、friction、改善候補を整理する。事実調査だけなら `research`、実装前計画は `planning`、差分作成は `implementation` スキルを使う。
 metadata:
   short-description: architecture 改善
 ---
