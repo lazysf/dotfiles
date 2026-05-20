@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = ["yarn", "npm", "publish"],
+  decision = "forbidden",
+  justification = "package publish は Codex ではなくユーザーが実行する。",
+  match = [
+    "yarn npm publish",
+    "yarn npm publish --access public",
+  ],
+  not_match = [
+    "yarn npm info",
+    "yarn npm whoami",
+  ],
+)
