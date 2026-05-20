@@ -1,0 +1,27 @@
+prefix_rule(
+  pattern = [
+    [
+      "mkfs",
+      "mkfs.btrfs",
+      "mkfs.exfat",
+      "mkfs.ext2",
+      "mkfs.ext3",
+      "mkfs.ext4",
+      "mkfs.fat",
+      "mkfs.vfat",
+      "mkfs.xfs",
+    ],
+  ],
+  decision = "forbidden",
+  justification = "filesystem format は Codex から絶対に実行しない。",
+  match = [
+    "mkfs /dev/sdb1",
+    "mkfs.ext4 /dev/sdb1",
+    "mkfs.xfs /dev/sdb1",
+    "mkfs.vfat /dev/sdb1",
+  ],
+  not_match = [
+    "fsck /dev/sdb1",
+    "diskutil list",
+  ],
+)

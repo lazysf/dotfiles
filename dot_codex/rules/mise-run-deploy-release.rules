@@ -1,0 +1,15 @@
+prefix_rule(
+  pattern = ["mise", "run", ["deploy", "release"]],
+  decision = "forbidden",
+  justification = "deploy / release タスクは Codex ではなくユーザーが実行する。",
+  match = [
+    "mise run deploy",
+    "mise run release",
+  ],
+  not_match = [
+    "mise run",
+    "mise run test",
+    "mise run lint",
+    "mise run format",
+  ],
+)
