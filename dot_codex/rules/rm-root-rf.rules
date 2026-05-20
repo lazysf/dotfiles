@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = ["rm", ["-rf", "-fr"], "/"],
+  decision = "forbidden",
+  justification = "ルートファイルシステム削除は Codex から絶対に実行しない。",
+  match = [
+    "rm -rf /",
+    "rm -fr /",
+  ],
+  not_match = [
+    "rm -rf /tmp/example",
+    "rm -fr /tmp/example",
+  ],
+)

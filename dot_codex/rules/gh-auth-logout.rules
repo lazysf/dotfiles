@@ -1,0 +1,12 @@
+prefix_rule(
+  pattern = ["gh", "auth", "logout"],
+  decision = "forbidden",
+  justification = "認証 logout は Codex ではなくユーザーが実行する。",
+  match = [
+    "gh auth logout",
+  ],
+  not_match = [
+    "gh auth status",
+    "gh auth token",
+  ],
+)

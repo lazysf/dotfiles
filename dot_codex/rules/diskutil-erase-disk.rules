@@ -1,0 +1,12 @@
+prefix_rule(
+  pattern = ["diskutil", "eraseDisk"],
+  decision = "forbidden",
+  justification = "disk erase は Codex から絶対に実行しない。",
+  match = [
+    "diskutil eraseDisk APFS NewDisk /dev/disk2",
+  ],
+  not_match = [
+    "diskutil list",
+    "diskutil info /dev/disk2",
+  ],
+)

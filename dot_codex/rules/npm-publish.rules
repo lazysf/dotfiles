@@ -1,0 +1,13 @@
+prefix_rule(
+  pattern = ["npm", "publish"],
+  decision = "forbidden",
+  justification = "package publish は Codex ではなくユーザーが実行する。",
+  match = [
+    "npm publish",
+    "npm publish --access public",
+  ],
+  not_match = [
+    "npm pack",
+    "npm install",
+  ],
+)
