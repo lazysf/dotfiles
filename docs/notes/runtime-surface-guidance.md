@@ -2,7 +2,7 @@
 
 この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
-現在の正式な公開 surface は、`dot_codex/skills/` 配下の 15 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 4 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
+現在の正式な公開 surface は、`dot_codex/skills/` 配下の 15 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 2 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
 
@@ -38,12 +38,11 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 ## review 系 surface の役割分担
 
-- 要件 draft review の正式入口は `01-product-planning-reviewer`
-- 実装計画 draft review の正式入口は `02-implementation-planning-reviewer`
-- 差分レビューの正式入口は `03-quality-reviewer`
-- セキュリティレビューの正式入口は `04-security-reviewer`
+- 要件 draft と実装計画 draft の review は、専用 reviewer agent を持たず親 Codex が扱う
+- 差分レビューの正式入口は `quality-reviewer`
+- セキュリティレビューの正式入口は `security-reviewer`
 - review は利用者が対象に応じて適切な reviewer agent を明示的に呼んで実施する
-- generic review から `04-security-reviewer` への自動昇格は行わない
+- generic review から `security-reviewer` への自動昇格は行わない
 - `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
 - reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
 - `docs/README.md` は index、`dot_codex/private_AGENTS.md.tmpl` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
@@ -55,7 +54,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - 1 文目で、ユーザーが言いそうな依頼語を優先して「どんな依頼で使うか」を自然文で示す
 - 2 文目で、その skill が何を整理 / 実行 / 出力するかを示す
 - 3 文目で、近接 skill との差分、渡し先、または対象外を明示する
-- 他 skill や agent を案内する時は、`〜したい時は \`skill-name\` スキルを使う`、`レビューしたい時は \`03-quality-reviewer\` reviewer agent を使う` のように surface 種別まで prose で書く
+- 他 skill や agent を案内する時は、`〜したい時は \`skill-name\` スキルを使う`、`レビューしたい時は \`quality-reviewer\` reviewer agent を使う` のように surface 種別まで prose で書く
 - `\`skill-name\` で扱う`、`\`skill-name\` に委ねる`、`\`skill-name\` へ handoff する`、`writer skill` のような抽象表現は避ける
 - skill 名の裸参照だけで意味を持たせず、何をしたい時に使うのかを文の中で明示する
 - 主役 skill と補助 skill の違いは prefix や内部用語ではなく prose で表現する
