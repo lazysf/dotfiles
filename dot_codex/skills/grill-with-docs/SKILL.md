@@ -16,6 +16,7 @@ metadata:
 - 既存用語との衝突、曖昧語、code との矛盾を見つけたら、具体例を添えてどちらを正とするか確認する。
 - 回答を受けたら、確定事項、残る未確定事項、必要な docs 更新を分ける。
 - 共有理解に到達するまで、最も影響が大きい未確定事項を 1 つずつ詰める。
+- ぼんやりした要望から PRD draft まで仕上げる初期 workflow では、まず `product-planning` で目的と成功条件を固め、確定した durable knowledge だけこの skill で反映する。
 
 ## 対象 Context の扱い
 
@@ -28,12 +29,22 @@ metadata:
 ## Inline 記録
 
 - `CONTEXT.md` は glossary であり、spec、作業メモ、実装判断、秘密情報を混ぜない。
+- `docs/PRD.md`、`docs/REQUIREMENTS.md`、`docs/BASIC_DESIGN.md`、`docs/DETAILED_DESIGN.md`、`docs/IMPLEMENTATION_PLAN.md`、`docs/TEST_CASES.md`、`docs/TRACEABILITY_MATRIX.md` は工程成果物として扱い、`CONTEXT.md` や ADR に同じ内容を重複記録しない。
+- 工程成果物の本文を書き起こす時は、対象に応じて次の reference を読む。
+  - PRD: [references/prd-format.md](references/prd-format.md)
+  - 要件定義: [references/requirements-format.md](references/requirements-format.md)
+  - 基本設計: [references/basic-design-format.md](references/basic-design-format.md)
+  - 詳細設計: [references/detailed-design-format.md](references/detailed-design-format.md)
+  - 実装計画: [references/implementation-plan-format.md](references/implementation-plan-format.md)
+  - テストケース: [references/test-case-format.md](references/test-case-format.md)
+  - traceability matrix: [references/traceability-matrix-format.md](references/traceability-matrix-format.md)
 - `CONTEXT.md` を更新する時は [references/context-format.md](references/context-format.md) に従う。
 - 用語が確定したら、対象 context の `CONTEXT.md` を inline 更新する。
 - ADR は、あとから変えるコスト、文脈なしの意外性、実際の trade-off の 3 条件を満たす場合だけ扱う。
 - ADR を作成または状態更新する時は [references/adr-format.md](references/adr-format.md) に従う。
 - ADR 作成や状態更新は、提案してから実行する。
 - 既存 docs や note を更新する場合は、会話中に確認された evidence に限定し、自然な置き場が不明なら確認する。
+- PRD や要件定義の `Open Questions` に残すべき未確定事項は、確認済み知識として `CONTEXT.md`、ADR、notes に昇格させない。
 - 秘密情報、認証情報、private config、未公開個人情報は durable artifact に残さない。
 - commit 前の差分確認と commit 作成は扱わない。commit したい時は `git-commit` スキルを使う。
 
