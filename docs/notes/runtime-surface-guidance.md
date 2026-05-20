@@ -2,24 +2,18 @@
 
 この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
-現在の正式な公開 surface は、`dot_codex/skills/` 配下の 15 個の prefix なし skill 名と、`dot_codex/agents/` 配下の 2 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
+現在の正式な公開 surface は、`dot_codex/skills/` 配下の prefix なし skill 名と、`dot_codex/agents/` 配下の 2 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
 
 ## Surface の責務
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
 - `research`: 事実確認、原因調査、影響調査、PoC、仕様確認の入口。bug / security / quality / compat / maintenance も、まず観測事実を集める段階ではここで扱う
-- `product-planning`: 要件定義の中核。散らばった依頼や軽い停止線整理も含め、目的、成功条件、非目的、制約、用語、未確定事項を整理する
-- `to-prd`: 会話や整理済み要件を PRD draft に落とす入口。生成時点では draft として扱い、正式 docs への保存や issue 化は明示依頼がある時だけ扱う
-- `implementation-planning`: 技術計画の中核。要件確定後の実装順序、変更境界、検証入口に加え、リファクタ境界、単純化、quality / compat / security の実装前 scope を整理する
-- `improve-codebase-architecture`: architecture 改善候補の探索と候補選択後の grilling の入口。`zoom-out` 的な module / caller / 責務の地図化を含み、実装順序確定は `implementation-planning`、差分作成は `code-implementation-loop` へ進める
-- `code-implementation-loop`: 確認方法先行で、最小差分の実装、必要な整理、再確認を進める
-- `coding-standards`: コード作業に言語別の制約やベストプラクティスを足す補助 skill。実装、調査、計画、レビュー本体は担わず、対象言語の reference を必要時に読む
-- `change-verification`: 既存変更の受け入れ確認や、bugfix / security / quality / compat の修正効果確認を standalone で扱う
+- `planning`: 実装前の問い詰め、計画作成、inline knowledge capture の中核。目的、成功条件、非目的、制約、設計、実装順序、検証入口、対応関係を整理し、必要に応じて `CONTEXT.md`、docs、ADR、code と照合して確定した用語や判断をその場で反映する
+- `architecture`: architecture 改善候補の探索と候補選択後の grilling の入口。`zoom-out` 的な module / caller / 責務の地図化を含み、実装順序確定は `planning`、差分作成は `implementation` へ進める
+- `implementation`: 確認方法先行で、最小差分の実装、必要な整理、再確認を進める。対応 reference がある言語では保存形式や公開面のガードを足す
+- `verification`: 既存変更の受け入れ確認、bugfix / security / quality / compat の修正効果確認、rename / 削除 / surface 変更後の整合性確認を standalone で扱う
 - `caveman`: 出力を短く圧縮したい依頼で使う補助 skill。応答文体だけを変え、調査、計画、実装、レビュー、commit / push の責務は持たない
-- `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成を docs-aware な grilling と一緒に扱う場合は `grill-with-docs` を使う
-- `grill-me`: plan / design の pressure test 入口。質問を 1 つずつ行い、推奨回答を添え、codebase で答えられることは先に探索する
-- `grill-with-docs`: docs-aware な pressure test と inline knowledge capture の入口。`CONTEXT.md`、docs、ADR、code と照合し、確定した用語や判断をその場で反映する
-- `consistency-audit`: 補助 skill。明示依頼時の整合性精査に責務を絞る
+- `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成を planning と一緒に扱う場合は `planning` を使う
 - `git-commit`, `git-push`: 通常 commit / push の正式入口。その他の Git 操作は skill を増やさず既定 prompt と停止線で扱う
 - `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
@@ -34,7 +28,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 固定の代表導線は `dot_codex/private_AGENTS.md.tmpl` に持たせない。
 実行時の入口判断は、要求分類表ではなく、各 `SKILL.md` の description、reviewer agent 定義、ユーザーが明示した依頼語、既存 docs / ADR / code で確認できる事実に基づいて行う。
-迷う場合は、観測事実の取得を `research`、要件整理を `product-planning`、実装前の変更境界や検証入口の整理を `implementation-planning`、最小差分の実装を `code-implementation-loop`、変更後確認を `change-verification` に寄せる。
+迷う場合は、観測事実の取得を `research`、要件整理や実装前の変更境界、検証入口の整理を `planning`、最小差分の実装を `implementation`、変更後確認を `verification` に寄せる。
 
 ## review 系 surface の役割分担
 
@@ -43,7 +37,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - セキュリティレビューの正式入口は `security-reviewer`
 - review は利用者が対象に応じて適切な reviewer agent を明示的に呼んで実施する
 - generic review から `security-reviewer` への自動昇格は行わない
-- `product-planning` と `implementation-planning` は整理専用であり、review 本体を担わない
+- `planning` は整理専用であり、review 本体を担わない
 - reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
 - `docs/README.md` は index、`dot_codex/private_AGENTS.md.tmpl` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
 
@@ -54,6 +48,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - 1 文目で、ユーザーが言いそうな依頼語を優先して「どんな依頼で使うか」を自然文で示す
 - 2 文目で、その skill が何を整理 / 実行 / 出力するかを示す
 - 3 文目で、近接 skill との差分、渡し先、または対象外を明示する
+- 言語、ファイル形式、provider、成果物 format など限定的な処理の詳細は、発火語として必要な場合を除き本文の reference 選択や `references/` に置く
 - 他 skill や agent を案内する時は、`〜したい時は \`skill-name\` スキルを使う`、`レビューしたい時は \`quality-reviewer\` reviewer agent を使う` のように surface 種別まで prose で書く
 - `\`skill-name\` で扱う`、`\`skill-name\` に委ねる`、`\`skill-name\` へ handoff する`、`writer skill` のような抽象表現は避ける
 - skill 名の裸参照だけで意味を持たせず、何をしたい時に使うのかを文の中で明示する

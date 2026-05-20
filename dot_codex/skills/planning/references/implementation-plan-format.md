@@ -8,7 +8,7 @@
 - 実装計画用フォルダは作らず、`docs/IMPLEMENTATION_PLAN.md` を使う。
 - 実装結果、日報、作業ログは混ぜない。
 - 対象の `FR-*` と対応付ける。
-- `TASK-*` の採番や実行 task の粒度調整は `task-decomposition` で扱う。
+- `TASK-*` は実行しやすく検証可能な粒度にする。
 - 未確認事項は `Open Questions` に残す。
 
 ## Template
@@ -29,6 +29,10 @@
 ### Implementation Slices
 
 1. [実装のまとまり、順序、依存。]
+
+### Tasks
+
+- `TASK-001`: [完了条件と確認方法が見える作業単位。]
 
 ### Verification
 

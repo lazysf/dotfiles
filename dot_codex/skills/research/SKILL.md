@@ -1,13 +1,13 @@
 ---
 name: research
-description: 「まず調べたい」「原因を切り分けたい」「外部変化・品質・セキュリティ・保守性の影響を事実で整理したい」といった調査で使う。facts、unknowns、options、recommendation、next_step を分ける。要件整理は `product-planning`、技術計画は `implementation-planning`。
+description: 「まず調べたい」「原因を切り分けたい」「再現条件を確認したい」「外部変化や品質・セキュリティ・保守性の影響を事実で整理したい」といった調査で使う。facts、unknowns、options、recommendation、next_step を分ける。要件、設計、実装順序、検証方法を固める時は `planning` スキルを使う。
 metadata:
   short-description: 調査手順
 ---
 
 # 調査
 
-実装や修正に入る前に、判断材料として必要な事実を整理する。
+主にバグ、外部変化、品質、セキュリティ、保守性の判断材料として必要な事実を整理する。
 
 ## 手順
 
@@ -22,10 +22,9 @@ metadata:
 ## 境界
 
 - 確認できた事実と未確認事項を混ぜない。
-- 調査だけで閉じる案件では、実装案を決め打ちしない。
-- 要件を問いで固める段階では `product-planning` スキルを使う。
-- 実装範囲や検証順序を決める段階では `implementation-planning` スキルを使う。
-- architecture 改善候補の探索は `improve-codebase-architecture` スキルを使う。
+- 調査だけで閉じる案件では、要件、設計、実装案を決め打ちしない。
+- 要件、設計、実装範囲、検証順序を固める段階では `planning` スキルを使う。
+- architecture 改善候補の探索は `architecture` スキルを使う。
 - security / quality の差分 review は該当 reviewer agent を使う。
 
 ## 出力
