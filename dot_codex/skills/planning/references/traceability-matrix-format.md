@@ -1,26 +1,26 @@
 # Traceability Matrix Format
 
 `docs/TRACEABILITY_MATRIX.md` を作成・更新する時に使う。
-PRD、要件、設計、タスク、テストケース、テストコードの対応関係を一覧化する。
+要件、設計、タスク、テストケース、テストコードの対応関係を一覧化する。
 
 ## Rules
 
 - traceability 用フォルダは作らず、`docs/TRACEABILITY_MATRIX.md` を使う。
-- 追跡対象が存在しない場合は空欄にせず `N/A` または `TBD` を使う。
+- 追跡対象が存在しない場合は空欄にせず `N/A` または `TBD` を使い、理由を `備考` に残す。
 - 対応が不明なものを推測で埋めない。
-- status は必要最小限にする。
+- 状態は必要最小限にする。
 
 ## Template
 
 ```markdown
-# Traceability Matrix
+# トレーサビリティマトリクス
 
-| Feature | Requirement | Acceptance Criteria | Basic Design | Detailed Design | Task | Test Case | Test Code | Status |
-|---|---|---|---|---|---|---|---|---|
-| `FR-001` | `REQ-001` | `AC-001` | `BD-001` | `DD-001` | `TASK-001` | `TC-001` | `TBD` | `planned` |
+| 機能 / 要件領域 | 要求事項 | 受入条件 | 基本設計 | 詳細設計 | タスク | テストケース | テストコード | 状態 | 備考 |
+|---|---|---|---|---|---|---|---|---|---|
+| `FR-001` | `REQ-001` | `AC-001` | `BD-001` | `DD-001` | `TASK-001` | `TC-001` | `TBD` | `planned` | [未作成、対象外、不明などの理由。] |
 ```
 
-## Status
+## 状態
 
 - `draft`: まだ問い詰め中
 - `planned`: 実装計画まである
