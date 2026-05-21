@@ -14,10 +14,3 @@ fi
 if command -v mise >/dev/null 2>&1; then
 	eval "$(mise activate zsh --shims)"
 fi
-
-# -----------------------------------------
-# OrbStack (optional)
-# -----------------------------------------
-if [[ -f "${HOME}/.orbstack/shell/init.zsh" ]]; then
-	. "${HOME}/.orbstack/shell/init.zsh"
-fi
