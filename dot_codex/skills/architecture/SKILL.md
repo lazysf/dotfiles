@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: 文脈上、architecture 改善、リファクタ候補探索、密結合・浅い module・責務分散の整理が必要な時に自動使用する。対象領域を zoom out し、module / caller / responsibility の map、friction、改善候補を整理する。事実調査だけなら `research`、実装前計画は `planning`、差分作成は `implementation` スキルを使う。
+description: 文脈上、architecture 改善、リファクタ候補探索、密結合・浅い module・責務分散の整理が必要な時に自動使用する。対象領域を zoom out し、module / caller / responsibility の map、friction、改善候補を整理する。事実調査だけなら `research`、実装前の問い詰めは `grill`、文書化は `scribe`、差分作成は `implementation` スキルを使う。
 metadata:
   short-description: architecture 改善
 ---
@@ -19,7 +19,7 @@ metadata:
 - architecture 用語の補助が必要な時だけ [references/architecture-language.md](references/architecture-language.md) を読む。
 - friction を探し、改善候補を番号付きで提示する。
 - ユーザーが候補を選んだら、制約、守る既存挙動、module shape、interface、tests、移行順序を 1 つずつ grilling する。
-- 実装計画に進める状態になったら、`planning` へ渡せる粒度で整理する。
+- 実装前に問い詰める状態になったら、`grill` へ渡せる粒度で整理する。
 
 ## 確認観点
 
@@ -32,10 +32,10 @@ metadata:
 ## 境界
 
 - 具体的な不具合原因や外部変化の調査だけなら `research` スキルを使う。
-- 実装順序、変更境界、検証方法を確定する段階では `planning` スキルを使う。
+- 実装順序、変更境界、検証方法を問い詰めて確定する段階では `grill` スキルを使う。
+- 設計 docs、CONTEXT、ADR への反映や整形が必要な時は `scribe` スキルを使う。
 - 差分作成やテスト修正に入る段階では `implementation` スキルを使う。
 - 既存差分の品質 review は `quality-reviewer`、security boundary review は `security-reviewer` reviewer agent を使う。
-- `CONTEXT.md` や ADR 更新が必要になった時は `planning` スキルを使う。
 
 ## 出力
 
@@ -46,4 +46,4 @@ metadata:
 - `risk`: 既存挙動、ADR、公開 interface、検証不足の懸念
 - `next_question`: 深掘りする候補を 1 つ選ぶ質問
 
-候補選択後の grilling では、確定事項、未確定事項、次に必要な planning / implementation / docs 更新を分けて返す。
+候補選択後の grilling では、確定事項、未確定事項、次に必要な `grill` / `scribe` / `implementation` を分けて返す。
