@@ -8,44 +8,36 @@
 - 基本設計用フォルダは作らず、`docs/BASIC_DESIGN.md` を使う。
 - 詳細な処理順や実装手順は入れすぎない。
 - 対象の `FR-*` と対応付ける。
-- 未確認事項は `Open Questions` に残す。
+- 未確認事項は `未確認事項` に残す。
 
 ## Template
 
 ```markdown
-# Basic Design
+# 基本設計
 
-## FR-001: [Feature name]
+## FR-001: [機能または要件領域名]
 
-### Design Goal
+### 設計方針
 
-[この設計で達成すること。]
+[要件を満たすための基本方針。]
 
-### Approach
-
-[採用する基本方針。]
-
-### Components / Responsibilities
+### 構成と責務
 
 - `[component]`: [責務。]
 
-### Design Items
+### 基本設計項目
 
-- `BD-001`: [要件に対応する基本設計要素。]
+- `BD-001`: [要件を満たすための主要な設計判断または構成要素。]
 
-### Data / State
+### データ / 状態
 
 - [扱う主な data、state、保存先。]
 
-### User / System Flow
+### 利用者 / システムフロー
 
 1. [主要な流れ。]
 
-### Alternatives Considered
-
-- [検討した代替案と見送った理由。]
-
-### Open Questions
+### 未確認事項
 
 - [未確認事項。]
 ```

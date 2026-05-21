@@ -1,51 +1,52 @@
 # Test Case Format
 
 `docs/TEST_CASES.md` を作成・更新する時に使う。
-要件、設計、task に対応する test case と手動確認を置く。
+要件とタスクに対応する test case と手動確認を置く。設計との対応は Traceability Matrix で整理する。
 
 ## Rules
 
 - test case 用フォルダは作らず、`docs/TEST_CASES.md` を使う。
-- 対象の `FR-*`、`AC-*`、`TASK-*` と対応付ける。
+- 対象の `FR-*`、`AC-*`、`TASK-*` と対応付ける。該当しないものは `N/A` と書く。
+- `TC-*` は 1 つの期待結果を観測できる粒度にする。
 - 自動テストできない場合は、手動確認または比較観点として残す。
 - テストコードの path は確認済みの場合だけ書く。未作成なら `TBD` にする。
-- 未確認事項は `Open Questions` に残す。
+- 未確認事項は `未確認事項` に残す。
 
 ## Template
 
 ```markdown
-# Test Cases
+# テストケース
 
-## FR-001: [Feature name]
+## FR-001: [機能または要件領域名]
 
-### TC-001: [Test case name]
+### TC-001: [テストケース名]
 
-### Covers
+#### 対応
 
 - `AC-001`
 - `TASK-001`
 
-### Type
+#### 種別
 
-- [automated / manual / exploratory]
+- [automated | manual | exploratory]
 
-### Preconditions
+#### 前提条件
 
-- [前提条件、fixture、workbook、data など。]
+- [fixture、workbook、data、権限、設定など。]
 
-### Steps
+#### 手順
 
 1. [確認手順。]
 
-### Expected Result
+#### 期待結果
 
 - [観測可能な期待結果。]
 
-### Test Code
+#### テストコード
 
 - `TBD`
 
-### Open Questions
+#### 未確認事項
 
 - [未確認事項。]
 ```

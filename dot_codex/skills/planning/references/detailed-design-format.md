@@ -8,46 +8,47 @@
 - 詳細設計用フォルダは作らず、`docs/DETAILED_DESIGN.md` を使う。
 - 対象の `FR-*` と対応付ける。
 - 変わりやすい code snippet は、判断を明確にする時だけ短く使う。
-- 未確認事項は `Open Questions` に残す。
+- 該当するデータ対応がない場合は `N/A` と書く。
+- 未確認事項は `未確認事項` に残す。
 
 ## Template
 
 ```markdown
-# Detailed Design
+# 詳細設計
 
-## FR-001: [Feature name]
+## FR-001: [機能または要件領域名]
 
-### Target Scope
+### 対象範囲
 
 - [対象 module、画面、macro、command など。]
 
-### Interfaces
+### インターフェース
 
-- `[interface / function / macro / endpoint]`: [入力、出力、責務。]
+- `[interface / function / macro / endpoint]`: [入力、出力、副作用、責務。]
 
-### Design Items
+### 詳細設計項目
 
-- `DD-001`: [要件に対応する詳細設計要素。]
+- `DD-001`: [実装へ落とすための処理、分岐、状態、連携などの設計要素。]
 
-### Processing Flow
+### 処理フロー
 
 1. [処理手順。]
 
-### Validation / Error Handling
+### 検証・エラー処理
 
 - [validation、例外、error 表示、fallback。]
 
-### Data Mapping
+### データ対応
 
-| Source | Target | Rule | Notes |
+| 変換元 | 変換先 | ルール | 備考 |
 |---|---|---|---|
-| [source] | [target] | [rule] | [notes] |
+| [変換元] | [変換先] | [ルール] | [備考] |
 
-### Edge Cases
+### 考慮ケース
 
-- [考慮すべき edge case。]
+- [考慮すべき edge case、境界条件、例外的な入力。]
 
-### Open Questions
+### 未確認事項
 
 - [未確認事項。]
 ```
