@@ -16,9 +16,10 @@
   - [Specification](https://agentskills.io/specification)
   - [Best practices](https://agentskills.io/skill-creation/best-practices)
   - [Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
-- `docs-update` スキルは、README、既存 docs、運用手順、設計メモなど、説明文書本文の更新に限って使用する
+- `grill` スキルは、実装、設計、要件整理、仕様化の前に、共有理解へ到達するまで一問ずつ問い詰め、確定事項を doc / artifact に最小反映する時に使用する
+- `scribe` スキルは、README、既存 docs、運用手順、設計メモ、PRD、要件定義、設計、実装計画、テストケース、traceability、CONTEXT、ADR などの doc / artifact 作成・更新・整形に使用する
 - 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
-- `docs-update` 単独で進めない代表例:
+- `scribe` 単独で進めない代表例:
   - root `AGENTS.md` と `dot_codex/private_AGENTS.md.tmpl`
   - `dot_codex/skills/**/SKILL.md`
   - `dot_codex/skills/**/references/`、`scripts/`、`assets/` のうち skill の判断や実行に影響するもの

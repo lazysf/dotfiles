@@ -32,6 +32,7 @@
   - [0016-reduce-reviewer-agent-surface.md](./adr/0016-reduce-reviewer-agent-surface.md)
   - [0017-consolidate-planning-skill-surface.md](./adr/0017-consolidate-planning-skill-surface.md)
   - [0018-keep-git-mutation-rules-prompted.md](./adr/0018-keep-git-mutation-rules-prompted.md)
+  - [0019-split-planning-and-docs-surface.md](./adr/0019-split-planning-and-docs-surface.md)
 - `dot_codex/private_AGENTS.md.tmpl`: 運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: review の正式入口になる reviewer agent を置く。review はここから明示的に呼び出す

@@ -1,6 +1,6 @@
 ---
 name: implementation
-description: 文脈上、合意済みの変更を実装、修正、テスト更新する段階に入った時に自動使用する。確認方法を先に置き、最小実装、必要な整理、再確認を小さく回す。原因調査は `research`、要件整理や実装前計画は `planning` スキルを使う。
+description: 文脈上、合意済みの変更を実装、修正、テスト更新する段階に入った時に自動使用する。確認方法を先に置き、最小実装、必要な整理、再確認を小さく回す。原因調査は `research`、要件整理や実装前の問い詰めは `grill`、文書化は `scribe` スキルを使う。
 metadata:
   short-description: 実装ループ
 ---
@@ -31,7 +31,8 @@ metadata:
 ## 境界
 
 - 原因調査は `research` スキルを使う。
-- 要件整理や技術計画は `planning` スキルを使う。
+- 要件整理や技術計画の問い詰めは `grill` スキルを使う。
+- 実装計画や docs の作成・更新・整形は `scribe` スキルを使う。
 - Excel VBA の exported `.bas` / `.cls` を作成・編集する時は [references/vba-excel-macro.md](references/vba-excel-macro.md) を読む。
 - 原則判断の詳細が必要な時は [references/implementation-guardrails.md](references/implementation-guardrails.md) を読む。
 - テスト化しにくい変更では [references/verification-fallbacks.md](references/verification-fallbacks.md) を読む。

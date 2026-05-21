@@ -9,19 +9,19 @@
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
 - `research`: 事実確認、原因調査、影響調査、PoC、仕様確認の入口。bug / security / quality / compat / maintenance も、まず観測事実を集める段階ではここで扱う
-- `planning`: 実装前の問い詰め、計画作成、inline knowledge capture の中核。目的、成功条件、非目的、制約、設計、実装順序、検証入口、対応関係を整理し、必要に応じて `CONTEXT.md`、docs、ADR、code と照合して確定した用語や判断をその場で反映する
-- `architecture`: architecture 改善候補の探索と候補選択後の grilling の入口。`zoom-out` 的な module / caller / 責務の地図化を含み、実装順序確定は `planning`、差分作成は `implementation` へ進める
+- `grill`: 実装前の問い詰め、共有理解、inline knowledge capture の中核。目的、成功条件、非目的、制約、設計、実装順序、検証入口、対応関係を整理し、必要に応じて `CONTEXT.md`、docs、ADR、code と照合して確定した用語や判断を最小反映する
+- `architecture`: architecture 改善候補の探索と候補選択後の grilling の入口。`zoom-out` 的な module / caller / 責務の地図化を含み、実装順序確定は `grill`、差分作成は `implementation` へ進める
 - `implementation`: 確認方法先行で、最小差分の実装、必要な整理、再確認を進める。対応 reference がある言語では保存形式や公開面のガードを足す
 - `verification`: 既存変更の受け入れ確認、bugfix / security / quality / compat の修正効果確認、rename / 削除 / surface 変更後の整合性確認を standalone で扱う
 - `caveman`: 出力を短く圧縮したい依頼で使う補助 skill。応答文体だけを変え、調査、計画、実装、レビュー、commit / push の責務は持たない
-- `docs-update`: 既存 docs のみを更新する docs-only 入口。知識の置き場判断や新しい note / ADR の作成を planning と一緒に扱う場合は `planning` を使う
+- `scribe`: README、既存 docs、運用手順、設計メモ、PRD、要件定義、設計、実装計画、テストケース、traceability、CONTEXT、ADR などの doc / artifact 作成・更新・整形の入口。置き場判断や共有理解の問い詰めが必要な場合は `grill` を使う
 - `git-commit`, `git-push`: 通常 commit / push の正式入口。その他の Git 操作は skill を増やさず既定 prompt と停止線で扱う
 - `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
 - `rules/`: 機械的なガード。操作制約や許可ルールを担う
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
 要求分類は user-facing workflow として案内せず、依頼を固定分類へ当てはめるための正本も置かない。
-docs-only の依頼で、成果物が既存ドキュメント更新に限られる場合は、新しい user-facing workflow を増やさず `docs-update` を直接入口として使ってよい。
+docs-only の依頼や doc / artifact 作成・更新・整形は、新しい user-facing workflow を増やさず `scribe` を直接入口として使ってよい。
 root `CONTEXT-MAP.md` は multi-context の入口、各 `CONTEXT.md` は glossary を担当する。
 CONTEXT は spec、作業メモ、実装判断を扱わない。
 
@@ -29,7 +29,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 固定の代表導線は `dot_codex/private_AGENTS.md.tmpl` に持たせない。
 実行時の入口判断は、要求分類表ではなく、各 `SKILL.md` の description、reviewer agent 定義、ユーザーが明示した依頼語、既存 docs / ADR / code で確認できる事実に基づいて行う。
-迷う場合は、観測事実の取得を `research`、要件整理や実装前の変更境界、検証入口の整理を `planning`、最小差分の実装を `implementation`、変更後確認を `verification` に寄せる。
+迷う場合は、観測事実の取得を `research`、要件整理や実装前の変更境界、検証入口の問い詰めを `grill`、doc / artifact の作成・更新・整形を `scribe`、最小差分の実装を `implementation`、変更後確認を `verification` に寄せる。
 
 ## review 系 surface の役割分担
 
@@ -38,7 +38,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - セキュリティレビューの正式入口は `security-reviewer`
 - review は利用者が対象に応じて適切な reviewer agent を明示的に呼んで実施する
 - generic review から `security-reviewer` への自動昇格は行わない
-- `planning` は整理専用であり、review 本体を担わない
+- `grill` は問い詰めと共有理解の整理専用であり、review 本体を担わない
 - reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
 - `docs/README.md` は index、`dot_codex/private_AGENTS.md.tmpl` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
 
