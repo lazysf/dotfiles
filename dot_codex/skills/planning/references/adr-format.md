@@ -1,7 +1,7 @@
 # ADR 形式
 
 ADR は `docs/adr/` に置き、`0001-slug.md`、`0002-slug.md` のように連番を使う。
-この repo では、軽量な ADR 本文と必須の decision status を使う。
+この repo では、軽量な ADR 本文と必須の `Status` を使う。
 
 ## ADR を作る条件
 
@@ -16,14 +16,14 @@ ADR は `docs/adr/` に置き、`0001-slug.md`、`0002-slug.md` のように連�
 ## 最小テンプレート
 
 ```markdown
-# NNNN: [Short decision title]
+# NNNN: [短い決定タイトル]
 
 - Status: Proposed
 
-[context、decision、why を 1-3 文で説明する。]
+[背景、決定、理由を 1-3 文で説明する。]
 ```
 
-## Status
+## 状態
 
 この repo では `Status` を必須にする。
 
@@ -48,17 +48,17 @@ relationship metadata を推測で補わない。`Supersedes` は古い ADR を�
 実際に価値がある場合だけ section を追加する。
 
 ```markdown
-## Context
+## 背景
 
-[decision が必要になった確認済み背景。]
+[決定が必要になった確認済み背景。]
 
-## Decision
+## 決定
 
 [選んだ方向。]
 
-## Consequences
+## 影響
 
-[自明ではない downstream effect、constraint、residual risk。]
+[自明ではない影響、制約、残リスク。]
 ```
 
 検討した options など他の任意 section は、不採用案を残す価値がある場合だけ使う。
@@ -68,9 +68,9 @@ relationship metadata を推測で補わない。`Supersedes` は古い ADR を�
 - `docs/adr/` を確認し、既存の最大番号を探す。
 - 番号を 1 つ増やす。
 - 短い kebab-case slug を使う。
-- 新しい ADR を `docs/README.md` に追加する。
+- `docs/README.md` が存在する場合は、新しい ADR を一覧へ追加する。
 
-## Lifecycle 更新
+## ライフサイクル更新
 
 - 新しい ADR は `Proposed` から始める。
 - ユーザーが採用を明示した場合だけ `Accepted` にする。
