@@ -11,8 +11,8 @@ metadata:
 
 ## 継続
 
-`/caveman`、"caveman mode"、"talk like caveman"、"use caveman" のように明示的なモード指定がある場合だけ、以後の返答でも有効にする。
-"less tokens"、"be brief"、"短く"、"簡潔に" のような単発の短縮依頼では、その返答だけに適用する。
+`/caveman`、"caveman mode"、"talk like caveman"、"use caveman" のように明示的なモード指定がある場合は、ユーザーが停止するまで以後の返答でも有効にする。
+"less tokens"、"be brief"、"短く"、"簡潔に" のような単発の短縮依頼だけなら、その返答だけに適用する。
 ユーザーが "stop caveman"、"normal mode"、"通常文に戻す"、"普通に戻して" と言ったら停止する。
 
 ## 文体
