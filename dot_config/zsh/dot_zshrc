@@ -39,11 +39,6 @@ fi
 # Completion and correction
 # -----------------------------------------
 
-# Docker completions (must come before compinit)
-if [[ -d "${HOME}/.docker/completions" ]]; then
-	fpath=("${HOME}/.docker/completions" $fpath)
-fi
-
 # Use a fixed compdump path (under ZDOTDIR)
 ZSH_COMPDUMP="${ZDOTDIR:-${HOME}}/.zcompdump"
 
