@@ -12,7 +12,7 @@
 
 ## Guidance
 
-- 言語別標準は、主役 workflow ではなく `implementation` の補助 reference として設計する。調査は `research`、計画は `planning` に任せる。
+- 言語別標準は、主役 workflow ではなく `implementation` の補助 reference として設計する。調査は `research`、実装前の問い詰めは `grill` に任せる。
 - `implementation/SKILL.md` は薄い router にし、言語固有の詳細は `references/` に分ける。description は変更実装として発火しやすく保ち、現時点で対応する言語やファイル種別は本文や references に逃す。
 - 新しい reference を追加するときは、発火語、対象/非対象、保存形式、公開面、停止線、標準から外す例外条件をそろえる。
 - exported file 形式を扱う reference では、ソース本文だけでなく import/export に必要な metadata、header、encoding、改行、名前制約まで確認する。

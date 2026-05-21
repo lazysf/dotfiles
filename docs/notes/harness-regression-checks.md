@@ -99,8 +99,8 @@
 
 - 例: 「依頼文が散らばっているので今回どこまでやるか整理したい」「新機能の受け入れ確認をしたい」「バグ修正が効いたか確認したい」
 - 観測ポイント:
-  - 散らばった依頼、軽い停止線整理、PRD draft 作成は `planning` が正式入口として案内される
-  - `planning` で生成した PRD は draft として扱われ、正式 docs への保存や issue 化は明示依頼がある時だけ扱われる
+  - 散らばった依頼や軽い停止線整理は `grill`、PRD draft 作成や整形は `scribe` が正式入口として案内される
+  - `scribe` で生成した PRD は draft として扱われ、正式 docs への保存や issue 化は明示依頼がある時だけ扱われる
   - feature / maintenance の受け入れ確認は `verification` の `acceptance` mode として扱われる
   - bugfix / security / quality / compat の修正効果確認は `verification` の `verification` mode として扱われる
   - 要求分類そのものを user-facing workflow として案内しない
@@ -113,23 +113,23 @@
   - note / ADR の追加や整理があったときも、README 側の一覧が放置されない
   - 多少の並び替えや説明文の更新は許容しつつ、入口としての役割が失われていない
 
-### 9. docs-only 依頼が `docs-update` に乗る
+### 9. docs-only 依頼が `scribe` に乗る
 
 - 例: 「README の手順だけ更新したい」「既存の運用 docs を実装に合わせて直したい」
 - 期待:
-  - docs-only の依頼では `docs-update` が文脈に応じて自動使用される
-  - 新しい user-facing workflow を増やさず、既存ドキュメント更新の専用入口として扱われる
-  - 知識の置き場判断と混同されない
+  - docs-only の依頼では `scribe` が文脈に応じて自動使用される
+  - 新しい user-facing workflow を増やさず、既存ドキュメント更新と artifact 整形の入口として扱われる
+  - 知識の置き場判断や共有理解の問い詰めが必要な場合は `grill` と切り分けられる
 
-### 10. 知見蓄積は `planning` に統合される
+### 10. 知見蓄積は `grill` / `scribe` に分担される
 
 - 例: 「docs と照らして計画を問い詰めて」「今回の用語を CONTEXT に残して」「この判断を ADR として残したい」
 - 観測ポイント:
-  - user-facing 入口は `planning` に統合され、docs 更新専用入口と混同されない
-  - docs-aware な grilling の中で evidence 収集、置き場判断、必要な CONTEXT / existing docs / note / ADR 更新が扱われる
+  - user-facing 入口は、問い詰めと置き場判断を `grill`、doc / artifact の作成・更新・整形を `scribe` に分けて案内される
+  - docs-aware な grilling の中で evidence 収集、置き場判断、必要な CONTEXT / existing docs / note / ADR 更新候補が扱われる
   - docs / note / ADR / ADR metadata は、会話中に確定した durable knowledge として扱われる
   - 通常知見と判断記録の置き場が混ざらない
-  - 詳細な workflow は `planning` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
+  - 詳細な workflow は `grill` / `scribe` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 11. ADR が状態付き台帳として扱われる
 
@@ -140,7 +140,7 @@
   - 手順メモや運用メモが ADR に再流入していない
   - 状態モデルやメタデータ、運用フローの詳細は [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
-### 12. `planning` が durable knowledge を inline 更新する
+### 12. `grill` が durable knowledge を inline 最小反映する
 
 - 例: 「docs と照らしてこの設計を grill して」「この用語が固まったので CONTEXT に残して」
 - 観測ポイント:
@@ -150,17 +150,17 @@
   - ADR 作成と状態更新の順序が崩れない
   - note と ADR の送り先が混ざらない
   - diff だけから判断を推測して ADR を作らない
-  - 詳細は `planning` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
+  - 詳細は `grill` / `scribe` skill と [ADR Ledger Model](./adr-ledger-model.md) を正本にする
 
 ### 13. ADR 採用判断と状態更新が一貫する
 
 - 例: 「この ADR を採用済みにしたい」「ADR 作成後に Accepted へ進めたい」
 - 観測ポイント:
   - ADR の `Accepted` 化が commit 作成と切り離されている
-  - 採用判断が明示された場合だけ `planning` で状態更新される
+  - 採用判断が明示された場合だけ `scribe` で状態更新される
   - `Superseded` は、新 ADR 側に対象 ADR を指す `Supersedes` が明示されている場合だけ更新される
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
-  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `planning` skill を正本にする
+  - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `scribe` skill を正本にする
 
 ### 13.5. `verification` が整合性を確認する
 
@@ -179,7 +179,7 @@
 - 観測ポイント:
   - `git-push` は push 実行と upstream 判定だけを扱う
   - 知見蓄積、ADR 作成、ADR 状態更新を開始しない
-  - 知見整理が必要な場合でも push 結果と混ぜず、必要なら別 action として `planning` を案内する
+  - 知見整理が必要な場合でも push 結果と混ぜず、必要なら別 action として `grill` / `scribe` を案内する
 
 ### 15. `git-push` の返答が最小契約を保つ
 
@@ -195,9 +195,9 @@
 
 - 例: 「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」
 - 観測ポイント:
-  - `planning` の状態更新が明示された採用判断や supersede 根拠に沿っている
+  - `scribe` の状態更新が `grill` で確認した採用判断や supersede 根拠に沿っている
   - supersede 更新が明示根拠のある場合だけ行われる
-  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `planning` skill を正本にする
+  - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `scribe` skill を正本にする
 
 ### 17. 既存の主要入口が壊れていない
 
@@ -212,31 +212,31 @@
 - 観測ポイント:
   - architecture 改善候補を見つけたい依頼は `architecture` に案内される
   - `zoom-out` 的な codebase 地図化は独立 skill ではなく `architecture` の探索ステップとして扱われる
-  - `architecture` は候補出しと候補選択後の grilling までを扱い、実装順序確定は `planning` に進める
-  - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす計画は `planning` に案内される
-  - リファクタ境界そのものを決める依頼は `planning` に案内される
-  - 性能や安定性など品質特性の事実確認は `research`、実装前 scope は `planning` に案内される
+  - `architecture` は候補出しと候補選択後の grilling までを扱い、実装順序確定は `grill` に進める
+  - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす計画は `grill` に案内される
+  - リファクタ境界そのものを決める依頼は `grill` に案内される
+  - 性能や安定性など品質特性の事実確認は `research`、実装前 scope は `grill` に案内される
   - 実装開始や確認方法先行の最小差分は `implementation` に案内される
 
-### 18. planning skill が整理専用のまま保たれる
+### 18. `grill` skill が問い詰め専用のまま保たれる
 
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
 - 観測ポイント:
-  - planning skill が整理専用のまま保たれ、review 本体を抱え込んでいない
+  - `grill` skill が問い詰めと共有理解の整理専用のまま保たれ、review 本体を抱え込んでいない
   - 要件 review と実装計画 review の責務が分離されたまま維持されている
   - 導線の詳細は [Runtime Surface Guidance](./runtime-surface-guidance.md) と各 `SKILL.md` / agent 定義を正本にする
 
-### 19. context-aware upstream planning が機能する
+### 19. context-aware upstream grilling が機能する
 
 - 例: 「計画を深掘りして」「既存 context と docs に照らして要件を固めたい」「実装順序と検証方法を詰めたい」
 - 観測ポイント:
-  - 要件定義の深掘りは `planning` に案内される
-  - 実装計画の深掘りは `planning` に案内される
+  - 要件定義の深掘りは `grill` に案内される
+  - 実装計画の深掘りは `grill` に案内される
   - root `CONTEXT-MAP.md` から `dot_codex/CONTEXT.md` と `docs/CONTEXT.md` へ辿れる
   - root `CONTEXT.md` は作らない
   - `CONTEXT.md` は glossary と関係性に限定され、spec、作業メモ、実装判断を混ぜない
   - `CONTEXT-MAP.md` と deploy 先の `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
-  - `grill me` は `planning` の発火語として扱われ、docs 反映が不要な場合は質問だけを 1 つずつ進める
+  - `grill me` は `grill` の発火語として扱われ、docs 反映が不要な場合は質問だけを 1 つずつ進める
 
 ### 20. ADR が状態付き軽量 ADR として扱われる
 
@@ -282,7 +282,7 @@
 - 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
 - 観測ポイント:
   - reviewer 設定が役割分担と矛盾せず、不要な一律変更になっていない
-  - planning 系 reviewer と差分 review 系 reviewer の責務差が保たれている
+  - 要件 review / 実装計画 review と差分 review 系 reviewer の責務差が保たれている
   - 具体的な tier や既定値は agent 定義と runtime config を正本にする
 
 ## 関連文書
