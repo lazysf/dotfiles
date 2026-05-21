@@ -1,6 +1,6 @@
 ---
 name: verification
-description: 文脈上、変更後の確認、受け入れ確認、修正効果確認、hardening 結果、rename / 削除後の参照ずれ確認が必要な時に自動使用する。成功条件、修正前症状、保護したい既存挙動、回帰観点、変更後の整合性を分け、実行した確認と残リスクを整理する。実装前に確認方法を置いて小さく進めたい時は `implementation` スキルを使う。
+description: 変更後に受け入れ条件、修正効果、hardening 効果、rename / 削除 / path 変更後の参照ずれを確認したい時に使う。実行した確認、守った既存挙動、残リスクを整理する。まだ差分を作る段階や、確認方法を先に置いて実装する段階なら `implementation` を使う。
 metadata:
   short-description: 検証手順
 ---
