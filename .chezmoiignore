@@ -21,6 +21,7 @@ scripts
 .python-version
 AGENTS.md
 .codex/CONTEXT.md
+.codex/config.toml
 CONTEXT-MAP.md
 LICENSE
 README.md
