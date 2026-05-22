@@ -24,6 +24,7 @@ metadata:
 
 ## 成果物
 
+- Docs README: [references/readme-format.md](references/readme-format.md)
 - PRD: [references/prd-format.md](references/prd-format.md)
 - 要件定義: [references/requirements-format.md](references/requirements-format.md)
 - 基本設計: [references/basic-design-format.md](references/basic-design-format.md)
