@@ -1,7 +1,7 @@
 # ADR 形式
 
 ADR は `docs/adr/` に置き、`0001-slug.md`、`0002-slug.md` のように連番を使う。
-この repo では、軽量な ADR 本文と必須の `Status` を使う。
+軽量な ADR 本文と必須の `Status` を使う。
 
 ## ADR を作る条件
 
@@ -11,8 +11,7 @@ ADR は `docs/adr/` に置き、`0001-slug.md`、`0002-slug.md` のように連�
 2. 文脈なしでは意外: 将来の読み手が、なぜこの道を選んだのか疑問に思う。
 3. 実際の trade-off: 実在する代替案があり、特定の理由で 1 つを選んだ。
 
-戻しやすい、明らか、または実質的な代替案がなかった判断では ADR を作らない。
-ADR の責務外の内容は書かない。
+戻しやすい、明らか、実質的な代替案がない判断では ADR を作らない。責務外の内容は書かない。
 
 ## 最小テンプレート
 
@@ -26,23 +25,21 @@ ADR の責務外の内容は書かない。
 
 ## 状態
 
-この repo では `Status` を必須にする。
-
-使える値:
+`Status` は必須。使える値:
 
 - `Proposed`: 作成済みだが、まだ採用されていない
 - `Accepted`: 採用され、現在も有効
 - `Superseded`: 後続 ADR に置き換えられた
 - `Rejected`: 不採用案として残す
 
-relationship metadata は明示的に分かっている場合だけ使う。
+relationship metadata は明示的に分かっている場合だけ使う:
 
 - `- Supersedes: 0003`
 - `- Superseded-By: 0005`
 - `- Amends: 0003`
 - `- Amended by: 0005`
 
-relationship metadata を推測で補わない。`Supersedes` は古い ADR を置き換える時だけ使う。`Amends` は古い ADR を有効なまま保ちつつ、一部を修正または拡張する時だけ使う。
+relationship metadata を推測で補わない。`Supersedes` は置換、`Amends` は有効な ADR の一部修正・拡張だけに使う。
 
 ## 任意セクション
 
@@ -62,7 +59,7 @@ relationship metadata を推測で補わない。`Supersedes` は古い ADR を�
 [自明ではない影響、制約、残リスク。]
 ```
 
-検討した options など他の任意 section は、不採用案を残す価値がある場合だけ使う。
+検討 options など他の任意 section は、不採用案を残す価値がある場合だけ使う。
 
 ## 採番
 

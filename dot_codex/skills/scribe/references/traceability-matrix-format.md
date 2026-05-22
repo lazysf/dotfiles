@@ -1,12 +1,12 @@
 # Traceability Matrix Format
 
 `docs/TRACEABILITY_MATRIX.md` を作成・更新する時に使う。
-要件、設計、タスク、テストケース、テストコードの対応関係を一覧化する。
+要件、設計、タスク、テストケース、テストコードの対応を一覧化する。
 
 ## Rules
 
 - traceability 用フォルダは作らず、`docs/TRACEABILITY_MATRIX.md` を使う。
-- 追跡対象が存在しない場合は空欄にせず `N/A` または `TBD` を使い、理由を `備考` に残す。
+- 追跡対象がない場合は `N/A` または `TBD` を使い、理由を `備考` に残す。
 - 対応が不明なものを推測で埋めない。
 - 状態は必要最小限にする。
 - Traceability Matrix の責務外の内容は書かない。

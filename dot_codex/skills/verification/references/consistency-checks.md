@@ -1,12 +1,12 @@
 # Consistency Checks
 
-変更差分から、参照、docs、設定、ignore の追従漏れを確認する時だけ読む。
+差分から参照、docs、設定、ignore の追従漏れを確認する時だけ読む。
 
 ## 手順
 
 - `git status -sb`、`git diff --name-status`、`git diff` で対象差分を確認する。
 - 追加、rename、削除された path、見出し、skill 名、設定名を `rg` で検索する。
-- README、docs、index、一覧、相対リンク、設定の path 参照、命名参照のずれを見る。
+- README、docs、index、一覧、相対リンク、設定 path、命名参照のずれを見る。
 - `.gitignore` は Git 追跡対象、`.chezmoiignore` は chezmoi 配布対象として独立に見る。
 - `dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/` の surface 変更では、関連 docs や regression check の追従要否を見る。
 - 事実だけで判断できる漏れは同じ変更単位で修正する。
