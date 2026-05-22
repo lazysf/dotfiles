@@ -13,6 +13,12 @@ artifact 選択で迷う時は `grill` の [artifact routing](../../grill/refere
 - `未確認事項` に確認済み前提を混ぜない。
 - docs を更新する時は、対象 format reference を読む。
 
+## Docs README
+
+- docs 配下に生成・保守される artifact の体系を整理する。
+- 本文の内容を再掲せず、リンク先と用途が分かる 1 行説明に留める。
+- 追加、削除、rename した継続的に参照する doc / artifact があれば一覧を更新する。
+
 ## PRD
 
 - 概要、課題、目的、成功条件、スコープ、非目的、制約を整理する。
