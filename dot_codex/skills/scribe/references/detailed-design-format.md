@@ -1,13 +1,13 @@
 # Detailed Design Format
 
 `docs/DETAILED_DESIGN.md` を作成・更新する時に使う。
-実装可能な粒度の処理、interface、validation、edge case を置く。
+実装可能な処理、interface、validation、edge case を置く。
 
 ## Rules
 
 - 詳細設計用フォルダは作らず、`docs/DETAILED_DESIGN.md` を使う。
 - 対象の `FR-*` と対応付ける。
-- 変わりやすい code snippet は、判断を明確にする時だけ短く使う。
+- code snippet は判断を明確にする時だけ短く使う。
 - 該当するデータ対応がない場合は `N/A` と書く。
 - 未確認事項は `未確認事項` に残す。
 - 詳細設計の責務外の内容は書かない。

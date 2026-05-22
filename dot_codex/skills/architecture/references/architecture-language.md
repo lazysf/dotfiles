@@ -1,18 +1,18 @@
 # Architecture 用語
 
-architecture 改善候補を扱う時は、次の用語を優先する。
+architecture 改善候補では次の用語を優先する。
 
 ## 用語
 
-**Module**: interface と implementation を持つ単位。function、package、feature slice などを含む。
+**Module**: interface と implementation を持つ単位。function、package、feature slice など。
 _Avoid_: component, service, unit
 
-**Interface**: caller が module を正しく使うために知る必要があるもの。型、invariant、順序、error mode、config、性能期待を含む。
+**Interface**: caller が module を正しく使うために知るもの。型、invariant、順序、error mode、config、性能期待を含む。
 _Avoid_: API, signature
 
 **Implementation**: module の interface の背後に隠れる code と behavior。
 
-**Depth**: module が interface を通じて提供する leverage。深い module は、小さく安定した interface の背後に十分な behavior を隠す。
+**Depth**: module が interface を通じて提供する leverage。深い module は小さく安定した interface の背後に十分な behavior を隠す。
 _Avoid_: line-count ratio
 
 **Shallow module**: interface が、それによって隠す implementation と同じくらい複雑な module。
@@ -30,5 +30,5 @@ _Avoid_: boundary
 
 - depth は implementation の行数ではなく、interface に宿る。
 - interface を主な test surface として扱う。
-- adapter が 1 つだけなら仮説上の seam であることが多く、2 つあるなら seam が役割を持っていることが多い。
+- adapter が 1 つだけなら仮説上の seam、2 つあるなら役割を持つ seam であることが多い。
 - module を削除して同じ複雑さが caller に移るだけなら、その module は有用だった可能性が高い。削除して複雑さも消えるなら、pass-through だった可能性がある。

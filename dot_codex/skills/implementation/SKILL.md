@@ -1,6 +1,6 @@
 ---
 name: implementation
-description: 合意済みの変更をコード、設定、テスト、スクリプトへ実装または修正する時に使う。先にテスト、再現手順、比較観点など確認方法を置き、最小差分で実装して再確認する。原因調査は `research`、要件や設計の合意形成は `grill`、変更後の検証整理だけなら `verification` を使う。
+description: 合意済みの変更をコード、設定、テスト、スクリプトへ実装または修正する時に使う。テスト、再現手順、比較観点などを先に置き、最小差分で実装して再確認する。原因調査は `research`、合意形成は `grill`、変更後の検証整理だけなら `verification`。
 metadata:
   short-description: 実装ループ
 ---
@@ -12,29 +12,28 @@ metadata:
 ## 基本方針
 
 - 先に失敗する確認を置く。
-- 今回の依頼を満たす最小差分から始める。
+- 今回必要な最小差分から始める。
 - 命名、責務、エラー処理、テスト配置は近傍実装に寄せる。
 - 外部入力、公開面、永続化、権限などの境界を優先して堅くする。
-- 最小実装で通し、読みやすさや単純さが改善する場合だけ整える。
-- 未検証事項は成功扱いにせず、各ループの後に結果を確認する。
+- 読みやすさや単純さが改善する場合だけ整える。
+- 未検証事項は成功扱いにしない。
 - 次の差分を増やしすぎない。
 
 ## 手順
 
 - 先にテスト、再現手順、比較観点のいずれかを置く。
-- いま必要な振る舞いだけを、近傍実装の流儀と責務に寄せて満たす。
+- いま必要な振る舞いだけを近傍実装に寄せて満たす。
 - 将来前提の抽象化や拡張ポイントは混ぜない。
-- テストが通る状態を保ったまま、読みやすさや単純さが改善する場合だけ整える。
 - コメントは、見れば分かることではなく制約や意図が必要な場所にだけ置く。
 - 追加した確認を再実行し、通ったこと、実行できなかったこと、未確認事項を分けて残す。
 
 ## 境界
 
-- 原因調査は `research` スキルを使う。
-- 要件整理や技術計画の問い詰めは `grill` スキルを使う。
-- 実装計画や docs の作成・更新・整形は `scribe` スキルを使う。
+- 原因調査は `research`。
+- 要件整理や技術計画は `grill`。
+- 実装計画や docs 更新は `scribe`。
 - Excel VBA の exported `.bas` / `.cls` を作成・編集する時は [references/vba-excel-macro.md](references/vba-excel-macro.md) を読む。
-- 原則判断の詳細が必要な時は [references/implementation-guardrails.md](references/implementation-guardrails.md) を読む。
+- 原則判断で迷う時は [references/implementation-guardrails.md](references/implementation-guardrails.md) を読む。
 - テスト化しにくい変更では [references/verification-fallbacks.md](references/verification-fallbacks.md) を読む。
 
 ## 完了条件

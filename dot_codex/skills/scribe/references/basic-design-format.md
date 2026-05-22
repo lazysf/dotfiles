@@ -1,7 +1,7 @@
 # Basic Design Format
 
 `docs/BASIC_DESIGN.md` を作成・更新する時に使う。
-要件を満たすための全体方針、責務分担、主要な構成を置く。
+要件を満たす全体方針、責務分担、主要構成を置く。
 
 ## Rules
 
