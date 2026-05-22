@@ -21,3 +21,4 @@
 - 自然な置き場が明確で、依頼の流れ上必要なら新規 artifact を作ってよい。
 - 置き場、artifact 種別、ID 体系、ADR lifecycle が曖昧なら、推測で作らず質問する。
 - format 適用や複数 artifact の整合が必要なら `scribe` スキルを使う。
+- 責務外の内容は対象 artifact に書かず、必要なら別 artifact の更新候補に分ける。

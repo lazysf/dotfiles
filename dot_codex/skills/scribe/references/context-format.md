@@ -36,6 +36,7 @@ _Avoid_: [避ける alias や多義語]
 - 対話例は、用語境界を短い定義だけで示しにくい場合だけ `## 対話例` として追加する。
 - 自然なまとまりがある場合だけ subheading で group 化する。
 - secrets、credentials、private config values、未公開個人情報、一時的な作業メモ、spec、実装判断を入れない。
+- CONTEXT の責務外の内容は書かない。
 
 ## 単一 / 複数 Context
 

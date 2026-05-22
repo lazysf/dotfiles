@@ -9,6 +9,7 @@ project または product change 全体の要求を置く。個別 feature の�
 - 確認済み事実と未確認事項を混ぜない。
 - 未確認事項は `未確認事項` に残す。
 - 秘密情報、認証情報、private config、未公開個人情報を入れない。
+- PRD の責務外の内容は書かない。
 
 ## Template
 
