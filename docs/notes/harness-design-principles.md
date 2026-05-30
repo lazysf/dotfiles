@@ -1,22 +1,22 @@
 # Harness Design Principles
 
 この文書は、この dotfiles repo で Codex ハーネスを保守するときの repo-level knowledge をまとめたものです。
-`dot_codex/` に置く deployable artifact そのものではなく、保守元 repo で参照する設計原則と採用方針を扱います。
+`dot_codex/` に置く Codex surface source そのものではなく、保守元 repo で参照する設計原則と採用方針を扱います。
 
 ## 基本原則
 
-- deployable artifact は `dot_codex/` に置き、repo-level knowledge は `docs/` に置く
+- Codex surface source は `dot_codex/` に置き、repo-level knowledge は `docs/` に置く
 - project-specific knowledge は各 project の `docs/` を正本にする
 - multi-context repo では root `CONTEXT-MAP.md` を入口にし、各 `CONTEXT.md` は対象 context の近くに置く
 - 知見は `CONTEXT.md`, `docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/` のどこへ置くかを分ける
 - defaults は明確な効果と回帰検証なしに大きく動かさない
 - preview / unstable feature は安易に既定採用しない
-- 破壊的操作や外部影響のある操作は allow せず、既定 prompt と skill 停止線に任せる
+- 破壊的操作や外部影響のある操作は allow しない。高リスク操作は `forbidden` rule、その他の mutation は既定 prompt と skill 停止線に任せる
 
 ## この repo で優先すること
 
 - まず repo-level knowledge として調査結果や運用知見を `docs/` に残し、その後で `dot_codex/` に昇格すべきものだけを選ぶ
-- `dot_codex/` には、展開後にも価値があり、workspace 横断で再利用するものだけを置く
+- `dot_codex/` の managed surface には、展開後にも価値があり、workspace 横断で再利用するものだけを置く
 - 大きな runtime surface の追加よりも、docs、verification、rules、skills の整合を優先する
 - prefix 付きの workflow 名を増やすより、各 skill の発火条件と説明を揃えることを優先する
 
@@ -70,11 +70,11 @@
 - review 本体は reviewer agent が担い、結果の見せ方も agent 定義内で人間向けに調整する
 - 具体的な reviewer 名や review 導線は surface 文書と agent 定義を正本にする
 
-### 7. reviewer の model tier は役割ごとに分ける
+### 7. reviewer の model 設定は agent 定義を正本にする
 
-- 親エージェントと reviewer では、担う責務に応じて model tier や reasoning effort を分ける
-- reviewer の調整は一律変更ではなく、対象 role に限定して行う
-- 具体的な model 設定や reviewer ごとの既定値は agent 定義と runtime config を正本にする
+- reviewer の model tier や reasoning effort は、agent 定義で明示する
+- reviewer の調整は、対象 role の責務と実行コストに照らして行う
+- 具体的な model 設定や reviewer ごとの既定値は agent 定義を正本にし、全体既定は現行 runtime config または config template で確認する
 
 ## 関連文書
 
