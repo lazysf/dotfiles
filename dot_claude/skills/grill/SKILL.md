@@ -1,0 +1,38 @@
+---
+name: grill
+description: 要件整理、仕様化、設計、実装計画の前に、scope、成功条件、制約、検証入口、実装 readiness を対話で固める時に使う。一問ずつ確認し、確定事項だけを doc / artifact に最小反映する。事実調査は `research`、docs 更新は `scribe`、差分作成は `implement`。
+---
+
+# Grill
+
+実装や文書化に入る前に、共有理解へ到達するまで一問ずつ問い詰める。確定事項だけを適切な doc / artifact に最小反映する。
+
+## 手順
+
+- 依頼を短く言い換え、目的、作る成果物、今回扱わないことを置く。
+- `CONTEXT-MAP.md` / `CONTEXT.md`、docs、ADR、近傍 code、既存 tests で答えられる前提は先に確認する。
+- どの artifact に反映すべきか迷う時は [references/artifact-routing.md](references/artifact-routing.md) を読む。
+- 要件整理の観点で迷う時は [references/requirements-heuristics.md](references/requirements-heuristics.md) を読む。
+- 技術計画の観点で迷う時は [references/implementation-heuristics.md](references/implementation-heuristics.md) を読む。
+- 最も影響が大きい未確認事項を 1 つだけ質問し、推奨回答を添える。
+- 回答を受けたら、確定事項、仮定、未確認事項、docs 更新候補を分ける。
+- 確定事項は、置き場と形式が明確な場合だけ doc / artifact へ最小反映する。
+- 実装へ進む前に、scope、成功条件、変更境界、検証入口、未確認事項、残リスクを明示する。
+
+## 反映
+
+- 小さい追記や未確認事項の移動は `grill` でよい。
+- 新規 artifact、本格 docs 更新、format / ID / traceability 整理は `scribe`。
+- `CONTEXT.md` は glossary として扱い、spec、作業メモ、実装判断、秘密情報を混ぜない。
+- 既存 docs や note を更新する場合は、会話中に確認された evidence に限定し、自然な置き場が不明なら質問を続ける。
+- ADR は作成や状態更新を提案してから `scribe` で扱う。
+- `未確認事項` は確認済み知識として `CONTEXT.md`、ADR、notes に昇格させない。
+- 秘密情報、認証情報、private config、未公開個人情報は durable artifact に残さない。
+
+## 境界
+
+- 事実調査は `research`。
+- architecture 候補探索は `architecture`。
+- docs 本文更新は `scribe`。
+- 差分作成やテスト実装は `implement`。
+- 要件 / 設計 draft の review は `spec-reviewer`、品質 review は `quality-reviewer`、security review は `security-reviewer` reviewer subagent を使う。
