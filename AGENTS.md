@@ -35,4 +35,4 @@
 - `dot_codex/skills/`: 再利用する作業手順と通常作業の正式入口を置く
 - `docs/notes/`: repo-level の通常知見や背景を置く
 - `docs/adr/`: repo-level の判断記録を置く
-- `dot_codex/private_AGENTS.md.tmpl`: deployable artifact 側の運用契約を置く
+- `dot_codex/private_AGENTS.md.tmpl`: managed Codex surface 側の運用契約を置く

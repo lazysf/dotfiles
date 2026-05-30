@@ -2,8 +2,9 @@
 
 この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
-現在の正式な公開 surface は、`dot_codex/skills/` 配下の prefix なし skill 名と、`dot_codex/agents/` 配下の 2 個の reviewer agent とする。skill 名の命名規約は kebab-case に統一する。
+現在の managed surface は、`dot_codex/private_AGENTS.md.tmpl`、`dot_codex/skills/` 配下の prefix なし skill 名、`dot_codex/agents/` 配下の 2 個の reviewer agent、`dot_codex/rules/` 配下の機械的 guard とする。skill 名の命名規約は kebab-case に統一する。
 `caveman`、`git-commit`、`git-push` は明示依頼で使う手動入口とし、それ以外の skill は文脈上必要なら自動使用する入口として扱う。
+`dot_codex/CONTEXT.md` と `dot_codex/private_config.toml.tmpl` の target は現在 `.chezmoiignore` で配布対象外のため、managed surface の実効確認では `chezmoi managed` を正本にする。
 
 ## Surface の責務
 
@@ -17,7 +18,7 @@
 - `scribe`: README、既存 docs、運用手順、設計メモ、PRD、要件定義、設計、実装計画、テストケース、traceability、CONTEXT、ADR などの doc / artifact 作成・更新・整形の入口。置き場判断や共有理解の問い詰めが必要な場合は `grill` を使う
 - `git-commit`, `git-push`: 通常 commit / push の正式入口。その他の Git 操作は skill を増やさず既定 prompt と停止線で扱う
 - `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
-- `rules/`: 機械的なガード。操作制約や許可ルールを担う
+- `rules/`: 機械的な guard。安全に自走できる定番操作の `allow` と、root 削除、disk erase、filesystem format、package publish、auth logout、deploy / release など高リスク操作の `forbidden` を担う
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
 要求分類は user-facing workflow として案内せず、依頼を固定分類へ当てはめるための正本も置かない。
@@ -45,9 +46,9 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 ## Frontmatter Description 設計ルール
 
 - skill の発火面は `SKILL.md` frontmatter の `name` と `description` であり、特に `description` を主な自然文入口として扱う
-- `description` は原則 3 文でそろえる
-- 自動使用する skill の 1 文目は、明示的な skill 名指定がなくても文脈から使えるように「文脈上、...必要な時に自動使用する」と書く
-- `caveman`、`git-commit`、`git-push` の 1 文目は、明示依頼で使う手動入口として読める形にする
+- `description` は 1-3 文程度に保ち、短くても入口と境界が分かる形にする
+- 自動使用する skill の 1 文目は、明示的な skill 名指定がなくても文脈から選べる依頼語で書く
+- `caveman`、`git-commit`、`git-push` の 1 文目は、ユーザーの明示依頼で使う手動入口として読める形にする
 - 1 文目で、ユーザーが言いそうな依頼語を優先して「どんな依頼で使うか」を自然文で示す
 - 2 文目で、その skill が何を整理 / 実行 / 出力するかを示す
 - 3 文目で、近接 skill との差分、渡し先、または対象外を明示する

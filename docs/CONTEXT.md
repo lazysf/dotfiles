@@ -1,12 +1,12 @@
 # Knowledge Ledger
 
 Knowledge Ledger context は、この Codex ハーネスを保守するための durable な repo-level knowledge を定義する。
-再利用する背景知識、判断、context language を deployable runtime artifacts から分離するために存在する。
+再利用する背景知識、判断、context language を managed runtime surface から分離するために存在する。
 
 ## Language
 
 **Knowledge Ledger**: `docs/` 配下と root context files に置く repo-level の durable knowledge。
-_Avoid_: runtime surface, deployable artifact
+_Avoid_: runtime surface, managed harness artifact
 
 **Note**: `docs/notes/` 配下に置く durable な guidance または背景知識。
 _Avoid_: scratchpad, temporary memo
@@ -23,8 +23,11 @@ _Avoid_: docs index, README
 **Context**: repo language の境界づけられた領域に対する `CONTEXT.md` glossary。
 _Avoid_: specification, work log, implementation plan
 
-**Planning**: 実装前の plan / design を一問ずつ問い詰め、必要に応じて docs、ADRs、code、context language と照合しながら、確定した durable knowledge を inline 更新する workflow。
-_Avoid_: docs-only update, commit step
+**Grilling**: 実装や文書化の前に、scope、成功条件、制約、検証入口、実装 readiness を一問ずつ確認する workflow。
+_Avoid_: docs-only update, implementation, review
+
+**Scribing**: README、既存 docs、CONTEXT、ADR などの artifact を一次情報に沿って作成、更新、整形する workflow。
+_Avoid_: requirement negotiation, implementation, commit step
 
 ## Relationships
 
@@ -32,7 +35,8 @@ _Avoid_: docs-only update, commit step
 - **Context** は language を定義し、implementation decisions は定義しない。
 - **Note** は decision record ではない durable guidance を記録する。
 - **ADR** は意味のある decision を記録し、**Decision Status** を持つ。
-- **Planning** は、どの durable artifact を変更するべきかを会話中に判断し、必要な更新を inline で扱う。
+- **Grilling** は、どの durable artifact を変更するべきかを会話中に切り分ける。
+- **Scribing** は、確定した内容を **Note**、**ADR**、**Context** などへ反映する。
 
 ## Example dialogue
 
