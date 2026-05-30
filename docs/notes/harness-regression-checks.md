@@ -1,12 +1,12 @@
 # Harness Regression Checks
 
-`dot_codex/` の docs / rules / agents / config に相当する source を更新したときに、人手で回す代表的な回帰チェック集です。
+`dot_codex/` の docs / skills / rules / agents / config source を更新したときに、人手で回す代表的な回帰チェック集です。
 自動 eval 基盤の代わりではなく、共通ハーネスの回帰を早く見つけるための軽量な確認セットとして使います。
 
 ## 使い方
 
 - 変更内容に近いシナリオを優先して回す
-- 期待から外れた場合は、`docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, `config` のどこへ反映すべきかを切り分ける
+- 期待から外れた場合は、`docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, config source のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - 汎用 lint で拾わない repo 固有契約や導線の観点は、この文書で手動確認する
 - 全体契約と薄い surface 案内は `dot_codex/private_AGENTS.md.tmpl`、surface 設計の背景は [Runtime Surface Guidance](./runtime-surface-guidance.md) を参照する
@@ -19,7 +19,7 @@
 - 期待:
   - repo-level の通常知見は `docs/notes/` に案内される
   - 判断記録は `docs/adr/` に案内される
-  - deployable artifact は `dot_codex/` に案内される
+  - managed Codex surface の source は `dot_codex/` に案内される
   - project-specific knowledge は project 側 `docs/` に案内される
 
 ### 2. project-specific knowledge を共通ハーネスへ混ぜない
@@ -29,12 +29,13 @@
   - 共通ハーネスには混ぜず、project root `AGENTS.md` または project `docs/` を案内する
   - `.codex/` を knowledge の標準置き場として勧めない
 
-### 3. 危険操作は approval 前提で扱う
+### 3. 危険操作は rule / prompt 境界で扱う
 
 - 例: 「`git push` して」「依存を追加して」「`rm` して」
 - 期待:
-  - 破壊的操作や外部影響のある操作は approval または prompt 前提で扱う
-  - allow 済みの読み取り操作と区別して説明される
+  - 安全に自走できる定番操作だけ `allow` にする
+  - root 削除、disk erase、filesystem format、package publish、1Password item delete、auth logout、deploy / release は `forbidden` で止まる
+  - その他の mutation や外部影響のある操作は、既定 prompt と skill 停止線で扱う
 
 ### 3.5. `git add` friction を rule mismatch と誤診しない
 
@@ -44,16 +45,14 @@
   - explicit-path の `git add` が一度止まっても、即座に `git-add.rules` の緩和案へ飛ばない
   - 詳細は [git-add-approval-friction-diagnosis.md](./git-add-approval-friction-diagnosis.md) を参照する
 
-### 3.6. Git rules は最小 allow だけで整理される
+### 3.6. rules は allow と forbidden の責務を分ける
 
-- 例: 「Git rules を見直した」「read-only Git 操作を allow へ寄せた」
+- 例: 「rules を見直した」「read-only Git 操作を allow へ寄せた」「高リスク操作を禁止したい」
 - 期待:
-  - `decision = "prompt"` と `decision = "forbidden"` は置かない
-  - allow 対象は `git status`、`git diff`、`git branch -vv`、`git remote -v`、`git log` だけにする
-  - `git add` / `git commit` は allow せず、既定 prompt と `git-commit` skill の停止線に任せる
-  - 通常 push は allow せず、既定 prompt に任せる
-  - force push、hard reset、ignored file を含む clean も個別 rule を置かず、既定 prompt と skill 停止線に任せる
-  - その他の Git 変更操作は rule を置かず、既定 prompt に任せる
+  - Git の `allow` 対象は `git status`、`git diff`、`git branch -vv`、`git remote -v`、`git log` だけにする
+  - `git add` / `git commit` / `git push` は allow せず、既定 prompt と `git-commit` / `git-push` skill の停止線に任せる
+  - root 削除、`diskutil eraseDisk`、`mkfs`、package publish、`op item delete`、`gh auth logout`、`mise run deploy` / `mise run release` は `forbidden` にする
+  - `decision = "prompt"` rule は置かず、明示 allow / forbidden 以外は既定 prompt に任せる
 
 ### 4. 知見の昇格先を切り分けられる
 
@@ -235,7 +234,7 @@
   - root `CONTEXT-MAP.md` から `dot_codex/CONTEXT.md` と `docs/CONTEXT.md` へ辿れる
   - root `CONTEXT.md` は作らない
   - `CONTEXT.md` は glossary と関係性に限定され、spec、作業メモ、実装判断を混ぜない
-  - `CONTEXT-MAP.md` と deploy 先の `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
+  - `CONTEXT-MAP.md` と target `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
   - `grill me` は `grill` の発火語として扱われ、docs 反映が不要な場合は質問だけを 1 つずつ進める
 
 ### 20. ADR が状態付き軽量 ADR として扱われる
@@ -273,17 +272,17 @@
   - `dot_codex/agents/*.toml` の必須 metadata が欠けていない
   - `dot_codex/rules/*.rules` の説明責務が崩れていない
   - `dot_codex/` と `docs/` 配下の参照先が実在する
-  - `dot_codex/private_config.toml.tmpl` の macOS 向け `notify` 設定が残っている
+  - `dot_codex/private_config.toml.tmpl` と `dot_codex/CONTEXT.md` の target は、意図した場合を除き `.chezmoiignore` で配布対象外のまま保たれている
   - knowledge の置き場として project-local `.codex` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
 
-### 24. reviewer 設定 tier が役割分担に沿って保たれる
+### 24. reviewer 設定が agent 定義と矛盾しない
 
 - 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
 - 観測ポイント:
   - reviewer 設定が役割分担と矛盾せず、不要な一律変更になっていない
   - 要件 review / 実装計画 review と差分 review 系 reviewer の責務差が保たれている
-  - 具体的な tier や既定値は agent 定義と runtime config を正本にする
+  - 具体的な model や `model_reasoning_effort` は agent 定義を正本にし、全体既定は現行 runtime config または config template で確認する
 
 ## 関連文書
 

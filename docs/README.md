@@ -33,7 +33,8 @@
   - [0017-consolidate-planning-skill-surface.md](./adr/0017-consolidate-planning-skill-surface.md)
   - [0018-keep-git-mutation-rules-prompted.md](./adr/0018-keep-git-mutation-rules-prompted.md)
   - [0019-split-planning-and-docs-surface.md](./adr/0019-split-planning-and-docs-surface.md)
-- `dot_codex/private_AGENTS.md.tmpl`: 運用契約と薄い surface 案内を置く
-- `dot_codex/skills/`: prefix なしの skill 手順と、その `references/` を置く
-- `dot_codex/agents/`: review の正式入口になる reviewer agent を置く。review はここから明示的に呼び出す
-- `dot_codex/rules/`: 機械的なガードを置く
+- `dot_codex/private_AGENTS.md.tmpl`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
+- `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
+- `dot_codex/agents/`: `~/.codex/agents/` へ展開する read-only reviewer agent を置く
+- `dot_codex/rules/`: `~/.codex/rules/` へ展開する allow / forbidden の機械的 guard を置く
+- `dot_codex/CONTEXT.md`, `dot_codex/private_config.toml.tmpl`: repo 内の参照用 source。展開先の `.codex/CONTEXT.md` / `.codex/config.toml` は `.chezmoiignore` で配布対象外

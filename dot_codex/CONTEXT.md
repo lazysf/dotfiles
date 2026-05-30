@@ -1,17 +1,17 @@
 # Codex ハーネス
 
-Codex ハーネス context は、`dot_codex/` で管理する deployable な Codex runtime surface を定義する。
-chezmoi で展開した後も、運用指示、再利用 skill、agent、rule、plugin 設定、安全境界を一貫させるために存在する。
+Codex ハーネス context は、`dot_codex/` で管理する Codex runtime surface の語彙を定義する。
+chezmoi で展開した後も、運用指示、再利用 skill、agent、rule、安全境界を一貫させるために存在する。
 
 ## Language
 
-**Codex ハーネス**: `dot_codex/` 配下に置く deployable な Codex runtime surface。
+**Codex ハーネス**: `dot_codex/` 配下に置く Codex runtime surface の source。
 _Avoid_: dotfiles docs, repo knowledge
 
 **Runtime Surface**: 展開後の Codex の振る舞いに影響する、ユーザー向けまたは agent 向けの入口。
 _Avoid_: documentation set, implementation detail
 
-**Runtime Surface Size**: Codex 関連設定として管理する `AGENTS.md`、`SKILL.md`、agent 定義、rule、runtime config などの記載量。
+**Runtime Surface Size**: Codex 関連 surface として管理する `AGENTS.md`、`SKILL.md`、agent 定義、rule、runtime config source などの記載量。
 _Avoid_: docs-only volume
 
 **Runtime Context Cost**: 実行時に agent の文脈へ入る確率と量で重み付けした記載コスト。
@@ -29,11 +29,11 @@ _Avoid_: command, phase, wrapper
 **Reviewer Agent**: focused review に使う、`dot_codex/agents/` 配下の read-only な専門 agent。
 _Avoid_: skill reviewer, automatic review
 
-**Rule**: 狭い command pattern を許可する、`dot_codex/rules/` 配下の機械的 guard。
+**Rule**: 狭い command pattern を許可または禁止する、`dot_codex/rules/` 配下の機械的 guard。
 _Avoid_: policy note, prose instruction
 
-**Deployable Artifact**: chezmoi により `~/.codex` へ展開されることを意図したファイル。
-_Avoid_: repo note, design record
+**Managed Harness Artifact**: chezmoi により `~/.codex` へ展開され、`.chezmoiignore` で除外されていないファイル。
+_Avoid_: repo note, design record, ignored source
 
 **Operational Boundary**: mutation、外部影響、破壊的操作、scope 拡大を制限する安全境界。
 _Avoid_: preference, reminder
@@ -47,13 +47,13 @@ _Avoid_: preference, reminder
 - **Runtime Output Quality** は **Runtime Precision** と重なるが、正確さに加えて根拠、読みやすさ、十分性、ノイズの少なさを含む。
 - **Reviewer Agent** は draft や diff を review するが、ファイルは変更しない。
 - **Rule** は機械的な command 実行を guard するもので、workflow 判断の代替ではない。
-- **Deployable Artifact** は、**Knowledge Ledger** の accepted decision によって形が変わることがある。
+- **Managed Harness Artifact** は、**Knowledge Ledger** の accepted decision によって形が変わることがある。
 
 ## Example dialogue
 
-> **Maintainer:** 「この繰り返し使う planning 挙動は Skill にするべき？ note にするべき？」
+> **Maintainer:** 「この繰り返し使う問い詰め手順は Skill にするべき？ note にするべき？」
 > **Domain expert:** 「workspace 横断で Codex の振る舞いを変えるなら Skill。理由の説明だけなら Knowledge Ledger に置く。」
 
 ## Flagged ambiguities
 
-- 「docs」は `dot_codex/` 内の deployable instructions と、`docs/` 配下の repo-level knowledge の両方を指しうる。Resolved: 前者は **Deployable Artifact**、後者は Knowledge Ledger の用語で呼ぶ。
+- 「docs」は `dot_codex/` 内の managed instructions と、`docs/` 配下の repo-level knowledge の両方を指しうる。Resolved: 前者は **Managed Harness Artifact**、後者は Knowledge Ledger の用語で呼ぶ。
