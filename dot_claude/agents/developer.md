@@ -2,7 +2,7 @@
 name: developer
 description: tasks.md と設計に沿って code、config、tests を実装し、対応 task、変更内容、確認結果を implementation.md に記録する時に使う。
 tools: Read, Glob, Grep, Edit, Write, Bash
-model: sonnet
+model: opus
 effort: high
 skills:
   - implement
