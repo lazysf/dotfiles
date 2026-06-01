@@ -1,10 +1,10 @@
 # Runtime Surface Guidance
 
-この文書は、`dot_codex/private_AGENTS.md.tmpl` と各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
+この文書は、`dot_codex/private_AGENTS.md.tmpl`、`dot_claude/CLAUDE.md`、各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
-現在の managed surface は、`dot_codex/private_AGENTS.md.tmpl`、`dot_codex/skills/` 配下の prefix なし skill 名、`dot_codex/agents/` 配下の 2 個の reviewer agent、`dot_codex/rules/` 配下の機械的 guard とする。skill 名の命名規約は kebab-case に統一する。
+現在の managed surface は、`dot_codex/private_AGENTS.md.tmpl`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/`、`dot_claude/CLAUDE.md`、`dot_claude/skills/`、`dot_claude/agents/`、`dot_claude/rules/`、`dot_claude/output-styles/`、`dot_claude/settings.json` とする。skill 名の命名規約は kebab-case に統一する。
 `caveman`、`git-commit`、`git-push` は明示依頼で使う手動入口とし、それ以外の skill は文脈上必要なら自動使用する入口として扱う。
-`dot_codex/CONTEXT.md` と `dot_codex/private_config.toml.tmpl` の target は現在 `.chezmoiignore` で配布対象外のため、managed surface の実効確認では `chezmoi managed` を正本にする。
+root `CLAUDE.md` は repo-local import shim、`dot_codex/CONTEXT.md` と `dot_codex/private_config.toml.tmpl` の target は repo 内の参照用 source として現在 `.chezmoiignore` で配布対象外にする。managed surface の実効確認では `chezmoi managed` を正本にする。
 
 ## Surface の責務
 
@@ -17,8 +17,8 @@
 - `caveman`: 出力を短く圧縮したい依頼で使う補助 skill。応答文体だけを変え、調査、計画、実装、レビュー、commit / push の責務は持たない
 - `scribe`: README、既存 docs、運用手順、設計メモ、PRD、要件定義、設計、実装計画、テストケース、traceability、CONTEXT、ADR などの doc / artifact 作成・更新・整形の入口。置き場判断や共有理解の問い詰めが必要な場合は `grill` を使う
 - `git-commit`, `git-push`: 通常 commit / push の正式入口。その他の Git 操作は skill を増やさず既定 prompt と停止線で扱う
-- `agents/`: read-only reviewer と review の正式入口。review 本体はここで扱う
-- `rules/`: 機械的な guard。安全に自走できる定番操作の `allow` と、root 削除、disk erase、filesystem format、package publish、auth logout、deploy / release など高リスク操作の `forbidden` を担う
+- `agents/`: Codex では read-only reviewer と review の正式入口、Claude Code では subagent 定義の入口。review 本体は対応する agent 定義で扱う
+- `rules/`: 機械的な guard。Codex では安全に自走できる定番操作の `allow` と、root 削除、disk erase、filesystem format、package publish、auth logout、deploy / release など高リスク操作の `forbidden` を担う。Claude Code rules は対象 path 条件で読む短い運用ルールを担う
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
 要求分類は user-facing workflow として案内せず、依頼を固定分類へ当てはめるための正本も置かない。
@@ -28,7 +28,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 ## 導線の考え方
 
-固定の代表導線は `dot_codex/private_AGENTS.md.tmpl` に持たせない。
+固定の代表導線は `dot_codex/private_AGENTS.md.tmpl` や `dot_claude/CLAUDE.md` に持たせない。
 実行時の入口判断は、要求分類表ではなく、各 `SKILL.md` の description、reviewer agent 定義、ユーザーが明示した依頼語、既存 docs / ADR / code で確認できる事実に基づいて行う。
 迷う場合は、観測事実の取得を `research`、要件整理や実装前の変更境界、検証入口の問い詰めを `grill`、doc / artifact の作成・更新・整形を `scribe`、最小差分の実装を `implementation`、変更後確認を `verification` に寄せる。
 
@@ -41,7 +41,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - generic review から `security-reviewer` への自動昇格は行わない
 - `grill` は問い詰めと共有理解の整理専用であり、review 本体を担わない
 - reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
-- `docs/README.md` は index、`dot_codex/private_AGENTS.md.tmpl` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
+- `docs/README.md` は index、`dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
 
 ## Frontmatter Description 設計ルール
 

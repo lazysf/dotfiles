@@ -1,6 +1,6 @@
 # Harness Regression Checks
 
-`dot_codex/` の docs / skills / rules / agents / config source を更新したときに、人手で回す代表的な回帰チェック集です。
+`dot_codex/` / `dot_claude/` の docs / skills / rules / agents / config source を更新したときに、人手で回す代表的な回帰チェック集です。
 自動 eval 基盤の代わりではなく、共通ハーネスの回帰を早く見つけるための軽量な確認セットとして使います。
 
 ## 使い方
@@ -9,7 +9,7 @@
 - 期待から外れた場合は、`docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, config source のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - 汎用 lint で拾わない repo 固有契約や導線の観点は、この文書で手動確認する
-- 全体契約と薄い surface 案内は `dot_codex/private_AGENTS.md.tmpl`、surface 設計の背景は [Runtime Surface Guidance](./runtime-surface-guidance.md) を参照する
+- 全体契約と薄い surface 案内は `dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md`、surface 設計の背景は [Runtime Surface Guidance](./runtime-surface-guidance.md) を参照する
 
 ## チェック項目
 
@@ -19,15 +19,15 @@
 - 期待:
   - repo-level の通常知見は `docs/notes/` に案内される
   - 判断記録は `docs/adr/` に案内される
-  - managed Codex surface の source は `dot_codex/` に案内される
+  - managed Codex surface の source は `dot_codex/`、managed Claude Code surface の source は `dot_claude/` に案内される
   - project-specific knowledge は project 側 `docs/` に案内される
 
 ### 2. project-specific knowledge を共通ハーネスへ混ぜない
 
-- 例: 「このプロジェクト固有の運用メモを `dot_codex/` に入れたい」
+- 例: 「このプロジェクト固有の運用メモを `dot_codex/` / `dot_claude/` に入れたい」
 - 期待:
-  - 共通ハーネスには混ぜず、project root `AGENTS.md` または project `docs/` を案内する
-  - `.codex/` を knowledge の標準置き場として勧めない
+  - 共通ハーネスには混ぜず、project root `AGENTS.md` / `CLAUDE.md` または project `docs/` を案内する
+  - `.codex/` や `.claude/` を knowledge の標準置き場として勧めない
 
 ### 3. 危険操作は rule / prompt 境界で扱う
 
@@ -65,12 +65,12 @@
   - 機械的ガードなら `rules/`
   - 専門化した補助役なら `agents/`
 
-### 5. `AGENTS.md` が契約と薄い surface 案内として機能する
+### 5. `AGENTS.md` / `CLAUDE.md` が契約と薄い surface 案内として機能する
 
 - 例: 「ハーネスの詳細知識はどこを読めばよいか」
 - 期待:
-  - `dot_codex/private_AGENTS.md.tmpl` は契約と薄い surface 案内の入口として案内される
-  - `skills / agents / rules / docs` の役割分担は `dot_codex/private_AGENTS.md.tmpl` の説明と矛盾しない
+  - `dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md` は契約と薄い surface 案内の入口として案内される
+  - `skills / agents / rules / docs` の役割分担は `dot_codex/private_AGENTS.md.tmpl` や `dot_claude/CLAUDE.md` の説明と矛盾しない
   - 補助 skill は主役 skill と混同せずに案内される
   - repo-level の詳細知識は `docs/notes/` に誘導される
   - 判断理由は `docs/adr/` に誘導される
@@ -204,7 +204,7 @@
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 観測ポイント:
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
-  - `dot_codex/private_AGENTS.md.tmpl`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
+  - `dot_codex/private_AGENTS.md.tmpl`、`dot_claude/CLAUDE.md`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
 
 ### 17.5. リファクタや品質改善の入口が統合後 surface に乗る
 
@@ -271,10 +271,12 @@
 - 例: 「agent metadata や rule metadata の欠落、リンク切れ、`.codex` 推奨文言を見落としていないか」
 - 観測ポイント:
   - `dot_codex/agents/*.toml` の必須 metadata が欠けていない
-  - `dot_codex/rules/*.rules` の説明責務が崩れていない
-  - `dot_codex/` と `docs/` 配下の参照先が実在する
+  - `dot_claude/agents/*.md` の frontmatter と役割が崩れていない
+  - `dot_codex/rules/*.rules` と `dot_claude/rules/*.md` の説明責務が崩れていない
+  - `dot_codex/`、`dot_claude/`、`docs/` 配下の参照先が実在する
   - `dot_codex/private_config.toml.tmpl` と `dot_codex/CONTEXT.md` の target は、意図した場合を除き `.chezmoiignore` で配布対象外のまま保たれている
-  - knowledge の置き場として project-local `.codex` を勧める文面が再流入していない
+  - root `CLAUDE.md` は repo-local import shim として配布対象外のまま保たれている
+  - knowledge の置き場として project-local `.codex` / `.claude` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
 
 ### 24. reviewer 設定が agent 定義と矛盾しない

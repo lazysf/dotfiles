@@ -37,4 +37,8 @@
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する read-only reviewer agent を置く
 - `dot_codex/rules/`: `~/.codex/rules/` へ展開する allow / forbidden の機械的 guard を置く
+- `dot_claude/CLAUDE.md`: `~/.claude/CLAUDE.md` へ展開する Claude Code surface 側の運用契約を置く
+- `dot_claude/skills/`: `~/.claude/skills/` へ展開する skill 手順と、その `references/` を置く
+- `dot_claude/agents/`: `~/.claude/agents/` へ展開する Claude Code subagent 定義を置く
+- `dot_claude/rules/`, `dot_claude/output-styles/`, `dot_claude/settings.json`: `~/.claude/` 配下へ展開する rules、output styles、settings を置く
 - `dot_codex/CONTEXT.md`, `dot_codex/private_config.toml.tmpl`: repo 内の参照用 source。展開先の `.codex/CONTEXT.md` / `.codex/config.toml` は `.chezmoiignore` で配布対象外
