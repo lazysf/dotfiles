@@ -27,7 +27,7 @@ color: cyan
 - 全変更セット（tracked diff、staged diff、untracked file list / content）。
 - `implementation.md`。
 - `test.md`。
-- verifier handoff。
+- inspector handoff。
 - lead から渡された target ID / review scope / blocker。
 
 入力が不足して判断できない場合は、推測で補わず `Blockers` または `Open Questions` に返す。
@@ -41,7 +41,7 @@ color: cyan
 
 ## 進め方
 
-- lead から渡された全変更セット（tracked diff、staged diff、untracked file list / content）、artifact、verifier handoff、review scope を確認する。
+- lead から渡された全変更セット（tracked diff、staged diff、untracked file list / content）、artifact、inspector handoff、review scope を確認する。
 - `git status --short` と `git ls-files --others --exclude-standard` で untracked file を確認し、必要な本文も読む。
 - docs 追従更新は `doc-followup` skill、本文作成や ADR 形式は `scribe` skill、参照ずれ確認は `inspect` skill の consistency 観点に従う。
 - 変更理由が diff、上流 artifact、または確認済み command result から説明できるものだけ直す。

@@ -128,7 +128,7 @@
 - 期待:
   - `orchestrate` workflow では、実装・検証後かつ Gate 3 前に `repository-maintainer` が docs / references / prose の追従更新と repo hygiene / tooling 設定の影響確認を行う
   - docs 追従更新は `doc-followup`、本文作成や artifact 整形は `scribe`、追従漏れ確認だけなら `inspect` と切り分けられる
-  - tooling の挙動差分がある場合、Gate 3 前に `verifier` へ戻り、影響する確認と `test.md` が更新される
+  - tooling の挙動差分がある場合、Gate 3 前に `inspector` へ戻り、影響する確認と `test.md` が更新される
   - runtime guardrail 変更や品質ゲート弱体化は自走編集されず blocker として扱われる
   - Gate 3 review では repository maintenance 後の全変更セットと handoff が入力に含まれる
 
@@ -283,7 +283,7 @@
   - agent 定義側の `model` / `model_reasoning_effort` / `sandbox_mode` / instructions を有効にする目的が崩れていない
   - read-only reviewer は `sandbox_mode = "read-only"` を維持している
   - workflow では各 agent へ request folder、対象 artifact、対象 ID、観点、除外範囲、検証状況を明示して渡す
-  - `repository-maintainer` へは、実装差分、verifier handoff、repo hygiene / tooling 設定の確認範囲、Gate 3 reviewer に渡すべき観点を明示して渡す
+  - `repository-maintainer` へは、実装差分、inspector handoff、repo hygiene / tooling 設定の確認範囲、Gate 3 reviewer に渡すべき観点を明示して渡す
   - Gate 3 reviewer へは、repository maintenance 後の全変更セットと handoff を渡す
 
 ### 23. repo 固有契約の軽い確認を手動回帰で補う

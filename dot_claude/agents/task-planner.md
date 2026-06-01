@@ -24,7 +24,7 @@ color: yellow
 - `requirements.md`。
 - `basic-design.md`。
 - `detailed-design.md`。
-- analyst handoff。
+- researcher handoff。
 - lead から渡された target ID / open question / blocker。
 
 ## 編集権限

@@ -1,11 +1,11 @@
 ---
 name: inspect
-description: verifier が実装後に AC / TASK に対応する test、lint、build、manual check、参照ずれを確認し、test.md に TC、結果、未確認事項、残リスクを整理する時に使う。実装前の確認設計や修正は `implement`。
+description: inspector が実装後に AC / TASK に対応する test、lint、build、manual check、参照ずれを確認し、test.md に TC、結果、未確認事項、残リスクを整理する時に使う。実装前の確認設計や修正は `implement`。
 ---
 
 # 変更検証
 
-`verifier` が実装後の検証を行い、`test.md` に記録するための skill。
+`inspector` が実装後の検証を行い、`test.md` に記録するための skill。
 
 ## 手順
 

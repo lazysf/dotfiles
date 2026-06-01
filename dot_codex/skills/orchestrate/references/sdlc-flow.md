@@ -23,7 +23,7 @@ Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 �
 ### inquiry
 
 - 対象: コード変更・差分作成・実装を伴わない質問、相談、調査依頼。「○○の仕組みは？」「△△の方針はどう考えるべき？」「□□を調べて」など。
-- flow: Phase 0 -> lead が直接回答（必要なら `analyst` を 1 回呼ぶ）-> 完了。
+- flow: Phase 0 -> lead が直接回答（必要なら `researcher` を 1 回呼ぶ）-> 完了。
 - Gate: なし。
 - artifact: 任意。triage 記録を残したい場合は `request.md` のみで十分。継続して同じテーマで質問が続くなら昇格を検討する。
 - 昇格条件: 途中でコード変更・実装・既存機能変更が必要になった時点で、lead が tier を再判定し `micro` / `standard` / `full` のいずれかへ移す。
@@ -31,7 +31,7 @@ Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 �
 ### micro
 
 - 対象: typo、1 行修正、自明な機械的変更、単一 skill で閉じる作業（commit / push など）。
-- flow: Phase 0 -> 実装（自明なら lead が直接、必要なら `developer` か該当 skill を 1 つ起動）-> lead 自己確認。
+- flow: Phase 0 -> 実装（自明なら lead が直接、必要なら `implementer` か該当 skill を 1 つ起動）-> lead 自己確認。
 - Gate: なし。lead が変更内容と確認結果を出力に残す。
 
 ### standard
@@ -50,7 +50,7 @@ Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 �
 
 ## Phase 1: 要件フェーズ
 
-1. 初期調査: `analyst`
+1. 初期調査: `researcher`
    - 既存コード、設定、docs、関連仕様を確認する。
    - 類似実装、既存パターン、既存 test / lint / build 入口を確認する。
    - 影響範囲と停止線に触れそうな点を把握する。
@@ -60,7 +60,7 @@ Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 �
    - `requirements.md` に目的、背景、scope / non-scope、`REQ-*`、`AC-*`、制約、前提、未確認事項を整理する。
    - 実装方法や詳細設計を決めない。
 
-3. 必要時の追加調査: `analyst`
+3. 必要時の追加調査: `researcher`
    - 要件定義中に不足した事実を確認する。
 
 ## Gate 1: 要件レビュー
@@ -71,7 +71,7 @@ pass 後、ユーザー確認が必要な事項がなければ Phase 2 へ進む
 
 ## Phase 2: 設計フェーズ
 
-1. 必要時の追加調査: `analyst`
+1. 必要時の追加調査: `researcher`
    - 設計判断に必要な既存構造、API、data flow、制約を確認する。
 
 2. 基本設計 / 詳細設計: `architect`
@@ -89,14 +89,14 @@ pass 後、ユーザー確認が必要な事項がなければ Phase 3 へ進む
 
 ## Phase 3: 実装・テストフェーズ
 
-1. 必要時の追加調査: `analyst`
+1. 必要時の追加調査: `researcher`
    - 実装中に出た不明点を確認する。
 
-2. 実装: `developer`
+2. 実装: `implementer`
    - `tasks.md` と設計に沿って code / config / tests を実装する。
    - `implementation.md` に対応 task、変更内容、変更ファイル、実行した確認、残リスクを書く。
 
-3. 検証: `verifier`
+3. 検証: `inspector`
    - `test.md` に `TC-*`、test / lint / build / manual check 結果、未確認事項、残リスクを書く。
 
 4. repository maintenance: `repository-maintainer`
@@ -104,7 +104,7 @@ pass 後、ユーザー確認が必要な事項がなければ Phase 3 へ進む
    - docs / references / prose の追従更新を行う。
    - repo hygiene / tooling 設定は影響確認し、必要な変更は handoff / blocker / review_focus に返す。
    - 結果、追従不要の理由、Gate 3 で見るべき影響を handoff に残す。
-   - tooling の `behavior_delta` が `changed` の場合は Gate 3 へ進む前に `verifier` へ戻し、影響する check と `test.md` を更新する。
+   - tooling の `behavior_delta` が `changed` の場合は Gate 3 へ進む前に `inspector` へ戻し、影響する check と `test.md` を更新する。
    - `repository-maintainer` が `blocked` を返した場合、lead は Gate 3 へ進めない。runtime guardrail / CI permission / secret / auth / 権限 / 外部送信 / deploy / publish に触れる blocker は、前工程へ自律差戻しせずユーザー確認または change-request 候補にする。
 
 ## Gate 3: 完了レビュー
@@ -115,4 +115,4 @@ Gate 3 では repository maintenance 後の全変更セット（tracked diff、s
 
 ## 調査の扱い
 
-調査は独立成果物を持たない。`analyst` が handoff で事実を lead に返し、lead が後続 agent へ必要分だけ渡す。agent 間の直接通信は前提にしない。
+調査は独立成果物を持たない。`researcher` が handoff で事実を lead に返し、lead が後続 agent へ必要分だけ渡す。agent 間の直接通信は前提にしない。

@@ -1,11 +1,11 @@
 ---
 name: research
-description: analyst が、要件・設計・実装判断の前に、既存コード、docs、設定、既存挙動、影響範囲、test entrypoint を事実で切り分ける時に使う。facts、unknowns、constraints、affected areas、test entry points を分け、調査成果物は作らない。
+description: researcher が、要件・設計・実装判断の前に、既存コード、docs、設定、既存挙動、影響範囲、test entrypoint を事実で切り分ける時に使う。facts、unknowns、constraints、affected areas、test entry points を分け、調査成果物は作らない。
 ---
 
 # 調査
 
-`analyst` が使う調査 skill。調査結果は handoff で返し、後続 agent が担当 artifact へ必要分だけ吸収する。
+`researcher` が使う調査 skill。調査結果は handoff で返し、後続 agent が担当 artifact へ必要分だけ吸収する。
 
 ## 手順
 

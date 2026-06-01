@@ -14,7 +14,7 @@ description: 全依頼の進行入口として常に使う。コード変更・�
 - lead は `request.md` と `review.md`、進行判断、ユーザー確認を担当する。
 - 工程 agent は担当 artifact だけ編集する。
 - reviewer は read-only。
-- 広い調査は `analyst` に任せる。
+- 広い調査は `researcher` に任せる。
 - agent から lead への handoff は英語でもよい。ユーザー向けの要約と確認は日本語にする。
 
 ## 手順
@@ -31,11 +31,11 @@ description: 全依頼の進行入口として常に使う。コード変更・�
 ## Agent Routing
 
 - Phase 0: lead。
-- Phase 1: `analyst` / `requirements-engineer`。
+- Phase 1: `researcher` / `requirements-engineer`。
 - Gate 1: `requirements-reviewer`。
-- Phase 2: `analyst` / `architect` / `task-planner`。
+- Phase 2: `researcher` / `architect` / `task-planner`。
 - Gate 2: `design-reviewer` / `security-reviewer`。
-- Phase 3: `analyst` / `developer` / `verifier`。
+- Phase 3: `researcher` / `implementer` / `inspector`。
 - Repository maintenance: `repository-maintainer`。
 - Gate 3: `quality-reviewer` / `security-reviewer`。
 

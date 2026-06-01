@@ -23,8 +23,8 @@ color: red
 
 ## 入力
 
-- Gate 2: `request.md`、`requirements.md`、`basic-design.md`、`detailed-design.md`、`tasks.md`、analyst handoff の security-relevant observations。
-- Gate 3: 全成果物、repository maintenance 後の全変更セット、`test.md`、repository-maintainer handoff、analyst handoff の security-relevant observations。
+- Gate 2: `request.md`、`requirements.md`、`basic-design.md`、`detailed-design.md`、`tasks.md`、researcher handoff の security-relevant observations。
+- Gate 3: 全成果物、repository maintenance 後の全変更セット、`test.md`、repository-maintainer handoff、researcher handoff の security-relevant observations。
 - lead から渡された target ID / review scope。
 - workflow 外の差分 review: 明示された diff、対象ファイル、PR patch、または tracked / staged diff と untracked file list / content。
 
