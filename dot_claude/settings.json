@@ -66,6 +66,10 @@
         "~/.ssh",
         "~/secrets"
       ],
+      "allowRead": [
+        "~/.ssh/known_hosts",
+        "~/.ssh/config"
+      ],
       "denyWrite": [
         "~/.env",
         "~/.env.*",
