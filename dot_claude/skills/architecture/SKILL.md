@@ -1,20 +1,22 @@
 ---
 name: architecture
-description: 構造改善、責務分散、密結合、浅い module、リファクタ候補、変更容易性、testability を整理する時に使う。module / caller / responsibility を地図化し、friction と改善候補を出す。原因調査は `research`、差分作成は `implement`。
+description: architect が basic-design.md / detailed-design.md を作る前に、構造改善、責務分担、module boundary、interface、data flow、testability、security boundary を整理する時に使う。原因調査は `research`、差分作成は `implement`。
 ---
 
-# Architecture 改善
+# Architecture
+
+構造、責務、境界、interface、data flow、testability を設計判断へ落とす。
 
 ## 手順
 
 - 対象領域と改善目的を一文で言い換える。
-- `CONTEXT-MAP.md` / `CONTEXT.md`、関連 docs、ADR、近傍 code、既存テストを読む。
+- `requirements.md`、analyst handoff、関連 docs、ADR、近傍 code、既存テストを読む。
 - module、caller、責務、外部 I/O、テスト入口を地図化する。
 - 既存 domain language を優先し、`CONTEXT.md` にある用語で候補を説明する。
 - ADR と衝突する案は conflict として明示する。
 - architecture 用語の補助が必要な時だけ [references/architecture-language.md](references/architecture-language.md) を読む。
+- `basic-design.md` に置く全体方針・責務境界と、`detailed-design.md` に置く処理詳細を分ける。
 - friction と改善候補を番号付きで出す。
-- ユーザーが候補を選んだら、制約、守る既存挙動、module shape、interface、tests、移行順序を 1 つずつ `grill` へ渡せる粒度で詰める。
 
 ## 確認観点
 
@@ -23,6 +25,7 @@ description: 構造改善、責務分散、密結合、浅い module、リファ
 - interface が implementation と同じくらい複雑になっていないか。
 - test が interface ではなく内部 detail に寄りすぎていないか。
 - 改善候補が locality、leverage、testability のどれを改善するか説明できるか。
+- security / 権限 / data / 外部 I/O の境界が設計上見えているか。
 
 ## 境界
 
@@ -30,11 +33,13 @@ description: 構造改善、責務分散、密結合、浅い module、リファ
 - 実装順序、変更境界、検証方法の合意形成は `grill`。
 - docs / CONTEXT / ADR 反映は `scribe`。
 - 差分作成やテスト修正は `implement`。
-- 設計 draft の review は `spec-reviewer`、品質 review は `quality-reviewer`、security boundary review は `security-reviewer` reviewer subagent。
+- Gate 2 design review は `design-reviewer`、security boundary review は `security-reviewer` を使う。
 
 ## 出力
 
 - `map`: module / caller / 責務 / 外部 I/O の地図
 - `friction`: 構造上の摩擦点
-- `candidate`: 番号付き改善候補（各候補に benefit / risk と、改善する性質 locality / leverage / testability）
+- `candidate`: 番号付き改善候補
+- `basic_design_notes`: `basic-design.md` に置く判断
+- `detailed_design_notes`: `detailed-design.md` に置く判断
 - `next_question`: 候補選択・実装順序の問い詰めへ渡す点
