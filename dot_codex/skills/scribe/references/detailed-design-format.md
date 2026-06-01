@@ -1,55 +1,55 @@
 # Detailed Design Format
 
-`docs/DETAILED_DESIGN.md` を作成・更新する時に使う。
-実装可能な処理、interface、validation、edge case を置く。
+`detailed-design.md` は詳細設計の正本。実装者が迷わない具体仕様を置く。
 
 ## Rules
 
-- 詳細設計用フォルダは作らず、`docs/DETAILED_DESIGN.md` を使う。
-- 対象の `FR-*` と対応付ける。
-- code snippet は判断を明確にする時だけ短く使う。
-- 該当するデータ対応がない場合は `N/A` と書く。
-- 未確認事項は `未確認事項` に残す。
-- 詳細設計の責務外の内容は書かない。
+- `DD-*` は対応する `BD-*` / `AC-*` を含める。
+- 実装ログ、テスト結果、作業記録を書かない。
+- validation、error handling、edge case、状態遷移や分岐条件、test 観点を必要範囲で書く。
 
 ## Template
 
 ```markdown
-# 詳細設計
+# Detailed Design
 
-## FR-001: [機能または要件領域名]
+## 対象範囲
 
-### 対象範囲
+- [対象 module、画面、command、endpoint など。]
 
-- [対象 module、画面、macro、command など。]
+## Interface 詳細
 
-### インターフェース
+- `[interface / function / endpoint]`: [入力、出力、副作用、責務。]
 
-- `[interface / function / macro / endpoint]`: [入力、出力、副作用、責務。]
+## 詳細設計項目
 
-### 詳細設計項目
+- `DD-001`: [処理、分岐、状態、連携などの設計要素。対応する `BD-*` / `AC-*` を含める。]
 
-- `DD-001`: [実装へ落とすための処理、分岐、状態、連携などの設計要素。]
-
-### 処理フロー
+## 処理フロー
 
 1. [処理手順。]
 
-### 検証・エラー処理
+## Validation
 
-- [validation、例外、error 表示、fallback。]
+- [入力検証、制約、許容値。]
 
-### データ対応
+## Error Handling
 
-| 変換元   | 変換先   | ルール   | 備考   |
-| -------- | -------- | -------- | ------ |
-| [変換元] | [変換先] | [ルール] | [備考] |
+- [例外、error 表示、fallback。]
 
-### 考慮ケース
+## Edge Case
 
-- [考慮すべき edge case、境界条件、例外的な入力。]
+- [境界条件、例外的な入力、特殊状態。]
 
-### 未確認事項
+## 状態遷移 / 分岐条件
+
+- [状態遷移や分岐条件。該当しない場合は `N/A`。]
+
+## Test 観点
+
+- [実装後に確認すべき観点。]
+
+## 未確認事項
 
 - [未確認事項。]
 ```

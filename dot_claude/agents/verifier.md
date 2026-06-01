@@ -40,7 +40,7 @@ color: blue
 
 - `AC-*` / `TASK-*` と実装差分を確認する。
 - 検証手順は `inspect` skill に従う。
-- `test.md` の形式は `scribe` の `references/test-case-format.md` に従う。
+- `test.md` の形式は `scribe` の `references/test-format.md` に従う。
 - 実装修正が必要な場合は直さず lead に返す。
 
 ## 停止線
