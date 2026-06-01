@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Supersedes: 0017
+- Amended by: 0020
 
 `planning` に問い詰め、durable knowledge 反映、成果物 format、既存 docs 更新を統合した結果、共有理解を詰める責務と文書を整える責務が再び重なった。共有理解へ到達するまで一問ずつ問い詰める入口を `grill`、README、既存 docs、PRD、要件定義、設計、実装計画、CONTEXT、ADR などの doc / artifact 作成・更新・整形を `scribe` として分ける。
 

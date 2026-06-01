@@ -62,19 +62,20 @@
 - 単発の説明で十分なものは `docs/` に残す
 - 何度も繰り返す手順は `skills/` への昇格を検討する
 - 機械的に止めたい操作は `rules/` を優先する
-- reviewer などの定型的な read-only の見立ては `agents/` に分ける
+- 工程担当や reviewer などの定型的な専門 role は `agents/` に分ける
 
-### 6. review は agent-first の明示選択で扱う
+### 6. workflow と review は agent-first の明示選択で扱う
 
-- review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
+- multi-agent workflow や review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
+- workflow の進行は `orchestrate` skill と specialist agent 定義を正本にする
 - review 本体は reviewer agent が担い、結果の見せ方も agent 定義内で人間向けに調整する
 - 具体的な reviewer 名や review 導線は surface 文書と agent 定義を正本にする
 
-### 7. reviewer の model 設定は agent 定義を正本にする
+### 7. agent の model 設定は agent 定義を正本にする
 
-- reviewer の model tier や reasoning effort は、agent 定義で明示する
-- reviewer の調整は、対象 role の責務と実行コストに照らして行う
-- 具体的な model 設定や reviewer ごとの既定値は agent 定義を正本にし、全体既定は現行 runtime config または config template で確認する
+- specialist agent の model tier や reasoning effort は、agent 定義で明示する
+- agent の調整は、対象 role の責務と実行コストに照らして行う
+- 具体的な model 設定や agent ごとの既定値は agent 定義を正本にし、全体既定は現行 runtime config または config template で確認する
 
 ## 関連文書
 

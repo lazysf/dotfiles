@@ -223,7 +223,7 @@
 - 例: 「成功条件と非目的を詰めたい」「実装順序と検証方法を詰めたい」
 - 観測ポイント:
   - `grill` skill が問い詰めと共有理解の整理専用のまま保たれ、review 本体を抱え込んでいない
-  - 要件 review と実装計画 review の責務が分離されたまま維持されている
+  - multi-agent workflow の進行は `orchestrate`、要件 review は `requirements-reviewer`、設計 review は `design-reviewer`、品質 review は `quality-reviewer` に分離されている
   - 導線の詳細は [Runtime Surface Guidance](./runtime-surface-guidance.md) と各 `SKILL.md` / agent 定義を正本にする
 
 ### 19. context-aware upstream grilling が機能する
@@ -252,19 +252,21 @@
 
 - 例: 「レビュー findings を整理したい」「この差分をレビューして結果までまとめたい」
 - 観測ポイント:
-  - 差分 review 本体は `quality-reviewer` / `security-reviewer` が担う
+  - Gate review 本体は `requirements-reviewer` / `design-reviewer` / `quality-reviewer` / `security-reviewer` が担う
+  - workflow 外の差分 review は `quality-reviewer` / `security-reviewer` が担える
   - reviewer agent が固定の JSON 形式だけを返す指定へ戻っていない
   - reviewer agent の結果が、親がそのまま利用者へ渡しても読みやすい findings-first の形になっている
   - 導線と役割分担の詳細は [Runtime Surface Guidance](./runtime-surface-guidance.md) と関連 agent 定義を正本にする
 
-### 22. reviewer agent 起動契約が AGENTS に残る
+### 22. agent 起動契約が AGENTS に残る
 
-- 例: 「計画レビューを親 Codex で扱いたい」「quality-reviewer に差分レビューを依頼したい」
+- 例: 「multi-agent workflow で進めたい」「quality-reviewer に差分レビューを依頼したい」
 - 観測ポイント:
-  - `dot_codex/private_AGENTS.md.tmpl` に、reviewer agent を `agent_type` で明示起動する場合は `fork_context=true` を併用しない契約がある
-  - reviewer 定義側の `model` / `sandbox_mode` / instructions を有効にする目的が崩れていない
-  - `quality-reviewer` / `security-reviewer` には `cwd`、対象差分、対象ファイル、観点、除外範囲、検証状況を `message` に明示して渡す契約がある
-  - docs / skills に、reviewer role と `fork_context=true` の併用を推奨する記述が再流入していない
+  - `dot_codex/private_AGENTS.md.tmpl` に、main セッションが lead として `orchestrate` skill を使う契約がある
+  - Codex では agent 間の直接通信ではなく、lead が handoff、差戻し、再 review、追加調査依頼を仲介する契約がある
+  - agent 定義側の `model` / `model_reasoning_effort` / `sandbox_mode` / instructions を有効にする目的が崩れていない
+  - read-only reviewer は `sandbox_mode = "read-only"` を維持している
+  - workflow では各 agent へ request folder、対象 artifact、対象 ID、観点、除外範囲、検証状況を明示して渡す
 
 ### 23. repo 固有契約の軽い確認を手動回帰で補う
 
@@ -283,8 +285,8 @@
 
 - 例: 「reviewer agent の model や `model_reasoning_effort` を見直した」「品質重視や速度重視で tier を変えたい」
 - 観測ポイント:
-  - reviewer 設定が役割分担と矛盾せず、不要な一律変更になっていない
-  - 要件 review / 実装計画 review と差分 review 系 reviewer の責務差が保たれている
+  - reviewer 設定が workflow の役割分担と矛盾せず、不要な一律変更になっていない
+  - 要件 review / 設計 review / 品質 review / security review の責務差が保たれている
   - 具体的な model や `model_reasoning_effort` は agent 定義を正本にし、全体既定は現行 runtime config または config template で確認する
 
 ## 関連文書
