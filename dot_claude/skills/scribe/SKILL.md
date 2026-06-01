@@ -28,7 +28,7 @@ description: request.md、requirements.md、basic-design.md、detailed-design.md
 - Detailed Design: [references/detailed-design-format.md](references/detailed-design-format.md)
 - Tasks: [references/tasks-format.md](references/tasks-format.md)
 - Implementation: [references/implementation-format.md](references/implementation-format.md)
-- Test: [references/test-case-format.md](references/test-case-format.md)
+- Test: [references/test-format.md](references/test-format.md)
 - Review: [references/review-format.md](references/review-format.md)
 - Traceability Matrix: [references/traceability-matrix-format.md](references/traceability-matrix-format.md)
 - Docs README: [references/readme-format.md](references/readme-format.md)
