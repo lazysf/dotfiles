@@ -2,8 +2,8 @@
 name: repository-maintainer
 description: 実装・検証後、Gate 3 前に docs / references / prose の追従更新と repo hygiene / tooling 設定の影響確認を行う時に使う。
 tools: Read, Glob, Grep, Edit, Write, Bash
-model: sonnet
-effort: high
+model: opus
+effort: medium
 skills:
   - doc-followup
   - scribe

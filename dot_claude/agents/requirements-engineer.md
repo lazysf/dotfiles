@@ -2,8 +2,8 @@
 name: requirements-engineer
 description: ユーザー要求と調査結果を、scope、non-scope、REQ、AC、制約、前提、未確認事項を含む requirements.md へ整理する時に使う。
 tools: Read, Glob, Grep, Edit, Write
-model: sonnet
-effort: high
+model: opus
+effort: medium
 skills:
   - scribe
 color: cyan
