@@ -24,9 +24,9 @@ description: コード変更・実装・既存機能変更・複数ファイル�
 - Phase 0 で要求を受けたら、まず triage して tier を決める。triage と tier 別フローは [references/sdlc-flow.md](references/sdlc-flow.md) を読む。
 - Phase / Gate の流れも同じ [references/sdlc-flow.md](references/sdlc-flow.md) に従う。
 - agent routing と成果物責務を確認する。
-- agent 出力は [references/handoff.md](references/handoff.md) の形で受け取る。
-- Gate review は [references/gate-review.md](references/gate-review.md) に従う。
-- fail 時の自律修正ループは [references/autonomous-loop.md](references/autonomous-loop.md) に従う。
+- agent から最初の handoff を受け取る前に、受け取り形式を [references/handoff.md](references/handoff.md) に定めているため読み、その形で受け取る。
+- 各 Gate の review に入る前に、判定基準と進め方を [references/gate-review.md](references/gate-review.md) に置いているため読み、それに従う。
+- Gate fail で自律修正に入る時は、ループの手順と停止条件を [references/autonomous-loop.md](references/autonomous-loop.md) に置いているため、修正を始める前に読み従う。
 - 実装・検証後、Gate 3 前に `repository-maintainer` で docs / references / prose の追従更新と、repo hygiene / tooling 設定の影響確認を行う。
 - ユーザー確認が必要な場合だけ、lead が日本語で確認する。
 

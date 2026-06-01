@@ -46,7 +46,7 @@ description: developer が tasks.md と detailed-design.md に沿って code、c
 - 原因調査は `research`。
 - 要件整理や技術計画は `grill`。
 - 実装計画の合意形成は `grill`。合意済みの計画や docs の記録・整形は `scribe`。
-- Excel VBA の exported `.bas` / `.cls` を作成・編集する時は [references/vba-best-practices.md](references/vba-best-practices.md) を読む。
+- Excel VBA の exported `.bas` / `.cls` を作成・編集する時は、その環境固有の注意点を [references/vba-best-practices.md](references/vba-best-practices.md) に置いているため、書く前に読む。
 
 ## 完了条件
 

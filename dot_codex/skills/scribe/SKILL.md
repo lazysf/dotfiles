@@ -23,9 +23,11 @@ metadata:
 - `REQ-*` / `AC-*` / `BD-*` / `DD-*` / `TASK-*` / `TC-*` の対応を崩さない。
 - 前提条件、手順、期待結果、注意点、受入条件、確認方法は必要なものだけ書く。
 - リンク、path、command、用語、他文書との整合を確認する。
-- artifact ごとの書き方で迷う時は [references/artifact-workflows.md](references/artifact-workflows.md) を読む。
+- 複数 artifact をまたぐ進め方や、どの artifact から書くかの判断に迷う時は、その手順を [references/artifact-workflows.md](references/artifact-workflows.md) に置いているため、書き始める前に読む。
 
 ## 成果物
+
+各 artifact を作成・更新する時は、章立て・ID 規則・記述順を対応する format reference に定めているため、書き始める前に対象の 1 つを必ず読み、その構成に従う。記憶や推測で書かない。
 
 - Request: [references/request-format.md](references/request-format.md)
 - Docs README: [references/readme-format.md](references/readme-format.md)

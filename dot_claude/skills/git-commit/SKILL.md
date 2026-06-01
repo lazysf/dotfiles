@@ -16,7 +16,7 @@ description: Git の変更を安全に commit したい依頼で使う。1コミ
 - body / footer / BREAKING CHANGE を付ける場合は形式が決まっているので、書く前に [references/commit-message-format.md](references/commit-message-format.md) を読み、その規定（`Why:` / `What:` / `Impact:` ラベル、git trailer 形式の footer）に従う。自己流の body / footer を書かない。title だけで足りる時は読まなくてよい。
 - 通常 commit だけを実行する。push、rebase、amend、squash、`--no-verify`、直接 refs 操作、知見蓄積は扱わない。
 - 承認回避の別経路や副作用のある代替操作は使わない。
-- 停止条件、失敗時、結果報告の詳細が必要な時は [references/commit-guardrails.md](references/commit-guardrails.md) を読む。
+- detached HEAD・未解決 conflict・混在差分・hook 失敗など停止や失敗の判断に当たったら、対応と結果報告の規定を [references/commit-guardrails.md](references/commit-guardrails.md) に置いているため、その場で読み従う。
 
 ## 出力
 

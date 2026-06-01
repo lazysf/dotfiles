@@ -14,7 +14,7 @@ metadata:
 - 追従元を確認する。ユーザー指定 path / issue / PR / request folder がある場合はそれを最優先にする。未指定なら unstaged / staged diff、untracked file list、直近 commit の順で根拠を取る。
 - ユーザー指定 scope がある場合はその外へ更新を広げない。scope 外の docs 更新が必要なら、理由を `Open Questions` に残して確認する。
 - 変更の種類を分ける: rename / delete / new file / surface 追加 / runtime 設定 / skill / agent / rules / docs 構造 / public behavior。
-- 影響する docs を探す。対象が広い場合は [references/followup-checklist.md](references/followup-checklist.md) を読む。
+- 影響する docs を探す。rename / delete / 移動を含む変更や、複数 surface・複数 docs に波及する変更では、確認すべき箇所を [references/followup-checklist.md](references/followup-checklist.md) に列挙しているため、探索の前に読んで漏れなく当たる。単一ファイルの軽微な追従なら読まなくてよい。
 - 古い path、名称、導線、責務説明、ADR / README / index の抜けを `rg` と既存 docs で確認する。
 - 確認できたずれだけを、既存の章構成、文体、粒度に合わせて最小更新する。
 - Codex / Claude の両 surface に対応物がある場合は、片側だけ更新していないか確認する。

@@ -12,9 +12,9 @@ description: 要求、要件、設計、実装計画、実装 readiness の前�
 
 - 依頼を短く言い換え、目的、作る成果物、今回扱わないことを置く。
 - `CONTEXT-MAP.md` / `CONTEXT.md`、docs、ADR、近傍 code、既存 tests で答えられる前提は先に確認する。
-- どの artifact に反映すべきか迷う時は [references/artifact-routing.md](references/artifact-routing.md) を読む。
-- 要件整理の観点で迷う時は [references/requirements-heuristics.md](references/requirements-heuristics.md) を読む。
-- 技術計画の観点で迷う時は [references/implementation-heuristics.md](references/implementation-heuristics.md) を読む。
+- 確定事項を request folder のどの artifact に反映するか決める時は、反映先の判断基準を [references/artifact-routing.md](references/artifact-routing.md) に置いているため、反映の前に読む。
+- 要件（scope・成功条件・制約・受入条件）を詰める時は、確認すべき観点を [references/requirements-heuristics.md](references/requirements-heuristics.md) に置いているため、質問を組み立てる前に読む。
+- 技術計画や実装方針を詰める時は、確認すべき観点を [references/implementation-heuristics.md](references/implementation-heuristics.md) に置いているため、質問を組み立てる前に読む。
 - 最も影響が大きい未確認事項を中心に、関連する 1〜3 問をまとめて質問し、各問に推奨回答を添える。互いに依存して順序が崩れる問いは、先行する問いの回答を待ってから次を聞く。
 - 回答を受けたら、確定事項、仮定、未確認事項、docs 更新候補を分ける。
 - 確定事項は、置き場と形式が明確な場合だけ doc / artifact へ最小反映する。

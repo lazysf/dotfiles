@@ -48,9 +48,9 @@ metadata:
 - 原因調査は `research`。
 - 要件整理や技術計画は `grill`。
 - 実装計画や docs 更新は `scribe`。
-- Excel VBA の exported `.bas` / `.cls` を作成・編集する時は [references/vba-excel-macro.md](references/vba-excel-macro.md) を読む。
-- 原則判断で迷う時は [references/implementation-guardrails.md](references/implementation-guardrails.md) を読む。
-- テスト化しにくい変更では [references/verification-fallbacks.md](references/verification-fallbacks.md) を読む。
+- Excel VBA の exported `.bas` / `.cls` を作成・編集する時は、その環境固有のコーディング標準を [references/vba-excel-macro.md](references/vba-excel-macro.md) に置いているため、書く前に読む。
+- 実装範囲・最小差分・抽象化の判断に迷う時は、その原則を [references/implementation-guardrails.md](references/implementation-guardrails.md) に置いているため、実装に入る前に読む。
+- 自動テストを書きにくい変更では、代替の確認手段を [references/verification-fallbacks.md](references/verification-fallbacks.md) に置いているため、確認方法を決める前に読む。
 
 ## 完了条件
 
