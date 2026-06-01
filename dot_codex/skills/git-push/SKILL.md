@@ -20,7 +20,7 @@ metadata:
 - 承認が必要な操作は正規の承認要求を使い、承認回避のための別経路や副作用のある代替操作は使わない。
 - upstream が一意ならそれを使う。upstream 未設定かつ単一 remote なら、通常 branch push として upstream を設定してよい。
 - `git remote -v` や push error に秘密情報が含まれる可能性があるため、最終返答に credential、token、認証 URL、エラー全文を貼らない。
-- 停止条件、実行 command、失敗時、結果報告の詳細が必要な時は [references/push-guardrails.md](references/push-guardrails.md) を読む。
+- push 先・upstream・force 可否の判断や、停止・失敗時の対応に当たる時は、実行 command と結果報告の規定を [references/push-guardrails.md](references/push-guardrails.md) に置いているため、push を実行する前に読み従う。
 
 ## 出力
 

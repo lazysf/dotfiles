@@ -22,7 +22,7 @@ description: verifier が実装後に AC / TASK に対応する test、lint、bu
 
 - `acceptance`: 受入条件、期待挙動、保護したい既存挙動に対して確認する。
 - `verification`: bugfix / security / quality / compat の確認で使う。
-- `consistency`: 変更差分の参照、docs、設定、ignore の追従漏れ確認で使う。docs 追従更新まで行う依頼では `doc-followup` を使う。詳細は [references/consistency-checks.md](references/consistency-checks.md) を読む。
+- `consistency`: 変更差分の参照、docs、設定、ignore の追従漏れ確認で使う。確認項目を [references/consistency-checks.md](references/consistency-checks.md) に列挙しているため、確認を始める前に読んで各項目を当てる。docs 追従更新まで行う依頼では `doc-followup` を使う。
 - 迷う場合は、新規価値は `acceptance`、既存問題の修正効果は `verification`、参照ずれは `consistency`。
 
 ## 境界

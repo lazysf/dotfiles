@@ -14,7 +14,7 @@ description: architect が basic-design.md / detailed-design.md を作る前に�
 - module、caller、責務、外部 I/O、テスト入口を地図化する。
 - 既存 domain language を優先し、`CONTEXT.md` にある用語で候補を説明する。
 - ADR と衝突する案は conflict として明示する。
-- architecture 用語の補助が必要な時だけ [references/architecture-language.md](references/architecture-language.md) を読む。
+- basic-design.md / detailed-design.md で構造・責務・境界・data flow を記述する時は、用語の定義と使い分けを [references/architecture-language.md](references/architecture-language.md) に置いているため、記述する前に読んで用語を揃える。
 - `basic-design.md` に置く全体方針・責務境界と、`detailed-design.md` に置く処理詳細を分ける。
 - friction と改善候補を番号付きで出す。
 
