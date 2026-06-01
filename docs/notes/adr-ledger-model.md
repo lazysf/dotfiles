@@ -3,6 +3,7 @@
 この文書は、この repo で ADR をどう扱うかの正本をまとめる。
 ADR は通常知見の置き場ではなく、採用された判断とその履歴関係を残す状態付き台帳として扱う。
 ただし本文は重いテンプレートを必須にせず、短い判断なら 1-3 文で残せる状態付き軽量 ADR として扱う。
+採用済み ADR の本文は履歴として保持し、後続方針に合わせた上書き先にしない。
 
 ## ADR に入れるもの
 
@@ -50,9 +51,24 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 - `- Amends: 0003`
 - `- Amended by: 0005`
 
-`Superseded-By` は新規 ADR 作成時に推測で書かず、`grill` で確認した明示根拠に基づく `scribe` 更新でだけ付ける。
+`Superseded-By` は新規 ADR 作成時に推測で書かず、ユーザー依頼、会話上の合意、または `grill` で確認した明示根拠に基づく `scribe` 更新でだけ付ける。
 `Supersedes` も新規 ADR 作成時に明示されたものだけを使い、後段の状態更新が推測で補わない。
 `Amends` / `Amended by` は、既存 ADR の判断を置き換えずに一部だけ補正または拡張する時だけ使う。
+
+## 既存 ADR の編集境界
+
+既存 ADR 本文は採用時点の履歴として扱う。方針変更、既存判断の補正、判断理由や影響の再解釈は、既存本文を書き換えずに新しい ADR として記録する。
+
+既存 ADR に直接追記・修正してよいもの:
+
+- `Status`、`Superseded-By`、`Amended by` などの状態・関係メタデータ
+- typo、リンク切れ、Markdown の明白な破損など、判断内容を変えない修正
+
+既存 ADR に直接反映しないもの:
+
+- 採用済み判断の本文、理由、影響の書き換え
+- 後続方針に合わせた説明の上書き
+- 明示根拠のない `Supersedes` / `Superseded-By` / `Amends` / `Amended by` の backfill
 
 ## 本文の形
 
@@ -62,20 +78,21 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 
 ## 運用フロー
 
-1. 知見蓄積が必要なら `grill` で evidence と採用判断を問い詰める
-2. `grill` で確定した用語、既存 docs / note 更新、ADR 作成、ADR 状態更新の必要性を切り分ける
-3. 新しい判断記録が ADR 条件を満たすなら `scribe` で `docs/adr/NNNN-*.md` を `Proposed` として作る
-4. その判断が採用済みと明示されている場合だけ、新 ADR を `Accepted` に更新する
+1. 知見蓄積が必要なら、ユーザー依頼や会話で確認した evidence と採用判断を整理する
+2. 確定した用語、既存 docs / note 更新、ADR 作成、ADR 状態更新の必要性を切り分ける
+3. 新しい判断記録が ADR 条件を満たすなら `scribe` で `docs/adr/NNNN-*.md` を作る
+4. 採用判断が未確定なら `Proposed`、ユーザーの明示依頼または会話上の合意で採用済みなら `Accepted` とする
 5. 新 ADR 側に明示 `Supersedes` がある場合だけ、続けて旧 ADR を `Superseded` にする
 6. 新 ADR 側に明示 `Amends` がある場合だけ、続けて旧 ADR に `Amended by` を追記する
+7. 旧 ADR 本文は履歴として保持し、後続判断の内容で上書きしない
 
 ## Acceptance Timing
 
 ADR の `Accepted` 化は Git commit とは切り離し、採用判断が明示された時だけ `scribe` の docs-aware 更新として行う。
 project config や private config による自動切り替えは行わない。
 
-- 新規 ADR はいったん `Proposed` として作る
-- 採用判断が明示されたら、後続 action で `Accepted` に進める
+- 新規 ADR は、採用判断が未確定なら `Proposed` として作る
+- 採用判断が明示済みなら、作成時点で `Accepted` にしてよい
 - 新 ADR に `Supersedes` がある場合は、採用後に旧 ADR を後続 action で `Superseded` に進める
 
 知見蓄積は Git push と切り離し、作業の締めや明示依頼で `grill` / `scribe` を使う。
