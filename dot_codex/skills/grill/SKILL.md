@@ -1,6 +1,6 @@
 ---
 name: grill
-description: 要件整理、仕様化、設計、実装計画の前に、scope、成功条件、制約、検証入口、実装 readiness を対話で固める時に使う。関連する未確認事項を 1〜3 問にまとめて確認し、確定事項だけを doc / artifact に最小反映する。事実調査は `research`、docs 更新は `scribe`、差分作成は `implementation`。
+description: 要件整理、仕様化、設計、実装計画の前に、scope、成功条件、制約、検証入口、実装 readiness を対話で固める時に使う。関連する未確認事項を 1〜3 問にまとめて確認し、確定事項だけを doc / artifact に最小反映する。事実調査は `research`、docs 更新は `scribe`、差分作成は `implement`。
 metadata:
   short-description: 共有理解の問い詰め
 ---
@@ -40,7 +40,7 @@ metadata:
 - 事実調査は `research`。
 - architecture 候補探索は `architecture`。
 - docs 本文更新は `scribe`。
-- 差分作成やテスト実装は `implementation`。
+- 差分作成やテスト実装は `implement`。
 - multi-agent workflow として進める時は `orchestrate`。
 - Gate review は `requirements-reviewer`、`design-reviewer`、`quality-reviewer`、`security-reviewer` reviewer agent を使う。
 

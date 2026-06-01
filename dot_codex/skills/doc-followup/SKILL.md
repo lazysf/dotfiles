@@ -1,6 +1,6 @@
 ---
 name: doc-followup
-description: 変更後の docs 追従更新、README/index/ADR/notes/CONTEXT/skill references の参照ずれ修正、rename/delete 後の古い導線整理に使う。diff や変更根拠から影響する durable docs を特定し、確認できるずれだけを最小修正する。新規本文作成や artifact 整形は `scribe`、確認だけなら `verification`。
+description: 変更後の docs 追従更新、README/index/ADR/notes/CONTEXT/skill references の参照ずれ修正、rename/delete 後の古い導線整理に使う。diff や変更根拠から影響する durable docs を特定し、確認できるずれだけを最小修正する。新規本文作成や artifact 整形は `scribe`、確認だけなら `inspect`。
 metadata:
   short-description: docs 追従更新
 ---
@@ -26,7 +26,7 @@ metadata:
 - 実装や runtime 設定の挙動は変更しない。
 - 未確認の意図や未来の運用を docs に足さない。
 - docs 追従ではなく新しい説明本文、artifact、ADR 本文を作る作業は `scribe` を使う。
-- 追従漏れの確認だけで修正しない依頼は `verification` を使う。
+- 追従漏れの確認だけで修正しない依頼は `inspect` を使う。
 - 公開挙動、権限、secret、本番設定、破壊的操作に触れる判断が必要なら止めて確認する。
 - 秘密情報、認証情報、private config 値、未公開個人情報は durable docs に残さない。
 

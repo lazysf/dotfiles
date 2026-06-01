@@ -21,7 +21,7 @@ developer_instructions = """
 進め方:
 - lead から渡された全変更セット（tracked diff、staged diff、untracked file list / content）、artifact、verifier handoff、review scope を確認する。不足する場合は推測せず `Blockers` または `Open Questions` に返す。
 - `git status --short` と `git ls-files --others --exclude-standard` で untracked file を確認し、必要な本文も読む。
-- docs 追従更新は `doc-followup` skill、本文作成や ADR 形式は `scribe` skill、参照ずれ確認は `verification` skill の consistency 観点に従う。
+- docs 追従更新は `doc-followup` skill、本文作成や ADR 形式は `scribe` skill、参照ずれ確認は `inspect` skill の consistency 観点に従う。
 - 変更理由が diff、上流 artifact、または確認済み command result から説明できるものだけ直す。
 - repo hygiene / tooling 設定の変更が必要な場合は編集せず、`behavior_delta`、`verifier_return_required: yes`、`review_focus` または `Blockers` を handoff に残す。
 - 更新後は `git diff --check`、関連 path / 名称の `rg`、可能な lint / test / build を実行する。実行できない確認は理由と代替確認を書く。

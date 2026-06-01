@@ -101,8 +101,8 @@
 - 観測ポイント:
   - 散らばった依頼や軽い停止線整理は `grill`、PRD draft 作成や整形は `scribe` が正式入口として案内される
   - `scribe` で生成した PRD は draft として扱われ、正式 docs への保存や issue 化は明示依頼がある時だけ扱われる
-  - feature / maintenance の受け入れ確認は `verification` の `acceptance` mode として扱われる
-  - bugfix / security / quality / compat の修正効果確認は `verification` の `verification` mode として扱われる
+  - feature / maintenance の受け入れ確認は `inspect` の `acceptance` mode として扱われる
+  - bugfix / security / quality / compat の修正効果確認は `inspect` の `verification` mode として扱われる
   - 要求分類そのものを user-facing workflow として案内しない
 
 ### 8. `docs/README.md` が主要 note と ADR の入口を維持する
@@ -127,7 +127,7 @@
 - 例: 「この変更に docs を追従させたい」「rename 後の参照漏れを直したい」「ADR と README の一覧も更新して」「`.gitignore` や lint 設定も仕上げて」
 - 期待:
   - `orchestrate` workflow では、実装・検証後かつ Gate 3 前に `repository-maintainer` が docs / references / prose の追従更新と repo hygiene / tooling 設定の影響確認を行う
-  - docs 追従更新は `doc-followup`、本文作成や artifact 整形は `scribe`、追従漏れ確認だけなら `verification` / `inspect` と切り分けられる
+  - docs 追従更新は `doc-followup`、本文作成や artifact 整形は `scribe`、追従漏れ確認だけなら `inspect` と切り分けられる
   - tooling の挙動差分がある場合、Gate 3 前に `verifier` へ戻り、影響する確認と `test.md` が更新される
   - runtime guardrail 変更や品質ゲート弱体化は自走編集されず blocker として扱われる
   - Gate 3 review では repository maintenance 後の全変更セットと handoff が入力に含まれる
@@ -175,17 +175,17 @@
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
   - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `scribe` skill を正本にする
 
-### 13.5. `verification` / `inspect` が整合性を確認する
+### 13.5. `inspect` が整合性を確認する
 
 - 例: 「この変更の整合性を確認したい」「ファイルを rename したので参照漏れを確認したい」「`.chezmoiignore` 変更の影響を見たい」
 - 観測ポイント:
   - `git-commit` は commit 作成に責務を絞り、条件付き整合性 preflight を自動実行しない
-  - README、docs、index、一覧、参照リンクの追従漏れ確認だけなら `verification` / `inspect` の `consistency` mode で扱われる
-  - ファイル追加、rename、削除、ignore 変更の参照追従確認は `verification` / `inspect` の対象になる
+  - README、docs、index、一覧、参照リンクの追従漏れ確認だけなら `inspect` の `consistency` mode で扱われる
+  - ファイル追加、rename、削除、ignore 変更の参照追従確認は `inspect` の対象になる
   - standalone で追従更新まで行う場合は `doc-followup` に進む
   - workflow 内で実装後の repo hygiene / docs / tooling 設定まで仕上げる場合は `repository-maintainer` に進む
   - `.gitignore` は Git 追跡対象、`.chezmoiignore` は chezmoi 配布対象として独立に確認される
-  - `verification` / `inspect` が判断を要する事項を見つけた場合、確認すべき点が返る
+  - `inspect` が判断を要する事項を見つけた場合、確認すべき点が返る
   - `doc-followup` または `repository-maintainer` が修正を加えた場合、次の commit 導線で差分と 1 コミット 1 変更のまとまりが確認される
 
 ### 14. `git-push` が知見蓄積を行わない
@@ -231,7 +231,7 @@
   - 過剰実装、不要な抽象化、複雑な分岐を既存挙動維持で減らす計画は `grill` に案内される
   - リファクタ境界そのものを決める依頼は `grill` に案内される
   - 性能や安定性など品質特性の事実確認は `research`、実装前 scope は `grill` に案内される
-  - 実装開始や確認方法先行の最小差分は `implementation` に案内される
+  - 実装開始や確認方法先行の最小差分は `implement` に案内される
 
 ### 18. `grill` skill が問い詰め専用のまま保たれる
 
