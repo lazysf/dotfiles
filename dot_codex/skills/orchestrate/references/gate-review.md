@@ -68,7 +68,7 @@ Pass 条件:
 - repository maintenance handoff に変更有無、挙動差分、品質ゲート影響、security / CI 影響、確認結果が明示されている。
 - repository maintenance 後の全変更セットが reviewer 入力に含まれている。
 - repository-maintainer が変更したファイル差分は、必要に応じて補助情報として reviewer 入力に含まれている。
-- repository maintenance の `behavior_delta` が `changed` の場合、`verifier` の再確認結果と更新後の `test.md` がある。
+- repository maintenance の `behavior_delta` が `changed` の場合、`inspector` の再確認結果と更新後の `test.md` がある。
 - 未解消の docs / repo hygiene / tooling 追従漏れ、品質ゲート弱体化、security / CI risk が Gate 3 reviewer によって許容不能と判断されていない。
 - `implementation.md` に要件変更や設計変更を勝手に書いていない。
 - `test.md` に仕様変更を混ぜていない。

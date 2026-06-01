@@ -4,7 +4,7 @@ agent は完了時に以下の形で lead へ返す。本文は英語でもよ�
 
 ## Engineering Agent Output
 
-対象: `analyst` / `requirements-engineer` / `architect` / `task-planner` / `developer` / `verifier` / `repository-maintainer`
+対象: `researcher` / `requirements-engineer` / `architect` / `task-planner` / `implementer` / `inspector` / `repository-maintainer`
 
 ```markdown
 ## Result
@@ -150,6 +150,6 @@ reason: [理由]
 - `repository-maintainer` が `blocked` を返した場合、lead は Gate 3 へ進めない。runtime guardrail / CI permission / secret / auth / 権限 / 外部送信 / deploy / publish に触れる blocker は、前工程へ自律差戻しせずユーザー確認または change-request 候補にする。
 - 対象 ID が存在する工程で `none` を使う場合は理由を書く。
 - reviewer が `write_operations` / `modified_artifacts` / `external_io` を `none` 以外で返した場合、その review は無効扱いにする。
-- analyst が `external_io` / `files_written` / `secret_access` を `none` 以外で返した場合、その handoff は無効扱いにする。
+- researcher が `external_io` / `files_written` / `secret_access` を `none` 以外で返した場合、その handoff は無効扱いにする。
 - `not_reviewed` に Gate 上必須の対象が残る場合、原則 pass にしない。
 - secret 値は成果物、handoff、review、log に書かない。secret の種類、保管場所、用途だけを書く。

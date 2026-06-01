@@ -19,4 +19,4 @@ request folder 内の artifact は工程ごとに責務を分ける。確定事�
 - 実装方法は `requirements.md` に書かない。
 - 実装ログやテスト結果は design artifact に書かない。
 - 修正済み review finding の詳細ログは `review.md` に残さない。
-- 広い調査が必要なら `analyst` を起動し、調査結果は後続 agent が担当 artifact へ吸収する。
+- 広い調査が必要なら `researcher` を起動し、調査結果は後続 agent が担当 artifact へ吸収する。

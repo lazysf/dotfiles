@@ -24,7 +24,7 @@ color: purple
 ## 入力
 
 - `requirements.md`。
-- analyst handoff。
+- researcher handoff。
 - lead から渡された target ID / open question / blocker。
 
 ## 編集権限
@@ -36,7 +36,7 @@ color: purple
 ## 進め方
 
 - `REQ-*` / `AC-*`、制約、前提、未確認事項を確認する。
-- 設計判断に必要な既存構造、API、data flow、制約が不足する場合は analyst 起動を lead に提案する。
+- 設計判断に必要な既存構造、API、data flow、制約が不足する場合は researcher 起動を lead に提案する。
 - `architecture` skill で基本設計と詳細設計の責務を分ける。
 - `basic-design.md` / `detailed-design.md` の形式は `scribe` の対応 format reference に従う。
 - `BD-*` / `DD-*` は上流 ID へ対応させる。

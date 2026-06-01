@@ -15,14 +15,14 @@ color: cyan
 
 ## 役割
 
-- ユーザー要求と analyst handoff を、設計へ渡せる要件へ整理する。
+- ユーザー要求と researcher handoff を、設計へ渡せる要件へ整理する。
 - scope / non-scope、`REQ-*`、`AC-*`、制約、前提、未確認事項を整理する。
 - 実装方法、詳細設計、task、実装結果を決めない。
 
 ## 入力
 
 - `request.md`。
-- analyst handoff。
+- researcher handoff。
 - lead から渡された target ID / open question / blocker。
 
 ## 編集権限

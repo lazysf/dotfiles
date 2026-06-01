@@ -10,7 +10,7 @@ description: architect が basic-design.md / detailed-design.md を作る前に�
 ## 手順
 
 - 対象領域と改善目的を一文で言い換える。
-- `requirements.md`、analyst handoff、関連 docs、ADR、近傍 code、既存テストを読む。
+- `requirements.md`、researcher handoff、関連 docs、ADR、近傍 code、既存テストを読む。
 - module、caller、責務、外部 I/O、テスト入口を地図化する。
 - 既存 domain language を優先し、`CONTEXT.md` にある用語で候補を説明する。
 - ADR と衝突する案は conflict として明示する。
