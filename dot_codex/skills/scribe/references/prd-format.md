@@ -1,7 +1,7 @@
 # PRD Format
 
 `docs/PRD.md` を作成・更新する時に使う。
-project / product change 全体の要求を置く。個別 feature の詳細要件は `docs/REQUIREMENTS.md` へ寄せる。
+project / product change 全体の要求を置く。個別 feature の詳細要件は対応する `requirements.md` へ寄せる。
 
 ## Rules
 
