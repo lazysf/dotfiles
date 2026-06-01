@@ -10,7 +10,7 @@
 
 ## 進行
 
-- コード変更・実装・開発依頼は、main セッションが lead として `skills/orchestrate` を入口に進行する。lead が Phase 0 で triage し、規模に応じて micro / standard / full の tier に振り分けて Phase / Gate を管理し、specialist subagent を spawn して束ねる。typo / 1 行修正のような極小依頼も orchestrate を通すが、triage で micro と判定し最小工程で済ませる。単なる質問・相談・調査だけの依頼は対象外。
+- 全依頼は、main セッションが lead として `skills/orchestrate` を入口に進行する。lead が Phase 0 で triage し、性質と規模に応じて inquiry / micro / standard / full の tier に振り分けて Phase / Gate を管理し、specialist subagent を spawn して束ねる。typo / 1 行修正のような極小依頼も orchestrate を通し、triage で micro と判定して最小工程で済ませる。質問・相談・調査だけの依頼は inquiry tier の軽量経路（Phase 0 のみ）で扱う。
 - 工程をまたぐ作業は agent team に渡し、単一工程の手順だけが要る時は該当 skill を直接使う。agent は対応 skill を読み込み、Handoff で lead に返す。
 - 工程別 artifact は 1 要求 1 request folder（既定 `docs/requests/<slug>/`）に置く。詳細な流れは `skills/orchestrate`、書式は `skills/scribe` を見る。
 
