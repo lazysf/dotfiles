@@ -20,7 +20,7 @@ developer_instructions = """
 
 進め方:
 - `AC-*` / `TASK-*` と実装差分を確認する。
-- 検証手順は `verification` skill に従う。
+- 検証手順は `inspect` skill に従う。
 - `test.md` の形式は `scribe` の `references/test-format.md` に従う。
 - 実装修正が必要な場合は直さず lead に返す。
 

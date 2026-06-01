@@ -17,7 +17,7 @@
 
 - まず repo-level knowledge として調査結果や運用知見を `docs/` に残し、その後で `dot_codex/` / `dot_claude/` に昇格すべきものだけを選ぶ
 - `dot_codex/` / `dot_claude/` の managed surface には、展開後にも価値があり、workspace 横断で再利用するものだけを置く
-- 大きな runtime surface の追加よりも、docs、verification、rules、skills の整合を優先する
+- 大きな runtime surface の追加よりも、docs、inspect、rules、skills の整合を優先する
 - prefix 付きの workflow 名を増やすより、各 skill の発火条件と説明を揃えることを優先する
 
 ## 採用している考え方
@@ -49,13 +49,13 @@
 ### 3. defaults は大きく動かさない
 
 - 既定 model、approval、sandbox などは、整理や見直しのたびに動かす対象にしない
-- 主目的が構造整理や運用導線の整備である場合は、まず docs と verification を固める
+- 主目的が構造整理や運用導線の整備である場合は、まず docs と inspect を固める
 - 既定値を変えるときは、変更理由と回帰確認の観点をセットで残す
 
 ### 4. unstable feature は既定採用しない
 
 - preview や開発中の機能は、将来性だけで既定採用しない
-- docs、rules、verification で安定してカバーできる範囲を優先する
+- docs、rules、inspect で安定してカバーできる範囲を優先する
 - 新機能の採用は、安定性と運用効果が確認できた時点で別判断にする
 
 ### 5. prose だけで腐敗しやすいルールは将来の昇格候補として扱う
