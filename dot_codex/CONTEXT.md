@@ -26,8 +26,8 @@ _Avoid_: correctness only, polish only
 **Skill**: `dot_codex/skills/` 配下に置く再利用可能な workflow。`SKILL.md` の trigger description と手順を持つ。
 _Avoid_: command, phase, wrapper
 
-**Reviewer Agent**: focused review に使う、`dot_codex/agents/` 配下の read-only な専門 agent。
-_Avoid_: skill reviewer, automatic review
+**Specialist Agent**: multi-agent workflow の工程や review に使う、`dot_codex/agents/` 配下の専門 agent。
+_Avoid_: skill reviewer, automatic review, generic worker
 
 **Rule**: 狭い command pattern を許可または禁止する、`dot_codex/rules/` 配下の機械的 guard。
 _Avoid_: policy note, prose instruction
@@ -45,7 +45,7 @@ _Avoid_: preference, reminder
 - **Runtime Surface Size** は **Runtime Context Cost** を下げるための主要な制御対象であり、実ファイルの記載量が少ないほど実行時に文脈へ入る量も小さくなりやすい。
 - **Runtime Precision** は、**Runtime Context Cost** を増やせば必ず上がるものではなく、発火境界、停止線、検証入口、出力契約の明確さに左右される。
 - **Runtime Output Quality** は **Runtime Precision** と重なるが、正確さに加えて根拠、読みやすさ、十分性、ノイズの少なさを含む。
-- **Reviewer Agent** は draft や diff を review するが、ファイルは変更しない。
+- **Specialist Agent** のうち reviewer agent は draft や diff を review するが、ファイルは変更しない。
 - **Rule** は機械的な command 実行を guard するもので、workflow 判断の代替ではない。
 - **Managed Harness Artifact** は、**Knowledge Ledger** の accepted decision によって形が変わることがある。
 

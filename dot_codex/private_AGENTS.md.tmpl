@@ -24,6 +24,14 @@
 - 重複は、実害や保守負荷があり、単純さを損なわない場合だけ解消する
 - 依頼と無関係なリファクタ、構造整理、helper 化、依存追加、構成変更は避ける
 
+## 進行
+
+- 規模や不確実性のある依頼を multi-agent workflow として進める場合は、main セッションが lead として `orchestrate` skill を使い、Phase / Gate、request folder、subagent routing、handoff、ユーザー確認を管理する
+- Codex では agent 同士の直接通信を前提にせず、agent 出力の受け取り、次 agent への伝達、差戻し、再 review 起動は main セッションの lead が行う
+- typo / 1 行修正 / 自明な変更 / 単一 skill で閉じる作業は直接処理してよい
+- 工程をまたぐ作業は lead が specialist agent を順に起動して進め、単一工程の手順だけが要る時は該当 skill を直接使う
+- 工程別 artifact は 1 要求 1 request folder（既定 `docs/requests/<slug>/`）に置く。詳細な流れは `skills/orchestrate`、書式は `skills/scribe` を見る
+
 ## 停止線
 
 次の場合は、根拠と影響範囲を示して確認し、必要なら代替案も示す。
@@ -43,7 +51,8 @@
 - 作業対象 repo の `docs/notes/`: その repo に閉じる通常知見や背景
 - 作業対象 repo の `docs/adr/`: その repo に閉じる判断記録
 - `~/.codex/skills/`: 再利用する作業手順と通常作業の正式入口
-- `~/.codex/agents/`: 専門化した read-only 補助役や review 入口
+- `~/.codex/agents/`: multi-agent workflow を担う専門 agent 群（調査・要件・設計・実装・検証の各役と review 入口）
 - `~/.codex/rules/`: 機械的なガード
+- 作業対象 repo の `docs/requests/<slug>/`: 個別要求に閉じる SDLC artifact
 - 詳細な使い分けや発火条件は、各 `SKILL.md` と agent 定義を正本にする
 - 置き場が曖昧な場合でも、`~/.codex/` 直下や repo root 直下に新しい運用ファイルを増やさない

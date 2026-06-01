@@ -40,7 +40,8 @@ metadata:
 - architecture 候補探索は `architecture`。
 - docs 本文更新は `scribe`。
 - 差分作成やテスト実装は `implementation`。
-- 品質 review は `quality-reviewer`、security review は `security-reviewer` reviewer agent を使う。
+- multi-agent workflow として進める時は `orchestrate`。
+- Gate review は `requirements-reviewer`、`design-reviewer`、`quality-reviewer`、`security-reviewer` reviewer agent を使う。
 
 ## 出力
 

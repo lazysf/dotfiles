@@ -1,19 +1,19 @@
 ---
 name: architecture
-description: 構造改善、責務分散、密結合、浅い module、リファクタ候補、変更容易性、testability を整理する時に使う。module / caller / responsibility を地図化し、friction と改善候補を出す。原因調査は `research`、差分作成は `implementation`。
+description: 構造改善、責務分担、module boundary、interface、data flow、testability、security boundary を整理する時に使う。module / caller / responsibility / external I/O を地図化し、friction と改善候補を出す。原因調査は `research`、差分作成は `implementation`。
 metadata:
   short-description: architecture 改善
 ---
 
 # Architecture 改善
 
-構造を一段引いて見て、保守性、変更容易性、testability の改善候補を整理する。
+構造を一段引いて見て、責務、境界、interface、data flow、保守性、変更容易性、testability の改善候補を整理する。
 
 ## 手順
 
 - 対象領域と改善目的を一文で言い換える。
 - `CONTEXT-MAP.md` / `CONTEXT.md`、関連 docs、ADR、近傍 code、既存テストを読む。
-- module、caller、責務、外部 I/O、テスト入口を地図化する。
+- module、caller、責務、interface、data flow、外部 I/O、security / 権限 / data boundary、テスト入口を地図化する。
 - 既存 domain language を優先し、`CONTEXT.md` にある用語で候補を説明する。
 - ADR と衝突する案は conflict として明示する。
 - architecture 用語の補助が必要な時だけ [references/architecture-language.md](references/architecture-language.md) を読む。
@@ -28,6 +28,7 @@ metadata:
 - interface が implementation と同じくらい複雑になっていないか。
 - test が interface ではなく内部 detail に寄りすぎていないか。
 - 改善候補が locality、leverage、testability のどれを改善するか説明できるか。
+- security / 権限 / data / 外部 I/O の境界が設計上見えているか。
 
 ## 境界
 
@@ -44,6 +45,7 @@ metadata:
 - `candidate`
 - `benefit`
 - `risk`
+- `boundary_notes`
 - `next_question`
 
 候補選択後の grilling では、確定事項、未確定事項、次に必要な `grill` / `scribe` / `implementation` を分けて返す。
