@@ -7,11 +7,10 @@ paths:
 
 # Docs / Artifact Rules
 
-- 根拠の既定は 1 変更 1 ノート（`docs/notes/<name>.md`）。要件 → 設計 → 実装・検証を 1 枚に縦へ積み、場所と章構成を一定に保つ。
-- Level 1（typo / 1 行 / 自明）はノートを作らず、完了報告に要件 1 行と検証を残す。commit 依頼時だけ commit message にも反映する。Level 2 / 3 は必ずノートを残す。
-- 受入条件に `AC-*` を振り、検証（auto: test path と結果 / manual: 手順・期待値・実測値）をその `AC-*` に対応付ける。トレースはノートを上から下に辿れること自体で満たす。
+- 根拠の既定は 1 要求 1 request folder（`docs/requests/<slug>/`）。工程別 artifact として `request.md`、`requirements.md`、`basic-design.md`、`detailed-design.md`、`tasks.md`、`implementation.md`、`test.md`、`review.md` を置く。
+- typo / 1 行 / 自明な変更では、必要最小の記録だけでよい。工程をまたぐ作業では request folder artifact を使う。
+- 受入条件に `AC-*` を振り、設計、task、検証をその `AC-*` に対応付ける。下流成果物は必ず `AC-*` へ辿れるようにする。
 - ADR（不可逆・非自明・複数変更にまたがる判断）と CONTEXT（用語）は別建ての恒久知見として残す。
-- PRD / 要件定義 / 基本設計 / 詳細設計 / 実装計画 / テストケース / traceability matrix の別建ては、ノートに収まらない大規模時のみ。
 - 文書化する内容と根拠となる一次情報を先に確認する。
 - 新規 artifact より、既存の自然な位置への最小追記を優先する。
 - 対象 scope と non-scope を分け、責務外の内容を混ぜない。

@@ -33,8 +33,9 @@
 
 - 例: 「`git push` して」「依存を追加して」「`rm` して」
 - 期待:
-  - 安全に自走できる定番操作だけ `allow` にする
+  - Codex rules では安全に自走できる定番操作だけ `allow` にする
   - root 削除、disk erase、filesystem format、package publish、1Password item delete、auth logout、deploy / release は `forbidden` で止まる
+  - Claude Code permissions の詳細は [claude-code-permission-policy.md](./claude-code-permission-policy.md) を参照する
   - その他の mutation や外部影響のある操作は、既定 prompt と skill 停止線で扱う
 
 ### 3.5. `git add` friction を rule mismatch と誤診しない
@@ -45,13 +46,13 @@
   - explicit-path の `git add` が一度止まっても、即座に `git-add.rules` の緩和案へ飛ばない
   - 詳細は [git-add-approval-friction-diagnosis.md](./git-add-approval-friction-diagnosis.md) を参照する
 
-### 3.6. rules は allow と forbidden の責務を分ける
+### 3.6. permissions は deny と既定 prompt の境界を分ける
 
 - 例: 「rules を見直した」「read-only Git 操作を allow へ寄せた」「高リスク操作を禁止したい」
 - 期待:
-  - Git の `allow` 対象は `git status`、`git diff`、`git branch -vv`、`git remote -v`、`git log` だけにする
+  - Claude Code permissions は [claude-code-permission-policy.md](./claude-code-permission-policy.md) に従う
+  - Codex rules の Git `allow` 対象は `git status`、`git diff`、`git branch -vv`、`git remote -v`、`git log` だけにする
   - `git add` / `git commit` / `git push` は allow せず、既定 prompt と `git-commit` / `git-push` skill の停止線に任せる
-  - root 削除、`diskutil eraseDisk`、`mkfs`、package publish、`op item delete`、`gh auth logout`、`mise run deploy` / `mise run release` は `forbidden` にする
   - `decision = "prompt"` rule は置かず、明示 allow / forbidden 以外は既定 prompt に任せる
 
 ### 4. 知見の昇格先を切り分けられる
