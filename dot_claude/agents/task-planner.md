@@ -2,8 +2,8 @@
 name: task-planner
 description: 詳細設計を、DD / AC に対応する実装 task、実装順序、完了条件、確認方法、変更境界を含む tasks.md へ分解する時に使う。
 tools: Read, Glob, Grep, Edit, Write
-model: sonnet
-effort: high
+model: opus
+effort: medium
 skills:
   - scribe
 color: yellow

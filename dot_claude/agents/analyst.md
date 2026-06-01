@@ -4,7 +4,7 @@ description: 要件・設計・実装判断の前に、既存コード、docs、
 tools: Read, Glob, Grep, Bash
 permissionMode: plan
 model: opus
-effort: high
+effort: low
 skills:
   - research
 color: teal
