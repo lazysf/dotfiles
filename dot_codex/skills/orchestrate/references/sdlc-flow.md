@@ -57,11 +57,19 @@ pass 後、ユーザー確認が必要な事項がなければ Phase 3 へ進む
 3. 検証: `verifier`
    - `test.md` に `TC-*`、test / lint / build / manual check 結果、未確認事項、残リスクを書く。
 
+4. repository maintenance: `repository-maintainer`
+   - 実装差分、追加 / rename / delete された file、変更された skill / agent / docs / tooling 設定を確認する。
+   - docs / references / prose の追従更新を行う。
+   - repo hygiene / tooling 設定は影響確認し、必要な変更は handoff / blocker / review_focus に返す。
+   - 結果、追従不要の理由、Gate 3 で見るべき影響を handoff に残す。
+   - tooling の `behavior_delta` が `changed` の場合は Gate 3 へ進む前に `verifier` へ戻し、影響する check と `test.md` を更新する。
+   - `repository-maintainer` が `blocked` を返した場合、lead は Gate 3 へ進めない。runtime guardrail / CI permission / secret / auth / 権限 / 外部送信 / deploy / publish に触れる blocker は、前工程へ自律差戻しせずユーザー確認または change-request 候補にする。
+
 ## Gate 3: 完了レビュー
 
 `quality-reviewer` と `security-reviewer` の 2 人体制で review する。
 
-pass 後、ユーザー確認が必要な事項がなければ完了する。
+Gate 3 では repository maintenance 後の全変更セット（tracked diff、staged diff、untracked file list / content）と handoff を review 入力に含める。pass 後、ユーザー確認が必要な事項がなければ完了する。
 
 ## 調査の扱い
 

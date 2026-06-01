@@ -1,5 +1,5 @@
 name = "requirements-engineer"
-description = "Requirements agent that turns the user request and investigation findings into requirements.md with scope, non-scope, REQ, AC, constraints, assumptions, and open questions."
+description = "ユーザー要求と調査結果を、scope、non-scope、REQ、AC、制約、前提、未確認事項を含む requirements.md へ整理する時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

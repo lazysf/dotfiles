@@ -1,6 +1,6 @@
 ---
 name: scribe
-description: README、既存 docs、運用手順、設計メモ、request folder、PRD、要件定義、基本設計、詳細設計、task、実装記録、検証結果、review、traceability matrix、CONTEXT、ADR などの doc / artifact 作成・更新・整形に使う。一次情報と確認済み文脈に沿って、format、文体、章構成、ID、リンク、path、command、未確認事項を整える。合意形成は `grill`。
+description: README、既存 docs、運用手順、設計メモ、request folder、PRD、要件定義、基本設計、詳細設計、task、実装記録、検証結果、review、traceability matrix、CONTEXT、ADR などの doc / artifact 作成・更新・整形に使う。一次情報と確認済み文脈に沿って、format、文体、章構成、ID、リンク、path、command、未確認事項を整える。変更後の参照ずれや docs 追従更新は `doc-followup`、合意形成は `grill`。
 metadata:
   short-description: 文書と成果物の整形
 ---
@@ -48,6 +48,7 @@ metadata:
 - 未確認事項は断定せず、確認待ちとして分ける。
 - 小さな変更に合わせて文書全体を書き直さない。
 - 共有理解、要件、成功条件、scope、実装 readiness の合意形成は `grill`。
+- 変更後の README、index、ADR、notes、CONTEXT、skill references の追従更新は `doc-followup`。
 - ADR 作成や状態更新は、ユーザーの明示依頼、または方針変更・採用判断の合意がある場合に実行する。合意が曖昧な場合だけ提案してから実行する。
 - 方針変更や既存判断の補正は既存 ADR 本文を上書きせず、新規 ADR と状態・関係メタデータで履歴として反映する。
 - 秘密情報、認証情報、private config、未公開個人情報は durable artifact に残さない。
