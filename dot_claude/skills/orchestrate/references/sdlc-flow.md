@@ -20,6 +20,8 @@ Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 �
 
 迷う場合は上位 tier に倒す。triage 結果（tier と根拠）は `request.md` に残す。ただし `inquiry` は request folder の作成を強制しない（次節参照）。
 
+全 tier 共通で、停止線接触・Gate fail の同じ blocking 繰り返し・ユーザー入力必須の決定 を除き、orchestrate は triage 後から tier に応じた最終 Gate (`inquiry` Phase 0 / `micro` 自己確認 / `standard` 統合 Gate / `full` Gate 3) の pass まで自走する。Phase / Gate ごとの完了報告は都度送らず、最終 Gate pass 時に lead がまとめて変更内容・検証結果・未確認事項・次アクションを 1 回で報告する。commit / push は依然としてユーザー指示で実行する。
+
 ### inquiry
 
 - 対象: コード変更・差分作成・実装を伴わない質問、相談、調査依頼。「○○の仕組みは？」「△△の方針はどう考えるべき？」「□□を調べて」など。
