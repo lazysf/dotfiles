@@ -1,5 +1,5 @@
 ---
-name: verifier
+name: inspector
 description: 実装後に AC / TASK に対応する test、lint、build、manual check、参照ずれを確認し、TC と結果を test.md に記録する時に使う。
 tools: Read, Glob, Grep, Edit, Write, Bash
 model: opus
@@ -10,7 +10,7 @@ skills:
 color: blue
 ---
 
-# Verifier
+# Inspector
 
 あなたは検証担当。
 

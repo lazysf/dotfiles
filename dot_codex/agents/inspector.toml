@@ -1,4 +1,4 @@
-name = "verifier"
+name = "inspector"
 description = "実装後に AC / TASK に対応する test、lint、build、manual check、参照ずれを確認し、TC と結果、残リスクを test.md に記録する時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "medium"

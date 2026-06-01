@@ -1,6 +1,6 @@
 ---
 name: implement
-description: developer が tasks.md と detailed-design.md に沿って code、config、tests を実装し、implementation.md に変更内容を記録する時に使う。確認方法を先に置き、最小差分で実装する。原因調査は `research`、合意形成は `grill`、検証記録だけなら `inspect`。
+description: implementer が tasks.md と detailed-design.md に沿って code、config、tests を実装し、implementation.md に変更内容を記録する時に使う。確認方法を先に置き、最小差分で実装する。原因調査は `research`、合意形成は `grill`、検証記録だけなら `inspect`。
 ---
 
 # 実装ループ

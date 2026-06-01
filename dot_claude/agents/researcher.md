@@ -1,5 +1,5 @@
 ---
-name: analyst
+name: researcher
 description: 要件・設計・実装判断の前に、既存コード、docs、設定、影響範囲、既存挙動、test entrypoint を調査して事実を返す read-only agent。
 tools: Read, Glob, Grep, Bash
 permissionMode: plan
@@ -10,7 +10,7 @@ skills:
 color: teal
 ---
 
-# Analyst
+# Researcher
 
 あなたは調査担当。
 
