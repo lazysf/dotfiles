@@ -136,6 +136,8 @@
 - 例: 「この判断を ADR として残したい」「この ADR はもう置き換えられた」
 - 観測ポイント:
   - ADR が通常知見と混ざらず、状態付き台帳として扱われる
+  - 方針変更や既存判断の補正は既存 ADR 本文を書き換えず、新 ADR として記録される
+  - 旧 ADR は `Status`、`Superseded-By`、`Amended by` などの状態・関係メタデータだけが更新される
   - 新規作成、採用、旧 ADR の退役が順序付き action として扱われる
   - 手順メモや運用メモが ADR に再流入していない
   - 状態モデルやメタデータ、運用フローの詳細は [ADR Ledger Model](./adr-ledger-model.md) を正本にする
@@ -157,7 +159,7 @@
 - 例: 「この ADR を採用済みにしたい」「ADR 作成後に Accepted へ進めたい」
 - 観測ポイント:
   - ADR の `Accepted` 化が commit 作成と切り離されている
-  - 採用判断が明示された場合だけ `scribe` で状態更新される
+  - 採用判断が明示された場合だけ `scribe` で `Accepted` 作成または状態更新される
   - `Superseded` は、新 ADR 側に対象 ADR を指す `Supersedes` が明示されている場合だけ更新される
   - 受理や supersede の扱いが状態付き台帳モデルと整合している
   - ADR lifecycle の詳細は [ADR Ledger Model](./adr-ledger-model.md) と `scribe` skill を正本にする
@@ -195,7 +197,7 @@
 
 - 例: 「この ADR を Accepted にしたい」「Supersedes に合わせて旧 ADR を Superseded にしたい」
 - 観測ポイント:
-  - `scribe` の状態更新が `grill` で確認した採用判断や supersede 根拠に沿っている
+  - `scribe` の状態更新が、ユーザー依頼、会話上の合意、または `grill` で確認した採用判断や supersede 根拠に沿っている
   - supersede 更新が明示根拠のある場合だけ行われる
   - 詳細な更新条件は [ADR Ledger Model](./adr-ledger-model.md) と `scribe` skill を正本にする
 
@@ -299,3 +301,6 @@
 - [ADR 0007](../adr/0007-retire-harness-verifier-script.md)
 - [ADR 0008](../adr/0008-keep-git-operation-surface-minimal.md)
 - [ADR 0018](../adr/0018-keep-git-mutation-rules-prompted.md)
+- [ADR 0020](../adr/0020-import-claude-sdlc-workflow-to-codex.md)
+- [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md)
+- [ADR 0022](../adr/0022-preserve-adr-body-history.md)

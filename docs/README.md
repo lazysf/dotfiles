@@ -33,9 +33,12 @@
   - [0017-consolidate-planning-skill-surface.md](./adr/0017-consolidate-planning-skill-surface.md)
   - [0018-keep-git-mutation-rules-prompted.md](./adr/0018-keep-git-mutation-rules-prompted.md)
   - [0019-split-planning-and-docs-surface.md](./adr/0019-split-planning-and-docs-surface.md)
+  - [0020-import-claude-sdlc-workflow-to-codex.md](./adr/0020-import-claude-sdlc-workflow-to-codex.md)
+  - [0021-allow-direct-adr-updates-from-user-agreement.md](./adr/0021-allow-direct-adr-updates-from-user-agreement.md)
+  - [0022-preserve-adr-body-history.md](./adr/0022-preserve-adr-body-history.md)
 - `dot_codex/private_AGENTS.md.tmpl`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
-- `dot_codex/agents/`: `~/.codex/agents/` へ展開する read-only reviewer agent を置く
+- `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex multi-agent workflow 用の specialist agent / reviewer agent を置く
 - `dot_codex/rules/`: `~/.codex/rules/` へ展開する allow / forbidden の機械的 guard を置く
 - `dot_claude/CLAUDE.md`: `~/.claude/CLAUDE.md` へ展開する Claude Code surface 側の運用契約を置く
 - `dot_claude/skills/`: `~/.claude/skills/` へ展開する skill 手順と、その `references/` を置く

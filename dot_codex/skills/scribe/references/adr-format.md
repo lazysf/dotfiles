@@ -68,10 +68,19 @@ relationship metadata を推測で補わない。`Supersedes` は置換、`Amend
 - 短い kebab-case slug を使う。
 - `docs/README.md` が存在する場合は、新しい ADR を一覧へ追加する。
 
+## 既存 ADR の編集境界
+
+ADR 本文は履歴として扱い、採用済み判断の本文、理由、影響を後続方針に合わせて書き換えない。
+
+- 方針変更や既存判断の補正は新しい ADR として作る。
+- 置き換える場合は新 ADR に `Supersedes`、旧 ADR に `Superseded-By` を付ける。
+- 置き換えずに補足する場合は新 ADR に `Amends`、旧 ADR に `Amended by` を付ける。
+- 既存 ADR 本文の編集は typo、リンク切れ、Markdown の明白な破損など、判断内容を変えない修正に限る。
+
 ## ライフサイクル更新
 
-- 新しい ADR は `Proposed` から始める。
-- ユーザーが採用を明示した場合だけ `Accepted` にする。
+- 新しい ADR は、採用判断が未確定なら `Proposed`、ユーザーの明示依頼または会話上の合意で採用済みなら `Accepted` として作る。
+- 既存 ADR は、ユーザーが採用を明示した場合だけ `Accepted` にする。
 - ユーザーが不採用を明示した場合だけ `Rejected` にする。
 - 新しい ADR が `Supersedes` に古い ADR を明示している場合だけ、古い ADR を `Superseded` にする。
 - 新しい ADR が `Amends` に古い ADR を明示している場合だけ、古い ADR に `Amended by` を追加する。
