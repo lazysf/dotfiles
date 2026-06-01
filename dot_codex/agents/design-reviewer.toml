@@ -1,5 +1,5 @@
 name = "design-reviewer"
-description = "Read-only Gate 2 reviewer for requirements.md, basic-design.md, detailed-design.md, and tasks.md traceability, boundaries, and implementation readiness."
+description = "Gate 2 で requirements.md、basic-design.md、detailed-design.md、tasks.md を read-only review し、対応関係、境界、実装 readiness を確認する時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

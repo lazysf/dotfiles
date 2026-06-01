@@ -1,5 +1,5 @@
 name = "requirements-reviewer"
-description = "Read-only Gate 1 reviewer for request.md and requirements.md consistency, scope, observable AC, and artifact responsibility boundaries."
+description = "Gate 1 で request.md と requirements.md を read-only review し、元要求との整合、scope、観測可能な AC、artifact 責務境界を確認する時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

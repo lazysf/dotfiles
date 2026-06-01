@@ -24,7 +24,7 @@ metadata:
 
 - `acceptance`: feature / maintenance の確認で使う。成功条件、期待挙動、保護したい既存挙動に対して確認する。
 - `verification`: bugfix / security / quality / compat の確認で使う。修正前症状、対象リスク、品質ギャップ、外部変化への追従前ギャップに対して確認する。
-- `consistency`: 変更差分の参照、docs、設定、ignore の追従漏れ確認で使う。詳細は [references/consistency-checks.md](references/consistency-checks.md) を読む。
+- `consistency`: 変更差分の参照、docs、設定、ignore の追従漏れ確認で使う。docs 追従更新まで行う依頼では `doc-followup` を使う。詳細は [references/consistency-checks.md](references/consistency-checks.md) を読む。
 - 迷う場合は、新規価値は `acceptance`、既存問題の修正効果は `verification`、参照ずれは `consistency`。
 
 ## 境界
@@ -33,7 +33,7 @@ metadata:
 - security は hardening の効果と副作用、quality は対象品質特性、compat は外部変化への追従成立を見る。
 - 実行できない確認は、理由と代替確認をセットで残す。
 - 同一条件で結果がぶれる場合は、未解消リスクとして扱う。
-- `consistency` で事実だけで判断できる漏れを見つけた場合は同じ変更単位で修正してよい。
+- `consistency` で docs 追従漏れを見つけた場合、更新まで行う依頼では `doc-followup` を使う。
 - `consistency` で公開インターフェース、既存挙動、削除判断、永続化、認証認可、権限に触れる判断が必要な場合は修正せず確認事項に残す。
 - 実装前に確認方法を置く段階は `implementation`。
 

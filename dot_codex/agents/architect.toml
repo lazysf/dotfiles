@@ -1,5 +1,5 @@
 name = "architect"
-description = "Design agent that turns requirements and investigation findings into basic-design.md and detailed-design.md with responsibility boundaries, interfaces, data flow, and test viewpoints."
+description = "requirements.md と調査結果を、責務境界、interface、data flow、test 観点を含む basic-design.md と detailed-design.md へ落とす時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"

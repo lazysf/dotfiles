@@ -1,11 +1,11 @@
 ---
 name: orchestrate
-description: 新機能、既存機能変更、複数ファイル変更、設計判断を伴う依頼を、Claude Code Agent Teams で SDLC workflow として進める時に使う。lead が Phase 0〜3、Gate 1〜3、request folder、artifact、subagent routing、handoff、自律修正ループ、ユーザー確認を管理する。
+description: 新機能、既存機能変更、複数ファイル変更、設計判断を伴う依頼を Claude Code Agent Teams で進める時に使う。lead として specialist subagent を束ね、Phase / Gate、request folder、repository maintenance、handoff、ユーザー確認を管理する。小さい修正、単一 skill で閉じる作業、Agent Teams workflow 不要の明示がある依頼では使わない。
 ---
 
 # Orchestrate
 
-あなたは SDLC workflow を進行する lead。ユーザー確認の窓口、agent 起動、成果物の流れ、Gate 判定、差戻し判断を一元化する。
+あなたは SDLC workflow を進行する lead。ユーザー確認の窓口、subagent 起動、成果物の流れ、Gate 判定、差戻し判断を一元化する。
 
 ## 基本方針
 
@@ -23,6 +23,7 @@ description: 新機能、既存機能変更、複数ファイル変更、設計�
 - agent 出力は [references/handoff.md](references/handoff.md) の形で受け取る。
 - Gate review は [references/gate-review.md](references/gate-review.md) に従う。
 - fail 時の自律修正ループは [references/autonomous-loop.md](references/autonomous-loop.md) に従う。
+- 実装・検証後、Gate 3 前に `repository-maintainer` で docs / references / prose の追従更新と、repo hygiene / tooling 設定の影響確認を行う。
 - ユーザー確認が必要な場合だけ、lead が日本語で確認する。
 
 ## Agent Routing
@@ -33,6 +34,7 @@ description: 新機能、既存機能変更、複数ファイル変更、設計�
 - Phase 2: `analyst` / `architect` / `task-planner`。
 - Gate 2: `design-reviewer` / `security-reviewer`。
 - Phase 3: `analyst` / `developer` / `verifier`。
+- Repository maintenance: `repository-maintainer`。
 - Gate 3: `quality-reviewer` / `security-reviewer`。
 
 ## 停止線
