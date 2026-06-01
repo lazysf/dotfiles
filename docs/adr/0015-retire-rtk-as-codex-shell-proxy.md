@@ -11,7 +11,7 @@ Codex integration では shell command の自動 rewrite は行われず、agent
 ## Decision
 
 RTK を Codex ハーネスの deployable runtime surface から外す。
-`dot_codex/RTK.md` は管理対象から削除し、`dot_codex/private_AGENTS.md.tmpl` から `~/.codex/RTK.md` 参照を削除する。
+`dot_codex/RTK.md` は管理対象から削除し、`dot_codex/AGENTS.md` から `~/.codex/RTK.md` 参照を削除する。
 shell command は通常の Codex shell 実行と approval / rule 境界で扱う。
 
 ## Consequences

@@ -10,7 +10,7 @@
 ## Decision
 
 RTK を共通 Codex ハーネスの deployable runtime surface として採用する。
-`dot_codex/RTK.md` を deployable artifact として管理し、`dot_codex/private_AGENTS.md.tmpl` から展開先 home directory に合わせた薄い参照だけを置く。
+`dot_codex/RTK.md` を deployable artifact として管理し、`dot_codex/AGENTS.md` から展開先 home directory に合わせた薄い参照だけを置く。
 `dot_codex/RTK.md` の本文は `rtk init -g --codex` が生成した内容を維持し、repo 固有の運用境界は ADR と既存の rule 設計で扱う。
 
 ## Consequences

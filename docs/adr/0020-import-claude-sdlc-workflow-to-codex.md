@@ -24,7 +24,7 @@ Claude Code 側の workflow の考え方を Codex にも取り込み、main セ�
 ## Consequences
 
 - ADR 0016 の「Codex reviewer agent は 2 個」という制約は退役する。
-- `dot_codex/private_AGENTS.md.tmpl` は固定の細かい作業手順ではなく、lead / workflow / request folder の薄い入口案内を持つ。
+- `dot_codex/AGENTS.md` は固定の細かい作業手順ではなく、lead / workflow / request folder の薄い入口案内を持つ。
 - `docs/requests/<slug>/` は個別要求に閉じる SDLC artifact の既定置き場になる。
 - Gate review 用 reviewer は workflow の一部として増えるが、reviewer は read-only を維持する。
 - `dot_codex/private_config.toml.tmpl` の既存 `multi_agent = true` は維持し、`[agents] max_threads / max_depth` を workflow の同時実行と深さを制御する設定として扱う。

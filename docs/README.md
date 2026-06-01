@@ -38,7 +38,7 @@
   - [0022-preserve-adr-body-history.md](./adr/0022-preserve-adr-body-history.md)
   - [0023-add-doc-followup-skill.md](./adr/0023-add-doc-followup-skill.md)
   - [0024-add-repository-maintainer-agent.md](./adr/0024-add-repository-maintainer-agent.md)
-- `dot_codex/private_AGENTS.md.tmpl`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
+- `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex multi-agent workflow 用の specialist agent / reviewer agent を置く
 - `dot_codex/rules/`: `~/.codex/rules/` へ展開する allow / forbidden の機械的 guard を置く
