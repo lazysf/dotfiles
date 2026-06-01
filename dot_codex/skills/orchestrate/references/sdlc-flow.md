@@ -2,7 +2,7 @@
 
 仕様駆動開発のフルフロー（full tier）は、Phase 0〜3 と Gate 1〜3 で進める。
 
-全依頼はまず Phase 0 を通し、その後 Triage で規模を判定して tier を決める。tier は通す Phase / Gate を変える。`micro` / `standard` は full の一部工程を省略する。依頼の大小で入口を分けず、入口は常に Phase 0 + Triage に一本化する。これは「どのフローで進めるか」をその場で迷わないため、かつ軽い依頼に full の重い工程を機械的に課さないため。
+全依頼はまず Phase 0 を通し、その後 Triage で性質と規模を判定して tier を決める。tier は通す Phase / Gate を変える。`inquiry` は質問・相談・調査向けの軽量経路で Phase 0 のみで完了する。`micro` / `standard` は full の一部工程を省略する。依頼の種類で入口を分けず、入口は常に Phase 0 + Triage に一本化する。これは「どのフローで進めるか」をその場で迷わないため、かつ軽い依頼に full の重い工程を機械的に課さないため。
 
 ## Phase 0: 要求・要望入力
 
@@ -13,11 +13,20 @@ lead がユーザーの要求、背景、期待状態、不明点を受け取り
 Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 段。
 
 1. 停止線接触を判定する。公開挙動 / 公開 API / data format / 永続化 / auth / 権限 / secret / 新依存 / 破壊的操作 / 本番設定 のいずれかに触れるなら、規模に関わらず `full` にする。停止線接触の影響は規模では測れないため、安全側に倒す。
-2. 接触しないなら規模で振り分ける。
-   - 自明・単一箇所・設計判断なし -> `micro`
+2. 接触しないなら性質と規模で振り分ける。
+   - コード変更・差分作成・実装を伴わない質問・相談・調査 -> `inquiry`
+   - 自明・単一箇所・設計判断なしのコード変更 -> `micro`
    - 複数 file または軽い設計判断あり -> `standard`
 
-迷う場合は上位 tier に倒す。triage 結果（tier と根拠）は `request.md` に残す。
+迷う場合は上位 tier に倒す。triage 結果（tier と根拠）は `request.md` に残す。ただし `inquiry` は request folder の作成を強制しない（次節参照）。
+
+### inquiry
+
+- 対象: コード変更・差分作成・実装を伴わない質問、相談、調査依頼。「○○の仕組みは？」「△△の方針はどう考えるべき？」「□□を調べて」など。
+- flow: Phase 0 -> lead が直接回答（必要なら `analyst` を 1 回呼ぶ）-> 完了。
+- Gate: なし。
+- artifact: 任意。triage 記録を残したい場合は `request.md` のみで十分。継続して同じテーマで質問が続くなら昇格を検討する。
+- 昇格条件: 途中でコード変更・実装・既存機能変更が必要になった時点で、lead が tier を再判定し `micro` / `standard` / `full` のいずれかへ移す。
 
 ### micro
 
@@ -37,7 +46,7 @@ Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 �
 - flow: 下の Phase 1〜3 と Gate 1〜3 を全て通す。
 - Gate: Gate 1 / 2 / 3 を 2 人体制で通す。
 
-以下の Phase 1〜3 / Gate 1〜3 は full の詳細。`standard` は各工程を軽量化または skip し、`micro` は実装と自己確認のみに省く。
+以下の Phase 1〜3 / Gate 1〜3 は full の詳細。`standard` は各工程を軽量化または skip し、`micro` は実装と自己確認のみに省く。`inquiry` は Phase 0 のみで完了するため Phase 1 以降を通さない。
 
 ## Phase 1: 要件フェーズ
 

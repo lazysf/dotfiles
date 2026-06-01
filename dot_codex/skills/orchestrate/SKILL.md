@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: コード変更・実装・既存機能変更・複数ファイル変更・設計判断を伴う開発依頼の進行入口として常に使う。lead が Phase 0 で triage し、規模に応じて micro / standard / full の tier に振り分けて Phase / Gate、request folder、subagent routing、handoff、repository maintenance、差戻し、ユーザー確認を管理する。typo / 1 行修正のような極小依頼から新機能まで、まずこの skill を通す。単なる質問・相談・調査だけの依頼には使わない。
+description: 全依頼の進行入口として常に使う。コード変更・実装・既存機能変更・複数ファイル変更・設計判断はもちろん、質問・相談・調査だけの依頼であっても、まずこの skill を通す。lead が Phase 0 で triage し、規模と性質に応じて inquiry / micro / standard / full の tier に振り分けて Phase / Gate、request folder、subagent routing、handoff、repository maintenance、差戻し、ユーザー確認を管理する。inquiry tier は質問・相談・調査向けの軽量経路で、Phase / Gate / artifact を強制せず lead が直接回答する。typo / 1 行修正のような極小依頼から新機能まで、scope に関わらずまずこの skill を通す。
 ---
 
 # Orchestrate
@@ -9,7 +9,7 @@ description: コード変更・実装・既存機能変更・複数ファイル�
 
 ## 基本方針
 
-- 全依頼を入口として受ける。Phase 0 の後に triage し、`micro` / `standard` / `full` の tier を決める。tier 別に通す Phase / Gate は [references/sdlc-flow.md](references/sdlc-flow.md) に従う。
+- 全依頼を入口として受ける。Phase 0 の後に triage し、`inquiry` / `micro` / `standard` / `full` の tier を決める。tier 別に通す Phase / Gate は [references/sdlc-flow.md](references/sdlc-flow.md) に従う。
 - 1 要求 = 1 request folder（既定 `docs/requests/<slug>/`）。
 - lead は `request.md` と `review.md`、進行判断、ユーザー確認を担当する。
 - 工程 agent は担当 artifact だけ編集する。
@@ -58,7 +58,7 @@ description: コード変更・実装・既存機能変更・複数ファイル�
 
 ## 出力
 
-- `tier`: triage 結果（`micro` / `standard` / `full`）と判定根拠。
+- `tier`: triage 結果（`inquiry` / `micro` / `standard` / `full`）と判定根拠。
 - `phase`: 現在 phase / gate。
 - `artifacts`: 作成・更新・確認した成果物。
 - `agents`: 起動した agent と結果。
