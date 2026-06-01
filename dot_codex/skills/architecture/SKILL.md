@@ -16,7 +16,7 @@ metadata:
 - module、caller、責務、interface、data flow、外部 I/O、security / 権限 / data boundary、テスト入口を地図化する。
 - 既存 domain language を優先し、`CONTEXT.md` にある用語で候補を説明する。
 - ADR と衝突する案は conflict として明示する。
-- architecture 用語の補助が必要な時だけ [references/architecture-language.md](references/architecture-language.md) を読む。
+- basic-design.md / detailed-design.md で構造・責務・境界・data flow を記述する時は、用語の定義と使い分けを [references/architecture-language.md](references/architecture-language.md) に置いているため、記述する前に読んで用語を揃える。
 - friction と改善候補を番号付きで出す。
 - ユーザーが候補を選んだら、制約、守る既存挙動、module shape、interface、tests、移行順序を 1 つずつ grilling する。
 - 実装前に問い詰める状態なら、`grill` へ渡せる粒度で整理する。

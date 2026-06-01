@@ -22,6 +22,8 @@ description: request.md、requirements.md、basic-design.md、detailed-design.md
 
 ## 成果物
 
+各 artifact を作成・更新する時は、章立て・ID 規則・記述順を対応する format reference に定めているため、書き始める前に対象の 1 つを必ず読み、その構成に従う。記憶や推測で書かない。
+
 - Request: [references/request-format.md](references/request-format.md)
 - Requirements: [references/requirements-format.md](references/requirements-format.md)
 - Basic Design: [references/basic-design-format.md](references/basic-design-format.md)
