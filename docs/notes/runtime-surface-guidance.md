@@ -81,3 +81,4 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - [ADR 0026](../adr/0026-add-inquiry-tier-to-orchestrate.md)
 - [ADR 0027](../adr/0027-align-codex-skill-names-with-claude.md)
 - [ADR 0028](../adr/0028-align-agent-names-with-skill-pairs.md)
+- [ADR 0029](../adr/0029-orchestrate-autonomous-run-until-final-gate.md)

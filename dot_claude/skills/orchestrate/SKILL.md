@@ -15,6 +15,7 @@ description: 全依頼の進行入口として常に使う。コード変更・�
 - 工程 agent は担当 artifact だけ編集する。
 - reviewer は read-only。
 - 広い調査は `researcher` に任せる。
+- 停止線接触、Gate fail の同じ blocking 繰り返し、ユーザー入力必須の決定を除き、triage 後から tier に応じた最終 Gate (`inquiry` Phase 0 / `micro` 自己確認 / `standard` 統合 Gate / `full` Gate 3) の pass まで自走する。commit / push は引き続きユーザー指示で実行する。
 - agent から lead への handoff は英語でもよい。ユーザー向けの要約と確認は日本語にする。
 
 ## 手順
@@ -26,6 +27,7 @@ description: 全依頼の進行入口として常に使う。コード変更・�
 - 各 Gate の review に入る前に、判定基準と進め方を [references/gate-review.md](references/gate-review.md) に置いているため読み、それに従う。
 - Gate fail で自律修正に入る時は、ループの手順と停止条件を [references/autonomous-loop.md](references/autonomous-loop.md) に置いているため、修正を始める前に読み従う。
 - 実装・検証後、Gate 3 前に `repository-maintainer` で docs / references / prose の追従更新と、repo hygiene / tooling 設定の影響確認を行う。
+- 自走中の Phase / Gate 進行は、進捗ステータス (短い 1 行) で十分とし、Phase / Gate ごとの完了報告は都度ユーザーに送らない。最終 Gate pass 時に変更内容・検証結果・未確認事項・次アクションを 1 回でまとめて報告する。
 - ユーザー確認が必要な場合だけ、lead が日本語で確認する。
 
 ## Agent Routing
