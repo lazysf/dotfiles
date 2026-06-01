@@ -1,11 +1,11 @@
 ---
 name: grill
-description: 要件整理、仕様化、設計、実装計画の前に、scope、成功条件、制約、検証入口、実装 readiness を対話で固める時に使う。一問ずつ確認し、確定事項だけを doc / artifact に最小反映する。事実調査は `research`、docs 更新は `scribe`、差分作成は `implement`。
+description: 要求、要件、設計、実装計画、実装 readiness の前に、scope、成功条件、制約、検証入口、ユーザー確認事項を一問ずつ固める時に使う。確定事項だけを request folder artifact へ最小反映する。事実調査は `research`、docs 更新は `scribe`、差分作成は `implement`。
 ---
 
 # Grill
 
-実装や文書化に入る前に、共有理解へ到達するまで一問ずつ問い詰める。確定事項だけを適切な doc / artifact に最小反映する。
+実装や文書化に入る前に、共有理解へ到達するまで一問ずつ問い詰める。確定事項だけを適切な artifact に最小反映する。
 
 ## 手順
 
@@ -24,7 +24,7 @@ description: 要件整理、仕様化、設計、実装計画の前に、scope�
 - 小さい追記や未確認事項の移動は `grill` でよい。
 - 新規 artifact、本格 docs 更新、format / ID / traceability 整理は `scribe`。
 - `CONTEXT.md` は glossary として扱い、spec、作業メモ、実装判断、秘密情報を混ぜない。
-- 既存 docs や note を更新する場合は、会話中に確認された evidence に限定し、自然な置き場が不明なら質問を続ける。
+- 既存 docs や artifact を更新する場合は、会話中に確認された evidence に限定し、自然な置き場が不明なら質問を続ける。
 - ADR は作成や状態更新を提案してから `scribe` で扱う。
 - `未確認事項` は確認済み知識として `CONTEXT.md`、ADR、notes に昇格させない。
 - 秘密情報、認証情報、private config、未公開個人情報は durable artifact に残さない。
@@ -35,4 +35,4 @@ description: 要件整理、仕様化、設計、実装計画の前に、scope�
 - architecture 候補探索は `architecture`。
 - docs 本文更新は `scribe`。
 - 差分作成やテスト実装は `implement`。
-- 要件 / 設計 draft の review は `spec-reviewer`、品質 review は `quality-reviewer`、security review は `security-reviewer` reviewer subagent を使う。
+- Gate 1 review は `requirements-reviewer`、Gate 2 design review は `design-reviewer`、品質 review は `quality-reviewer`、security review は `security-reviewer` を使う。

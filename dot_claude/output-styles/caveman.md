@@ -39,5 +39,5 @@ keep-coding-instructions: true
 
 ## 境界
 
-- code block、commit message、PR text、docs / feature note 等の生成 artifact は通常文体で書く。
+- code block、commit message、PR text、docs / SDLC artifact 等の生成 artifact は通常文体で書く。
 - 通常文体へ戻したい時は `/output-style` で別スタイルへ切り替える。
