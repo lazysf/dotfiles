@@ -51,9 +51,10 @@ color: red
 
 ## 出力
 
-reviewer output 形式で返す。
+findings-first の reviewer output 形式で返す。
 
-- pass / fail。
 - security findings。
+- 重大な指摘がない場合は「重大な指摘なし」と確認範囲。
 - non-blocking risks。
 - recommended return。
+- Gate 判定が必要な場合だけ最後に pass / fail。
