@@ -23,6 +23,8 @@ network_access = false
 [features]
 shell_snapshot = true
 multi_agent = true
+# UnderDevelopment flag: request_user_input tool を default mode でも有効化する (openai/codex#12694)
+default_mode_request_user_input = true
 
 [projects."{{ .chezmoi.sourceDir }}"]
 trust_level = "trusted"
