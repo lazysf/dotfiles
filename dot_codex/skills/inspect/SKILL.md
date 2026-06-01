@@ -1,6 +1,6 @@
 ---
-name: verification
-description: 変更後に受け入れ条件、修正効果、hardening 効果、rename / 削除 / path 変更後の参照ずれを確認する時に使う。実行した確認、守った既存挙動、残リスクを整理する。実装前の確認設計は `implementation`。
+name: inspect
+description: 変更後に受け入れ条件、修正効果、hardening 効果、rename / 削除 / path 変更後の参照ずれを確認する時に使う。実行した確認、守った既存挙動、残リスクを整理する。実装前の確認設計は `implement`。
 metadata:
   short-description: 検証手順
 ---
@@ -35,7 +35,7 @@ metadata:
 - 同一条件で結果がぶれる場合は、未解消リスクとして扱う。
 - `consistency` で docs 追従漏れを見つけた場合、更新まで行う依頼では `doc-followup` を使う。
 - `consistency` で公開インターフェース、既存挙動、削除判断、永続化、認証認可、権限に触れる判断が必要な場合は修正せず確認事項に残す。
-- 実装前に確認方法を置く段階は `implementation`。
+- 実装前に確認方法を置く段階は `implement`。
 
 ## 出力
 

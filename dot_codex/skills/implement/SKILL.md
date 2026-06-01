@@ -1,6 +1,6 @@
 ---
-name: implementation
-description: 合意済みの変更をコード、設定、テスト、スクリプトへ実装または修正する時に使う。テスト、再現手順、比較観点などを先に置き、最小差分で実装して再確認する。原因調査は `research`、合意形成は `grill`、変更後の検証整理だけなら `verification`。
+name: implement
+description: 合意済みの変更をコード、設定、テスト、スクリプトへ実装または修正する時に使う。テスト、再現手順、比較観点などを先に置き、最小差分で実装して再確認する。原因調査は `research`、合意形成は `grill`、変更後の検証整理だけなら `inspect`。
 metadata:
   short-description: 実装ループ
 ---

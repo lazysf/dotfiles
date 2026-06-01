@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: 構造改善、責務分担、module boundary、interface、data flow、testability、security boundary を整理する時に使う。module / caller / responsibility / external I/O を地図化し、friction と改善候補を出す。原因調査は `research`、差分作成は `implementation`。
+description: 構造改善、責務分担、module boundary、interface、data flow、testability、security boundary を整理する時に使う。module / caller / responsibility / external I/O を地図化し、friction と改善候補を出す。原因調査は `research`、差分作成は `implement`。
 metadata:
   short-description: architecture 改善
 ---
@@ -35,7 +35,7 @@ metadata:
 - 原因調査は `research`。
 - 実装順序、変更境界、検証方法の合意形成は `grill`。
 - docs / CONTEXT / ADR 反映は `scribe`。
-- 差分作成やテスト修正は `implementation`。
+- 差分作成やテスト修正は `implement`。
 - 品質 review は `quality-reviewer`、security boundary review は `security-reviewer`。
 
 ## 出力
@@ -48,4 +48,4 @@ metadata:
 - `boundary_notes`
 - `next_question`
 
-候補選択後の grilling では、確定事項、未確定事項、次に必要な `grill` / `scribe` / `implementation` を分けて返す。
+候補選択後の grilling では、確定事項、未確定事項、次に必要な `grill` / `scribe` / `implement` を分けて返す。

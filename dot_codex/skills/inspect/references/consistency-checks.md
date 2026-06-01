@@ -16,7 +16,7 @@
 
 - evidence は差分、対象 path 周辺の検索、既存ファイルで確認できる事実に限定する。
 - 公開インターフェース、既存挙動、削除判断、永続化、認証認可、権限に触れる判断は修正せず `remaining_risks` に残す。
-- 実装そのものは `implementation` スキルを使う。
+- 実装そのものは `implement` スキルを使う。
 - 変更後の README、index、ADR、notes、CONTEXT、skill references の追従更新は `doc-followup` スキルを使う。
 - 新規本文作成、artifact 整形、ADR 本文作成を主成果物として扱う場合は `scribe` スキルを使う。
 - 更新先や判断が曖昧で問い詰めが必要な場合は `grill` スキルを使う。

@@ -23,7 +23,7 @@ developer_instructions = """
 
 進め方:
 - 対象 `TASK-*`、`DD-*`、`AC-*` を確認する。
-- 実装手順は `implementation` skill に従う。
+- 実装手順は `implement` skill に従う。
 - `implementation.md` の形式は `scribe` の `references/implementation-format.md` に従う。
 - 実装中に上流問題を見つけたら、要件や設計を書き換えず lead に返す。
 
