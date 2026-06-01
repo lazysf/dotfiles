@@ -1,10 +1,43 @@
 # SDLC Flow
 
-AI 駆動開発 / 仕様駆動開発の基本フローは、Phase 0〜3 と Gate 1〜3 で進める。
+仕様駆動開発のフルフロー（full tier）は、Phase 0〜3 と Gate 1〜3 で進める。
+
+全依頼はまず Phase 0 を通し、その後 Triage で規模を判定して tier を決める。tier は通す Phase / Gate を変える。`micro` / `standard` は full の一部工程を省略する。依頼の大小で入口を分けず、入口は常に Phase 0 + Triage に一本化する。これは「どのフローで進めるか」をその場で迷わないため、かつ軽い依頼に full の重い工程を機械的に課さないため。
 
 ## Phase 0: 要求・要望入力
 
 lead がユーザーの要求、背景、期待状態、不明点を受け取り、`request.md` に整理する。
+
+## Triage: tier 判定
+
+Phase 0 の後、lead が依頼を triage し tier を決める。判定は 2 段。
+
+1. 停止線接触を判定する。公開挙動 / 公開 API / data format / 永続化 / auth / 権限 / secret / 新依存 / 破壊的操作 / 本番設定 のいずれかに触れるなら、規模に関わらず `full` にする。停止線接触の影響は規模では測れないため、安全側に倒す。
+2. 接触しないなら規模で振り分ける。
+   - 自明・単一箇所・設計判断なし -> `micro`
+   - 複数 file または軽い設計判断あり -> `standard`
+
+迷う場合は上位 tier に倒す。triage 結果（tier と根拠）は `request.md` に残す。
+
+### micro
+
+- 対象: typo、1 行修正、自明な機械的変更、単一 skill で閉じる作業（commit / push など）。
+- flow: Phase 0 -> 実装（自明なら lead が直接、必要なら `developer` か該当 skill を 1 つ起動）-> lead 自己確認。
+- Gate: なし。lead が変更内容と確認結果を出力に残す。
+
+### standard
+
+- 対象: 複数 file または軽い設計判断を伴い、停止線に触れない依頼。
+- flow: Phase 0 -> 要件（必要時のみ `requirements-engineer`、軽量なら skip）-> 基本設計（`architect` が `basic-design.md` を軽量に、`detailed-design.md` は必要時のみ）-> タスク分解（必要時のみ）-> 実装 -> 検証 -> repository maintenance -> 統合 Gate。
+- Gate: 1 回。`quality-reviewer` を必須、security に触れる兆候があれば `security-reviewer` を追加。
+
+### full
+
+- 対象: 新機能、停止線接触、不確実性が高い依頼。
+- flow: 下の Phase 1〜3 と Gate 1〜3 を全て通す。
+- Gate: Gate 1 / 2 / 3 を 2 人体制で通す。
+
+以下の Phase 1〜3 / Gate 1〜3 は full の詳細。`standard` は各工程を軽量化または skip し、`micro` は実装と自己確認のみに省く。
 
 ## Phase 1: 要件フェーズ
 

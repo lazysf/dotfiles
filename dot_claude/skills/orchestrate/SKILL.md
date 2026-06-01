@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: 新機能、既存機能変更、複数ファイル変更、設計判断を伴う依頼を Claude Code Agent Teams で進める時に使う。lead として specialist subagent を束ね、Phase / Gate、request folder、repository maintenance、handoff、ユーザー確認を管理する。小さい修正、単一 skill で閉じる作業、Agent Teams workflow 不要の明示がある依頼では使わない。
+description: コード変更・実装・既存機能変更・複数ファイル変更・設計判断を伴う開発依頼の進行入口として常に使う。lead が Phase 0 で triage し、規模に応じて micro / standard / full の tier に振り分けて Phase / Gate、request folder、subagent routing、repository maintenance、handoff、ユーザー確認を管理する。typo / 1 行修正のような極小依頼から新機能まで、まずこの skill を通す。単なる質問・相談・調査だけの依頼には使わない。
 ---
 
 # Orchestrate
@@ -9,6 +9,7 @@ description: 新機能、既存機能変更、複数ファイル変更、設計�
 
 ## 基本方針
 
+- 全依頼を入口として受ける。Phase 0 の後に triage し、`micro` / `standard` / `full` の tier を決める。tier 別に通す Phase / Gate は [references/sdlc-flow.md](references/sdlc-flow.md) に従う。
 - 1 要求 = 1 request folder（既定 `docs/requests/<slug>/`）。
 - lead は `request.md` と `review.md`、進行判断、ユーザー確認を担当する。
 - 工程 agent は担当 artifact だけ編集する。
@@ -18,7 +19,8 @@ description: 新機能、既存機能変更、複数ファイル変更、設計�
 
 ## 手順
 
-- Phase / Gate の流れは [references/sdlc-flow.md](references/sdlc-flow.md) を読む。
+- Phase 0 で要求を受けたら、まず triage して tier を決める。triage と tier 別フローは [references/sdlc-flow.md](references/sdlc-flow.md) を読む。
+- Phase / Gate の流れも同じ [references/sdlc-flow.md](references/sdlc-flow.md) に従う。
 - agent routing と成果物責務を確認する。
 - agent 出力は [references/handoff.md](references/handoff.md) の形で受け取る。
 - Gate review は [references/gate-review.md](references/gate-review.md) に従う。
@@ -54,6 +56,7 @@ description: 新機能、既存機能変更、複数ファイル変更、設計�
 
 ## 出力
 
+- `tier`: triage 結果（`micro` / `standard` / `full`）と判定根拠。
 - `phase`: 現在 phase / gate。
 - `artifacts`: 作成・更新・確認した成果物。
 - `agents`: 起動した agent と結果。
