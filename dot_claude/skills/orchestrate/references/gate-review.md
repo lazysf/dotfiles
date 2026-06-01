@@ -60,10 +60,16 @@ Pass 条件:
 
 - `TC-*` が `AC-*` / `TASK-*` に対応している。
 - security-relevant な元要求や制約が検証対象へ trace されている。
-- 実装差分が scope 内に収まっている。
+- repository maintenance 後の全変更セット（tracked diff、staged diff、untracked file list / content）が scope 内に収まっている。
 - 該当する自動テスト / lint / build の結果が確認済み。
 - 該当しない test / lint / build は、N/A の理由と残リスクが明示されている。
 - 自動化できない確認がある場合、理由、代替確認、残リスクが明示されている。
+- repository maintenance が実行済みで、追従不要の場合も handoff に理由と確認範囲が明示されている。
+- repository maintenance handoff に変更有無、挙動差分、品質ゲート影響、security / CI 影響、確認結果が明示されている。
+- repository maintenance 後の全変更セットが reviewer 入力に含まれている。
+- repository-maintainer が変更したファイル差分は、必要に応じて補助情報として reviewer 入力に含まれている。
+- repository maintenance の `behavior_delta` が `changed` の場合、`verifier` の再確認結果と更新後の `test.md` がある。
+- 未解消の docs / repo hygiene / tooling 追従漏れ、品質ゲート弱体化、security / CI risk が Gate 3 reviewer によって許容不能と判断されていない。
 - `implementation.md` に要件変更や設計変更を勝手に書いていない。
 - `test.md` に仕様変更を混ぜていない。
 - `review.md` に修正済み指摘の詳細ログを残していない。

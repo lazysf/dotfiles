@@ -1,5 +1,5 @@
 name = "developer"
-description = "Implementation agent that follows tasks.md and design artifacts to edit code, config, and tests, then records changed tasks, files, checks, and risks in implementation.md."
+description = "tasks.md と設計 artifact に沿って code、config、tests を実装し、対応 task、変更 file、確認結果、残リスクを implementation.md に記録する時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

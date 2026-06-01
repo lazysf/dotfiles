@@ -1,5 +1,5 @@
 name = "task-planner"
-description = "Task planning agent that decomposes detailed design into tasks.md with DD/AC-linked tasks, implementation order, completion criteria, verification method, and change boundaries."
+description = "詳細設計を、DD / AC に対応する実装 task、実装順序、完了条件、確認方法、変更境界を含む tasks.md へ分解する時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

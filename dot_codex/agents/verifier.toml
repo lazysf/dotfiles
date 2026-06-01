@@ -1,5 +1,5 @@
 name = "verifier"
-description = "Verification agent that checks tests, lint, build, manual checks, and references after implementation, then records TC results and remaining risks in test.md."
+description = "実装後に AC / TASK に対応する test、lint、build、manual check、参照ずれを確認し、TC と結果、残リスクを test.md に記録する時に使う。"
 model = "gpt-5.5"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

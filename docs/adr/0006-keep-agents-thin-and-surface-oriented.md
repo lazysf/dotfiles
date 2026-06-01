@@ -1,7 +1,7 @@
 # 0006: `AGENTS.md` は薄い surface 案内に留める
 
 - Status: Accepted
-- Amended by: 0020
+- Amended by: 0020, 0024
 
 ## Context
 

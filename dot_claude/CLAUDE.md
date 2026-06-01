@@ -28,7 +28,7 @@
 - `~/.claude/CLAUDE.md`: 全 agent が共有する最小契約。
 - `~/.claude/rules/`: 全セッションまたは path 条件で読む短いルール。
 - `~/.claude/skills/`: task-specific な再利用手順。
-- `~/.claude/agents/`: 仕様駆動 workflow を担う専門 agent 群（要件・設計・実装・検証の各役と review 入口）。lead が spawn する specialist。進行は main セッション（lead, `skills/orchestrate`）が決める。
+- `~/.claude/agents/`: 仕様駆動 workflow を担う専門 agent 群（要件・設計・実装・検証・repository maintenance の各役と review 入口）。lead が spawn する specialist。進行は main セッション（lead, `skills/orchestrate`）が決める。
 - `~/.claude/settings.json`: permissions、sandbox、model、language などの機械的設定。
 - 作業対象 repo の `docs/requests/<slug>/`: 個別要求に閉じる SDLC artifact。
 - 作業対象 repo の `docs/notes/`: その repo に閉じる通常知見や背景。

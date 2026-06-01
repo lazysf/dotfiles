@@ -1,5 +1,5 @@
 name = "analyst"
-description = "Read-only analyst for gathering existing-code, docs, config, impact, behavior, and test-entry facts before requirements, design, or implementation decisions."
+description = "要件・設計・実装判断の前に、既存コード、docs、設定、影響範囲、既存挙動、test entrypoint を調査して事実を返す read-only agent。"
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
