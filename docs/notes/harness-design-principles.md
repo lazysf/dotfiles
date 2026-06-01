@@ -1,11 +1,11 @@
 # Harness Design Principles
 
-この文書は、この dotfiles repo で Codex ハーネスを保守するときの repo-level knowledge をまとめたものです。
-`dot_codex/` に置く Codex surface source そのものではなく、保守元 repo で参照する設計原則と採用方針を扱います。
+この文書は、この dotfiles repo で Codex / Claude Code ハーネスを保守するときの repo-level knowledge をまとめたものです。
+`dot_codex/` や `dot_claude/` に置く runtime surface source そのものではなく、保守元 repo で参照する設計原則と採用方針を扱います。
 
 ## 基本原則
 
-- Codex surface source は `dot_codex/` に置き、repo-level knowledge は `docs/` に置く
+- runtime surface source は `dot_codex/` と `dot_claude/` に置き、repo-level knowledge は `docs/` に置く
 - project-specific knowledge は各 project の `docs/` を正本にする
 - multi-context repo では root `CONTEXT-MAP.md` を入口にし、各 `CONTEXT.md` は対象 context の近くに置く
 - 知見は `CONTEXT.md`, `docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/` のどこへ置くかを分ける
@@ -15,8 +15,8 @@
 
 ## この repo で優先すること
 
-- まず repo-level knowledge として調査結果や運用知見を `docs/` に残し、その後で `dot_codex/` に昇格すべきものだけを選ぶ
-- `dot_codex/` の managed surface には、展開後にも価値があり、workspace 横断で再利用するものだけを置く
+- まず repo-level knowledge として調査結果や運用知見を `docs/` に残し、その後で `dot_codex/` / `dot_claude/` に昇格すべきものだけを選ぶ
+- `dot_codex/` / `dot_claude/` の managed surface には、展開後にも価値があり、workspace 横断で再利用するものだけを置く
 - 大きな runtime surface の追加よりも、docs、verification、rules、skills の整合を優先する
 - prefix 付きの workflow 名を増やすより、各 skill の発火条件と説明を揃えることを優先する
 
@@ -24,7 +24,7 @@
 
 ### 1. `AGENTS.md` は長文知識の正本ではなく契約と薄い surface 案内を置く
 
-- `dot_codex/private_AGENTS.md.tmpl` は、共通ハーネスの運用契約と薄い runtime surface 案内を扱う
+- `dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md` は、共通ハーネスの運用契約と薄い runtime surface 案内を扱う
 - repo-level の詳しい背景や判断理由は `docs/notes/` や `docs/adr/` に分ける
 - `AGENTS.md` の責務境界や導線設計の詳細は、関連 ADR や surface 文書を正本にする
 
@@ -33,9 +33,9 @@
 - 通常知見は `docs/notes/`
 - 判断記録は `docs/adr/` の状態付き ADR 台帳として置く
 - context 固有の用語は `CONTEXT.md` に置く
-- 繰り返し使う手順は `dot_codex/skills/`
-- 機械的に守らせたい制約は `dot_codex/rules/`
-- read-only の専門化した補助役は `dot_codex/agents/`
+- 繰り返し使う手順は `dot_codex/skills/` または `dot_claude/skills/`
+- 機械的に守らせたい制約は `dot_codex/rules/`、Claude Code の path 条件付き運用ルールは `dot_claude/rules/`
+- 専門化した補助役は `dot_codex/agents/` または `dot_claude/agents/`
 
 ### 2.5. ADR は状態付き台帳として扱う
 
@@ -79,6 +79,7 @@
 ## 関連文書
 
 - [dot_codex/private_AGENTS.md.tmpl](../../dot_codex/private_AGENTS.md.tmpl)
+- [dot_claude/CLAUDE.md](../../dot_claude/CLAUDE.md)
 - [ADR Ledger Model](./adr-ledger-model.md)
 - [Runtime Surface Guidance](./runtime-surface-guidance.md)
 - [Harness Regression Checks](./harness-regression-checks.md)

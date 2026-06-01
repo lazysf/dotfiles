@@ -66,7 +66,7 @@ uv sync
 ## 管理対象と配布対象
 
 `.chezmoiignore` は、chezmoi で home directory へ配布しない repo 保守用ファイルを定義します。
-`docs/`、`README.md`、`AGENTS.md`、`CONTEXT-MAP.md`、CONTEXT 系ファイル、`mise.toml`、`pyproject.toml`、`uv.lock` などは repo 保守専用のため配布対象外です。
+`docs/`、`README.md`、root `AGENTS.md` / `CLAUDE.md`、`CONTEXT-MAP.md`、CONTEXT 系ファイル、`mise.toml`、`.tombi.toml`、`pyproject.toml`、`uv.lock` などは repo 保守専用のため配布対象外です。
 `dot_codex/CONTEXT.md` と `dot_codex/private_config.toml.tmpl` の展開先になる `.codex/CONTEXT.md` / `.codex/config.toml` も、現在は配布対象外です。
 `dot_config/terminal/Main.terminal` は macOS では展開対象、非 macOS では配布対象外です。
 
@@ -80,5 +80,8 @@ uv sync
 - `docs/notes/`: repo-level の通常知見
 - `docs/adr/`: `Accepted` や `Superseded` を含む状態付き判断台帳
 
-共通ハーネスの source は `dot_codex/` に置きます。
+共通ハーネスの source は `dot_codex/` と `dot_claude/` に置きます。
+root `CLAUDE.md` は Claude Code 向けの repo-local import shim で、root `AGENTS.md` を参照します。
+
 現在 chezmoi の管理対象になる Codex surface は `~/.codex/AGENTS.md`、`~/.codex/skills/`、`~/.codex/agents/`、`~/.codex/rules/` です。
+Claude Code surface は `~/.claude/CLAUDE.md`、`~/.claude/skills/`、`~/.claude/agents/`、`~/.claude/rules/`、`~/.claude/output-styles/`、`~/.claude/settings.json` です。
