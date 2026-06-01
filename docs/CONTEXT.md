@@ -23,7 +23,7 @@ _Avoid_: docs index, README
 **Context**: repo language の境界づけられた領域に対する `CONTEXT.md` glossary。
 _Avoid_: specification, work log, implementation plan
 
-**Grilling**: 実装や文書化の前に、scope、成功条件、制約、検証入口、実装 readiness を一問ずつ確認する workflow。
+**Grilling**: 実装や文書化の前に、scope、成功条件、制約、検証入口、実装 readiness を、関連する未確認事項を 1〜3 問にまとめて確認する workflow。依存して順序が崩れる問いは先行回答を待つ。
 _Avoid_: docs-only update, implementation, review
 
 **Scribing**: README、既存 docs、CONTEXT、ADR などの artifact を一次情報に沿って作成、更新、整形する workflow。

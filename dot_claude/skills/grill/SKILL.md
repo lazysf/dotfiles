@@ -1,11 +1,12 @@
 ---
 name: grill
-description: 要求、要件、設計、実装計画、実装 readiness の前に、scope、成功条件、制約、検証入口、ユーザー確認事項を一問ずつ固める時に使う。確定事項だけを request folder artifact へ最小反映する。事実調査は `research`、docs 更新は `scribe`、差分作成は `implement`。
+description: 要求、要件、設計、実装計画、実装 readiness の前に、scope、成功条件、制約、検証入口、ユーザー確認事項を固める時に使う。関連する未確認事項を 1〜3 問にまとめて確認し、確定事項だけを request folder artifact へ最小反映する。事実調査は `research`、docs 更新は `scribe`、差分作成は `implement`。
 ---
 
 # Grill
 
-実装や文書化に入る前に、共有理解へ到達するまで一問ずつ問い詰める。確定事項だけを適切な artifact に最小反映する。
+実装や文書化に入る前に、共有理解へ到達するまで問い詰める。
+往復の無駄とループを避けるため、関連する未確認事項は 1〜3 問にまとめて聞く。確定事項だけを適切な artifact に最小反映する。
 
 ## 手順
 
@@ -14,7 +15,7 @@ description: 要求、要件、設計、実装計画、実装 readiness の前�
 - どの artifact に反映すべきか迷う時は [references/artifact-routing.md](references/artifact-routing.md) を読む。
 - 要件整理の観点で迷う時は [references/requirements-heuristics.md](references/requirements-heuristics.md) を読む。
 - 技術計画の観点で迷う時は [references/implementation-heuristics.md](references/implementation-heuristics.md) を読む。
-- 最も影響が大きい未確認事項を 1 つだけ質問し、推奨回答を添える。
+- 最も影響が大きい未確認事項を中心に、関連する 1〜3 問をまとめて質問し、各問に推奨回答を添える。互いに依存して順序が崩れる問いは、先行する問いの回答を待ってから次を聞く。
 - 回答を受けたら、確定事項、仮定、未確認事項、docs 更新候補を分ける。
 - 確定事項は、置き場と形式が明確な場合だけ doc / artifact へ最小反映する。
 - 実装へ進む前に、scope、成功条件、変更境界、検証入口、未確認事項、残リスクを明示する。

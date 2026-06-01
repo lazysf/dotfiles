@@ -252,7 +252,7 @@
   - root `CONTEXT.md` は作らない
   - `CONTEXT.md` は glossary と関係性に限定され、spec、作業メモ、実装判断を混ぜない
   - `CONTEXT-MAP.md` と target `.codex/CONTEXT.md` は `.chezmoiignore` で配布対象外になる
-  - `grill me` は `grill` の発火語として扱われ、docs 反映が不要な場合は質問だけを 1 つずつ進める
+  - `grill me` は `grill` の発火語として扱われ、docs 反映が不要な場合は質問だけを進める（関連する未確認事項は 1〜3 問にまとめて聞く）
 
 ### 20. ADR が状態付き軽量 ADR として扱われる
 
