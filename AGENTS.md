@@ -30,7 +30,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 - 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
 - `scribe` 単独で進めない代表例:
-  - root `AGENTS.md` / `CLAUDE.md` と `dot_codex/private_AGENTS.md.tmpl`
+  - root `AGENTS.md` / `CLAUDE.md` と `dot_codex/AGENTS.md`
   - `dot_claude/CLAUDE.md`
   - `dot_codex/skills/**/SKILL.md`
   - `dot_codex/skills/**/references/`、`scripts/`、`assets/` のうち skill の判断や実行に影響するもの
@@ -99,5 +99,5 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 - `docs/notes/`: repo-level の通常知見や背景を置く
 - `docs/adr/`: repo-level の判断記録を置く
 - root `CLAUDE.md`: Claude Code 向けの repo-local import shim を置く
-- `dot_codex/private_AGENTS.md.tmpl`: managed Codex surface 側の運用契約を置く
+- `dot_codex/AGENTS.md`: managed Codex surface 側の運用契約を置く
 - `dot_claude/CLAUDE.md`: managed Claude Code surface 側の運用契約を置く

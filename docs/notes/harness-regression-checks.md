@@ -9,7 +9,7 @@
 - 期待から外れた場合は、`docs/notes/`, `docs/adr/`, `skills/`, `rules/`, `agents/`, config source のどこへ反映すべきかを切り分ける
 - 新しい繰り返し失敗が見つかったら、この文書へ追加する前に `skill` や `rule` へ昇格すべきでないかを確認する
 - 汎用 lint で拾わない repo 固有契約や導線の観点は、この文書で手動確認する
-- 全体契約と薄い surface 案内は `dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md`、surface 設計の背景は [Runtime Surface Guidance](./runtime-surface-guidance.md) を参照する
+- 全体契約と薄い surface 案内は `dot_codex/AGENTS.md` と `dot_claude/CLAUDE.md`、surface 設計の背景は [Runtime Surface Guidance](./runtime-surface-guidance.md) を参照する
 
 ## チェック項目
 
@@ -69,8 +69,8 @@
 
 - 例: 「ハーネスの詳細知識はどこを読めばよいか」
 - 期待:
-  - `dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md` は契約と薄い surface 案内の入口として案内される
-  - `skills / agents / rules / docs` の役割分担は `dot_codex/private_AGENTS.md.tmpl` や `dot_claude/CLAUDE.md` の説明と矛盾しない
+  - `dot_codex/AGENTS.md` と `dot_claude/CLAUDE.md` は契約と薄い surface 案内の入口として案内される
+  - `skills / agents / rules / docs` の役割分担は `dot_codex/AGENTS.md` や `dot_claude/CLAUDE.md` の説明と矛盾しない
   - 補助 skill は主役 skill と混同せずに案内される
   - repo-level の詳細知識は `docs/notes/` に誘導される
   - 判断理由は `docs/adr/` に誘導される
@@ -219,7 +219,7 @@
 - 例: 「バグを直したい」「リファクタしたい」「新機能を追加したい」
 - 観測ポイント:
   - docs 更新後も、主要な依頼が適切な skill / reviewer agent の入口へ案内される
-  - `dot_codex/private_AGENTS.md.tmpl`、`dot_claude/CLAUDE.md`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
+  - `dot_codex/AGENTS.md`、`dot_claude/CLAUDE.md`、surface 文書、各 `SKILL.md` / agent 定義の役割分担が矛盾しない
 
 ### 17.5. リファクタや品質改善の入口が統合後 surface に乗る
 
@@ -278,7 +278,7 @@
 
 - 例: 「multi-agent workflow で進めたい」「quality-reviewer に差分レビューを依頼したい」
 - 観測ポイント:
-  - `dot_codex/private_AGENTS.md.tmpl` に、main セッションが lead として `orchestrate` skill を使う契約がある
+  - `dot_codex/AGENTS.md` に、main セッションが lead として `orchestrate` skill を使う契約がある
   - Codex では agent 間の直接通信ではなく、lead が handoff、差戻し、再 review、追加調査依頼を仲介する契約がある
   - agent 定義側の `model` / `model_reasoning_effort` / `sandbox_mode` / instructions を有効にする目的が崩れていない
   - read-only reviewer は `sandbox_mode = "read-only"` を維持している

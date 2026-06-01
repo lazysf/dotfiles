@@ -24,7 +24,7 @@
 
 ### 1. `AGENTS.md` は長文知識の正本ではなく契約と薄い surface 案内を置く
 
-- `dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md` は、共通ハーネスの運用契約と薄い runtime surface 案内を扱う
+- `dot_codex/AGENTS.md` と `dot_claude/CLAUDE.md` は、共通ハーネスの運用契約と薄い runtime surface 案内を扱う
 - repo-level の詳しい背景や判断理由は `docs/notes/` や `docs/adr/` に分ける
 - `AGENTS.md` の責務境界や導線設計の詳細は、関連 ADR や surface 文書を正本にする
 
@@ -81,7 +81,7 @@
 
 ## 関連文書
 
-- [dot_codex/private_AGENTS.md.tmpl](../../dot_codex/private_AGENTS.md.tmpl)
+- [dot_codex/AGENTS.md](../../dot_codex/AGENTS.md)
 - [dot_claude/CLAUDE.md](../../dot_claude/CLAUDE.md)
 - [ADR Ledger Model](./adr-ledger-model.md)
 - [Runtime Surface Guidance](./runtime-surface-guidance.md)

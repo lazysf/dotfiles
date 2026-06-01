@@ -1,8 +1,8 @@
 # Runtime Surface Guidance
 
-この文書は、`dot_codex/private_AGENTS.md.tmpl`、`dot_claude/CLAUDE.md`、各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
+この文書は、`dot_codex/AGENTS.md`、`dot_claude/CLAUDE.md`、各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
-現在の managed surface は、`dot_codex/private_AGENTS.md.tmpl`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/`、`dot_claude/CLAUDE.md`、`dot_claude/skills/`、`dot_claude/agents/`、`dot_claude/rules/`、`dot_claude/output-styles/`、`dot_claude/settings.json` とする。skill 名の命名規約は kebab-case に統一する。
+現在の managed surface は、`dot_codex/AGENTS.md`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/`、`dot_claude/CLAUDE.md`、`dot_claude/skills/`、`dot_claude/agents/`、`dot_claude/rules/`、`dot_claude/output-styles/`、`dot_claude/settings.json` とする。skill 名の命名規約は kebab-case に統一する。
 `caveman`、`git-commit`、`git-push` は明示依頼で使う手動入口とし、それ以外の skill は文脈上必要なら自動使用する入口として扱う。
 root `CLAUDE.md` は repo-local import shim、`dot_codex/CONTEXT.md` と `dot_codex/private_config.toml.tmpl` の target は repo 内の参照用 source として現在 `.chezmoiignore` で配布対象外にする。managed surface の実効確認では `chezmoi managed` を正本にする。
 
@@ -30,7 +30,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 ## 導線の考え方
 
-固定の細かい代表導線は `dot_codex/private_AGENTS.md.tmpl` や `dot_claude/CLAUDE.md` に持たせない。multi-agent workflow の流れは `orchestrate` skill の references を正本にする。
+固定の細かい代表導線は `dot_codex/AGENTS.md` や `dot_claude/CLAUDE.md` に持たせない。multi-agent workflow の流れは `orchestrate` skill の references を正本にする。
 実行時の入口判断は、要求分類表ではなく、各 `SKILL.md` の description、agent 定義、ユーザーが明示した依頼語、既存 docs / ADR / code で確認できる事実に基づいて行う。
 迷う場合は、観測事実の取得を `research`、要件整理や実装前の変更境界、検証入口の問い詰めを `grill`、doc / artifact の作成・更新・整形を `scribe`、変更後の docs 追従更新を `doc-followup` に寄せる。実装は Codex では `implementation`、Claude Code では `implement`、変更後確認は Codex では `verification`、Claude Code では `inspect` を使う。workflow 内の実装後 repo hygiene / docs / tooling 設定の仕上げは `repository-maintainer` agent を使う。
 
@@ -44,7 +44,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - generic review から `security-reviewer` への自動昇格は行わない
 - `grill` は問い詰めと共有理解の整理専用であり、review 本体を担わない
 - reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
-- `docs/README.md` は index、`dot_codex/private_AGENTS.md.tmpl` と `dot_claude/CLAUDE.md` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
+- `docs/README.md` は index、`dot_codex/AGENTS.md` と `dot_claude/CLAUDE.md` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
 
 ## Frontmatter Description 設計ルール
 
