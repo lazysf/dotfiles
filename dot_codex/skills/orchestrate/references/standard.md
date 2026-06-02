@@ -104,7 +104,7 @@
 - agent: `quality-reviewer` / `security-reviewer`
 - artifact: `review.md`
 - format: [review-format.md](../../scribe/references/review-format.md)
-- 進め方: `quality-reviewer` は必須。Gate 3 前に Triage 停止線と Security-Relevant Actions を再評価し、該当、missing、unknown のいずれかなら `security-reviewer` も起動する。pass 後、lead が変更内容、検証結果、残リスク、次アクションをまとめ、ユーザー承認を得て完了する。
+- 進め方: `quality-reviewer` は必須。Gate 3 前に Triage 停止線と Security-Relevant Actions を再評価し、該当、missing、unknown のいずれかなら `security-reviewer` も起動する。pass 後、lead が変更内容、検証結果、残リスク、次アクションを確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず完了する。
 
 ## 追加 reference
 
@@ -128,4 +128,4 @@
 - `requirements.md` / `tasks.md` を省略した場合、`implementation.md` / `test.md` / Gate 3 は、実装前に確定した `request.md` の scope / acceptance / 実装範囲 / 省略理由を trace 元にする。
 - 実装後に作る `implementation.md` / `test.md` / repository maintenance handoff は記録と検証用であり、実装可否を判断する上流 artifact の代替にしない。
 - standard の Gate は Gate 3 のみ。`quality-reviewer` 必須、Triage 停止線または Security-Relevant Actions が該当、missing、unknown の場合は `security-reviewer` 追加。
-- Phase / Gate ごとの完了報告は不要。Gate 3 pass 時に変更内容・検証結果・未確認事項・次アクションをまとめ、ユーザー承認を得る。
+- Phase / Gate ごとの完了報告は不要。Gate 3 pass 時に変更内容・検証結果・未確認事項・次アクションをまとめ、ユーザー確認が必要な事項がなければ承認待ちを挟まず完了する。
