@@ -48,6 +48,11 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 - 誤字修正、単純な diff 確認、commit / push、合意済み文言の機械的反映、パスや現状確認だけの場合は、`skill-creator` や公式情報確認を必須とはしない。ただし、scripts / references / trigger / 権限 / secret / 外部 I/O / 実行挙動に触れる変更は除く
 
+## Agent / Subagent 起動
+
+- `orchestrate` workflow 上で必要と定義された repo-local / managed agent / subagent は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい
+- この許可は agent / subagent 起動だけを対象にする。各 agent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する
+
 ## Codex 本体に関する作業
 
 - Codex の設定、権限、実行環境、AGENTS.md、MCP、hooks、rules、skills、subagents、plugins、CLI / app / IDE extension、運用方針に関わる判断を行う場合は、事前に [Codex Docs](https://developers.openai.com/codex) と [Docs MCP](https://developers.openai.com/learn/docs-mcp) を参照する

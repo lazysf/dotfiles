@@ -38,6 +38,15 @@
   - [0022-preserve-adr-body-history.md](./adr/0022-preserve-adr-body-history.md)
   - [0023-add-doc-followup-skill.md](./adr/0023-add-doc-followup-skill.md)
   - [0024-add-repository-maintainer-agent.md](./adr/0024-add-repository-maintainer-agent.md)
+  - [0025-orchestrate-triage-tier-routing.md](./adr/0025-orchestrate-triage-tier-routing.md)
+  - [0026-add-inquiry-tier-to-orchestrate.md](./adr/0026-add-inquiry-tier-to-orchestrate.md)
+  - [0027-align-codex-skill-names-with-claude.md](./adr/0027-align-codex-skill-names-with-claude.md)
+  - [0028-align-agent-names-with-skill-pairs.md](./adr/0028-align-agent-names-with-skill-pairs.md)
+  - [0029-orchestrate-autonomous-run-until-final-gate.md](./adr/0029-orchestrate-autonomous-run-until-final-gate.md)
+  - [0030-split-orchestrate-tier-flow-references.md](./adr/0030-split-orchestrate-tier-flow-references.md)
+  - [0031-add-gate-pass-user-approval-checkpoints.md](./adr/0031-add-gate-pass-user-approval-checkpoints.md)
+  - [0032-auto-skip-gate-pass-approval-when-no-user-decision.md](./adr/0032-auto-skip-gate-pass-approval-when-no-user-decision.md)
+  - [0033-preauthorize-orchestrate-workflow-agent-spawn.md](./adr/0033-preauthorize-orchestrate-workflow-agent-spawn.md)
 - `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex multi-agent workflow 用の specialist agent / reviewer agent を置く

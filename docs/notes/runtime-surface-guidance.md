@@ -9,7 +9,7 @@ root `CLAUDE.md` は repo-local import shim、`dot_codex/CONTEXT.md` と `dot_co
 ## Surface の責務
 
 - `skills/`: 実行手順の正本。詳細手順、判断基準、停止条件、出力フォーマットを定義し、そのまま正式入口として使う
-- `orchestrate`: 全依頼の進行入口。Phase 0 で triage し、性質と規模に応じて inquiry / micro / standard / full の tier に振り分けて、Phase / Gate、repository maintenance、request folder、agent routing、handoff、ユーザー確認つきで進める。tier により通す Phase / Gate を変え、inquiry は Phase 0 のみで完了する軽量経路、micro は最小工程に省く。Codex では main セッションが lead として agent 出力を次 agent の入力へ明示的に渡し、agent 間の直接通信を前提にしない。Claude Code では lead が specialist subagent と対応 skill を束ねる
+- `orchestrate`: 全依頼の進行入口。Phase 0 で triage し、性質と規模に応じて inquiry / micro / standard / full の tier に振り分けて、Phase / Gate、repository maintenance、request folder、agent routing、handoff、ユーザー確認つきで進める。tier により通す Phase / Gate を変え、inquiry は Phase 0 のみで完了する軽量経路、micro は最小工程に省く。Codex では main セッションが lead として agent 出力を次 agent の入力へ明示的に渡し、agent 間の直接通信を前提にしない。Claude Code では lead が specialist subagent と対応 skill を束ねる。workflow 上で必要な repo-local / managed agent / subagent 起動は standing authorization 済みとして扱い、tool 実行や停止線の判断とは分ける
 - `research`: 事実確認、原因調査、影響調査、PoC、仕様確認の入口。bug / security / quality / compat / maintenance も、まず観測事実、制約、影響範囲、test entry point を集める段階ではここで扱う
 - `grill`: 実装前の問い詰め、共有理解、inline knowledge capture の中核。目的、成功条件、非目的、制約、設計、実装順序、検証入口、対応関係を整理し、必要に応じて `CONTEXT.md`、docs、ADR、code と照合して確定した用語や判断を最小反映する
 - `architecture`: architecture 改善候補の探索と候補選択後の grilling の入口。`zoom-out` 的な module / caller / 責務 / interface / data flow / security boundary の地図化を含み、実装順序確定は `grill`、差分作成は `implement` へ進める
@@ -83,3 +83,6 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - [ADR 0028](../adr/0028-align-agent-names-with-skill-pairs.md)
 - [ADR 0029](../adr/0029-orchestrate-autonomous-run-until-final-gate.md)
 - [ADR 0030](../adr/0030-split-orchestrate-tier-flow-references.md)
+- [ADR 0031](../adr/0031-add-gate-pass-user-approval-checkpoints.md)
+- [ADR 0032](../adr/0032-auto-skip-gate-pass-approval-when-no-user-decision.md)
+- [ADR 0033](../adr/0033-preauthorize-orchestrate-workflow-agent-spawn.md)
