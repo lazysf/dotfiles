@@ -50,7 +50,7 @@ skill 名としての参照を全 surface で `implement` / `inspect` に統一�
 
 実装時に grep 結果を 1 件ずつ確認し、context で「skill 名」か「artifact/file 名」か「一般単語」かを判定する。skill 名としての使用は概ね次のパターン:
 
-- ``` `implementation` ```、``` `verification` ``` の inline code 引用
+- `` `implementation` ``、`` `verification` `` の inline code 引用
 - `implementation` / `verification` skill / agent と並ぶ文脈
 - `Codex では \`implementation\``、`Codex では \`verification\`` の対比文
 
