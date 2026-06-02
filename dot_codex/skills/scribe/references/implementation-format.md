@@ -4,7 +4,7 @@
 
 ## Rules
 
-- 対応する `TASK-*` を含める。
+- 対応する `TASK-*` を含める。`micro` または `standard` 軽量時に `tasks.md` を省略した場合は、`request.md` の scope / acceptance / 実装範囲、または `AC-*` に対応付ける。
 - 要件変更や設計変更を勝手に書かない。
 - 実装中に判明した上流問題は、変更せず未確認事項や blocker として残す。
 - test / lint / build の最終検証記録は `test.md` に任せる。
@@ -14,9 +14,10 @@
 ```markdown
 # Implementation
 
-## 対応タスク
+## 対応タスク / 対応範囲
 
 - `TASK-001`: [対応内容。]
+- `AC-001` / `request.md`: [tasks.md を省略した場合の対応内容。]
 
 ## 変更内容
 
