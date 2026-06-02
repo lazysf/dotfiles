@@ -86,7 +86,7 @@
 - agent: `repository-maintainer`
 - artifact: handoff
 - format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。lead が直接検証した場合は `test.md` と確認結果の要約を inspector handoff 相当として渡す。
+- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。lead が直接検証した場合は `test.md` と確認結果の要約を inspector handoff 相当として渡す。request artifact の作成・更新は自分の `docs/requests/<slug>/` 配下だけに限定し、別の `docs/requests/<other-slug>/` と `docs/requests/<slug>/` 外の docs は read-only とする。過去 request や slug 外 docs の修正が必要に見える場合は、自分の `implementation.md` または `test.md` に残リスクとして記録し、ユーザー確認なしに編集しない。
 
 ## Gate 3: 完了レビュー
 

@@ -122,7 +122,7 @@
 - agent: `repository-maintainer`
 - artifact: handoff
 - format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。`blocked` の場合、lead は Gate 3 へ進めない。
+- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。request artifact の作成・更新は自分の `docs/requests/<slug>/` 配下だけに限定し、別の `docs/requests/<other-slug>/` と `docs/requests/<slug>/` 外の docs は read-only とする。過去 request や slug 外 docs の修正が必要に見える場合は、自分の `implementation.md` または `test.md` に残リスクとして記録し、ユーザー確認なしに編集しない。`blocked` の場合、lead は Gate 3 へ進めない。
 
 ## Gate 3: 完了レビュー
 
