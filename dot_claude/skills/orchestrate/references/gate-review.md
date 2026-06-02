@@ -2,6 +2,8 @@
 
 Gate は次フェーズへ進めるための最小条件を見る。詳細な checklist ではなく、責務、対応関係、未確認事項、停止線を確認する。
 
+Gate reviewer の pass はユーザー承認ではない。pass 後、lead が成果物、review 結果、残リスク、次工程または完了判断をまとめてユーザー承認を得る。
+
 ## 共通 pass 条件
 
 - 対象成果物が自分の責務内に収まっている。
@@ -58,9 +60,9 @@ reviewer: `quality-reviewer` / `security-reviewer`
 
 Pass 条件:
 
-- `TC-*` が `AC-*` / `TASK-*` に対応している。
+- `TC-*` が `AC-*` / `TASK-*` に対応している。standard 軽量時に `requirements.md` / `tasks.md` を省略した場合は、`request.md` の scope / acceptance / 実装範囲に対応している。
 - security-relevant な元要求や制約が検証対象へ trace されている。
-- repository maintenance 後の全変更セット（tracked diff、staged diff、untracked file list / content）が scope 内に収まっている。
+- repository maintenance 後の全変更セット（tracked diff、staged diff、secret-safe に確認した untracked summary）が scope 内に収まっている。
 - 該当する自動テスト / lint / build の結果が確認済み。
 - 該当しない test / lint / build は、N/A の理由と残リスクが明示されている。
 - 自動化できない確認がある場合、理由、代替確認、残リスクが明示されている。
@@ -68,6 +70,8 @@ Pass 条件:
 - repository maintenance handoff に変更有無、挙動差分、品質ゲート影響、security / CI 影響、確認結果が明示されている。
 - repository maintenance 後の全変更セットが reviewer 入力に含まれている。
 - repository-maintainer が変更したファイル差分は、必要に応じて補助情報として reviewer 入力に含まれている。
+- untracked file は path / file type / secret-looking name を先に確認し、secret 疑いがある内容は読まずに `redacted` または `skipped_due_to_secret_risk` として扱われている。必須範囲が secret risk で確認不能なら pass にしない。
+- standard Gate 3 では Triage 停止線と Security-Relevant Actions を再評価し、該当、missing、unknown のいずれかなら `security-reviewer` が review している。
 - repository maintenance の `behavior_delta` が `changed` の場合、`inspector` の再確認結果と更新後の `test.md` がある。
 - 未解消の docs / repo hygiene / tooling 追従漏れ、品質ゲート弱体化、security / CI risk が Gate 3 reviewer によって許容不能と判断されていない。
 - `implementation.md` に要件変更や設計変更を勝手に書いていない。

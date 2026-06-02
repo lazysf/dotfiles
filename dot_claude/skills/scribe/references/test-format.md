@@ -5,7 +5,7 @@
 
 ## Rules
 
-- `AC-*`、`TASK-*`、実装差分と対応付ける。該当しないものは `N/A`。
+- `AC-*`、`TASK-*`、実装差分と対応付ける。`micro` または `standard` 軽量時に `tasks.md` を省略した場合は、`request.md` の scope / acceptance / 実装範囲に対応付ける。該当しないものは `N/A`。
 - `TC-*` は 1 つの期待結果を観測できる粒度にする。
 - test / lint / build / manual check の実行結果を分ける。
 - 未実行の確認は、理由と代替確認を書いて残す。
@@ -31,6 +31,7 @@
 
 - `AC-001`
 - `TASK-001`
+- `request.md` scope / acceptance
 
 #### 種別
 
