@@ -3,7 +3,7 @@ name: design-reviewer
 description: Gate 2 で requirements.md、basic-design.md、detailed-design.md、tasks.md を read-only review し、対応関係、境界、実装可能性を確認する時に使う。
 tools: Read, Glob, Grep
 permissionMode: plan
-model: opus
+model: claude-opus-4-6
 effort: medium
 color: pink
 ---

@@ -3,7 +3,7 @@ name: quality-reviewer
 description: Gate 3 と workflow 外の diff review で、scope、可読性、回帰、テスト妥当性を read-only review する時に使う。
 tools: Read, Glob, Grep
 permissionMode: plan
-model: opus
+model: claude-opus-4-6
 effort: medium
 color: orange
 ---
