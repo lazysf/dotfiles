@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: 全依頼の進行入口。質問、相談、調査、typo、1 行修正、コード変更、実装、既存機能変更、複数ファイル変更、設計判断を Phase 0 で受け取り、停止線確認と triage で inquiry / micro / standard / full に分岐する。SKILL.md は入口判断と分岐表だけを持ち、分岐後の flow と停止線は tier 別 reference に従う。
+description: ユーザーからの依頼・相談・質問・調査・typo・コード変更・実装・設計判断を受けたら、他の調査や tool より前に最初に使う。全依頼の進行入口として Phase 0 で受け、停止線確認と triage で inquiry / micro / standard / full に分岐する。
 ---
 
 # Orchestrate
