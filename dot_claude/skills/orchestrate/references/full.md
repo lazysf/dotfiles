@@ -23,10 +23,10 @@
 ### 要件定義
 
 - 扱い: 必須
-- agent: `requirements-engineer`
+- agent: lead
 - artifact: `requirements.md`
 - format: [requirements-format.md](../../scribe/references/requirements-format.md)
-- 進め方: 目的、scope / non-scope、`REQ-*`、`AC-*`、制約、前提、未確認事項を整理する。実装方法や詳細設計は決めない。
+- 進め方: lead が requirements skill を使い、目的、scope / non-scope、REQ-*、AC-*、制約、前提、未確認事項を整理する。実装方法や詳細設計は決めない。artifact は scribe で書く。
 
 ### 要件追加調査
 
@@ -59,26 +59,26 @@
 ### 基本設計
 
 - 扱い: 必須
-- agent: `architect`
+- agent: lead
 - artifact: `basic-design.md`
 - format: [basic-design-format.md](../../scribe/references/basic-design-format.md)
-- 進め方: 全体方針、責務分担、主要 component / module 境界、主要 interface / API / data flow、既存構造との接続点、security / 権限 / data / 外部 I/O の扱いを書く。
+- 進め方: lead が architecture skill を使い、全体方針、責務分担、主要 component / module 境界、主要 interface / API / data flow、既存構造との接続点、security / 権限 / data / 外部 I/O の扱いを書く。artifact は scribe で書く。
 
 ### 詳細設計
 
 - 扱い: 必須
-- agent: `architect`
+- agent: lead
 - artifact: `detailed-design.md`
 - format: [detailed-design-format.md](../../scribe/references/detailed-design-format.md)
-- 進め方: 処理手順、入出力、validation、error handling、edge case、状態遷移、test 観点を書く。
+- 進め方: lead が architecture skill を使い、処理手順、入出力、validation、error handling、edge case、状態遷移、test 観点を書く。artifact は scribe で書く。
 
 ### タスク分解
 
 - 扱い: 必須
-- agent: `task-planner`
+- agent: lead
 - artifact: `tasks.md`
 - format: [tasks-format.md](../../scribe/references/tasks-format.md)
-- 進め方: `TASK-*`、実装順序、完了条件、確認方法、変更境界を書く。
+- 進め方: lead が task-planning skill を使い、TASK-*、実装順序、完了条件、確認方法、変更境界を書く。artifact は scribe で書く。
 
 ## Gate 2: 設計レビュー
 
@@ -111,10 +111,10 @@
 ### 実装
 
 - 扱い: 必須
-- agent: `implementer`
+- agent: lead
 - artifact: `implementation.md`
 - format: [implementation-format.md](../../scribe/references/implementation-format.md)
-- 進め方: Phase 3 entry condition を満たしたうえで、`tasks.md` と設計に沿って code / config / tests を実装し、対応 task、変更内容、変更ファイル、実行した確認、残リスクを書く。実装結果を根拠に上流 artifact を作り直さない。
+- 進め方: lead が implement skill を使い、Phase 3 entry condition を満たしたうえで、tasks.md と設計に沿って code / config / tests を実装し、対応 task、変更内容、変更ファイル、実行した確認、残リスクを書く。実装結果を根拠に上流 artifact を作り直さない。artifact は scribe で書く。
 
 ### 検証
 
@@ -124,13 +124,13 @@
 - format: [test-format.md](../../scribe/references/test-format.md)
 - 進め方: `TC-*`、test / lint / build / manual check 結果、未確認事項、残リスクを書く。
 
-### repository maintenance
+### Gate 3 前 docs 確認
 
-- 扱い: 必須
-- agent: `repository-maintainer`
-- artifact: handoff
-- format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。request artifact は自分の `docs/requests/<slug>/` 配下だけ編集し、slug 外 docs は read-only とする。repository maintenance は実装後の追従確認であり、実装前に必要だった要件・設計・task artifact の後付け作成には使わない。`blocked` の場合、lead は Gate 3 へ進めない。
+- 扱い: 必要時
+- agent: lead
+- artifact: なし、または request.md / implementation.md の自然な節
+- format: なし
+- 進め方: lead が必要時に doc-followup skill を使って docs / references / prose の追従更新と参照ずれ確認を行う。request artifact は自分の `docs/requests/<slug>/` 配下だけ編集する。Gate 3 着手前に確認結果と残リスクを request.md または implementation.md に短くまとめる。
 
 ## Gate 3: 完了レビュー
 
@@ -140,7 +140,7 @@
 - agent: `quality-reviewer` / `security-reviewer`
 - artifact: `review.md`
 - format: [review-format.md](../../scribe/references/review-format.md)
-- 進め方: repository maintenance 後の全変更セット（tracked diff、staged diff、secret-safe に確認した untracked summary）と handoff を 2 人体制でレビューする。pass 後、lead が変更内容、検証結果、残リスク、次アクションを確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず完了する。
+- 進め方: 全変更セット（tracked diff、staged diff、secret-safe に確認した untracked summary）と handoff を 2 人体制でレビューする。pass 後、lead が変更内容、検証結果、残リスク、次アクションを確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず完了する。
 
 ## 追加 reference
 
@@ -161,7 +161,6 @@
 - 公開挙動系（ブロックA）/ command 系（ブロックB）の停止線は [stop-lines.md](stop-lines.md) のカタログに従い、実行、受容、Phase 3 着手判断はユーザー確認する。該当の可能性があればカタログ（stop-lines.md）を必ず開いて確認する。
 - 要求・要望の再定義、change request 採否、scope / non-scope 変更、未解消リスク受容が必要ならユーザー確認する。
 - secret を読んだ、生成した、移動した、削除した場合、値を出さずにユーザー確認する。
-- `repository-maintainer` が `blocked` を返した場合、Gate 3 へ進めない。
 - 同じ Gate blocking が繰り返し残る場合はユーザー確認する。
 
 ## 調査の扱い
