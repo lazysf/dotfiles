@@ -28,7 +28,9 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 ## 自走と確認 checkpoint
 
 - lead は、停止線接触、追加情報が必要な質問、Gate fail の同じ blocking 繰り返し、scope / risk 受容判断、ユーザー指示待ちを除き、次の checkpoint まで進める。
-- Gate がある tier では、reviewer pass は次フェーズまたは完了へ進めるための材料であり、ユーザー承認ではない。lead は Gate pass 後に成果物、review 結果、残リスク、次工程をまとめ、ユーザー承認を得てから次へ進む。
+- workflow 上で必要と定義された repo-local / managed subagent は standing authorization 済みとして追加確認なしで起動する。これは subagent 起動だけの許可であり、subagent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する。
+- Gate がある tier では、reviewer pass は次フェーズまたは完了へ進めるための材料であり、ユーザー承認ではない。lead は Gate pass 後に成果物、review 結果、残リスク、次工程を確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず次フェーズまたは完了へ進む。
+- Gate pass 後にユーザー確認するのは、停止線接触、scope / risk 受容、change request 採否、追加情報がないと次工程を判断できない事項、ユーザー指示待ちが残る場合だけ。
 - Phase / Gate 進行中の中途報告は最小化する。進捗共有は短い status に留め、checkpoint または完了時に必要事項をまとめる。
 - commit / push は workflow の自走対象外。ユーザー指示がある場合だけ該当 skill で扱う。
 
@@ -83,8 +85,8 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 | ---------- | --------------------------------------------- |
 | `inquiry`  | lead が直接回答する。Gate は通さない。        |
 | `micro`    | lead が自己確認し、変更内容と確認結果を返す。 |
-| `standard` | Gate 3 pass 後にユーザー承認を得て完了する。  |
-| `full`     | Gate 1 / 2 / 3 pass 後にユーザー承認を得る。  |
+| `standard` | Gate 3 pass 後、確認必須事項がなければ完了する。 |
+| `full`     | Gate 1 / 2 / 3 pass 後、確認必須事項がなければ次工程または完了へ進む。 |
 
 ## 出力
 

@@ -28,6 +28,7 @@
 
 - 全依頼は、main セッションが lead として `orchestrate` skill を入口に進行する。lead が Phase 0 で triage し、性質と規模に応じて inquiry / micro / standard / full の tier に振り分けて Phase / Gate、request folder、subagent routing、handoff、ユーザー確認を管理する。typo / 1 行修正のような極小依頼も orchestrate を通し、triage で micro と判定して最小工程で済ませる。質問・相談・調査だけの依頼は inquiry tier の軽量経路（Phase 0 のみ）で扱う
 - Codex では agent 同士の直接通信を前提にせず、agent 出力の受け取り、次 agent への伝達、差戻し、再 review 起動は main セッションの lead が行う
+- `orchestrate` workflow 上で必要と定義された repo-local / managed agent は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい。これは agent 起動の許可だけであり、各 agent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する
 - typo / 1 行修正 / 自明な変更 / 単一 skill で閉じる作業も orchestrate を通すが、triage で micro と判定し、lead 直接処理または該当 skill 1 つで最小工程に済ませる
 - 工程をまたぐ作業は lead が specialist agent を順に起動して進め、単一工程の手順だけが要る時は該当 skill を直接使う
 - 工程別 artifact は 1 要求 1 request folder（既定 `docs/requests/<slug>/`）に置く。詳細な流れは `skills/orchestrate`、書式は `skills/scribe` を見る

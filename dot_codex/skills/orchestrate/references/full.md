@@ -44,7 +44,7 @@
 - agent: `requirements-reviewer`
 - artifact: `review.md`
 - format: [review-format.md](../../scribe/references/review-format.md)
-- 進め方: `request.md` と `requirements.md` の整合をレビューする。pass 後、lead が要件、未確認事項、残リスク、Phase 2 で扱う範囲をまとめ、ユーザー承認を得てから Phase 2 へ進む。
+- 進め方: `request.md` と `requirements.md` の整合をレビューする。pass 後、lead が要件、未確認事項、残リスク、Phase 2 で扱う範囲を確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず Phase 2 へ進む。
 
 ## Phase 2: 設計・計画
 
@@ -88,7 +88,7 @@
 - agent: `design-reviewer` / `security-reviewer`
 - artifact: `review.md`
 - format: [review-format.md](../../scribe/references/review-format.md)
-- 進め方: 設計、task、security 観点を 2 人体制でレビューする。pass 後、lead が設計、task、Security-Relevant Actions、残リスク、Phase 3 で実行する範囲をまとめ、ユーザー承認を得てから Phase 3 へ進む。
+- 進め方: 設計、task、security 観点を 2 人体制でレビューする。pass 後、lead が設計、task、Security-Relevant Actions、残リスク、Phase 3 で実行する範囲を確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず Phase 3 へ進む。
 
 ## Phase 3: 実装・検証・仕上げ
 
@@ -98,7 +98,7 @@
 - agent: lead
 - artifact: `review.md`, `requirements.md`, `basic-design.md`, `detailed-design.md`, `tasks.md`
 - format: なし
-- 進め方: Gate 2 pass とユーザー承認により、要件・設計・task が実装判断に足る状態で確定していることを確認してから Phase 3 に着手する。Phase 3 中に上流 artifact 不足や scope 変更が判明した場合は、実装結果から後付けで要件・設計・task を作らず、Gate 2 以前へ戻すかユーザー確認する。
+- 進め方: Gate 2 pass 後に確認必須事項がない、または必要なユーザー承認が済んでいることにより、要件・設計・task が実装判断に足る状態で確定していることを確認してから Phase 3 に着手する。Phase 3 中に上流 artifact 不足や scope 変更が判明した場合は、実装結果から後付けで要件・設計・task を作らず、Gate 2 以前へ戻すかユーザー確認する。
 
 ### 実装追加調査
 
@@ -140,7 +140,7 @@
 - agent: `quality-reviewer` / `security-reviewer`
 - artifact: `review.md`
 - format: [review-format.md](../../scribe/references/review-format.md)
-- 進め方: repository maintenance 後の全変更セット（tracked diff、staged diff、secret-safe に確認した untracked summary）と handoff を 2 人体制でレビューする。pass 後、lead が変更内容、検証結果、残リスク、次アクションをまとめ、ユーザー承認を得て完了する。
+- 進め方: repository maintenance 後の全変更セット（tracked diff、staged diff、secret-safe に確認した untracked summary）と handoff を 2 人体制でレビューする。pass 後、lead が変更内容、検証結果、残リスク、次アクションを確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず完了する。
 
 ## 追加 reference
 
@@ -148,12 +148,13 @@
 - 各 Gate 前に [gate-review.md](gate-review.md) を読む。
 - Gate fail で自律修正する前に [autonomous-loop.md](autonomous-loop.md) を読む。
 
-## ユーザー承認 checkpoint
+## ユーザー確認 checkpoint
 
 - Gate pass は reviewer の判定であり、ユーザー承認ではない。
-- Gate 1 pass 後は、要件、scope / non-scope、未確認事項、Phase 2 へ進める理由を提示して承認を得る。
-- Gate 2 pass 後は、設計、task、Security-Relevant Actions、残リスク、Phase 3 で実行する範囲を提示して承認を得る。停止線由来で `full` に倒した場合も、この checkpoint で Phase 3 着手可否を確認する。
-- Gate 3 pass 後は、変更内容、検証結果、未確認事項、残リスク、次アクションを提示して承認を得る。
+- Gate pass 後、lead は成果物、review 結果、残リスク、次工程または完了判断を確認し、ユーザー確認が必要な事項がなければ承認待ちを挟まず次工程または完了へ進む。
+- Gate 1 pass 後は、要件、scope / non-scope、未確認事項にユーザー判断が必要な場合だけ提示して承認を得る。
+- Gate 2 pass 後は、設計、task、Security-Relevant Actions、残リスク、Phase 3 で実行する範囲にユーザー判断が必要な場合だけ提示して承認を得る。停止線由来で `full` に倒した場合は、Phase 3 着手可否を確認する。
+- Gate 3 pass 後は、変更内容、検証結果、未確認事項、残リスク、次アクションにユーザー判断が必要な場合だけ提示して承認を得る。
 
 ## 停止線
 
