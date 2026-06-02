@@ -42,11 +42,8 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 - 要求・要望の再定義、change request 採否、scope / non-scope 変更、未解消リスク受容が必要。
 - secret を読んだ、生成した、移動した、削除した。値は出力しない。
 
-次は `full` に倒す。read-only 調査と artifact 作成は進めてよいが、実行、受容、Phase 3 着手の前にユーザー確認する。
+公開挙動系（ブロックA）/ command 系（ブロックB）の停止線は [stop-lines.md](references/stop-lines.md) のカタログに従い、`full` に倒す。read-only 調査と artifact 作成は進めてよいが、実行、受容、Phase 3 着手の前にユーザー確認する。該当の可能性があればカタログ（stop-lines.md）を必ず開いて確認する。
 
-- 公開挙動 / 公開 API / data format / 永続化 / auth / 権限 / secret に触れる。
-- 新依存、破壊的操作、本番設定、runtime guardrail / CI permission / 外部送信 / deploy / publish に触れる。
-- command / script / hook / workflow の実行入口、権限、失敗条件、外部 I/O、security boundary、validation 境界、injection / path traversal、security-sensitive data flow に触れる。
 - 不確実性が高い、または影響範囲が Phase 0 だけでは絞れない。
 
 ## 分岐
@@ -57,6 +54,8 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 | `micro`    | 自明・単一箇所・設計判断なし                    | [micro.md](references/micro.md)       |
 | `standard` | 複数 file、または軽い設計判断あり               | [standard.md](references/standard.md) |
 | `full`     | 新機能、停止線接触、不確実性が高い              | [full.md](references/full.md)         |
+
+ブロックA/B 接触または公開挙動・interface・data flow の設計判断なら `full`、それ以外の複数 file / 既存パターン内変更は `standard`。詳細は [stop-lines.md](references/stop-lines.md) の境界判定。
 
 迷う場合は上位 tier。triage 結果（tier と根拠）は `request.md` に残す。ただし `inquiry` / `micro` は request folder を強制しない。
 

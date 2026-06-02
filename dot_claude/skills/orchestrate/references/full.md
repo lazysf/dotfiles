@@ -158,11 +158,9 @@
 
 ## 停止線
 
+- 公開挙動系（ブロックA）/ command 系（ブロックB）の停止線は [stop-lines.md](stop-lines.md) のカタログに従い、実行、受容、Phase 3 着手判断はユーザー確認する。該当の可能性があればカタログ（stop-lines.md）を必ず開いて確認する。
 - 要求・要望の再定義、change request 採否、scope / non-scope 変更、未解消リスク受容が必要ならユーザー確認する。
-- 公開挙動 / 公開 API / data format / 永続化 / auth / 権限 / secret handling に触れる実行、受容、Phase 3 着手判断はユーザー確認する。
 - secret を読んだ、生成した、移動した、削除した場合、値を出さずにユーザー確認する。
-- 新依存、破壊的操作、本番設定、runtime guardrail / CI permission / 外部送信 / deploy / publish に触れる実行、受容、Phase 3 着手判断はユーザー確認する。
-- command / script / hook / workflow の実行入口、権限、失敗条件、外部 I/O、security boundary、validation 境界、injection / path traversal、security-sensitive data flow に触れる実行、受容、Phase 3 着手判断はユーザー確認する。
 - `repository-maintainer` が `blocked` を返した場合、Gate 3 へ進めない。
 - 同じ Gate blocking が繰り返し残る場合はユーザー確認する。
 
