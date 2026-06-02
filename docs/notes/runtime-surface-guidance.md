@@ -30,7 +30,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 ## 導線の考え方
 
-固定の細かい代表導線は `dot_codex/AGENTS.md` や `dot_claude/CLAUDE.md` に持たせない。multi-agent workflow は `orchestrate` skill を正本にする。Phase 0、Triage 判定、Triage 停止線、星取表は `SKILL.md`、tier 決定後の flow と停止線は `references/inquiry.md` / `references/micro.md` / `references/standard.md` / `references/full.md` を正本にする。
+固定の細かい代表導線は `dot_codex/AGENTS.md` や `dot_claude/CLAUDE.md` に持たせない。multi-agent workflow は `orchestrate` skill を正本にする。Phase 0、Triage 判定、Triage 停止線、星取表は `SKILL.md`、tier 決定後の flow と tier 固有の停止線差分は `references/inquiry.md` / `references/micro.md` / `references/standard.md` / `references/full.md` を正本にする。停止線で列挙する語・遷移句・standard / full 境界判定は `references/stop-lines.md` を正本にし、各 tier reference はそこを参照して tier 固有差分だけを持つ。`references/stop-lines.md` のカタログ語を改訂する際は、`references/gate-review.md` の `security-reviewer` 起動条件（停止線語と意味連動するが語彙系統は別管理）の追従も確認する。
 実行時の入口判断は、要求分類表ではなく、各 `SKILL.md` の description、agent 定義、ユーザーが明示した依頼語、既存 docs / ADR / code で確認できる事実に基づいて行う。
 迷う場合は、観測事実の取得を `research`、要件整理や実装前の変更境界、検証入口の問い詰めを `grill`、doc / artifact の作成・更新・整形を `scribe`、変更後の docs 追従更新を `doc-followup` に寄せる。実装は `implement`、変更後確認は `inspect` を使う。workflow 内の実装後 repo hygiene / docs / tooling 設定の仕上げは `repository-maintainer` agent を使う。
 
