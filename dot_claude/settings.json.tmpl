@@ -52,7 +52,7 @@
     ]
   },
   "sandbox": {
-    "enabled": true,
+    "enabled": {{ if eq .chezmoi.os "windows" }}false{{ else }}true{{ end }},
     "failIfUnavailable": true,
     "allowUnsandboxedCommands": false,
     "autoAllowBashIfSandboxed": false,
