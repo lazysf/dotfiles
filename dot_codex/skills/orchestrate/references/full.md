@@ -92,13 +92,21 @@
 
 ## Phase 3: 実装・検証・仕上げ
 
+### Phase 3 entry condition
+
+- 扱い: 必須
+- agent: lead
+- artifact: `review.md`, `requirements.md`, `basic-design.md`, `detailed-design.md`, `tasks.md`
+- format: なし
+- 進め方: Gate 2 pass とユーザー承認により、要件・設計・task が実装判断に足る状態で確定していることを確認してから Phase 3 に着手する。Phase 3 中に上流 artifact 不足や scope 変更が判明した場合は、実装結果から後付けで要件・設計・task を作らず、Gate 2 以前へ戻すかユーザー確認する。
+
 ### 実装追加調査
 
 - 扱い: 必要時
 - agent: `researcher`
 - artifact: handoff
 - format: [handoff.md](handoff.md)
-- 進め方: 実装中に出た不明点を確認する。
+- 進め方: 実装中に出た不明点を確認する。調査結果が要件・設計・task の変更を必要とする場合は、Phase 3 内で吸収せず前工程へ戻す。
 
 ### 実装
 
@@ -106,7 +114,7 @@
 - agent: `implementer`
 - artifact: `implementation.md`
 - format: [implementation-format.md](../../scribe/references/implementation-format.md)
-- 進め方: `tasks.md` と設計に沿って code / config / tests を実装し、対応 task、変更内容、変更ファイル、実行した確認、残リスクを書く。
+- 進め方: Phase 3 entry condition を満たしたうえで、`tasks.md` と設計に沿って code / config / tests を実装し、対応 task、変更内容、変更ファイル、実行した確認、残リスクを書く。実装結果を根拠に上流 artifact を作り直さない。
 
 ### 検証
 
@@ -122,7 +130,7 @@
 - agent: `repository-maintainer`
 - artifact: handoff
 - format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。request artifact の作成・更新は自分の `docs/requests/<slug>/` 配下だけに限定し、別の `docs/requests/<other-slug>/` と `docs/requests/<slug>/` 外の docs は read-only とする。過去 request や slug 外 docs の修正が必要に見える場合は、自分の `implementation.md` または `test.md` に残リスクとして記録し、ユーザー確認なしに編集しない。`blocked` の場合、lead は Gate 3 へ進めない。
+- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。request artifact は自分の `docs/requests/<slug>/` 配下だけ編集し、slug 外 docs は read-only とする。repository maintenance は実装後の追従確認であり、実装前に必要だった要件・設計・task artifact の後付け作成には使わない。`blocked` の場合、lead は Gate 3 へ進めない。
 
 ## Gate 3: 完了レビュー
 

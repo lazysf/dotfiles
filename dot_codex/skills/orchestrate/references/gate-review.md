@@ -7,6 +7,7 @@ Gate reviewer の pass はユーザー承認ではない。pass 後、lead が�
 ## 共通 pass 条件
 
 - 対象成果物が自分の責務内に収まっている。
+- 次工程へ進むために必要な上流 artifact が、次工程着手前に作成・更新・確認されている。
 - 後続工程の内容を先取りしていない。
 - 他成果物に書くべき内容を混ぜていない。
 - 推測が事実として書かれていない。
@@ -16,6 +17,7 @@ Gate reviewer の pass はユーザー承認ではない。pass 後、lead が�
 
 - 上流成果物との矛盾がある。
 - ID 対応が欠落している。
+- 実装や検証の結果を根拠に、要件・設計・task などの上流 artifact を後付けしている。
 - 成果物の責務超過、次工程の先取り、他ファイルへ書くべき内容の混入がある。
 - scope 外の変更が混ざっている。
 - reviewer が blocking 指摘を出した。
@@ -75,5 +77,6 @@ Pass 条件:
 - repository maintenance の `behavior_delta` が `changed` の場合、`inspector` の再確認結果と更新後の `test.md` がある。
 - 未解消の docs / repo hygiene / tooling 追従漏れ、品質ゲート弱体化、security / CI risk が Gate 3 reviewer によって許容不能と判断されていない。
 - `implementation.md` に要件変更や設計変更を勝手に書いていない。
+- 実装開始後に `requirements.md` / `basic-design.md` / `detailed-design.md` / `tasks.md` が作成・更新されている場合、その変更が前工程への明示的な差戻しまたはユーザー承認済み change request として扱われている。
 - `test.md` に仕様変更を混ぜていない。
 - `review.md` に修正済み指摘の詳細ログを残していない。

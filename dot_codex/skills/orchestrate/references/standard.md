@@ -8,7 +8,7 @@
 - agent: lead
 - artifact: `request.md`
 - format: [request-format.md](../../scribe/references/request-format.md)
-- 進め方: tier、scope、acceptance、request folder を整理する。
+- 進め方: tier、scope、acceptance、request folder を整理する。`requirements.md` / `basic-design.md` / `detailed-design.md` / `tasks.md` を省略する場合でも、Phase 3 着手前に `request.md` へ省略理由、実装境界、検証入口を残す。
 
 ## Phase 1: 調査・要件
 
@@ -64,13 +64,21 @@
 
 ## Phase 3: 実装・検証・仕上げ
 
+### Phase 3 entry condition
+
+- 扱い: 必須
+- agent: lead
+- artifact: `request.md` または Phase 1 / 2 artifact
+- format: なし
+- 進め方: 実装前に、上流 artifact が今回の実装範囲を判断できる状態で確定していることを確認する。`requirements.md` / `tasks.md` を省略した場合は、`request.md` の scope / acceptance / 実装範囲 / 省略理由を trace 元にする。実装中または実装後に上流 artifact 不足が判明した場合は、後付けで成果物を作らず Phase 1 / 2 へ戻すか、ユーザー確認する。
+
 ### 実装
 
 - 扱い: 必須
 - agent: lead / `implementer`
 - artifact: `implementation.md`
 - format: [implementation-format.md](../../scribe/references/implementation-format.md)
-- 進め方: 合意済み scope と設計に沿って code / config / tests を変更する。`tasks.md` を省略した場合は `request.md` の scope / acceptance / 実装範囲へ trace する。
+- 進め方: Phase 3 entry condition を満たしたうえで、合意済み scope と設計に沿って code / config / tests を変更する。実装結果を根拠に上流 artifact を作り直さない。
 
 ### 検証
 
@@ -86,7 +94,7 @@
 - agent: `repository-maintainer`
 - artifact: handoff
 - format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。lead が直接検証した場合は `test.md` と確認結果の要約を inspector handoff 相当として渡す。request artifact の作成・更新は自分の `docs/requests/<slug>/` 配下だけに限定し、別の `docs/requests/<other-slug>/` と `docs/requests/<slug>/` 外の docs は read-only とする。過去 request や slug 外 docs の修正が必要に見える場合は、自分の `implementation.md` または `test.md` に残リスクとして記録し、ユーザー確認なしに編集しない。
+- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。lead が直接検証した場合は `test.md` と確認結果の要約を inspector handoff 相当として渡す。request artifact は自分の `docs/requests/<slug>/` 配下だけ編集し、slug 外 docs は read-only とする。repository maintenance は実装後の追従確認であり、実装前に必要だった要件・設計・task artifact の後付け作成には使わない。
 
 ## Gate 3: 完了レビュー
 
@@ -117,6 +125,7 @@
 
 - `requirements.md` / `basic-design.md` は必要時のみ軽量に作る。軽量 standard では `request.md` に scope / acceptance を残してよい。
 - `detailed-design.md` とタスク分解は必要時のみ。
-- `requirements.md` / `tasks.md` を省略した場合、`implementation.md` / `test.md` / Gate 3 は `request.md` の scope / acceptance / 実装範囲を trace 元にする。
+- `requirements.md` / `tasks.md` を省略した場合、`implementation.md` / `test.md` / Gate 3 は、実装前に確定した `request.md` の scope / acceptance / 実装範囲 / 省略理由を trace 元にする。
+- 実装後に作る `implementation.md` / `test.md` / repository maintenance handoff は記録と検証用であり、実装可否を判断する上流 artifact の代替にしない。
 - standard の Gate は Gate 3 のみ。`quality-reviewer` 必須、Triage 停止線または Security-Relevant Actions が該当、missing、unknown の場合は `security-reviewer` 追加。
 - Phase / Gate ごとの完了報告は不要。Gate 3 pass 時に変更内容・検証結果・未確認事項・次アクションをまとめ、ユーザー承認を得る。
