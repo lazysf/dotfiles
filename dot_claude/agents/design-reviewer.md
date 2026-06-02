@@ -4,7 +4,7 @@ description: Gate 2 で requirements.md、basic-design.md、detailed-design.md�
 tools: Read, Glob, Grep
 permissionMode: plan
 model: claude-opus-4-6
-effort: medium
+effort: high
 color: pink
 ---
 

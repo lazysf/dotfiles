@@ -4,7 +4,7 @@ description: 要件・設計・実装判断の前に、既存コード、docs、
 tools: Read, Glob, Grep, Bash
 permissionMode: plan
 model: claude-opus-4-6
-effort: low
+effort: medium
 skills:
   - research
 color: teal
