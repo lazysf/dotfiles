@@ -38,7 +38,6 @@
 
 ## 停止線
 
+- 公開挙動系（ブロックA）/ command 系（ブロックB）の停止線は [stop-lines.md](stop-lines.md) のカタログに従い、`full` に移し、実行、受容、Phase 3 着手前にユーザー確認する。該当の可能性があればカタログ（stop-lines.md）を必ず開いて確認する。
 - 複数 file、設計判断、影響調査が必要になったら `standard` 以上へ移す。
-- 公開挙動 / 公開 API / data format / 永続化 / auth / 権限 / secret / 新依存 / 破壊的操作 / 本番設定 / runtime guardrail / CI permission / 外部送信 / deploy / publish に触れるなら `full` に移し、実行、受容、Phase 3 着手前にユーザー確認する。
-- command / script / hook / workflow の実行入口、権限、失敗条件、外部 I/O、security boundary、validation 境界、injection / path traversal、security-sensitive data flow に触れるなら `full` に移し、実行、受容、Phase 3 着手前にユーザー確認する。
 - 自己確認で意図外差分、未確認リスク、scope ずれが出たら完了扱いにしない。
