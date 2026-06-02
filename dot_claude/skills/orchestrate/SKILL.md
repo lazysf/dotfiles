@@ -12,7 +12,9 @@ description: 全依頼の進行入口。質問、相談、調査、typo、1 行�
 1. 要求、背景、期待状態、不明点を受け取る。必要なら `request.md` に整理する。
 2. Phase 0 の直後に triage する。初期調査は Phase 1 の作業なので、triage 前に広い調査を始めない。
 3. まず Triage 停止線を確認する。
-4. 停止線に触れない場合、tier を決めて該当 reference を読む。
+4. 停止線に触れない場合、tier を決める。
+5. tier 決定直後、該当 reference を読む前に、最初の中途表示として `tier: <tier>。根拠: <短い理由>。` をユーザーへ示す。停止線に触れるため `full` に倒す場合も同じ形式で示し、実行、受容、Phase 3 着手前に必要な確認を続ける。根拠には secret 値、認証情報、private data、具体的な sensitive data を含めず、tier 判定条件または停止線カテゴリへ一般化する。
+6. 該当 reference を読む。
 
 request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は `[a-z0-9][a-z0-9-]{0,63}` とし、path separator、dot segment、絶対 path、symlink による repo 外参照を使わない。
 
@@ -86,6 +88,7 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 
 ## 出力
 
+- 最初の中途表示: triage 直後に `tier: <tier>。根拠: <短い理由>。` を必ず出す。
 - `tier`: triage 結果（`inquiry` / `micro` / `standard` / `full`）と判定根拠。
 - `phase`: 現在 phase / gate。
 - `artifacts`: 作成・更新・確認した成果物。
