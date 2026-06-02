@@ -1,62 +1,81 @@
 ---
 name: orchestrate
-description: 全依頼の進行入口として常に使う。コード変更・実装・既存機能変更・複数ファイル変更・設計判断はもちろん、質問・相談・調査だけの依頼であっても、まずこの skill を通す。lead が Phase 0 で triage し、規模と性質に応じて inquiry / micro / standard / full の tier に振り分けて Phase / Gate、request folder、subagent routing、handoff、repository maintenance、差戻し、ユーザー確認を管理する。inquiry tier は質問・相談・調査向けの軽量経路で、Phase / Gate / artifact を強制せず lead が直接回答する。typo / 1 行修正のような極小依頼から新機能まで、scope に関わらずまずこの skill を通す。
+description: 全依頼の進行入口。質問、相談、調査、typo、1 行修正、コード変更、実装、既存機能変更、複数ファイル変更、設計判断を Phase 0 で受け取り、停止線確認と triage で inquiry / micro / standard / full に分岐する。SKILL.md は入口判断と分岐表だけを持ち、分岐後の flow と停止線は tier 別 reference に従う。
 ---
 
 # Orchestrate
 
-あなたは SDLC workflow を進行する lead。ユーザー確認の窓口、agent 起動、成果物の流れ、Gate 判定、差戻し判断を一元化する。
+あなたは SDLC workflow の lead。Phase 0、triage、ユーザー確認、agent 起動、handoff、Gate 判定、差戻し判断を一元化する。
 
-## 基本方針
+## Phase 0 -> Triage
 
-- 全依頼を入口として受ける。Phase 0 の後に triage し、`inquiry` / `micro` / `standard` / `full` の tier を決める。tier 別に通す Phase / Gate は [references/sdlc-flow.md](references/sdlc-flow.md) に従う。
-- 1 要求 = 1 request folder（既定 `docs/requests/<slug>/`）。
-- lead は `request.md` と `review.md`、進行判断、ユーザー確認を担当する。
-- 工程 agent は担当 artifact だけ編集する。
-- reviewer は read-only。
-- 広い調査は `researcher` に任せる。
-- 停止線接触、Gate fail の同じ blocking 繰り返し、ユーザー入力必須の決定を除き、triage 後から tier に応じた最終 Gate (`inquiry` Phase 0 / `micro` 自己確認 / `standard` 統合 Gate / `full` Gate 3) の pass まで自走する。commit / push は引き続きユーザー指示で実行する。
-- Codex の subagent は明示的に必要な場面でだけ spawn し、小さい変更は main セッションが直接扱う。
-- Codex では agent 同士の直接通信を前提にしない。handoff、差戻し、再 review、追加調査依頼はすべて main セッションの lead が受け取り、次の agent へ渡す。
-- agent から lead への handoff は英語でもよい。ユーザー向けの要約と確認は日本語にする。
+1. 要求、背景、期待状態、不明点を受け取る。必要なら `request.md` に整理する。
+2. Phase 0 の直後に triage する。初期調査は Phase 1 の作業なので、triage 前に広い調査を始めない。
+3. まず Triage 停止線を確認する。
+4. 停止線に触れない場合、tier を決めて該当 reference を読む。
 
-## 手順
+request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は `[a-z0-9][a-z0-9-]{0,63}` とし、path separator、dot segment、絶対 path、symlink による repo 外参照を使わない。
 
-- Phase 0 で要求を受けたら、まず triage して tier を決める。triage と tier 別フローは [references/sdlc-flow.md](references/sdlc-flow.md) を読む。
-- Phase / Gate の流れも同じ [references/sdlc-flow.md](references/sdlc-flow.md) に従う。
-- agent routing と成果物責務を確認する。
-- agent から最初の handoff を受け取る前に、受け取り形式を [references/handoff.md](references/handoff.md) に定めているため読み、その形で受け取る。
-- 各 Gate の review に入る前に、判定基準と進め方を [references/gate-review.md](references/gate-review.md) に置いているため読み、それに従う。
-- Gate fail で自律修正に入る時は、ループの手順と停止条件を [references/autonomous-loop.md](references/autonomous-loop.md) に置いているため、修正を始める前に読み従う。
-- 実装・検証後、Gate 3 前に `repository-maintainer` で docs / references / prose の追従更新と、repo hygiene / tooling 設定の影響確認を行う。
-- 自走中の Phase / Gate 進行は、進捗ステータス (短い 1 行) で十分とし、Phase / Gate ごとの完了報告は都度ユーザーに送らない。最終 Gate pass 時に変更内容・検証結果・未確認事項・次アクションを 1 回でまとめて報告する。
-- ユーザー確認が必要な場合だけ、lead が日本語で確認する。
+## 自走と確認 checkpoint
 
-## Agent Routing
+- lead は、停止線接触、追加情報が必要な質問、Gate fail の同じ blocking 繰り返し、scope / risk 受容判断、ユーザー指示待ちを除き、次の checkpoint まで進める。
+- Gate がある tier では、reviewer pass は次フェーズまたは完了へ進めるための材料であり、ユーザー承認ではない。lead は Gate pass 後に成果物、review 結果、残リスク、次工程をまとめ、ユーザー承認を得てから次へ進む。
+- Phase / Gate 進行中の中途報告は最小化する。進捗共有は短い status に留め、checkpoint または完了時に必要事項をまとめる。
+- commit / push は workflow の自走対象外。ユーザー指示がある場合だけ該当 skill で扱う。
 
-- Phase 0: lead。
-- Phase 1: `researcher` / `requirements-engineer`。
-- Gate 1: `requirements-reviewer`。
-- Phase 2: `researcher` / `architect` / `task-planner`。
-- Gate 2: `design-reviewer` / `security-reviewer`。
-- Phase 3: `researcher` / `implementer` / `inspector`。
-- Repository maintenance: `repository-maintainer`。
-- Gate 3: `quality-reviewer` / `security-reviewer`。
+## Triage 停止線
 
-## 停止線
+次は Phase 0 / Triage で止める。
 
-次の場合は自律判断せず、lead がユーザーへ確認する。
+- 要求、成功条件、scope が曖昧で tier 判定できない。
+- 要求・要望の再定義、change request 採否、scope / non-scope 変更、未解消リスク受容が必要。
+- secret を読んだ、生成した、移動した、削除した。値は出力しない。
 
-- 要求・要望の再定義が必要。
-- 変更要求候補を採用するか決める必要がある。
-- scope / non-scope を変更する必要がある。
-- 未合意、scope 外、または上流 artifact と矛盾する公開挙動、公開 API、data format、永続化、auth、権限、secret への影響がある。
-- 新しい依存を追加する。
-- 破壊的操作が必要。
-- 本番設定に触れる。
-- secret を読んだ、生成した、移動した、削除した。
-- 未解消リスクを受け入れて進む必要がある。
-- 同じ blocking 指摘が繰り返し残る。
+次は `full` に倒す。read-only 調査と artifact 作成は進めてよいが、実行、受容、Phase 3 着手の前にユーザー確認する。
+
+- 公開挙動 / 公開 API / data format / 永続化 / auth / 権限 / secret に触れる。
+- 新依存、破壊的操作、本番設定、runtime guardrail / CI permission / 外部送信 / deploy / publish に触れる。
+- command / script / hook / workflow の実行入口、権限、失敗条件、外部 I/O、security boundary、validation 境界、injection / path traversal、security-sensitive data flow に触れる。
+- 不確実性が高い、または影響範囲が Phase 0 だけでは絞れない。
+
+## 分岐
+
+| tier       | 条件                                            | reference                             |
+| ---------- | ----------------------------------------------- | ------------------------------------- |
+| `inquiry`  | コード変更・差分作成・実装を伴わない質問 / 相談 | [inquiry.md](references/inquiry.md)   |
+| `micro`    | 自明・単一箇所・設計判断なし                    | [micro.md](references/micro.md)       |
+| `standard` | 複数 file、または軽い設計判断あり               | [standard.md](references/standard.md) |
+| `full`     | 新機能、停止線接触、不確実性が高い              | [full.md](references/full.md)         |
+
+迷う場合は上位 tier。triage 結果（tier と根拠）は `request.md` に残す。ただし `inquiry` / `micro` は request folder を強制しない。
+
+## 表記
+
+- `Phase / Gate`: workflow 上の段階。
+- `工程`: その段階で実行する作業単位。
+- `扱い`: `必須` は必ず実行、`任意` は必要なら実行、`必要時` は前工程で不足や複雑さが出た時だけ実行、`省略` はその tier では通さない。
+- tier reference は Phase / Gate セクションを正本にし、各工程を小セクションで書く。
+
+## Tier Map
+
+| Phase / Gate                | inquiry | micro | standard | full |
+| --------------------------- | ------- | ----- | -------- | ---- |
+| Phase 0: 受付・Triage       | 必須    | 必須  | 必須     | 必須 |
+| Phase 1: 調査・要件         | 省略    | 省略  | 任意     | 必須 |
+| Gate 1: 要件レビュー        | 省略    | 省略  | 省略     | 必須 |
+| Phase 2: 設計・計画         | 省略    | 省略  | 任意     | 必須 |
+| Gate 2: 設計レビュー        | 省略    | 省略  | 省略     | 必須 |
+| Phase 3: 実装・検証・仕上げ | 省略    | 必須  | 必須     | 必須 |
+| Gate 3: 完了レビュー        | 省略    | 省略  | 必須     | 必須 |
+
+## 完了方法
+
+| tier       | 完了方法                                      |
+| ---------- | --------------------------------------------- |
+| `inquiry`  | lead が直接回答する。Gate は通さない。        |
+| `micro`    | lead が自己確認し、変更内容と確認結果を返す。 |
+| `standard` | Gate 3 pass 後にユーザー承認を得て完了する。  |
+| `full`     | Gate 1 / 2 / 3 pass 後にユーザー承認を得る。  |
 
 ## 出力
 

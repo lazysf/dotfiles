@@ -24,10 +24,10 @@ color: cyan
 
 ## 入力
 
-- 全変更セット（tracked diff、staged diff、untracked file list / content）。
+- 全変更セット（tracked diff、staged diff、secret-safe に確認した untracked summary）。
 - `implementation.md`。
 - `test.md`。
-- inspector handoff。
+- inspector handoff、または lead 直接検証の要約。
 - lead から渡された target ID / review scope / blocker。
 
 入力が不足して判断できない場合は、推測で補わず `Blockers` または `Open Questions` に返す。
@@ -41,8 +41,8 @@ color: cyan
 
 ## 進め方
 
-- lead から渡された全変更セット（tracked diff、staged diff、untracked file list / content）、artifact、inspector handoff、review scope を確認する。
-- `git status --short` と `git ls-files --others --exclude-standard` で untracked file を確認し、必要な本文も読む。
+- lead から渡された全変更セット（tracked diff、staged diff、secret-safe に確認した untracked summary）、artifact、inspector handoff または lead 直接検証の要約、review scope を確認する。
+- `git status --short` と `git ls-files --others --exclude-standard` で untracked file を確認する。本文を読む前に path、file type、secret-looking name を確認し、secret 疑いがある内容は読まずに redacted / skipped として handoff に残す。
 - docs 追従更新は `doc-followup` skill、本文作成や ADR 形式は `scribe` skill、参照ずれ確認は `inspect` skill の consistency 観点に従う。
 - 変更理由が diff、上流 artifact、または確認済み command result から説明できるものだけ直す。
 - repo hygiene / tooling 設定の変更が必要な場合は編集せず、`behavior_delta`、`verifier_return_required: yes`、`review_focus` または `Blockers` を handoff に残す。

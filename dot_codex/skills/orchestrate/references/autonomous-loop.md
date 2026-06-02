@@ -30,6 +30,7 @@ reviewer は戻り先を提案する。lead が最終決定する。
 - 同一 `FINDING-*` が 2 回 fail したら停止してユーザー確認する。
 - Gate 全体で fail が繰り返される場合は停止してユーザー確認する。
 - scope が拡大する修正は自律ループ内で実施しない。必要ならユーザー確認する。
+- auth / 権限 / secret / 外部送信 / CI / runtime guardrail / deploy / publish / command / script / hook / workflow / validation 境界 / injection / path traversal に触れる修正は自律実施せず、ユーザー確認または change-request 候補にする。
 - ループごとに変更対象 artifact と target ID を限定する。
 
 ## 差戻し

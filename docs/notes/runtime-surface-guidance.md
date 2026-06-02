@@ -30,7 +30,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 
 ## 導線の考え方
 
-固定の細かい代表導線は `dot_codex/AGENTS.md` や `dot_claude/CLAUDE.md` に持たせない。multi-agent workflow の流れは `orchestrate` skill の references を正本にする。
+固定の細かい代表導線は `dot_codex/AGENTS.md` や `dot_claude/CLAUDE.md` に持たせない。multi-agent workflow は `orchestrate` skill を正本にする。Phase 0、Triage 判定、Triage 停止線、星取表は `SKILL.md`、tier 決定後の flow と停止線は `references/inquiry.md` / `references/micro.md` / `references/standard.md` / `references/full.md` を正本にする。
 実行時の入口判断は、要求分類表ではなく、各 `SKILL.md` の description、agent 定義、ユーザーが明示した依頼語、既存 docs / ADR / code で確認できる事実に基づいて行う。
 迷う場合は、観測事実の取得を `research`、要件整理や実装前の変更境界、検証入口の問い詰めを `grill`、doc / artifact の作成・更新・整形を `scribe`、変更後の docs 追従更新を `doc-followup` に寄せる。実装は `implement`、変更後確認は `inspect` を使う。workflow 内の実装後 repo hygiene / docs / tooling 設定の仕上げは `repository-maintainer` agent を使う。
 
@@ -82,3 +82,4 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - [ADR 0027](../adr/0027-align-codex-skill-names-with-claude.md)
 - [ADR 0028](../adr/0028-align-agent-names-with-skill-pairs.md)
 - [ADR 0029](../adr/0029-orchestrate-autonomous-run-until-final-gate.md)
+- [ADR 0030](../adr/0030-split-orchestrate-tier-flow-references.md)

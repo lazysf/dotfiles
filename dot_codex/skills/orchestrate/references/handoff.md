@@ -52,7 +52,7 @@ status: done | blocked
 
 ## Security-Relevant Actions
 
-external_io: none | [...]
+external_io: none | read:[source / purpose / data read] | write:[destination / purpose / data sent]
 commands: none | [...]
 files_written: none | [...]
 files_deleted: none | [...]
@@ -71,11 +71,13 @@ secret_access: none | [対象・理由。値は書かない]
 ## Repository Maintenance Impact
 
 maintenance_changes:
+
 - docs: [...]
 - repo_hygiene: [...]
 - tooling: [...]
 
 behavior_delta:
+
 - [lint | format | test | build]: [changed | unchanged | not_applicable] - [対象、rule、失敗条件、実行入口の差分]
 
 quality_gate_impact: strengthened | unchanged | not_applicable
@@ -83,13 +85,27 @@ verifier_return_required: yes | no
 security_ci_impact: none | [CI permission / secret / external I/O / deploy-publish への影響]
 
 checks:
+
 - [command / static check / manual check]
 - none
 
 review_focus:
+
 - [Gate 3 reviewer に重点確認してほしい点]
 - none
 ```
+
+## Untracked Content Handling
+
+Gate 3 や repository maintenance で untracked file を扱う場合は、内容を読む前に path、file type、secret-looking name を確認する。
+
+```markdown
+## Untracked Content Handling
+
+- `[path]`: content reviewed | redacted | skipped_due_to_secret_risk - [理由]
+```
+
+secret 疑いがある untracked content は読まず、内容ではなく種類、保管場所、用途、確認不能な範囲だけを書く。
 
 ## Reviewer Output
 
@@ -151,6 +167,7 @@ reason: [理由]
 - `repository-maintainer` が `blocked` を返した場合、lead は Gate 3 へ進めない。runtime guardrail / CI permission / secret / auth / 権限 / 外部送信 / deploy / publish に触れる blocker は、前工程へ自律差戻しせずユーザー確認または change-request 候補にする。
 - 対象 ID が存在する工程で `none` を使う場合は理由を書く。
 - reviewer が `write_operations` / `modified_artifacts` / `external_io` を `none` 以外で返した場合、その review は無効扱いにする。
-- researcher が `external_io` / `files_written` / `secret_access` を `none` 以外で返した場合、その handoff は無効扱いにする。
+- researcher の `external_io` は read-only lookup だけ許可する。source、目的、確認範囲を残し、secret / credential / private value を読まない。`external_io: write`、`files_written`、`secret_access` が `none` 以外なら、その handoff は無効扱いにする。
 - `not_reviewed` に Gate 上必須の対象が残る場合、原則 pass にしない。
 - secret 値は成果物、handoff、review、log に書かない。secret の種類、保管場所、用途だけを書く。
+- `commands` には secret / token 値を含めず、実行目的と対象だけを書く。
