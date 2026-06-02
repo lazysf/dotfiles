@@ -34,7 +34,7 @@
 - agent: lead / `repository-maintainer`
 - artifact: handoff または最終出力
 - format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従や repo hygiene 確認が必要な場合だけ行う。
+- 進め方: docs / references / prose 追従や repo hygiene 確認が必要な場合だけ行う。request folder を作る場合、artifact の作成・更新は自分の `docs/requests/<slug>/` 配下だけに限定し、別の `docs/requests/<other-slug>/` と `docs/requests/<slug>/` 外の docs は read-only とする。
 
 ## 停止線
 

@@ -16,6 +16,13 @@ description: 全依頼の進行入口。質問、相談、調査、typo、1 行�
 
 request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は `[a-z0-9][a-z0-9-]{0,63}` とし、path separator、dot segment、絶対 path、symlink による repo 外参照を使わない。
 
+## Request Artifact 境界
+
+- request artifact は、必ずその request 専用の `docs/requests/<slug>/` 配下だけに作成・更新する。
+- 関連機能、過去実装、類似作業のために作られた別の `docs/requests/<other-slug>/` と、`docs/requests/<slug>/` 外の docs は read-only とし、artifact 追記・修正・整理に使わない。
+- 既存 request folder が同じ要求の継続か判断できない場合は、新しい `slug` を作る。過去 folder や `docs/requests/<slug>/` 外の docs の編集が必要なら、理由と対象 path を示してユーザー確認する。
+- `repository-maintainer`、docs follow-up、Gate fail 修正でもこの境界を維持する。横断的な記録が必要な場合は、自分の `docs/requests/<slug>/` に参照・要約を書く。
+
 ## 自走と確認 checkpoint
 
 - lead は、停止線接触、追加情報が必要な質問、Gate fail の同じ blocking 繰り返し、scope / risk 受容判断、ユーザー指示待ちを除き、次の checkpoint まで進める。
