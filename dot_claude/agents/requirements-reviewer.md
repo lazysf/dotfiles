@@ -3,7 +3,7 @@ name: requirements-reviewer
 description: Gate 1 で request.md と requirements.md を read-only review し、元要求との整合、scope、AC の観測可能性、責務超過を確認する時に使う。
 tools: Read, Glob, Grep
 permissionMode: plan
-model: opus
+model: claude-opus-4-6
 effort: medium
 color: pink
 ---

@@ -3,7 +3,7 @@ name: security-reviewer
 description: Gate 2 / Gate 3 と workflow 外の diff review で、auth、権限、secret、外部 I/O、command、CI 変更、data flow、injection、path traversal、情報漏洩を read-only review する時に使う。
 tools: Read, Glob, Grep
 permissionMode: plan
-model: opus
+model: claude-opus-4-6
 effort: high
 color: red
 ---
