@@ -53,14 +53,14 @@
 
 ## 影響範囲
 
-| File | 変更 |
-|---|---|
-| `dot_claude/skills/orchestrate/SKILL.md` | 基本方針節 + 手順節 |
-| `dot_codex/skills/orchestrate/SKILL.md` | 同上 |
-| `dot_claude/skills/orchestrate/references/sdlc-flow.md` | Triage 節周辺 |
-| `dot_codex/skills/orchestrate/references/sdlc-flow.md` | 同上 |
-| `docs/adr/0029-orchestrate-autonomous-run-until-final-gate.md` | 新規 |
-| `docs/notes/runtime-surface-guidance.md` | ADR 0029 リンク追加 |
+| File                                                           | 変更                |
+| -------------------------------------------------------------- | ------------------- |
+| `dot_claude/skills/orchestrate/SKILL.md`                       | 基本方針節 + 手順節 |
+| `dot_codex/skills/orchestrate/SKILL.md`                        | 同上                |
+| `dot_claude/skills/orchestrate/references/sdlc-flow.md`        | Triage 節周辺       |
+| `dot_codex/skills/orchestrate/references/sdlc-flow.md`         | 同上                |
+| `docs/adr/0029-orchestrate-autonomous-run-until-final-gate.md` | 新規                |
+| `docs/notes/runtime-surface-guidance.md`                       | ADR 0029 リンク追加 |
 
 agent 定義 / handoff / gate-review / autonomous-loop / 進行節 (CLAUDE.md / AGENTS.md) は変更不要。
 

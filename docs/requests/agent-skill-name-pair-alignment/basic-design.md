@@ -12,14 +12,14 @@
 
 ### 1. Dir / file rename (6 件)
 
-| 旧 | 新 |
-|---|---|
-| `dot_claude/agents/verifier.md` | `dot_claude/agents/inspector.md` |
-| `dot_claude/agents/developer.md` | `dot_claude/agents/implementer.md` |
-| `dot_claude/agents/analyst.md` | `dot_claude/agents/researcher.md` |
-| `dot_codex/agents/verifier.toml` | `dot_codex/agents/inspector.toml` |
+| 旧                                | 新                                  |
+| --------------------------------- | ----------------------------------- |
+| `dot_claude/agents/verifier.md`   | `dot_claude/agents/inspector.md`    |
+| `dot_claude/agents/developer.md`  | `dot_claude/agents/implementer.md`  |
+| `dot_claude/agents/analyst.md`    | `dot_claude/agents/researcher.md`   |
+| `dot_codex/agents/verifier.toml`  | `dot_codex/agents/inspector.toml`   |
 | `dot_codex/agents/developer.toml` | `dot_codex/agents/implementer.toml` |
-| `dot_codex/agents/analyst.toml` | `dot_codex/agents/researcher.toml` |
+| `dot_codex/agents/analyst.toml`   | `dot_codex/agents/researcher.toml`  |
 
 `git mv` で履歴追跡を維持する。
 
@@ -58,7 +58,7 @@ agent 名としての参照を全 surface で新名に統一。
 
 実装時に grep 結果を 1 件ずつ確認し、context で「agent 名」「一般単語」を判定する。agent 名としての使用は概ね次のパターン:
 
-- ``` `verifier` ```、``` `developer` ```、``` `analyst` ``` の inline code
+- `` `verifier` ``、`` `developer` ``、`` `analyst` `` の inline code
 - "工程 N: `developer`" のような Phase 説明
 - agent から / agent への handoff の文脈
 - "Codex では `verifier` agent を使う" 等の対比文
