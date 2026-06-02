@@ -13,7 +13,7 @@
 
 `dot_claude/skills/orchestrate/SKILL.md` および `dot_codex/skills/orchestrate/SKILL.md` の基本方針節に次を追加する。
 
-```
+```markdown
 - 停止線接触、Gate fail の同じ blocking 繰り返し、ユーザー入力必須の決定 を除き、triage 後から tier に応じた最終 Gate (`inquiry` Phase 0 / `micro` 自己確認 / `standard` 統合 Gate / `full` Gate 3) の pass まで自走する。commit / push は引き続きユーザー指示で実行する。
 ```
 
@@ -23,7 +23,7 @@
 
 両 surface の手順節に次を追加する。
 
-```
+```markdown
 - 自走中の Phase / Gate 進行は、進捗ステータス (caveman の短い 1 行など) で十分とし、Phase / Gate ごとの完了報告を都度ユーザーに送らない。最終 Gate pass 時にまとめて変更内容・検証結果・未確認事項・次アクションを 1 回で報告する。
 ```
 
@@ -31,7 +31,7 @@
 
 両 surface の `sdlc-flow.md` 冒頭 (Triage 節の直前または直後) に次を追加する。
 
-```
+```markdown
 全 tier に共通して、停止線接触・Gate fail の同じ blocking 繰り返し・ユーザー入力必須の決定 を除き、orchestrate は triage 後から最終 Gate (tier に応じる) の pass まで自走する。Phase / Gate ごとの完了報告は都度送らず、最終 Gate pass 時に lead がまとめて報告する。commit / push は依然としてユーザー指示で実行する。
 ```
 
