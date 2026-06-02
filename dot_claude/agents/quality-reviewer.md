@@ -4,7 +4,7 @@ description: Gate 3 と workflow 外の diff review で、scope、可読性、�
 tools: Read, Glob, Grep
 permissionMode: plan
 model: claude-opus-4-6
-effort: medium
+effort: high
 color: orange
 ---
 
