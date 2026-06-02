@@ -119,18 +119,18 @@
 - 期待:
   - 変更後の追従更新ではない docs / artifact 作成・整形では `scribe` が文脈に応じて自動使用される
   - 新しい user-facing workflow を増やさず、既存ドキュメント更新と artifact 整形の入口として扱われる
-  - 変更後の参照ずれや docs 追従更新は `doc-followup` または `repository-maintainer` と切り分けられる
+  - 変更後の参照ずれや docs 追従更新は lead が `doc-followup` skill を使って行う
   - 知識の置き場判断や共有理解の問い詰めが必要な場合は `grill` と切り分けられる
 
-### 9.5. 変更後の repo maintenance が `repository-maintainer` に乗る
+### 9.5. 変更後の repo maintenance を lead が doc-followup で扱う
 
 - 例: 「この変更に docs を追従させたい」「rename 後の参照漏れを直したい」「ADR と README の一覧も更新して」「`.gitignore` や lint 設定も仕上げて」
 - 期待:
-  - `orchestrate` workflow では、実装・検証後かつ Gate 3 前に `repository-maintainer` が docs / references / prose の追従更新と repo hygiene / tooling 設定の影響確認を行う
+  - `orchestrate` workflow では、実装・検証後かつ Gate 3 前に lead が `doc-followup` skill で docs / references / prose の追従更新と repo hygiene / tooling 設定の影響確認を行う
   - docs 追従更新は `doc-followup`、本文作成や artifact 整形は `scribe`、追従漏れ確認だけなら `inspect` と切り分けられる
   - tooling の挙動差分がある場合、Gate 3 前に `inspector` へ戻り、影響する確認と `test.md` が更新される
   - runtime guardrail 変更や品質ゲート弱体化は自走編集されず blocker として扱われる
-  - Gate 3 review では repository maintenance 後の全変更セットと handoff が入力に含まれる
+  - Gate 3 review では全変更セットと handoff が入力に含まれる
 
 ### 10. 知見蓄積は `grill` / `scribe` に分担される
 
@@ -183,10 +183,10 @@
   - README、docs、index、一覧、参照リンクの追従漏れ確認だけなら `inspect` の `consistency` mode で扱われる
   - ファイル追加、rename、削除、ignore 変更の参照追従確認は `inspect` の対象になる
   - standalone で追従更新まで行う場合は `doc-followup` に進む
-  - workflow 内で実装後の repo hygiene / docs / tooling 設定まで仕上げる場合は `repository-maintainer` に進む
+  - workflow 内で実装後の repo hygiene / docs / tooling 設定まで仕上げる場合は lead が `doc-followup` skill を使う
   - `.gitignore` は Git 追跡対象、`.chezmoiignore` は chezmoi 配布対象として独立に確認される
   - `inspect` が判断を要する事項を見つけた場合、確認すべき点が返る
-  - `doc-followup` または `repository-maintainer` が修正を加えた場合、次の commit 導線で差分と 1 コミット 1 変更のまとまりが確認される
+  - lead が `doc-followup` で修正を加えた場合、次の commit 導線で差分と 1 コミット 1 変更のまとまりが確認される
 
 ### 14. `git-push` が知見蓄積を行わない
 
@@ -239,7 +239,7 @@
 - 観測ポイント:
   - `grill` skill が問い詰めと共有理解の整理専用のまま保たれ、review 本体を抱え込んでいない
   - multi-agent workflow の進行は `orchestrate`、要件 review は `requirements-reviewer`、設計 review は `design-reviewer`、品質 review は `quality-reviewer` に分離されている
-  - 実装後の repo hygiene / docs / tooling 設定の仕上げは `repository-maintainer` に分離されている
+  - 実装後の repo hygiene / docs / tooling 設定の仕上げは lead が `doc-followup` skill で行う
   - 導線の詳細は [Runtime Surface Guidance](./runtime-surface-guidance.md) と各 `SKILL.md` / agent 定義を正本にする
 
 ### 19. context-aware upstream grilling が機能する
@@ -283,8 +283,8 @@
   - agent 定義側の `model` / `model_reasoning_effort` / `sandbox_mode` / instructions を有効にする目的が崩れていない
   - read-only reviewer は `sandbox_mode = "read-only"` を維持している
   - workflow では各 agent へ request folder、対象 artifact、対象 ID、観点、除外範囲、検証状況を明示して渡す
-  - `repository-maintainer` へは、実装差分、inspector handoff、repo hygiene / tooling 設定の確認範囲、Gate 3 reviewer に渡すべき観点を明示して渡す
-  - Gate 3 reviewer へは、repository maintenance 後の全変更セットと handoff を渡す
+  - lead は `doc-followup` skill 適用前に、実装差分、inspector handoff、repo hygiene / tooling 設定の確認範囲、Gate 3 reviewer に渡すべき観点を整理する
+  - Gate 3 reviewer へは、全変更セットと handoff を渡す
 
 ### 23. repo 固有契約の軽い確認を手動回帰で補う
 
@@ -322,3 +322,4 @@
 - [ADR 0022](../adr/0022-preserve-adr-body-history.md)
 - [ADR 0023](../adr/0023-add-doc-followup-skill.md)
 - [ADR 0024](../adr/0024-add-repository-maintainer-agent.md)
+- [ADR 0034](../adr/0034-reduce-non-reviewer-agents.md)

@@ -15,17 +15,12 @@
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable",
     "allow": [
-      "Agent(architect)",
       "Agent(design-reviewer)",
-      "Agent(implementer)",
       "Agent(inspector)",
       "Agent(quality-reviewer)",
-      "Agent(repository-maintainer)",
-      "Agent(requirements-engineer)",
       "Agent(requirements-reviewer)",
       "Agent(researcher)",
-      "Agent(security-reviewer)",
-      "Agent(task-planner)"
+      "Agent(security-reviewer)"
     ],
     "deny": [
       "Read(//**/.env)",

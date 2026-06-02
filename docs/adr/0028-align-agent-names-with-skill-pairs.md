@@ -1,6 +1,7 @@
 # 0028: skill-agent ペアを語幹一致で揃える
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0034
 - Amends: 0020, 0024, 0027
 
 ADR 0020 で Claude SDLC workflow を Codex に import し、ADR 0024 で `repository-maintainer` agent を追加、ADR 0027 で Codex 側の workflow skill 名を Claude 基準 (`implement` / `inspect`) に揃えた。残った課題は工程系の skill ⇔ agent ペアの語幹不一致で、`implement` ⇔ `developer`、`inspect` ⇔ `verifier`、`research` ⇔ `analyst` のように動詞と役職が別の語幹に分かれていた。`architecture` ⇔ `architect` だけが語幹一致しており、orchestrate references / docs / 他 agent 定義で「skill `inspect`」「agent `verifier`」を別々に説明する必要があった。

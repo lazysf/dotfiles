@@ -37,7 +37,7 @@
 
 ## 実行した確認
 
-- [implementer が実行した確認。inspector の最終結果は `test.md` に置く。]
+- [lead または inspector が実行した確認。inspector の最終結果は `test.md` に置く。]
 
 ## 未確認事項
 

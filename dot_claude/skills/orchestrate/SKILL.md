@@ -23,7 +23,7 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 - request artifact は、必ずその request 専用の `docs/requests/<slug>/` 配下だけに作成・更新する。
 - 関連機能、過去実装、類似作業のために作られた別の `docs/requests/<other-slug>/` と、`docs/requests/<slug>/` 外の docs は read-only とし、artifact 追記・修正・整理に使わない。
 - 既存 request folder が同じ要求の継続か判断できない場合は、新しい `slug` を作る。過去 folder や `docs/requests/<slug>/` 外の docs の編集が必要なら、理由と対象 path を示してユーザー確認する。
-- `repository-maintainer`、docs follow-up、Gate fail 修正でもこの境界を維持する。横断的な記録が必要な場合は、自分の `docs/requests/<slug>/` に参照・要約を書く。
+- Gate 3 前 docs 確認、Gate fail 修正でもこの境界を維持する。横断的な記録が必要な場合は、自分の `docs/requests/<slug>/` に参照・要約を書く。
 
 ## 自走と確認 checkpoint
 
@@ -33,6 +33,7 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 - Gate pass 後にユーザー確認するのは、停止線接触、scope / risk 受容、change request 採否、追加情報がないと次工程を判断できない事項、ユーザー指示待ちが残る場合だけ。
 - Phase / Gate 進行中の中途報告は最小化する。進捗共有は短い status に留め、checkpoint または完了時に必要事項をまとめる。
 - commit / push は workflow の自走対象外。ユーザー指示がある場合だけ該当 skill で扱う。
+- 要件 / 設計 / task / 実装 / 検証 artifact は lead が scribe skill を使って書く。format reference (scribe/references/*-format.md) は正本として変更しない。
 
 ## Triage 停止線
 

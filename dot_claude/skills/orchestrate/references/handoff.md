@@ -4,7 +4,7 @@ agent は完了時に以下の形で lead へ返す。Claude でも agent 間の
 
 ## Engineering Agent Output
 
-対象: `researcher` / `requirements-engineer` / `architect` / `task-planner` / `implementer` / `inspector` / `repository-maintainer`
+対象: `researcher` / `inspector`
 
 ```markdown
 ## Result
@@ -65,39 +65,9 @@ secret_access: none | [対象・理由。値は書かない]
 - [lead が次に起動すべき agent / Gate / user confirmation]
 ```
 
-`repository-maintainer` は通常項目に加えて以下も返す。
-
-```markdown
-## Repository Maintenance Impact
-
-maintenance_changes:
-
-- docs: [...]
-- repo_hygiene: [...]
-- tooling: [...]
-
-behavior_delta:
-
-- [lint | format | test | build]: [changed | unchanged | not_applicable] - [対象、rule、失敗条件、実行入口の差分]
-
-quality_gate_impact: strengthened | unchanged | not_applicable
-verifier_return_required: yes | no
-security_ci_impact: none | [CI permission / secret / external I/O / deploy-publish への影響]
-
-checks:
-
-- [command / static check / manual check]
-- none
-
-review_focus:
-
-- [Gate 3 reviewer に重点確認してほしい点]
-- none
-```
-
 ## Untracked Content Handling
 
-Gate 3 や repository maintenance で untracked file を扱う場合は、内容を読む前に path、file type、secret-looking name を確認する。
+Gate 3 で untracked file を扱う場合は、内容を読む前に path、file type、secret-looking name を確認する。
 
 ```markdown
 ## Untracked Content Handling
@@ -162,9 +132,7 @@ reason: [理由]
 
 - `Next Action Proposal` は提案であり、lead が最終決定する。
 - `Next Action Proposal` を agent が直接実行先へ渡す前提にしない。
-- `repository-maintainer` の `behavior_delta` が `changed` を含む場合、`verifier_return_required` は `yes` にする。
-- `repository-maintainer` は品質ゲート弱体化や runtime guardrail 変更を行わず、必要なら `Blockers` に返す。
-- `repository-maintainer` が `blocked` を返した場合、lead は Gate 3 へ進めない。runtime guardrail / CI permission / secret / auth / 権限 / 外部送信 / deploy / publish に触れる blocker は、前工程へ自律差戻しせずユーザー確認または change-request 候補にする。
+- lead が doc-followup で品質ゲート弱体化や runtime guardrail / CI permission / secret / auth / 権限 / 外部送信 / deploy / publish 影響に触れる必要が出た場合は、前工程へ自律差戻しせずユーザー確認または change-request 候補にする。
 - 対象 ID が存在する工程で `none` を使う場合は理由を書く。
 - reviewer が `write_operations` / `modified_artifacts` / `external_io` を `none` 以外で返した場合、その review は無効扱いにする。
 - researcher の `external_io` は read-only lookup だけ許可する。source、目的、確認範囲を残し、secret / credential / private value を読まない。`external_io: write`、`files_written`、`secret_access` が `none` 以外なら、その handoff は無効扱いにする。

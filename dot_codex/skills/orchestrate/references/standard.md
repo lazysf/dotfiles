@@ -23,7 +23,7 @@
 ### 要件整理
 
 - 扱い: 任意
-- agent: lead / `requirements-engineer`
+- agent: lead
 - artifact: `requirements.md`
 - format: [requirements-format.md](../../scribe/references/requirements-format.md)
 - 進め方: 軽量なら `request.md` に scope / acceptance を残すだけでよい。
@@ -41,7 +41,7 @@
 ### 基本設計
 
 - 扱い: 任意
-- agent: `architect`
+- agent: lead
 - artifact: `basic-design.md`
 - format: [basic-design-format.md](../../scribe/references/basic-design-format.md)
 - 進め方: 複数 file や軽い設計判断がある場合に軽量に作る。
@@ -49,7 +49,7 @@
 ### 詳細設計
 
 - 扱い: 必要時
-- agent: `architect`
+- agent: lead
 - artifact: `detailed-design.md`
 - format: [detailed-design-format.md](../../scribe/references/detailed-design-format.md)
 - 進め方: 詳細な処理順、状態、edge case が必要な場合だけ作る。
@@ -57,7 +57,7 @@
 ### タスク分解
 
 - 扱い: 必要時
-- agent: lead / `task-planner`
+- agent: lead
 - artifact: `tasks.md`
 - format: [tasks-format.md](../../scribe/references/tasks-format.md)
 - 進め方: 実装順序や完了条件を分ける必要がある場合だけ作る。
@@ -75,7 +75,7 @@
 ### 実装
 
 - 扱い: 必須
-- agent: lead / `implementer`
+- agent: lead
 - artifact: `implementation.md`
 - format: [implementation-format.md](../../scribe/references/implementation-format.md)
 - 進め方: Phase 3 entry condition を満たしたうえで、合意済み scope と設計に沿って code / config / tests を変更する。実装結果を根拠に上流 artifact を作り直さない。
@@ -88,13 +88,13 @@
 - format: [test-format.md](../../scribe/references/test-format.md)
 - 進め方: test / lint / build / manual check と残リスクを確認する。`tasks.md` を省略した場合は `request.md` の scope / acceptance / 実装範囲へ trace する。
 
-### repository maintenance
+### Gate 3 前 docs 確認
 
-- 扱い: 必須
-- agent: `repository-maintainer`
-- artifact: handoff
-- format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従と repo hygiene / tooling 影響を見る。lead が直接検証した場合は `test.md` と確認結果の要約を inspector handoff 相当として渡す。request artifact は自分の `docs/requests/<slug>/` 配下だけ編集し、slug 外 docs は read-only とする。repository maintenance は実装後の追従確認であり、実装前に必要だった要件・設計・task artifact の後付け作成には使わない。
+- 扱い: 必要時
+- agent: lead
+- artifact: なし、または request.md / implementation.md の自然な節
+- format: なし
+- 進め方: lead が必要時に doc-followup skill を使って docs / references / prose の追従更新と参照ずれ確認を行う。request artifact は自分の `docs/requests/<slug>/` 配下だけ編集する。Gate 3 着手前に確認結果と残リスクを request.md または implementation.md に短くまとめる。
 
 ## Gate 3: 完了レビュー
 
@@ -116,7 +116,6 @@
 
 - 公開挙動系（ブロックA）/ command 系（ブロックB）の停止線は [stop-lines.md](stop-lines.md) のカタログに従い、`full` に移し、実行、受容、Phase 3 着手前にユーザー確認する。該当の可能性があればカタログ（stop-lines.md）を必ず開いて確認する。
 - scope / non-scope 変更、change request 採否、未解消リスク受容が必要ならユーザー確認する。
-- `repository-maintainer` が `blocked` を返した場合、Gate 3 へ進めない。
 - runtime guardrail / CI permission / secret / auth / 権限 / 外部送信 / deploy / publish / command / script / hook / workflow / validation 境界 / injection / path traversal に触れる blocker は、自律差戻しせずユーザー確認または change-request 候補にする。
 - 同じ Gate blocking が繰り返し残る場合はユーザー確認する。
 
@@ -125,6 +124,6 @@
 - `requirements.md` / `basic-design.md` は必要時のみ軽量に作る。軽量 standard では `request.md` に scope / acceptance を残してよい。
 - `detailed-design.md` とタスク分解は必要時のみ。
 - `requirements.md` / `tasks.md` を省略した場合、`implementation.md` / `test.md` / Gate 3 は、実装前に確定した `request.md` の scope / acceptance / 実装範囲 / 省略理由を trace 元にする。
-- 実装後に作る `implementation.md` / `test.md` / repository maintenance handoff は記録と検証用であり、実装可否を判断する上流 artifact の代替にしない。
+- 実装後に作る `implementation.md` / `test.md` は記録と検証用であり、実装可否を判断する上流 artifact の代替にしない。
 - standard の Gate は Gate 3 のみ。`quality-reviewer` 必須、Triage 停止線または Security-Relevant Actions が該当、missing、unknown の場合は `security-reviewer` 追加。
 - Phase / Gate ごとの完了報告は不要。Gate 3 pass 時に変更内容・検証結果・未確認事項・次アクションをまとめ、ユーザー確認が必要な事項がなければ承認待ちを挟まず完了する。
