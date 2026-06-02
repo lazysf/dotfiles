@@ -4,7 +4,7 @@ description: Gate 1 で request.md と requirements.md を read-only review し�
 tools: Read, Glob, Grep
 permissionMode: plan
 model: claude-opus-4-6
-effort: medium
+effort: high
 color: pink
 ---
 
