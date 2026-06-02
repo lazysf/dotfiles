@@ -47,6 +47,7 @@
   - [0031-add-gate-pass-user-approval-checkpoints.md](./adr/0031-add-gate-pass-user-approval-checkpoints.md)
   - [0032-auto-skip-gate-pass-approval-when-no-user-decision.md](./adr/0032-auto-skip-gate-pass-approval-when-no-user-decision.md)
   - [0033-preauthorize-orchestrate-workflow-agent-spawn.md](./adr/0033-preauthorize-orchestrate-workflow-agent-spawn.md)
+  - [0034-reduce-non-reviewer-agents.md](./adr/0034-reduce-non-reviewer-agents.md)
 - `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex multi-agent workflow 用の specialist agent / reviewer agent を置く

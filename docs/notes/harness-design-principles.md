@@ -35,7 +35,7 @@
 - context 固有の用語は `CONTEXT.md` に置く
 - 繰り返し使う手順は `dot_codex/skills/` または `dot_claude/skills/`
 - 機械的に守らせたい制約は `dot_codex/rules/`、Claude Code の path 条件付き運用ルールは `dot_claude/rules/`
-- workflow 工程担当、repository maintenance、reviewer などの専門 role は `dot_codex/agents/` または `dot_claude/agents/`
+- 調査・検証 specialist、reviewer などの専門 role は `dot_codex/agents/` または `dot_claude/agents/`
 
 ### 2.5. ADR は状態付き台帳として扱う
 
@@ -63,13 +63,13 @@
 - 単発の説明で十分なものは `docs/` に残す
 - 何度も繰り返す手順は `skills/` への昇格を検討する
 - 機械的に止めたい操作は `rules/` を優先する
-- 工程担当、repository maintenance、reviewer などの定型的な専門 role は `agents/` に分ける
+- 調査・検証 specialist、reviewer などの定型的な専門 role は `agents/` に分ける
 
 ### 6. workflow と review は agent-first の明示選択で扱う
 
 - multi-agent workflow や review 種別の選択責務を prose の暗黙挙動へ逃がさず、surface で明示する
 - workflow の進行は `orchestrate` skill と specialist agent 定義を正本にする
-- 実装後の repo hygiene / docs / tooling 設定の仕上げは `repository-maintainer` agent に分け、lead は handoff 統合とユーザー確認を担う
+- 実装後の repo hygiene / docs / tooling 設定の仕上げは lead が `doc-followup` skill を使って行い、ユーザー確認を含めて lead が一貫して担う
 - review 本体は reviewer agent が担い、結果の見せ方も agent 定義内で人間向けに調整する
 - 具体的な reviewer 名や review 導線は surface 文書と agent 定義を正本にする
 
@@ -98,3 +98,4 @@
 - [ADR 0011](../adr/0011-prune-codex-skill-and-reviewer-surface.md)
 - [ADR 0023](../adr/0023-add-doc-followup-skill.md)
 - [ADR 0024](../adr/0024-add-repository-maintainer-agent.md)
+- [ADR 0034](../adr/0034-reduce-non-reviewer-agents.md)

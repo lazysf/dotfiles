@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: architect が basic-design.md / detailed-design.md を作る前に、構造改善、責務分担、module boundary、interface、data flow、testability、security boundary を整理する時に使う。原因調査は `research`、差分作成は `implement`。
+description: lead が basic-design.md / detailed-design.md を作る前に、構造改善、責務分担、module boundary、interface、data flow、testability、security boundary を整理する時に使う。原因調査は `research`、差分作成は `implement`。
 ---
 
 # Architecture

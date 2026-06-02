@@ -15,10 +15,10 @@
 ### 実装
 
 - 扱い: 必須
-- agent: lead / `implementer`
+- agent: lead
 - artifact: `implementation.md`
 - format: [implementation-format.md](../../scribe/references/implementation-format.md)
-- 進め方: lead が直接実装する。必要なら `implementer` か該当 skill を使う。request folder を作らない場合、artifact は作らず最終出力に変更内容と確認結果をまとめる。
+- 進め方: lead が直接実装する。必要なら該当 skill を使う。request folder を作らない場合、artifact は作らず最終出力に変更内容と確認結果をまとめる。
 
 ### 自己確認
 
@@ -28,13 +28,13 @@
 - format: [test-format.md](../../scribe/references/test-format.md)
 - 進め方: lead が意図外差分、未確認リスク、scope ずれを確認する。Gate はない。request folder を作る場合だけ `test.md` を使う。
 
-### repository maintenance
+### Gate 3 前 docs 確認
 
 - 扱い: 任意
-- agent: lead / `repository-maintainer`
-- artifact: handoff または最終出力
-- format: [handoff.md](handoff.md)
-- 進め方: docs / references / prose 追従や repo hygiene 確認が必要な場合だけ行う。request folder を作る場合、artifact の作成・更新は自分の `docs/requests/<slug>/` 配下だけに限定し、別の `docs/requests/<other-slug>/` と `docs/requests/<slug>/` 外の docs は read-only とする。
+- agent: lead
+- artifact: なし、または request.md / implementation.md の自然な節
+- format: なし
+- 進め方: lead が必要時に doc-followup skill を使って docs / references / prose の追従更新と参照ずれ確認を行う。request folder を作る場合、artifact の作成・更新は自分の `docs/requests/<slug>/` 配下だけに限定し、別の `docs/requests/<other-slug>/` と `docs/requests/<slug>/` 外の docs は read-only とする。
 
 ## 停止線
 

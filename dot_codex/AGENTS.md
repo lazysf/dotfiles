@@ -52,7 +52,7 @@
 - 作業対象 repo の `docs/notes/`: その repo に閉じる通常知見や背景
 - 作業対象 repo の `docs/adr/`: その repo に閉じる判断記録
 - `~/.codex/skills/`: 再利用する作業手順と通常作業の正式入口
-- `~/.codex/agents/`: multi-agent workflow を担う専門 agent 群（調査・要件・設計・実装・検証・repository maintenance の各役と review 入口）
+- `~/.codex/agents/`: multi-agent workflow を担う specialist agent 群（調査・検証の specialist と review 入口）
 - `~/.codex/rules/`: 機械的なガード
 - 作業対象 repo の `docs/requests/<slug>/`: 個別要求に閉じる SDLC artifact
 - 詳細な使い分けや発火条件は、各 `SKILL.md` と agent 定義を正本にする
