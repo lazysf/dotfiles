@@ -70,7 +70,11 @@
 - agent: lead
 - artifact: `request.md` または Phase 1 / 2 artifact
 - format: なし
-- 進め方: 実装前に、上流 artifact が今回の実装範囲を判断できる状態で確定していることを確認する。`requirements.md` / `tasks.md` を省略した場合は、`request.md` の scope / acceptance / 実装範囲 / 省略理由を trace 元にする。実装中または実装後に上流 artifact 不足が判明した場合は、後付けで成果物を作らず Phase 1 / 2 へ戻すか、ユーザー確認する。
+- 進め方: コードに着手する前に、作成済みの上流 artifact を実際に Read で開いて確認する:
+  - `requirements.md` / `basic-design.md` / `detailed-design.md` / `tasks.md` のうち作ったもの: 実装範囲・完了条件が確定しているか。
+  - これらを省略した場合は `request.md` の scope / acceptance / 実装範囲 / 省略理由を Read で確認する。
+- 確認した artifact 名（または request.md の該当節）と充足観点を `implementation.md` または `request.md` に1行残してから着手する。痕跡を残していない実装着手は entry condition 未達として扱う。
+- 確認の目的は、記憶や会話の流れでなく成果物そのものを実装の根拠にすること。Read で確認できない、または未確定なら、後付けで作らず Phase 1 / 2 へ戻すかユーザー確認する。
 
 ### 実装
 
