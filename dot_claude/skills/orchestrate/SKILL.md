@@ -33,6 +33,7 @@ request folder を作る場合は `docs/requests/<slug>/` に置く。`slug` は
 - Gate pass 後にユーザー確認するのは、停止線接触、scope / risk 受容、change request 採否、追加情報がないと次工程を判断できない事項、ユーザー指示待ちが残る場合だけ。
 - Phase / Gate 進行中の中途報告は最小化する。進捗共有は短い status に留め、checkpoint または完了時に必要事項をまとめる。
 - commit / push は workflow の自走対象外。ユーザー指示がある場合だけ該当 skill で扱う。
+- 各工程は、直前工程の成果物を実際に Read で確認し、必要項目が確定していることを確かめてから着手する。確認した artifact と充足観点は痕跡として残す。確認できない、または未確定なら着手せず前工程へ戻すかユーザー確認する。これは記憶や会話の流れでなく成果物そのものを根拠に進め、実装先行・docs 後を防ぐため。具体手順は tier reference を見る。
 - 要件 / 設計 / task / 実装 / 検証 artifact は lead が scribe skill を使って書く。format reference (scribe/references/*-format.md) は正本として変更しない。
 
 ## Triage 停止線

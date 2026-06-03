@@ -12,13 +12,21 @@
 
 ## Phase 3: 実装・検証・仕上げ
 
+### 実装着手前確認
+
+- 扱い: 必須
+- agent: lead
+- artifact: なし（request folder がある場合は `request.md` の節）
+- format: なし
+- 進め方: コードに着手する前に、変更対象ファイルの現状と、何をなぜ変えるか（request 相当の意図）を Read で確認する。request folder を作らない場合は確認内容を最終出力にも反映する。確認の結果、複数 file・設計判断・影響調査が要ると分かったら `standard` 以上へ移す。
+
 ### 実装
 
 - 扱い: 必須
 - agent: lead
 - artifact: `implementation.md`
 - format: [implementation-format.md](../../scribe/references/implementation-format.md)
-- 進め方: lead が直接実装する。必要なら該当 skill を使う。request folder を作らない場合、artifact は作らず最終出力に変更内容と確認結果をまとめる。
+- 進め方: lead が直接実装する。必要なら該当 skill を使う。request folder を作らない場合、artifact は作らず最終出力に変更内容と確認結果をまとめる。`implementation.md` / `test.md` は記録用であり、着手判断の根拠は事前確認に置く。
 
 ### 自己確認
 
