@@ -29,10 +29,21 @@ description: inspector が実装後に AC / TASK に対応する test、lint、b
 
 - 実装はしない。
 - `test.md` 以外の成果物を編集しない。
+- feature は成功条件、maintenance は守る既存挙動、bugfix は再現手順の解消を優先する。
+- security は hardening の効果と副作用、quality は対象品質特性、compat は外部変化への追従成立を見る。
 - 実行できない確認は、理由と代替確認をセットで残す。
 - 同一条件で結果がぶれる場合は、未解消リスクとして扱う。
 - `consistency` で docs 追従漏れを見つけた場合、更新まで行う依頼では `doc-followup` を使う。
+- `consistency` で公開インターフェース、既存挙動、削除判断、永続化、認証認可、権限に触れる判断が必要な場合は修正せず確認事項に残す。
 - 実装前に確認方法を置く段階は `implement`。
+
+## 出力
+
+- `check_mode`
+- `check_plan`
+- `executed_checks`
+- `regression_or_protected_behavior`
+- `remaining_risks`
 
 ## 停止条件
 

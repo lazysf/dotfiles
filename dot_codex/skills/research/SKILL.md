@@ -36,7 +36,9 @@ metadata:
 - `constraints`
 - `affected_areas`
 - `test_entry_points`
-- `next_step`
+- `security_relevant_observations`
+- `external_io` / `files_written` / `secret_access`
+- `recommended_next_handoff`
 
 `facts` は確認済み根拠に結び付く判断材料だけに絞る。
 

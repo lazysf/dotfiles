@@ -26,7 +26,7 @@
 - agent: lead
 - artifact: `requirements.md`
 - format: [requirements-format.md](../../scribe/references/requirements-format.md)
-- 進め方: lead が requirements skill を使い、目的、scope / non-scope、REQ-*、AC-*、制約、前提、未確認事項を整理する。実装方法や詳細設計は決めない。artifact は scribe で書く。
+- 進め方: lead が grill skill を使い、目的、scope / non-scope、REQ-*、AC-*、制約、前提、未確認事項を整理する。実装方法や詳細設計は決めない。artifact は scribe で書く。
 
 ### 要件追加調査
 
@@ -78,7 +78,7 @@
 - agent: lead
 - artifact: `tasks.md`
 - format: [tasks-format.md](../../scribe/references/tasks-format.md)
-- 進め方: lead が task-planning skill を使い、TASK-*、実装順序、完了条件、確認方法、変更境界を書く。artifact は scribe で書く。
+- 進め方: lead が設計 artifact に基づき TASK-*、実装順序、完了条件、確認方法、変更境界を整理する。artifact は scribe で書く。
 
 ## Gate 2: 設計レビュー
 

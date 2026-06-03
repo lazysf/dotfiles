@@ -6,7 +6,8 @@ description: 要求、要件、設計、実装計画、実装 readiness の前�
 # Grill
 
 実装や文書化に入る前に、共有理解へ到達するまで問い詰める。
-往復の無駄とループを避けるため、関連する未確認事項は 1〜3 問にまとめて聞く。確定事項だけを適切な artifact に最小反映する。
+往復の無駄とループを避けるため、関連する未確認事項は 1〜3 問にまとめて聞く。
+回答ごとに確定事項、仮定、未確認事項を分け、確定事項だけを適切な artifact に最小反映する。
 
 ## 手順
 
@@ -18,6 +19,8 @@ description: 要求、要件、設計、実装計画、実装 readiness の前�
 - 最も影響が大きい未確認事項を中心に、関連する 1〜3 問をまとめて質問し、各問に推奨回答を添える。互いに依存して順序が崩れる問いは、先行する問いの回答を待ってから次を聞く。
 - 回答を受けたら、確定事項、仮定、未確認事項、docs 更新候補を分ける。
 - 確定事項は、置き場と形式が明確な場合だけ doc / artifact へ最小反映する。
+- 責務外の内容は対象 artifact に書かない。
+- 共有理解に到達するまで、未確認事項を 1〜3 問ずつ詰める。
 - 実装へ進む前に、scope、成功条件、変更境界、検証入口、未確認事項、残リスクを明示する。
 
 ## 反映
@@ -36,4 +39,23 @@ description: 要求、要件、設計、実装計画、実装 readiness の前�
 - architecture 候補探索は `architecture`。
 - docs 本文更新は `scribe`。
 - 差分作成やテスト実装は `implement`。
-- Gate 1 review は `requirements-reviewer`、Gate 2 design review は `design-reviewer`、品質 review は `quality-reviewer`、security review は `security-reviewer` を使う。
+- multi-agent workflow として進める時は `orchestrate`。
+- Gate review は `requirements-reviewer`、`design-reviewer`、`quality-reviewer`、`security-reviewer` reviewer subagent を使う。
+
+## 出力
+
+- `confirmed_context`
+- `scope`
+- `non_scope`
+- `updated_docs`
+- `open_questions`
+- `readiness`
+- `next_questions`
+
+`confirmed_context` と `open_questions` を混ぜず、未確認事項を確認済み前提として扱わない。
+`next_questions` は次に聞く 1〜3 問をまとめて置く。
+
+## 停止条件
+
+- scope、成功条件、目的がユーザー回答後も収束せず、問い詰めが進展しない。
+- 停止線に触れる判断（公開挙動、権限、secret、本番設定、破壊的操作）が必要。

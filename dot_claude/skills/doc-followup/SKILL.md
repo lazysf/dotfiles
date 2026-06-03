@@ -37,3 +37,8 @@ description: 変更後に README、ADR、notes、CONTEXT、skill references な�
 - `verification`
 
 未確認事項や意図的に更新しなかった docs があれば隠さず示す。
+
+## 停止条件
+
+- 追従元の diff や変更意図が不明で、何を追従すべきか定まらない。
+- 公開挙動、権限、secret、本番設定、破壊的操作に触れる docs 更新が必要。
