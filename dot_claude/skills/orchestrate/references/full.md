@@ -96,9 +96,15 @@
 
 - 扱い: 必須
 - agent: lead
-- artifact: `review.md`, `requirements.md`, `basic-design.md`, `detailed-design.md`, `tasks.md`
+- artifact: `requirements.md`, `basic-design.md`, `detailed-design.md`, `tasks.md`
 - format: なし
-- 進め方: Gate 2 pass 後に確認必須事項がない、または必要なユーザー承認が済んでいることにより、要件・設計・task が実装判断に足る状態で確定していることを確認してから Phase 3 に着手する。Phase 3 中に上流 artifact 不足や scope 変更が判明した場合は、実装結果から後付けで要件・設計・task を作らず、Gate 2 以前へ戻すかユーザー確認する。
+- 進め方: Gate 2 pass 後、コードに着手する前に、次の上流 artifact を実際に Read で開いて確認する:
+  - `requirements.md`: REQ-* / AC-* が確定し実装判断に足るか。
+  - `basic-design.md`: 責務・境界・主要 interface が確定しているか。
+  - `detailed-design.md`: 処理・I/O・validation・error handling が実装者として迷わない状態か。
+  - `tasks.md`: 作業単位・完了条件・確認方法が具体的か。
+- 確認した artifact 名と充足観点を `implementation.md` または `request.md` の冒頭に1行残してから着手する。痕跡を残していない実装着手は entry condition 未達として扱う。
+- 確認の目的は、記憶や会話の流れでなく成果物そのものを実装の根拠にすること。Read で確認できない、または項目が未確定なら、着手せず Gate 2 以前へ戻すかユーザー確認する。実装結果から後付けで上流 artifact を作らない。
 
 ### 実装追加調査
 
