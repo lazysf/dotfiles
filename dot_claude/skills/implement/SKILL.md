@@ -11,10 +11,14 @@ description: lead が tasks.md と detailed-design.md に沿って code、config
 
 - 先にテスト、再現手順、比較観点のいずれかを置く。
 - `tasks.md`、`detailed-design.md`、`requirements.md` に沿って実装する。
-- 最小差分で進め、次の差分を増やしすぎない。
+- 今回必要な最小で直線的な差分から始める。
 - 近傍実装と明示規約に寄せて、いま必要な振る舞いだけを満たす。
+- 命名、責務、エラー処理、テスト配置は近傍実装に寄せる。
+- 外部入力、公開面、永続化、権限などの境界を優先して堅くする。
+- module 分割、class 化、interface 化、helper 化、設定化、新規依存追加は、既存パターンまたは実害が確認できるまで遅らせる。
 - 要件変更や設計変更を勝手に行わない。必要なら lead に戻す。
 - 未検証事項は成功扱いにしない。
+- 次の差分を増やしすぎない。
 - 実装結果は `implementation.md` に記録する。
 
 ## 手順
@@ -47,6 +51,8 @@ description: lead が tasks.md と detailed-design.md に沿って code、config
 - 要件整理や技術計画は `grill`。
 - 実装計画の合意形成は `grill`。合意済みの計画や docs の記録・整形は `scribe`。
 - Excel VBA の exported `.bas` / `.cls` を作成・編集する時は、その環境固有の注意点を [references/vba-best-practices.md](references/vba-best-practices.md) に置いているため、書く前に読む。
+- 実装範囲・最小差分・抽象化の判断に迷う時は、その原則を [references/implementation-guardrails.md](references/implementation-guardrails.md) に置いているため、実装に入る前に読む。
+- 自動テストを書きにくい変更では、代替の確認手段を [references/verification-fallbacks.md](references/verification-fallbacks.md) に置いているため、確認方法を決める前に読む。
 
 ## 完了条件
 

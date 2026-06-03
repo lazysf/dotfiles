@@ -26,6 +26,19 @@ description: researcher が、要件・設計・実装判断の前に、既存�
 - architecture 候補探索は `architecture`。
 - security / quality の差分 review は該当 reviewer agent を使う。
 
+## 出力
+
+- `facts`
+- `unknowns`
+- `constraints`
+- `affected_areas`
+- `test_entry_points`
+- `security_relevant_observations`
+- `external_io` / `files_written` / `secret_access`
+- `recommended_next_handoff`
+
+`facts` は確認済み根拠に結び付く判断材料だけに絞る。
+
 ## 停止条件
 
 - workspace 外の前提が支配的で、根拠ある整理ができない。

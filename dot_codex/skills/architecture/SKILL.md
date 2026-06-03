@@ -49,3 +49,8 @@ metadata:
 - `next_question`
 
 候補選択後の grilling では、確定事項、未確定事項、次に必要な `grill` / `scribe` / `implement` を分けて返す。
+
+## 停止条件
+
+- 対象領域の実装や依存が workspace 外にあり、根拠ある設計ができない。
+- ADR と衝突する候補しか残らず、方針変更の判断が必要。

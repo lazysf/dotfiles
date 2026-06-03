@@ -43,3 +43,8 @@ description: lead が basic-design.md / detailed-design.md を作る前に、構
 - `basic_design_notes`: `basic-design.md` に置く判断
 - `detailed_design_notes`: `detailed-design.md` に置く判断
 - `next_question`: 候補選択・実装順序の問い詰めへ渡す点
+
+## 停止条件
+
+- 対象領域の実装や依存が workspace 外にあり、根拠ある設計ができない。
+- ADR と衝突する候補しか残らず、方針変更の判断が必要。
