@@ -1,5 +1,7 @@
 # Runtime Surface Guidance
 
+> **Scope**: この文書は Codex surface と、かつての Codex / Claude 対称モデルを記述する。Claude surface は ADR 0035 で軽量 workflow へ再設計され、`orchestrate` / `grill` / `architecture` / `implement` / `inspect` / `doc-followup` skill、`inspector` / `requirements-reviewer` / `design-reviewer` agent、tier / Phase / Gate を持たない。以下で Claude に当てはまるのは置き場の原則、命名規約、frontmatter description 設計など surface 非依存の部分に限る。Claude surface の現行構成は [claude-lightweight-workflow.md](./claude-lightweight-workflow.md) を正本にする。
+
 この文書は、`dot_codex/AGENTS.md`、`dot_claude/CLAUDE.md`、各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
 現在の managed surface は、`dot_codex/AGENTS.md`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/`、`dot_claude/CLAUDE.md`、`dot_claude/skills/`、`dot_claude/agents/`、`dot_claude/rules/`、`dot_claude/output-styles/`、`dot_claude/settings.json` とする。skill 名の命名規約は kebab-case に統一する。

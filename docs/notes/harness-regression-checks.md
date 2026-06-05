@@ -1,5 +1,7 @@
 # Harness Regression Checks
 
+> **Scope**: 以下のシナリオは Codex surface と対称モデルを前提とする項目を含む。Claude surface は ADR 0035 で軽量 workflow へ再設計されたため、orchestrate / tier / Gate / `doc-followup` / `inspect` などを前提とする項目は Claude には当てはまらない。Claude surface の回帰観点は [claude-lightweight-workflow.md](./claude-lightweight-workflow.md) を参照する。
+
 `dot_codex/` / `dot_claude/` の docs / skills / rules / agents / config source を更新したときに、人手で回す代表的な回帰チェック集です。
 自動 eval 基盤の代わりではなく、共通ハーネスの回帰を早く見つけるための軽量な確認セットとして使います。
 
