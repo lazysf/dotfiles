@@ -50,6 +50,6 @@
 - `git diff --check`
 - 関連する旧 path / 旧名称の `rg`
 - Codex / Claude 対応 surface の差分確認
-- 可能なら project の `mise run lint` / `mise run test`
+- 可能なら project の lint / test entrypoint
 
 実行できない確認は、理由と代替確認を残す。
