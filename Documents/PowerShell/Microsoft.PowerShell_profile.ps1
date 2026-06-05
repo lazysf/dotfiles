@@ -17,7 +17,7 @@ $env:XDG_STATE_HOME = if ($env:XDG_STATE_HOME) { $env:XDG_STATE_HOME } else { (J
 # -----------------------------
 # yazi environment
 # -----------------------------
-$env:YAZI_FILE_ONE = Join-Path $HOME "scoop/apps/git/current/usr/bin/file.exe"
+$env:YAZI_FILE_ONE = "C:\Program Files\Git\usr\bin\file.exe"
 $env:YAZI_CONFIG_HOME = Join-Path $HOME ".config/yazi"
 
 # -----------------------------
