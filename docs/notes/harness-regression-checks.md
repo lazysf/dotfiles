@@ -40,7 +40,7 @@
 
 ### 3.5. `git add` friction を rule mismatch と誤診しない
 
-- 例: 「`git add docs dot_codex .tombi.toml mise.toml dot_config/mise/config.toml.tmpl` で承認が必要になった」
+- 例: 「`git add docs dot_codex .tombi.toml pyproject.toml` で承認が必要になった」
 - 期待:
   - まず `.git/index.lock` と `Operation not permitted` の有無を確認し、sandbox 書き込み失敗かどうかを切り分ける
   - explicit-path の `git add` が一度止まっても、即座に `git-add.rules` の緩和案へ飛ばない

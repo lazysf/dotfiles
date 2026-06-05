@@ -11,7 +11,6 @@
   - [git-add-approval-friction-diagnosis.md](./notes/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./notes/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
-  - [mise-tool-matrix.md](./notes/mise-tool-matrix.md): mise と nvim の formatter / linter 対応表
   - [vba-implementation-reference-design.md](./notes/vba-implementation-reference-design.md): VBA 実装 reference の設計・review 観点
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
