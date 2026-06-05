@@ -2,23 +2,53 @@
 
 ## 共通契約
 
+- 成果物の最終責任と運用・保守は人間が持つ。AI が書いたものも、人が読み・誤解せず・安全に変えられるかで採否を決める。
+- 実装・編集は最小直線で始める。共通化、抽象化、helper、設定層、新依存は実害が出てから入れる。
 - 断定は、確認したファイル、差分、コマンド結果、公式情報、またはユーザー確認に結び付ける。
 - 変更前に関連ファイル、設定、既存パターン、検証入口を確認する。
-- 小さな判断は既存文脈に寄せて自走し、大きな判断だけ確認する。
-- 作業の引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける。
+- 小さな判断は既存文脈に寄せて自走し、大きな判断だけ確認する。推測で先へ進めない。
+- 引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける。
 - 役割別の手順や判断基準は `agents/`、`skills/`、`rules/` に置き、このファイルへ重複させない。
 
 ## 進行
 
-- すべての依頼は、他の skill・tool・調査に入る前に、まず `skills/orchestrate` を呼ぶ。triage と進行はそこから始める。
-- lead が Phase 0 で triage し、性質と規模に応じて inquiry / micro / standard / full の tier に振り分けて Phase / Gate を管理し、specialist subagent を spawn して束ねる。typo / 1 行修正のような極小依頼も orchestrate を通し、triage で micro と判定して最小工程で済ませる。質問・相談・調査だけの依頼は inquiry tier の軽量経路（Phase 0 のみ）で扱う。
-- 工程をまたぐ作業は agent team に渡し、単一工程の手順だけが要る時は該当 skill を直接使う。agent は対応 skill を読み込み、Handoff で lead に返す。
-- `orchestrate` workflow 上で必要と定義された repo-local / managed subagent は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい。これは subagent 起動の許可だけであり、各 subagent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する。
-- 工程別 artifact は 1 要求 1 request folder（既定 `docs/requests/<slug>/`）に置く。詳細な流れは `skills/orchestrate`、書式は `skills/scribe` を見る。
+この流れは強制ではなくガイド（道標）。各工程は発火条件を満たす時だけ通す。満たさない工程は飛ばし、code-first で速く回す。
+
+```
+掘り下げ → 方針(Plan) → 実装 ⇄ 検証 → review → doc → commit/push
+```
+
+| 工程 | 発火条件（満たす時だけ実行） |
+| --- | --- |
+| 掘り下げ | ①解釈が2通り以上に分岐 ②妥当なデフォルトを推測で置けない ③外すと手戻りが大きい ④その曖昧さが探索で埋まらない（ユーザー意図依存）— の全てを満たす時だけ、実装前に 1〜3 問にまとめて確認する。簡易テスト「成功条件を1文で書けるか」。 |
+| 方針(Plan) | 実装方針に複数案があり選択が要る、または変更が広範囲。`EnterPlanMode` を自己発動し、承認を得て実装へ。承認は捨てた Gate の代替。 |
+| 実装 ⇄ 検証 | code-first で反復。設計の分岐点で選択したら ADR を1枚（条件は下記 doc）。 |
+| review | ユーザー明示時に `quality-reviewer` / `security-reviewer` を呼ぶ。 |
+| doc | 下記「doc」に従う。 |
+| commit/push | ユーザー指示時に `skills/git-commit` / `skills/git-push`。 |
+
+- 掘り下げ（事前の質問）と Plan は「探索で埋まる曖昧さか」で振り分ける。コードを読めば分かる曖昧さ（やり方・既存パターン）は質問せず Plan/探索で解く。ユーザーの頭にしかない曖昧さ（目的・意図・外部制約）だけ事前に問う。同じことを2回聞かない。
+- 掘り下げ不要なら、デフォルトを「○○と仮定して進める」と宣言して実装、または自明ならそのまま実装。
+- 掘り下げ（4 条件 AND）／ ADR（3 条件 AND）の発火閾値は固定でなく、運用して過少／過剰なら見直す。
+- 普段の調査は自分で行う。分離・並列したい時だけ `researcher` を呼ぶ。
+- `researcher` / `quality-reviewer` / `security-reviewer` は standing authorization 済みとして追加確認なしで起動してよい。起動の許可だけで、subagent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する。
+
+## doc
+
+第三者保守を想定し、開発駆動でなく確定事実から作る。3層に分ける。
+
+| 層 | 中身 | いつ | 置き場 |
+| --- | --- | --- | --- |
+| 仕様・使い方 | 何を・どう使うか | 実装が固まった後に後追い生成 | README / docs |
+| ADR | なぜそうしたか | 実装中、分岐点で発生時に1枚 | `docs/adr/` |
+| notes | 背景・調査メモ | 任意 | `docs/notes/` |
+
+- **doc 要否は黙って飛ばさない（silent skip 禁止）。** 実装一段落時と commit 前に、仕様 doc 追従の要否を一言明示する。
+- 要否判定、ADR の 3 条件、書式は `skills/scribe`。
 
 ## 停止線
 
-次の場合は、根拠と影響範囲を示して確認し、必要なら代替案も示す。
+次に触れる時は、根拠と影響範囲を示して確認し、必要なら代替案も示す（= 規模・リスクの安全弁。触れたら実装前に止まる）。
 
 - 公開挙動、公開インターフェース、データ形式、永続化、互換性に影響する。
 - 認証認可、権限、秘密情報、本番設定、セキュリティ上重要な処理に触れる。
@@ -27,13 +57,11 @@
 
 ## 置き場
 
-- `~/.claude/CLAUDE.md`: 全 agent が共有する最小契約。
+- `~/.claude/CLAUDE.md`: 全 agent が共有する最小契約とワークフローのガイド。
 - `~/.claude/rules/`: 全セッションまたは path 条件で読む短いルール。
 - `~/.claude/skills/`: task-specific な再利用手順。
-- `~/.claude/agents/`: 仕様駆動 workflow を担う specialist agent 群（調査・検証の specialist と review 入口）。lead が spawn する specialist。進行は main セッション（lead, `skills/orchestrate`）が決める。
+- `~/.claude/agents/`: read-only で分離したい specialist（`researcher` / `quality-reviewer` / `security-reviewer`）。main セッションが必要時に spawn する。
 - `~/.claude/settings.json`: permissions、sandbox、model、language などの機械的設定。
-- 作業対象 repo の `docs/requests/<slug>/`: 個別要求に閉じる SDLC artifact。
-- 作業対象 repo の `docs/notes/`: その repo に閉じる通常知見や背景。
 - 作業対象 repo の `docs/adr/`: その repo に閉じる判断記録。
-- 作業対象 repo の `CONTEXT.md` / `CONTEXT-MAP.md`: 用語や文脈固有の呼び名（`grill` / `architecture` が先に読む）。
-- 置き場が曖昧な場合でも、`~/.claude/` 直下や repo root 直下に新しい運用ファイルを増やさない。
+- 作業対象 repo の `docs/notes/`: その repo に閉じる通常知見や背景。
+- 置き場が曖昧でも、`~/.claude/` 直下や repo root 直下に新しい運用ファイルを増やさない。

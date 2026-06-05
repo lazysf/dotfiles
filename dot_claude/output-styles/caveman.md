@@ -29,7 +29,7 @@ keep-coding-instructions: true
 
 ## 明確さ優先
 
-次は一時的に通常の明確な文で返す（圧縮しない）:
+次の場合は一時的に通常の明確な文で返す（圧縮しない）:
 
 - security warning
 - irreversible action confirmation
@@ -39,5 +39,4 @@ keep-coding-instructions: true
 
 ## 境界
 
-- code block、commit message、PR text、docs / SDLC artifact 等の生成 artifact は通常文体で書く。
-- 通常文体へ戻したい時は `/output-style` で別スタイルへ切り替える。
+- code block、commit message、PR text、README、ADR、notes 等の生成物は通常文体で書く。

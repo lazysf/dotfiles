@@ -11,6 +11,7 @@
   - [git-add-approval-friction-diagnosis.md](./notes/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./notes/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
+  - [claude-lightweight-workflow.md](./notes/claude-lightweight-workflow.md): Claude surface の軽量 workflow 構成と Codex との非対称
   - [vba-implementation-reference-design.md](./notes/vba-implementation-reference-design.md): VBA 実装 reference の設計・review 観点
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
@@ -47,6 +48,7 @@
   - [0032-auto-skip-gate-pass-approval-when-no-user-decision.md](./adr/0032-auto-skip-gate-pass-approval-when-no-user-decision.md)
   - [0033-preauthorize-orchestrate-workflow-agent-spawn.md](./adr/0033-preauthorize-orchestrate-workflow-agent-spawn.md)
   - [0034-reduce-non-reviewer-agents.md](./adr/0034-reduce-non-reviewer-agents.md)
+  - [0035-make-claude-surface-lightweight-llm-native.md](./adr/0035-make-claude-surface-lightweight-llm-native.md)
 - `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex multi-agent workflow 用の specialist agent / reviewer agent を置く
