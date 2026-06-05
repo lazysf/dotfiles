@@ -40,5 +40,8 @@ Documents
 
 # macOS only
 {{- if ne .chezmoi.os "darwin" }}
+.zshenv
+.config/zsh
+.ssh/config
 .config/terminal
 {{- end }}
