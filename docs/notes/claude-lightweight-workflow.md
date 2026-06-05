@@ -40,7 +40,7 @@
 - agent: `inspector` / `requirements-reviewer` / `design-reviewer`
 - 体系: request folder（`docs/requests/<slug>/`）の 4 枚 doc、`AC-*` などの traceability ID、tier / Phase / Gate
 
-## 既知の follow-up
+## 共有 note との整合
 
-- `runtime-surface-guidance.md` / `harness-regression-checks.md` の Claude 記述を非対称前提へ整合。
-- `claude-code-permission-policy.md` は「明示 allow を置かない」と書くが、現 settings は `Agent(...)` allow を持つ。例外を追記して整合する。
+- `runtime-surface-guidance.md` / `harness-regression-checks.md` / `harness-design-principles.md` は Codex 側でまだ有効なので本文は保持し、冒頭に scope banner を入れて「Claude は本 note が正本」と示した。これら共有 note の全面 bilateral 書き換え（Codex / Claude を本文で並記）は churn が大きいため deferred。
+- `claude-code-permission-policy.md` に `Agent(...)` allow 例外を追記済み。
