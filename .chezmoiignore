@@ -11,12 +11,13 @@
 # Repo-only directories
 .vscode
 docs
+node_modules
 scripts
 
 # Repo-only files
 .gitattributes
 .gitignore
-.markdownlint.jsonc
+.markdownlint-cli2.jsonc
 .pre-commit-config.yaml
 .python-version
 .tombi.toml
@@ -24,6 +25,8 @@ AGENTS.md
 CLAUDE.md
 .codex/config.toml
 LICENSE
+package.json
+package-lock.json
 README.md
 nvim.log
 nvim.yml

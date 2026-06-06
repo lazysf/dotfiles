@@ -12,3 +12,8 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
         exclude: \.(md|markdown)$
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.22.1
+    hooks:
+      - id: markdownlint-cli2
+        args: ["--fix"]

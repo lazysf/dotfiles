@@ -92,6 +92,19 @@ chezmoi apply
 
 repo 保守用 Python は `uv` で管理します。初回セットアップまたは依存更新後は `uv sync` を実行します。
 
+## Markdown lint
+
+repo 内の Markdown は `markdownlint-cli2` で lint します。初回セットアップは `npm install`（再現性を保つため `package-lock.json` も commit しており、CI 等では `npm ci` が使えます）。
+
+```sh
+npm run lint        # lint
+npm run lint:fix    # 自動修正できるものを fix
+```
+
+設定は [`.markdownlint-cli2.jsonc`](.markdownlint-cli2.jsonc) に集約しています（ルール / 対象 glob / 除外）。
+
+[`.pre-commit-config.yaml`](.pre-commit-config.yaml) にも markdownlint-cli2 を hook 登録しており、`prek run` または commit 時に staged Markdown が自動で lint・fix されます。hook は `.markdownlint-cli2.jsonc` のルール設定を共有して読みます。
+
 ## 管理対象と配布対象
 
 `.chezmoiignore` は、chezmoi で home directory へ配布しない repo 保守用ファイルを定義します。
