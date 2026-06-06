@@ -134,7 +134,7 @@
 #### 結果
 
 - pass
-- `Engineering Agent Output` 見出しのみが両 surface line 5 に存在。対象列挙は line 7 `対象: \`researcher\` / \`inspector\`` のみ。`Repository Maintenance Impact` block、`verifier_return_required` field、`repository-maintainer` / `repository maintenance` 文字列はいずれも 0 件。
+- `Engineering Agent Output` 見出しのみが両 surface line 5 に存在。対象列挙は line 7 `対象: \`researcher\` / \`inspector\``のみ。`Repository Maintenance Impact`block、`verifier_return_required`field、`repository-maintainer` / `repository maintenance` 文字列はいずれも 0 件。
 
 ### TC-007: ADR 0034 存在と双方向 Supersedes / Superseded-By メタ整合
 
