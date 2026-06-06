@@ -10,6 +10,7 @@ __pycache__/
 
 # Local env
 .venv/
+node_modules/
 
 # Local logs
 nvim.log
