@@ -10,6 +10,7 @@
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./notes/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
   - [lightweight-workflow.md](./notes/lightweight-workflow.md): 両 surface 軽量 workflow の構成と意図的差分
+  - [model-and-effort-tuning-history.md](./notes/model-and-effort-tuning-history.md): Claude / Codex の model と reasoning effort 調整の経緯
   - [vba-implementation-reference-design.md](./notes/vba-implementation-reference-design.md): VBA 実装 reference の設計・review 観点
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
@@ -50,6 +51,7 @@
   - [0036-make-codex-surface-lightweight-and-restore-symmetry.md](./adr/0036-make-codex-surface-lightweight-and-restore-symmetry.md)
   - [0037-retire-context-md-system.md](./adr/0037-retire-context-md-system.md)
   - [0038-allow-reviewer-subagents-read-only-bash.md](./adr/0038-allow-reviewer-subagents-read-only-bash.md)
+  - [0039-retire-docs-requests-artifacts.md](./adr/0039-retire-docs-requests-artifacts.md)
 - `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex 用の read-only specialist agent / reviewer agent を置く
