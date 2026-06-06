@@ -50,7 +50,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## Agent / Subagent 起動
 
-- `orchestrate` workflow 上で必要と定義された repo-local / managed agent / subagent は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい
+- 各 surface の運用契約（`dot_codex/AGENTS.md` / `dot_claude/CLAUDE.md`）で起動が認められている read-only specialist agent / subagent（`researcher` / `quality-reviewer` / `security-reviewer`）は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい
 - この許可は agent / subagent 起動だけを対象にする。各 agent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する
 
 ## Codex 本体に関する作業

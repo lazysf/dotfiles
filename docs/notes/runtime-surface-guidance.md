@@ -1,12 +1,12 @@
 # Runtime Surface Guidance
 
-> **Scope**: この文書は Codex surface と、かつての Codex / Claude 対称モデルを記述する。Claude surface は ADR 0035 で軽量 workflow へ再設計され、`orchestrate` / `grill` / `architecture` / `implement` / `inspect` / `doc-followup` skill、`inspector` / `requirements-reviewer` / `design-reviewer` agent、tier / Phase / Gate を持たない。以下で Claude に当てはまるのは置き場の原則、命名規約、frontmatter description 設計など surface 非依存の部分に限る。Claude surface の現行構成は [claude-lightweight-workflow.md](./claude-lightweight-workflow.md) を正本にする。
+> **Scope**: この文書は ADR 0036 以前の重 SDLC 対称モデル（Codex / Claude 両方が `orchestrate` / `grill` / `architecture` / `implement` / `inspect` / `doc-followup` skill、`inspector` / `requirements-reviewer` / `design-reviewer` agent、tier / Phase / Gate を持つ姿）と、ADR 0037 以前の `CONTEXT-MAP.md` / 近傍 `CONTEXT.md` 体系を記述する履歴文書。現行は ADR 0036 で両 surface とも軽量 LLM-native へ再設計され、これらの skill / agent / tier / Phase / Gate は持たず、ADR 0037 で CONTEXT.md 体系は撤去されている。現行構成は [lightweight-workflow.md](./lightweight-workflow.md) を正本にする。本文中で両 surface に依然有効なのは、置き場の原則、命名規約、frontmatter description 設計など surface 非依存の部分に限る。
 
 この文書は、`dot_codex/AGENTS.md`、`dot_claude/CLAUDE.md`、各 `SKILL.md` / agent 定義で参照する runtime surface の基準をまとめる。
 現行運用では要求分類を入口判断の軸にしない。
 現在の managed surface は、`dot_codex/AGENTS.md`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/`、`dot_claude/CLAUDE.md`、`dot_claude/skills/`、`dot_claude/agents/`、`dot_claude/rules/`、`dot_claude/output-styles/`、`dot_claude/settings.json` とする。skill 名の命名規約は kebab-case に統一する。
 `caveman`、`git-commit`、`git-push` は明示依頼で使う手動入口とし、それ以外の skill は文脈上必要なら自動使用する入口として扱う。
-root `CLAUDE.md` は repo-local import shim、`dot_codex/CONTEXT.md` と `dot_codex/private_config.toml.tmpl` の target は repo 内の参照用 source として現在 `.chezmoiignore` で配布対象外にする。managed surface の実効確認では `chezmoi managed` を正本にする。
+root `CLAUDE.md` は repo-local import shim、`dot_codex/private_config.toml.tmpl` の target は repo 内の参照用 source として現在 `.chezmoiignore` で配布対象外にする（`dot_codex/CONTEXT.md` の記述は ADR 0037 で撤去済み）。managed surface の実効確認では `chezmoi managed` を正本にする。
 
 ## Surface の責務
 

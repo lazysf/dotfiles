@@ -74,7 +74,7 @@ ADR 本文は既存の Markdown 形式に寄せ、見出し直下のメタ行で
 
 新規 ADR は、見出し直下のメタ行に続けて 1-3 文で文脈、決定、理由を書くだけでもよい。
 必要な場合だけ、既存 ADR と同じ `Context` / `Decision` / `Consequences` 見出しを使う。
-具体的な形式は [scribe の ADR format](../../dot_codex/skills/scribe/references/adr-format.md) を参照する。
+具体的な形式は両 surface の `scribe` references で同一内容として並列に保持されている: [Codex 版](../../dot_codex/skills/scribe/references/adr-format.md) / [Claude 版](../../dot_claude/skills/scribe/references/adr-format.md)。
 
 ## 運用フロー
 
@@ -100,6 +100,5 @@ commit 前の差分確認と commit 作成は `git-commit` に任せる。
 
 ## Skill Mapping
 
-- 知見蓄積の問い詰めと置き場判断: `grill`
-- 既存 docs、CONTEXT、ADR の作成・更新・整形: `scribe`
+- 既存 docs、ADR の作成・更新・整形: `scribe`
 - commit 前の差分確認と commit 作成: `git-commit`
