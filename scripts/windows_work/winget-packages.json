@@ -1,0 +1,44 @@
+{
+  "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+  "Sources": [
+    {
+      "Packages": [
+        { "PackageIdentifier": "sharkdp.bat" },
+        { "PackageIdentifier": "twpayne.chezmoi" },
+        { "PackageIdentifier": "eza-community.eza" },
+        { "PackageIdentifier": "sharkdp.fd" },
+        { "PackageIdentifier": "Gyan.FFmpeg" },
+        { "PackageIdentifier": "Schniz.fnm" },
+        { "PackageIdentifier": "junegunn.fzf" },
+        { "PackageIdentifier": "GitHub.cli" },
+        { "PackageIdentifier": "x-motemen.ghq" },
+        { "PackageIdentifier": "Git.Git" },
+        { "PackageIdentifier": "ImageMagick.ImageMagick" },
+        { "PackageIdentifier": "jqlang.jq" },
+        { "PackageIdentifier": "JesseDuffield.lazygit" },
+        { "PackageIdentifier": "tree-sitter.tree-sitter-cli" },
+        { "PackageIdentifier": "Neovim.Neovim" },
+        { "PackageIdentifier": "oschwartz10612.Poppler" },
+        { "PackageIdentifier": "j178.Prek" },
+        { "PackageIdentifier": "BurntSushi.ripgrep.MSVC" },
+        { "PackageIdentifier": "7zip.7zip" },
+        { "PackageIdentifier": "Starship.Starship" },
+        { "PackageIdentifier": "astral-sh.uv" },
+        { "PackageIdentifier": "sxyazi.yazi" },
+        { "PackageIdentifier": "ajeetdsouza.zoxide" },
+        { "PackageIdentifier": "Anthropic.Claude" },
+        { "PackageIdentifier": "Anthropic.ClaudeCode" },
+        { "PackageIdentifier": "OpenAI.Codex" },
+        { "PackageIdentifier": "DEVCOM.JetBrainsMonoNerdFont" },
+        { "PackageIdentifier": "Raycast.Raycast" },
+        { "PackageIdentifier": "Microsoft.VisualStudioCode" }
+      ],
+      "SourceDetails": {
+        "Argument": "https://cdn.winget.microsoft.com/cache",
+        "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Name": "winget",
+        "Type": "Microsoft.PreIndexed.Package"
+      }
+    }
+  ]
+}
