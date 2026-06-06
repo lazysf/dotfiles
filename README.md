@@ -2,7 +2,7 @@
 
 [chezmoi](https://www.chezmoi.io/) で管理する dotfiles リポジトリです。
 
-この README では、セットアップ、更新、整形・lint・検証の入口と、repo-level knowledge の参照先だけをまとめています。
+この README では、セットアップ・更新・配布対象・repo-level knowledge の入口だけをまとめています。
 
 ## セットアップ
 
@@ -22,34 +22,20 @@ chezmoi update
 
 この repo がローカルの source directory で、手動で更新した内容を適用:
 
-`op` が使える環境では、先に `op signin` してから実行:
-
 ```sh
-op signin
+op signin  # `op` が使える環境では先に実行
 chezmoi apply
 ```
 
-適用前に差分を確認:
-
-```sh
-chezmoi diff
-```
+適用前に差分を確認するなら `chezmoi diff`。
 
 ## macOS Terminal プロファイル
 
-macOS 標準 `Terminal` 用のプロファイルは repo 内の [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) で管理しています。
-このファイルは macOS では `chezmoi apply` の展開対象にし、非 macOS では `.chezmoiignore` により配布対象から外しています。
-
-利用するときは、repo 内の `dot_config/terminal/Main.terminal` を Finder か `open` で開いて `Terminal` に import し、必要なら `Main` をデフォルトプロファイルに設定してください。
+[`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は macOS では `chezmoi apply` で配布、`Terminal` への import は手動です（非 macOS では配布対象外）。
 
 ## Python 実行
 
-repo 保守用の Python 実行環境は `uv` で管理します。
-初回セットアップまたは依存更新後は、次を実行します。
-
-```sh
-uv sync
-```
+repo 保守用 Python は `uv` で管理します。初回セットアップまたは依存更新後は `uv sync` を実行します。
 
 ## 管理対象と配布対象
 

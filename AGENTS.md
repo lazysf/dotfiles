@@ -6,8 +6,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 ## 基本姿勢
 
 - 日本語で返答する
-- 事実に基づいて判断する
-- 推測や憶測で処理を進めない
+- 事実に基づいて判断し、推測や憶測で処理を進めない
 
 ## Agent Skills に関する作業
 
@@ -30,19 +29,12 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 - 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
 - `scribe` 単独で進めない代表例:
-  - root `AGENTS.md` / `CLAUDE.md` と `dot_codex/AGENTS.md`
-  - `dot_claude/CLAUDE.md`
-  - `dot_codex/skills/**/SKILL.md`
-  - `dot_codex/skills/**/references/`、`scripts/`、`assets/` のうち skill の判断や実行に影響するもの
-  - `dot_claude/skills/**/SKILL.md`
-  - `dot_claude/skills/**/references/`、`scripts/`、`assets/` のうち skill の判断や実行に影響するもの
-  - `dot_codex/agents/*.toml`
-  - `dot_claude/agents/*.md`
-  - `dot_codex/rules/*.rules`
-  - `dot_claude/rules/*.md`
+  - root `AGENTS.md` / `CLAUDE.md`、`dot_codex/AGENTS.md`、`dot_claude/CLAUDE.md`
+  - 両 surface の `skills/**`（`SKILL.md` と、判断や実行に影響する `references/` / `scripts/` / `assets/`）
+  - 両 surface の agent 定義（`dot_codex/agents/*.toml` / `dot_claude/agents/*.md`）
+  - 両 surface の rules（`dot_codex/rules/*.rules` / `dot_claude/rules/*.md`）
   - `dot_claude/output-styles/*.md`
-  - `dot_codex/private_config.toml.tmpl` など Codex runtime 設定
-  - `dot_claude/settings.json` など Claude Code runtime 設定
+  - runtime 設定（`dot_codex/private_config.toml.tmpl` / `dot_claude/settings.json`）
 
 ### 軽量例外
 
@@ -99,10 +91,8 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## 置き場の原則
 
-- `dot_codex/skills/`: Codex 用の再利用する作業手順と通常作業の正式入口を置く
-- `dot_claude/skills/`: Claude Code 用の再利用する作業手順と通常作業の正式入口を置く
-- `docs/notes/`: repo-level の通常知見や背景を置く
-- `docs/adr/`: repo-level の判断記録を置く
-- root `CLAUDE.md`: Claude Code 向けの repo-local import shim を置く
-- `dot_codex/AGENTS.md`: managed Codex surface 側の運用契約を置く
-- `dot_claude/CLAUDE.md`: managed Claude Code surface 側の運用契約を置く
+- 両 surface の `skills/`: 再利用する作業手順と通常作業の正式入口
+- 両 surface の運用契約: `dot_codex/AGENTS.md` / `dot_claude/CLAUDE.md`
+- root `CLAUDE.md`: Claude Code 向けの repo-local import shim
+- `docs/notes/`: repo-level の通常知見や背景
+- `docs/adr/`: repo-level の判断記録
