@@ -1,6 +1,6 @@
 # Harness Design Principles
 
-> **Scope**: 「6. workflow と review」「7. agent の model 設定」の `orchestrate` / `doc-followup` 前提は Codex surface の記述。Claude surface は ADR 0035 で軽量 workflow へ再設計され、これらの skill を持たない。Claude surface の現行構成は [claude-lightweight-workflow.md](./claude-lightweight-workflow.md) を正本にする。
+> **Scope**: 「6. workflow と review」「7. agent の model 設定」の `orchestrate` / `doc-followup` 前提は ADR 0036 以前の重 SDLC 対称モデルの記述（履歴）で、現行は両 surface とも軽量 LLM-native へ再設計されている。「基本原則」と「2. knowledge は runtime surface ごとに昇格先を分ける」の `CONTEXT-MAP.md` / `CONTEXT.md` 前提は ADR 0037 で撤去されている（履歴）。両 surface の現行構成は [lightweight-workflow.md](./lightweight-workflow.md) を正本にする。
 
 この文書は、この dotfiles repo で Codex / Claude Code ハーネスを保守するときの repo-level knowledge をまとめたものです。
 `dot_codex/` や `dot_claude/` に置く runtime surface source そのものではなく、保守元 repo で参照する設計原則と採用方針を扱います。

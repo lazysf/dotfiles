@@ -33,15 +33,9 @@ description: 実装が固まった後の README / docs（仕様・使い方）�
 - ADR: [references/adr-format.md](references/adr-format.md)
 - notes: [references/notes-format.md](references/notes-format.md)
 
-## ADR の判断基準（3 条件 AND）
+## ADR の判断基準
 
-次を全部満たす時だけ ADR を 1 枚書く。乱発も silent skip も避ける。
-
-1. 複数案を実際に比較した（仮想ではなく検討した）。
-2. 選んだ案を覆すコストが高い（公開 IF / データ形式 / 永続化 / 認証 / 依存）。
-3. 捨てた案に再検討の価値がある（将来の読み手が「なぜ A でなく B か」を疑問に思う）。
-
-書く時は ADR format reference の最小テンプレに従う。既存 ADR 本文は履歴として扱い、上書きせず新規 ADR + 関係メタデータで反映する。
+3 条件 AND（複数案を実比較 / 覆すコストが高い / 捨てた案に再検討価値）を全部満たす時だけ書く。乱発も silent skip も避ける。詳細条件・最小テンプレ・Status lifecycle・関係メタデータは [references/adr-format.md](references/adr-format.md) を参照。既存 ADR 本文は履歴として扱い、上書きせず新規 ADR + 関係メタデータで反映する。
 
 ## 境界・停止条件
 

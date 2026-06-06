@@ -22,9 +22,7 @@ scripts
 .tombi.toml
 AGENTS.md
 CLAUDE.md
-.codex/CONTEXT.md
 .codex/config.toml
-CONTEXT-MAP.md
 LICENSE
 README.md
 nvim.log

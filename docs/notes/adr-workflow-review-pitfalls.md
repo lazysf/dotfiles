@@ -5,7 +5,7 @@ ADR 台帳フローを拡張するときは、次を先にそろえる。
 ## Acceptance timing
 
 - ADR の `Accepted` 化は commit 作成と切り離し、明示された採用判断だけを根拠にする。
-- `grill` / `scribe` の ADR 作成、採用、supersede 更新で採用判断契約を一致させる。
+- `scribe` の ADR 作成、採用、supersede 更新で採用判断契約を一致させる。
 - `git-push` は ADR を採用状態へ進めず、push 実行だけを扱う。
 
 ## Supersede contract

@@ -2,8 +2,6 @@
 
 この `docs/` は、この dotfiles repo を保守するときに参照する知見の置き場です。
 
-- [../CONTEXT-MAP.md](../CONTEXT-MAP.md): multi-context repo としての context 一覧
-- [CONTEXT.md](./CONTEXT.md): repo-level durable knowledge の用語
 - `docs/notes/`: repo-level の通常知見を置く
   - [adr-ledger-model.md](./notes/adr-ledger-model.md): ADR を状態付き判断台帳として扱う運用
   - [adr-workflow-review-pitfalls.md](./notes/adr-workflow-review-pitfalls.md): ADR 台帳フロー拡張時の review 観点
@@ -11,7 +9,7 @@
   - [git-add-approval-friction-diagnosis.md](./notes/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./notes/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
-  - [claude-lightweight-workflow.md](./notes/claude-lightweight-workflow.md): Claude surface の軽量 workflow 構成と Codex との非対称
+  - [lightweight-workflow.md](./notes/lightweight-workflow.md): 両 surface 軽量 workflow の構成と意図的差分
   - [vba-implementation-reference-design.md](./notes/vba-implementation-reference-design.md): VBA 実装 reference の設計・review 観点
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
@@ -49,12 +47,15 @@
   - [0033-preauthorize-orchestrate-workflow-agent-spawn.md](./adr/0033-preauthorize-orchestrate-workflow-agent-spawn.md)
   - [0034-reduce-non-reviewer-agents.md](./adr/0034-reduce-non-reviewer-agents.md)
   - [0035-make-claude-surface-lightweight-llm-native.md](./adr/0035-make-claude-surface-lightweight-llm-native.md)
+  - [0036-make-codex-surface-lightweight-and-restore-symmetry.md](./adr/0036-make-codex-surface-lightweight-and-restore-symmetry.md)
+  - [0037-retire-context-md-system.md](./adr/0037-retire-context-md-system.md)
+  - [0038-allow-reviewer-subagents-read-only-bash.md](./adr/0038-allow-reviewer-subagents-read-only-bash.md)
 - `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
-- `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex multi-agent workflow 用の specialist agent / reviewer agent を置く
+- `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex 用の read-only specialist agent / reviewer agent を置く
 - `dot_codex/rules/`: `~/.codex/rules/` へ展開する allow / forbidden の機械的 guard を置く
 - `dot_claude/CLAUDE.md`: `~/.claude/CLAUDE.md` へ展開する Claude Code surface 側の運用契約を置く
 - `dot_claude/skills/`: `~/.claude/skills/` へ展開する skill 手順と、その `references/` を置く
 - `dot_claude/agents/`: `~/.claude/agents/` へ展開する Claude Code subagent 定義を置く
 - `dot_claude/rules/`, `dot_claude/output-styles/`, `dot_claude/settings.json`: `~/.claude/` 配下へ展開する rules、output styles、settings を置く
-- `dot_codex/CONTEXT.md`, `dot_codex/private_config.toml.tmpl`: repo 内の参照用 source。展開先の `.codex/CONTEXT.md` / `.codex/config.toml` は `.chezmoiignore` で配布対象外
+- `dot_codex/private_config.toml.tmpl`: repo 内の参照用 source。展開先の `.codex/config.toml` は `.chezmoiignore` で配布対象外

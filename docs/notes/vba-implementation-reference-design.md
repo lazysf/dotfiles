@@ -1,5 +1,7 @@
 # VBA Implementation Reference Design
 
+> **Scope**: この文書は ADR 0036 以前の `implement` skill と `dot_claude/skills/implement/references/vba-best-practices.md` を前提とする履歴文書。現行は `implement` skill / reference を持たず、VBA の運用は `dot_claude/rules/vba.md`（path 条件 `src/**/*.{bas,cls}` で読まれる短い運用ルール）が正本。
+
 このメモは、VBA の path rule と `implement` の VBA best practices reference の分担をまとめる。
 
 ## Context
@@ -22,7 +24,7 @@
 
 ## References
 
-- [implement skill](../../dot_claude/skills/implement/SKILL.md)
+- `dot_claude/skills/implement/SKILL.md`（削除済み、ADR 0036）
+- `dot_claude/skills/implement/references/vba-best-practices.md`（削除済み、ADR 0036）
 - [VBA rule](../../dot_claude/rules/vba.md)
-- [VBA best practices reference](../../dot_claude/skills/implement/references/vba-best-practices.md)
 - [Runtime Surface Guidance](./runtime-surface-guidance.md)
