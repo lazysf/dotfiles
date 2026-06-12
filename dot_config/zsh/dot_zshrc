@@ -84,10 +84,11 @@ if [[ -f "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighti
 fi
 
 # -----------------------------------------
-# fnm (Node.js version manager)
+# nvm (Node.js version manager)
 # -----------------------------------------
-if command -v fnm >/dev/null 2>&1; then
-	eval "$(fnm env --use-on-cd --shell zsh)"
+export NVM_DIR="$HOME/.nvm"
+if [[ -s "${HOMEBREW_PREFIX}/opt/nvm/nvm.sh" ]]; then
+	. "${HOMEBREW_PREFIX}/opt/nvm/nvm.sh"
 fi
 
 # -----------------------------------------

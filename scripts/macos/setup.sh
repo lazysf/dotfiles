@@ -92,7 +92,7 @@ install_yazi_stack() {
 
 install_language_runtimes_stack() {
   echo "==> 言語ランタイム/版管理"
-  formula fnm   # Node.js
+  formula nvm   # Node.js
   formula uv    # Python
 }
 
