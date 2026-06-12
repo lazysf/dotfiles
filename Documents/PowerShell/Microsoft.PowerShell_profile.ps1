@@ -41,15 +41,6 @@ if (-not $global:ProfilePSReadLineOptionsRegistered) {
 }
 
 # -----------------------------
-# fnm (Node.js version manager)
-# -----------------------------
-$fnm = Get-Command -Name fnm -CommandType Application -ErrorAction SilentlyContinue
-if ($fnm) {
-  # Initialize fnm only when executable is available.
-  & $fnm.Source env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
-}
-
-# -----------------------------
 # Prompt (starship)
 # -----------------------------
 $starship = Get-Command -Name starship -CommandType Application -ErrorAction SilentlyContinue
