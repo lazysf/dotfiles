@@ -84,11 +84,11 @@ if [[ -f "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighti
 fi
 
 # -----------------------------------------
-# nvm (Node.js version manager)
+# volta (Node.js version manager)
 # -----------------------------------------
-export NVM_DIR="$HOME/.nvm"
-if [[ -s "${HOMEBREW_PREFIX}/opt/nvm/nvm.sh" ]]; then
-	. "${HOMEBREW_PREFIX}/opt/nvm/nvm.sh"
+export VOLTA_HOME="$HOME/.volta"
+if [[ -d "${VOLTA_HOME}/bin" ]]; then
+	export PATH="${VOLTA_HOME}/bin:${PATH}"
 fi
 
 # -----------------------------------------
