@@ -1,5 +1,7 @@
 # Model and Effort Tuning History
 
+> **Scope**: 時系列の履歴記録。各エントリは記録時点の model / effort / agent 構成を反映し、廃止済みの agent（例: `inspector`、ADR 0035 で廃止）への言及も当時の履歴。現行の構成は ADR 0036 / [lightweight-workflow.md](./lightweight-workflow.md) を正本にする。
+
 Claude / Codex の model と reasoning effort を調整してきた経緯を、後で「なぜこの配分か」を辿れるように時系列で残す。2026-06-03 の 3 章 (Opus 4.6 pin / Codex effort 調整 / Claude effort 統合) は `docs/requests/` から退避した詳細を要約しており、それ以降は本 notes に直接記録する。
 
 ## 2026-06-03: Claude model を Opus 4.6 に pin

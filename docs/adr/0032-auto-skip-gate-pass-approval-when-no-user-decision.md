@@ -1,6 +1,7 @@
 # ADR 0032: ユーザー判断が不要な Gate pass 後承認を自動 skip する
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0036
 - Supersedes: 0031
 - Amends: 0029
 
