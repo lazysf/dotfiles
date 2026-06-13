@@ -28,7 +28,6 @@ metadata:
 - 既存の自然な位置に差し込む。新規 doc は既存に収まらない時だけ作る。
 - 既存の章構成・用語・粒度・文体に寄せ、最小差分に留める。
 - 推測で書かない。未確認は「確認待ち」として分けるか書かない。
-- 秘密情報、認証情報、private config を durable な doc に残さない。
 
 ## 成果物別の書式
 
@@ -41,3 +40,19 @@ metadata:
 ## ADR の判断基準
 
 3 条件 AND（複数案を実比較 / 覆すコストが高い / 捨てた案に再検討価値）を全部満たす時だけ書く。乱発も silent skip も避ける。詳細条件・最小テンプレ・Status lifecycle・関係メタデータは [references/adr-format.md](references/adr-format.md) を参照。既存 ADR 本文は履歴として扱い、上書きせず新規 ADR + 関係メタデータで反映する。
+
+## 境界・停止条件
+
+- 実装や設定で確認できない内容を事実として書かない（一次情報がなければ書かない）。
+- 小さな変更で doc 全体を書き直さない。
+- 開発を駆動する事前 doc（requirements / design / tasks）は作らない。
+- 仕様 doc が必要かの判断を曖昧にしたまま commit に進まない。
+- ADR の 3 条件を満たさないのに ADR を求められたら、不要と明示するか notes を提案する。
+- 秘密情報、認証情報、private config、本番設定、未公開個人情報を doc に書かない（必要なら停止する）。
+
+## 出力
+
+- `artifact_type`（README / ADR / notes）
+- `updated_docs`（path のリスト）
+- `basis`（一次情報）
+- `open_questions`（未確認事項）
