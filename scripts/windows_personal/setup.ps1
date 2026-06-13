@@ -81,7 +81,7 @@ function Install-YaziStack {
 
 function Install-LanguageRuntimesStack {
     Write-Host '==> 言語ランタイム/版管理'
-    Install-WingetPackage Volta.Volta    # Node.js
+    Install-WingetPackage CoreyButler.NVMforWindows    # Node.js
     Install-WingetPackage astral-sh.uv  # Python
 }
 
