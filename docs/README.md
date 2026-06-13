@@ -5,12 +5,14 @@
 - `docs/notes/`: repo-level の通常知見を置く
   - [adr-ledger-model.md](./notes/adr-ledger-model.md): ADR を状態付き判断台帳として扱う運用
   - [adr-workflow-review-pitfalls.md](./notes/adr-workflow-review-pitfalls.md): ADR 台帳フロー拡張時の review 観点
+  - [claude-code-permission-policy.md](./notes/claude-code-permission-policy.md): `settings.json` permissions（allow / deny）の方針と根拠
   - [Runtime Surface Guidance](./notes/runtime-surface-guidance.md): runtime surface guidance と prefix なし skill surface の扱い
   - [git-add-approval-friction-diagnosis.md](./notes/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./notes/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
   - [lightweight-workflow.md](./notes/lightweight-workflow.md): 両 surface 軽量 workflow の構成と意図的差分
   - [model-and-effort-tuning-history.md](./notes/model-and-effort-tuning-history.md): Claude / Codex の model と reasoning effort 調整の経緯
+  - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
   - [vba-implementation-reference-design.md](./notes/vba-implementation-reference-design.md): VBA 実装 reference の設計・review 観点
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
@@ -59,5 +61,5 @@
 - `dot_claude/CLAUDE.md`: `~/.claude/CLAUDE.md` へ展開する Claude Code surface 側の運用契約を置く
 - `dot_claude/skills/`: `~/.claude/skills/` へ展開する skill 手順と、その `references/` を置く
 - `dot_claude/agents/`: `~/.claude/agents/` へ展開する Claude Code subagent 定義を置く
-- `dot_claude/rules/`, `dot_claude/output-styles/`, `dot_claude/settings.json`: `~/.claude/` 配下へ展開する rules、output styles、settings を置く
+- `dot_claude/rules/`, `dot_claude/output-styles/`, `dot_claude/settings.json.tmpl`: `~/.claude/` 配下へ展開する rules、output styles、settings を置く
 - `dot_codex/private_config.toml.tmpl`: repo 内の参照用 source。展開先の `.codex/config.toml` は `.chezmoiignore` で配布対象外
