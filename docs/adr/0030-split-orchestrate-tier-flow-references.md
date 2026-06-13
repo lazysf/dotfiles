@@ -1,8 +1,7 @@
 # ADR 0030: Split orchestrate tier flows into tier-specific references
 
-## Status
-
-Accepted
+- Status: Superseded
+- Superseded-By: 0036
 
 ## Context
 

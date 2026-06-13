@@ -1,7 +1,7 @@
 # 0036: Codex surface を軽量化し両 surface を対称（軽量）に戻す
 
 - Status: Accepted
-- Supersedes: 0035
+- Supersedes: 0025, 0026, 0029, 0030, 0032, 0035
 - Amended by: 0039
 
 ## 背景

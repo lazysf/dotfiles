@@ -1,6 +1,7 @@
 # 0029: orchestrate を最終 Gate pass まで自走させる
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0036
 - Amends: 0025, 0026
 
 ADR 0025 で全依頼を `orchestrate` Phase 0 + Triage 入口に統一し、ADR 0026 で `inquiry` tier を加えて 4 tier 構成を確立した。tier 別フローと停止線は整ったが、実運用では Phase / Gate ごとに lead がユーザーへ完了報告を返すため、ユーザー入力で進行が区切られ、停止線に触れない場面でも逐次介入が要る流れになっていた。停止線・Gate fail の同じ blocking 繰り返し・ユーザー入力必須の決定 以外は自走可能なはずだが、運用契約として明文化されていなかった。

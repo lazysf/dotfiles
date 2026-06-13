@@ -1,6 +1,7 @@
 # 0026: orchestrate に inquiry tier を追加し全依頼を入口にする
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0036
 - Amends: 0025
 
 ADR 0025 で `orchestrate` を全依頼の Phase 0 + Triage 入口とし、規模で `micro` / `standard` / `full` に振り分ける形にした。しかし Decision で「単なる質問・相談・調査だけの依頼は対象外」と例外を残したため、開発文脈にない単純な質問では `orchestrate` が発火せず、入口判断の場当たり化が再発した。実運用でも、別セッションで質問依頼に対して `orchestrate` が triage を通さずに進んだ事例が観測された。除外句が SKILL.md description にも残っており、Claude Code の skill 発火条件としても trigger を絞っていた。
