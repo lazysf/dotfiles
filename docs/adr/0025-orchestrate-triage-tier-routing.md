@@ -1,6 +1,7 @@
 # 0025: orchestrate を全依頼の triage 入口にし tier 別フローへ分岐する
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0036
 - Amends: 0020
 
 ADR 0020 で `orchestrate` を複数工程・設計判断を伴う依頼の進行入口とし、小さい修正や単一 skill で閉じる作業は main セッションが直接処理してよいとした。この入口分けは軽量運用を保つ意図だったが、運用上 2 つの非効率が出た。1 つは、依頼ごとに「orchestrate を通すか直接処理するか」をその場で判断する必要があり、入口判断そのものが迷いになること。もう 1 つは、いったん workflow に乗ると軽微な修正から大規模な実装まで一律で Phase 0〜3 と Gate 1〜3 を通り、中量級の受け皿がないこと。
