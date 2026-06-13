@@ -34,7 +34,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
   - 両 surface の agent 定義（`dot_codex/agents/*.toml` / `dot_claude/agents/*.md`）
   - 両 surface の rules（`dot_codex/rules/*.rules` / `dot_claude/rules/*.md`）
   - `dot_claude/output-styles/*.md`
-  - runtime 設定（`dot_codex/private_config.toml.tmpl` / `dot_claude/settings.json`）
+  - runtime 設定（`dot_codex/private_config.toml.tmpl` / `dot_claude/settings.json.tmpl`）
 
 ### 軽量例外
 
