@@ -10,7 +10,7 @@ docs 配下の artifact 体系だけを案内する。
 - リンクは README からの相対 path にし、各項目は 1 行説明に留める。
 - directory は配下の artifact 群の責務を書く。
 - 追加、削除、rename、移動した artifact と一覧の整合を確認する。
-- 一時メモを載せない。
+- 一時メモ、秘密情報、private config、未公開個人情報を載せない。
 
 ## Template
 
