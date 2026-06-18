@@ -44,6 +44,20 @@ Claude / Codex の model と reasoning effort を調整してきた経緯を、�
 - 注意: `[1m]` suffix は 2026-06 時点で Claude Code 公式 docs に明示掲載なし。実機で挙動を確認のうえ採用している。`[1m]` で起動できない場合は `claude-opus-4-7` (通常 context) へ fallback する判断余地を残す。
 - effort は据え置き。
 
+## 2026-06-18: Claude model を Opus 4.7 (通常 context) に戻し、effort を公式 default 寄せに
+
+- commit: TBD
+- 動機:
+  - `[1m]` suffix を外し Opus 4.7 + 通常 context に揃える。Claude Code UI で実際に選んでいる model (Opus 4.7 高速) と settings.json の宣言を一致させ、起動毎に意図しない model に巻き戻る挙動を避ける。
+  - effort は Opus 4.7 公式推奨（"xhigh for coding/agentic, minimum high for intelligence-sensitive"）に寄せる。前回の Codex 寄せでコスト側に倒していたが、Opus 4.7 では `low`/`medium` で under-thinking する可能性があるため見直し。
+- 変更:
+  - `dot_claude/settings.json.tmpl` の `model` を `claude-opus-4-8[1m]` -> `claude-opus-4-7`、`effortLevel` を `medium` -> `xhigh`
+  - `dot_claude/agents/quality-reviewer.md` frontmatter: `model` 同様、`effort: high` -> `xhigh`
+  - `dot_claude/agents/security-reviewer.md` frontmatter: `model` 同様、`effort: high` -> `xhigh`
+  - `dot_claude/agents/researcher.md` frontmatter: `model` 同様、`effort: low` -> `medium`
+- Codex 側 (`dot_codex/`) の effort は据え置き。Claude と Codex の effort 配分は今回非対称になる。
+- 注意: 高速モード (`/fast`) は settings.json で永続化する公式手段が未確認。現状は session 毎に UI / `/fast` で切替する運用。
+
 ## 過去 request の所在
 
 | 退避前 path | 主題 |
