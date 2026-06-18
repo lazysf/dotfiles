@@ -46,7 +46,7 @@ Claude / Codex の model と reasoning effort を調整してきた経緯を、�
 
 ## 2026-06-18: Claude model を Opus 4.7 (通常 context) に戻し、effort を公式 default 寄せに
 
-- commit: TBD
+- commit: [0ebe6e4](https://github.com/lazysf/dotfiles/commit/0ebe6e4) `chore: pin Claude model to Opus 4.7 and tune effort to xhigh`
 - 動機:
   - `[1m]` suffix を外し Opus 4.7 + 通常 context に揃える。Claude Code UI で実際に選んでいる model (Opus 4.7 高速) と settings.json の宣言を一致させ、起動毎に意図しない model に巻き戻る挙動を避ける。
   - effort は Opus 4.7 公式推奨（"xhigh for coding/agentic, minimum high for intelligence-sensitive"）に寄せる。前回の Codex 寄せでコスト側に倒していたが、Opus 4.7 では `low`/`medium` で under-thinking する可能性があるため見直し。
