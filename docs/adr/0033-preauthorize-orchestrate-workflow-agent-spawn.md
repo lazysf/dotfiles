@@ -1,6 +1,7 @@
 # 0033: orchestrate workflow agent 起動を事前許可する
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0040
 - Amends: 0020, 0029, 0032
 
 `orchestrate` は lead が工程 agent / reviewer agent を束ねる workflow であり、ADR 0029 / 0032 によりユーザー判断が必要な場面以外は自走する方針になった。一方で、workflow 上必須の agent / subagent 起動ごとにユーザー確認が発生すると、自走性が落ち、Gate review や repository maintenance が実質的に手動 checkpoint になる。
