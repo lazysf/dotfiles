@@ -20,12 +20,12 @@ description: Git の commit を push したい、現在ブランチをリモー�
 
 ## 出力
 
-- `result`: `pushed` / `nothing-to-push` / `skipped` / `failed`
-- `remote`: 使用した remote。ない場合は `none`
-- `branch`: push した branch。tag push なら `none`
-- `upstream`: `existing` / `set` / `not-set` / `skipped`
-- `action`: 使用した command。ない場合は `no-op`
-- `verification`: `passed` / `skipped` / `not run`
-- `notes`: tag 名、停止・失敗理由。ない場合は `none`
+- `result`
+- `remote`
+- `branch`
+- `upstream`
+- `action`
+- `verification`
+- `notes`
 
 失敗、no-op、事前停止でも同じ項目を返す。秘密情報やエラー全文は貼らず、要点を `notes` に書く。
