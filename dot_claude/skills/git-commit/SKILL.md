@@ -20,12 +20,12 @@ description: Git の変更を安全に commit したい依頼で使う。1コミ
 
 ## 出力
 
-- `branch`: 現在 branch。不明なら `none`
-- `commit`: short SHA。ない場合は `none`
-- `message`: 実際または試行した commit message。ない場合は `none`
-- `files`: commit した path の要約。ない場合は `none`
-- `verification`: `passed` / `skipped` / `not run` / `already run`
-- `left_unstaged`: 意図的に除外した変更。ない場合は `none`
-- `notes`: hook warning、停止・失敗理由。ない場合は `none`
+- `branch`
+- `commit`
+- `message`
+- `files`
+- `verification`
+- `left_unstaged`
+- `notes`
 
 失敗、no-op、事前停止でも同じ項目を返す。エラー全文や秘密情報は貼らず、要点を `notes` に書く。

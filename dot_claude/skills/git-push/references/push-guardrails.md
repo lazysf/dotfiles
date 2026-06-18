@@ -28,3 +28,13 @@
 - force push、pull、rebase、GitHub API、別 refspec で復旧しない。
 - 一時的に見える network / transport failure だけ、状態を再確認して 1 回 retry する。
 - authentication failure、permission denial、non-fast-forward、protected branch rejection、pre-receive hook rejection、ref update rejection は retry しない。
+
+## 報告
+
+- `result`: `pushed`、`nothing-to-push`、`skipped`、または `failed`
+- `remote`: 使用した remote。ない場合は `none`
+- `branch`: push した branch。tag push の場合は `none`
+- `upstream`: `existing`、`set`、`not-set`、または `skipped`
+- `action`: 使用した command。ない場合は `no-op`
+- `verification`: `passed`、`skipped`、または `not run`
+- `notes`: tag 名、停止理由、失敗理由。ない場合は `none`
