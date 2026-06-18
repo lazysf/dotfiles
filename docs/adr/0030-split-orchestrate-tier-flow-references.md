@@ -1,4 +1,4 @@
-# ADR 0030: Split orchestrate tier flows into tier-specific references
+# 0030: orchestrate tier フローを tier 別 reference に分割する
 
 - Status: Superseded
 - Superseded-By: 0036

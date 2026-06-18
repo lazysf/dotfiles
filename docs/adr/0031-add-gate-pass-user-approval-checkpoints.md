@@ -1,4 +1,4 @@
-# ADR 0031: Gate pass 後のユーザー承認 checkpoint を明示する
+# 0031: Gate pass 後のユーザー承認 checkpoint を明示する
 
 - Status: Superseded
 - Superseded-By: 0032

@@ -1,6 +1,7 @@
 # 0015: RTK を Codex shell proxy として不採用にする
 
 - Status: Accepted
+- Supersedes: 0014
 
 ## Context
 
