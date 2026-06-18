@@ -31,3 +31,13 @@
 - amend、squash、直接 ref 編集、その他 history 操作へ切り替えない。
 - 一時的に見える失敗だけ、`git status -sb` と `git diff --staged` を再確認し、同じ commit command を 1 回 retry する。
 - retry しても失敗する場合は停止し、理由の要点を報告する。
+
+## 報告
+
+- `branch`: 現在 branch。不明な場合は `none`
+- `commit`: short SHA。ない場合は `none`
+- `message`: 実際または試行した commit message。ない場合は `none`
+- `files`: commit した path の要約。ない場合は `none`
+- `verification`: `passed`、`skipped`、`not run`、または `already run`
+- `left_unstaged`: 無関係または意図的に除外した変更。ない場合は `none`
+- `notes`: hook warning、停止理由、失敗理由。ない場合は `none`
