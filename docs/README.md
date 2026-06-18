@@ -6,7 +6,8 @@
   - [adr-ledger-model.md](./notes/adr-ledger-model.md): ADR を状態付き判断台帳として扱う運用
   - [adr-workflow-review-pitfalls.md](./notes/adr-workflow-review-pitfalls.md): ADR 台帳フロー拡張時の review 観点
   - [claude-code-permission-policy.md](./notes/claude-code-permission-policy.md): `settings.json` permissions（allow / deny）の方針と根拠
-  - [Runtime Surface Guidance](./notes/runtime-surface-guidance.md): runtime surface guidance と prefix なし skill surface の扱い
+  - [claude-code-settings-spec-verification.md](./notes/claude-code-settings-spec-verification.md): `settings.json` / subagent frontmatter のキーと値が Claude Code 公式仕様に準拠していることの確認記録
+  - [runtime-surface-guidance.md](./notes/runtime-surface-guidance.md): runtime surface guidance と prefix なし skill surface の扱い
   - [git-add-approval-friction-diagnosis.md](./notes/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [harness-regression-checks.md](./notes/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
@@ -54,6 +55,7 @@
   - [0037-retire-context-md-system.md](./adr/0037-retire-context-md-system.md)
   - [0038-allow-reviewer-subagents-read-only-bash.md](./adr/0038-allow-reviewer-subagents-read-only-bash.md)
   - [0039-retire-docs-requests-artifacts.md](./adr/0039-retire-docs-requests-artifacts.md)
+  - [0040-retire-orchestrate-era-decisions.md](./adr/0040-retire-orchestrate-era-decisions.md)
 - `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex 用の read-only specialist agent / reviewer agent を置く
