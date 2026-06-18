@@ -1,7 +1,9 @@
 # 0027: Codex 側の workflow skill 名を Claude 基準に揃える
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0040
 - Amends: 0020, 0024
+- Amended by: 0028
 
 ADR 0020 で Claude SDLC workflow を Codex に import し、各工程 skill を Codex に設置した。当時 Codex 側は名詞形 (`implementation` / `verification`) を採用し、Claude 側の動詞形 (`implement` / `inspect`) と意図的に別名で運用してきた。両 surface に同等の責務を持つ skill が存在するにもかかわらず名前が違うため、`docs/notes/runtime-surface-guidance.md` に「Codex では `implementation`、Claude Code では `implement`」と毎回但し書きが必要で、両 surface 横断の説明、agent 定義、references の表現が複雑化していた。`caveman` のように runtime 機能差（output-style の有無）に由来する差は意図的だが、`implementation` / `verification` は単なる命名差で機能差ではない。
 
