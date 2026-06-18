@@ -1,6 +1,7 @@
 # 0023: docs 追従更新を専用 skill に分ける
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0040
 - Amends: 0011, 0019, 0020
 - Amended by: 0024
 

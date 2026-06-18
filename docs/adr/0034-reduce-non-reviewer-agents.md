@@ -1,7 +1,8 @@
 # 0034: non-reviewer agent を researcher / inspector のみへ集約する
 
-- Status: Accepted
+- Status: Superseded
 - Supersedes: 0024, 0028
+- Superseded-By: 0040
 
 ## 背景
 
