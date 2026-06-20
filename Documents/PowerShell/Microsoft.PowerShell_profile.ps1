@@ -50,6 +50,14 @@ if ($starship) {
 }
 
 # -----------------------------
+# zoxide
+# -----------------------------
+$zoxide = Get-Command -Name zoxide -CommandType Application -ErrorAction SilentlyContinue
+if ($zoxide) {
+  Invoke-Expression (& $zoxide.Source init powershell | Out-String)
+}
+
+# -----------------------------
 # Aliases / wrappers
 # -----------------------------
 if (Get-Command eza -ErrorAction SilentlyContinue) {
