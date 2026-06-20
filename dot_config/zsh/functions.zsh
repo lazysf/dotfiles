@@ -25,8 +25,8 @@ fi
 # ghq + fzf
 # -----------------------------------------
 if command -v ghq >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1; then
-	function ghq-fzf() {
-		local root preview_cmd src target
+	function g() {
+		local root preview_cmd src
 		root="$(ghq root)" || return 1
 		if command -v bat >/dev/null 2>&1; then
 			preview_cmd="bat --color=always --style=header,grid --line-range :80 ${root}/{}/README.*"
@@ -36,12 +36,7 @@ if command -v ghq >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1; then
 
 		src="$(ghq list | fzf --preview "${preview_cmd}")"
 		if [[ -n "${src}" ]]; then
-			target="${root}/${src}"
-			BUFFER="cd ${(q)target}"
-			zle accept-line
+			builtin cd -- "${root}/${src}"
 		fi
-		zle -R -c
 	}
-	zle -N ghq-fzf
-	bindkey '^g' ghq-fzf
 fi
