@@ -41,8 +41,13 @@ function Install-ShellStack {
 
 function Install-ModernCliStack {
     Write-Host '==> modern CLI utilities (汎用)'
-    Install-WingetPackage sharkdp.bat        # cat 代替
-    Install-WingetPackage eza-community.eza  # ls 代替
+    Install-WingetPackage sharkdp.bat              # cat 代替
+    Install-WingetPackage eza-community.eza        # ls 代替
+    Install-WingetPackage junegunn.fzf             # 汎用ファジー検索 (PowerShell g() / telescope)
+    Install-WingetPackage BurntSushi.ripgrep.MSVC  # 高速 grep
+    Install-WingetPackage sharkdp.fd               # 高速 find
+    Install-WingetPackage jqlang.jq                # JSON parser
+    Install-WingetPackage ajeetdsouza.zoxide       # cd 代替 (z コマンド)
 }
 
 function Install-GitStack {

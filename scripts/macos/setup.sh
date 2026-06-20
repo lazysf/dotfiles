@@ -55,8 +55,13 @@ install_shell_stack() {
 
 install_modern_cli_stack() {
   echo "==> modern CLI utilities (汎用)"
-  formula bat   # cat 代替
-  formula eza   # ls 代替
+  formula bat       # cat 代替
+  formula eza       # ls 代替
+  formula fzf       # 汎用ファジー検索 (zsh shell integration / ghq-fzf / telescope)
+  formula ripgrep   # 高速 grep
+  formula fd        # 高速 find
+  formula jq        # JSON parser
+  formula zoxide    # cd 代替 (z コマンド)
 }
 
 install_git_stack() {
