@@ -57,7 +57,7 @@ install_modern_cli_stack() {
   echo "==> modern CLI utilities (汎用)"
   formula bat       # cat 代替
   formula eza       # ls 代替
-  formula fzf       # 汎用ファジー検索 (zsh shell integration / ghq-fzf / telescope)
+  formula fzf       # 汎用ファジー検索 (zsh shell integration / g() / telescope)
   formula ripgrep   # 高速 grep
   formula fd        # 高速 find
   formula jq        # JSON parser
@@ -70,8 +70,8 @@ install_git_stack() {
   formula gh
   formula ghq
   formula lazygit
-  formula fzf   # ghq-fzf 関数 (dot_config/zsh/functions.zsh) の対話的選択
-  formula bat   # ghq-fzf 関数の README プレビュー (なければ ls -la fallback)
+  formula fzf   # g() 関数 (dot_config/zsh/functions.zsh) の対話的選択
+  formula bat   # g() 関数の README プレビュー (なければ ls -la fallback)
 }
 
 install_neovim_stack() {
