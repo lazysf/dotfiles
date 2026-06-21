@@ -28,11 +28,14 @@ fi
 # 事前に installed list を取って skip 判定する。
 installed_formulas="$(brew list --formula -1)"
 installed_casks="$(brew list --cask -1)"
+installed_taps="$(brew tap)"
 
 install_if_missing() {
   local kind="$1" name="$2" installed="$3"
-  if grep -qx "$name" <<<"$installed"; then
-    echo "  - $name (skip)"
+  # tap 経由 (user/tap/name 形式) は basename で skip 判定する (brew list は basename のみ)。
+  local check="${name##*/}"
+  if grep -qx "$check" <<<"$installed"; then
+    echo "  - $check (skip)"
     return
   fi
   echo "  + $name"
@@ -44,6 +47,15 @@ install_if_missing() {
 }
 formula() { install_if_missing formula "$1" "$installed_formulas"; }
 cask()    { install_if_missing cask "$1" "$installed_casks"; }
+tap() {
+  local name="$1"
+  if grep -qx "$name" <<<"$installed_taps"; then
+    echo "  - $name (skip tap)"
+    return
+  fi
+  echo "  + tap $name"
+  brew tap "$name"
+}
 
 install_shell_stack() {
   echo "==> shell (zsh + プロンプト)"
@@ -141,7 +153,9 @@ install_browser_stack() {
 
 install_maintenance_stack() {
   echo "==> Mac メンテナンス"
-  formula mole   # クリーンアップ / 最適化
+  formula mole                      # クリーンアップ / 最適化
+  tap vjeantet/homebrew-tap         # alerter 用の個人 tap
+  formula vjeantet/tap/alerter      # mole 週次チェックの通知
 }
 
 install_editor_gui_stack() {
