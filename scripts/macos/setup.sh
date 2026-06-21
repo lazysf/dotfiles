@@ -70,6 +70,7 @@ install_git_stack() {
   formula gh
   formula ghq
   formula lazygit
+  formula prek  # pre-commit 互換 hook ランナー (Rust 製)
   formula fzf   # g() 関数 (dot_config/zsh/functions.zsh) の対話的選択
   formula bat   # g() 関数の README プレビュー (なければ ls -la fallback)
 }
@@ -102,9 +103,8 @@ install_language_runtimes_stack() {
 }
 
 install_dotfiles_stack() {
-  echo "==> dotfiles / pre-commit 系"
+  echo "==> dotfiles"
   formula chezmoi
-  formula prek   # pre-commit 互換 hook ランナー (Rust 製)
 }
 
 install_password_stack() {
@@ -132,6 +132,10 @@ install_gui_utility_stack() {
   echo "==> GUI ユーティリティ"
   cask mos              # スクロール平滑化
   cask raycast          # ランチャー
+}
+
+install_browser_stack() {
+  echo "==> ブラウザ"
   cask microsoft-edge
 }
 
@@ -161,6 +165,7 @@ install_password_stack
 install_ai_stack
 install_font_stack
 install_gui_utility_stack
+install_browser_stack
 install_maintenance_stack
 install_editor_gui_stack
 install_research_stack
