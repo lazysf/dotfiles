@@ -135,6 +135,11 @@ install_gui_utility_stack() {
   cask microsoft-edge
 }
 
+install_maintenance_stack() {
+  echo "==> Mac メンテナンス"
+  formula mole   # クリーンアップ / 最適化
+}
+
 install_editor_gui_stack() {
   echo "==> エディタ (GUI)"
   cask visual-studio-code
@@ -156,6 +161,7 @@ install_password_stack
 install_ai_stack
 install_font_stack
 install_gui_utility_stack
+install_maintenance_stack
 install_editor_gui_stack
 install_research_stack
 
