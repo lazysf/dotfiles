@@ -45,4 +45,6 @@ Documents
 .config/zsh
 .ssh/config
 .config/terminal
+.config/mole
+Library
 {{- end }}

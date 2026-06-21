@@ -56,6 +56,7 @@
   - [0038-allow-reviewer-subagents-read-only-bash.md](./adr/0038-allow-reviewer-subagents-read-only-bash.md)
   - [0039-retire-docs-requests-artifacts.md](./adr/0039-retire-docs-requests-artifacts.md)
   - [0040-retire-orchestrate-era-decisions.md](./adr/0040-retire-orchestrate-era-decisions.md)
+  - [0041-adopt-alerter-for-mole-weekly-notification.md](./adr/0041-adopt-alerter-for-mole-weekly-notification.md)
 - `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
 - `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
 - `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex 用の read-only specialist agent / reviewer agent を置く
