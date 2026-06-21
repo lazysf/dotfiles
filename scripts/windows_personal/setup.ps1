@@ -60,6 +60,7 @@ function Install-GitStack {
     Install-WingetPackage GitHub.cli
     Install-WingetPackage x-motemen.ghq
     Install-WingetPackage JesseDuffield.lazygit
+    Install-WingetPackage j178.Prek      # pre-commit 互換 hook ランナー (Rust 製)
     Install-WingetPackage junegunn.fzf   # PowerShell profile の g() 関数 (ghq + fzf) で使用
 }
 
@@ -91,9 +92,8 @@ function Install-LanguageRuntimesStack {
 }
 
 function Install-DotfilesStack {
-    Write-Host '==> dotfiles / pre-commit 系'
+    Write-Host '==> dotfiles'
     Install-WingetPackage twpayne.chezmoi
-    Install-WingetPackage j178.Prek   # pre-commit 互換 hook ランナー (Rust 製)
 }
 
 function Install-PasswordStack {
@@ -120,8 +120,12 @@ function Install-FontStack {
 function Install-GuiUtilityStack {
     Write-Host '==> GUI ユーティリティ'
     Install-WingetPackage Raycast.Raycast   # ランチャー
-    # Microsoft Edge は Windows 10/11 標準同梱のため明示インストール不要。
     # mos (macOS 専用) は Windows 非対応。
+}
+
+function Install-BrowserStack {
+    Write-Host '==> ブラウザ'
+    # Microsoft Edge は Windows 10/11 標準同梱のため明示インストール不要。
 }
 
 function Install-EditorGuiStack {
@@ -145,6 +149,7 @@ Install-PasswordStack
 Install-AiStack
 Install-FontStack
 Install-GuiUtilityStack
+Install-BrowserStack
 Install-EditorGuiStack
 Install-ResearchStack
 
