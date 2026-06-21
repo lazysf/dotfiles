@@ -71,7 +71,7 @@ install_git_stack() {
   formula ghq
   formula lazygit
   formula prek  # pre-commit 互換 hook ランナー (Rust 製)
-  formula fzf   # g() 関数 (dot_config/zsh/functions.zsh) の対話的選択
+  formula fzf   # g() 関数 (ghq + fzf による対話的 repo 選択)
   formula bat   # g() 関数の README プレビュー (なければ ls -la fallback)
 }
 
