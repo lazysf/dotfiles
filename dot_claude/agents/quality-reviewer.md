@@ -3,7 +3,7 @@ name: quality-reviewer
 description: ユーザー明示時に、与えられた diff（明示 diff / 対象ファイル / PR patch / staged + untracked）を read-only で品質 review する時に使う。scope、可読性、責務分離、命名、回帰リスク、テスト妥当性を見る。
 tools: Read, Glob, Grep, Bash
 permissionMode: plan
-model: "claude-opus-4-7"
+model: "claude-opus-5"
 effort: xhigh
 color: orange
 ---

@@ -9,9 +9,9 @@
 | 全体契約 | `AGENTS.md`（進行ガイド・品質・doc・停止線・置き場 + prose 行動指針集約） | `CLAUDE.md`（同左、prose は `rules/` に分離） |
 | skills | `scribe` / `git-commit` / `git-push` / `caveman`（output-style 非対応のため skill） | `scribe` / `git-commit` / `git-push` |
 | output-style | なし | `caveman` |
-| agents | `researcher`（low, read-only）/ `quality-reviewer`（high）/ `security-reviewer`（high）。toml + `sandbox_mode = "read-only"` | `researcher`（medium）/ `quality-reviewer`（xhigh）/ `security-reviewer`（xhigh）。md frontmatter。researcher は `tools: Read, Glob, Grep`、reviewer 2 つは `tools: Read, Glob, Grep, Bash`（built-in read-only command の範囲で実質 read-only） |
+| agents | `researcher`（low, read-only）/ `quality-reviewer`（high）/ `security-reviewer`（high）。toml + `sandbox_mode = "read-only"` | `researcher`（high）/ `quality-reviewer`（xhigh）/ `security-reviewer`（xhigh）。md frontmatter。researcher は `tools: Read, Glob, Grep`、reviewer 2 つは `tools: Read, Glob, Grep, Bash`（built-in read-only command の範囲で実質 read-only） |
 | rules | command guard 専用（`.rules`、`allow` / `forbidden`） | path 条件付き短い prose rule（coding-standards / docs-artifacts / claude-surface-consistency / vba） |
-| runtime config | `private_config.toml.tmpl`（model `gpt-5.5`、effort `medium`、approval / auto_review / sandbox / `.rules` guard 維持） | `settings.json.tmpl`（model `claude-opus-4-7`、effortLevel `xhigh`、permissions / sandbox） |
+| runtime config | `private_config.toml.tmpl`（model `gpt-5.5`、effort `medium`、approval / auto_review / sandbox / `.rules` guard 維持） | `settings.json.tmpl`（model `claude-opus-5`、effortLevel `xhigh`、permissions / sandbox） |
 
 ## 進行ガイド
 
