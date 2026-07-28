@@ -1,0 +1,17 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/zsh
+# plist hash: {{ include "Library/LaunchAgents/local.mole.weekly-check.plist.tmpl" | sha256sum }}
+#
+# plist の内容が変わったら launchd へ登録し直す。
+# bootout は未登録時に失敗するため、成否を問わず bootstrap へ進める。
+
+set -eu
+
+label="local.mole.weekly-check"
+domain="gui/$(id -u)"
+plist="$HOME/Library/LaunchAgents/${label}.plist"
+
+launchctl bootout "${domain}/${label}" 2>/dev/null || true
+launchctl bootstrap "$domain" "$plist"
+echo "launchd: ${label} を登録しました"
+{{ end -}}

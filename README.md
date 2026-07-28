@@ -69,6 +69,16 @@ chezmoi apply
 
 [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は macOS では `chezmoi apply` で配布されますが、`Terminal` への import は手動です。
 
+## mole 週次チェック (macOS)
+
+毎週月曜 9:00 に `mo clean --dry-run` を実行し、解放可能サイズを通知します。通知の「クリーンアップ」ボタンで `mo clean` を実行できます。依存する `mole` / `alerter` は `scripts/macos/setup.sh` の maintenance stack で導入されます。
+
+`chezmoi apply` で [`dot_config/mole/executable_weekly-check.sh`](dot_config/mole/executable_weekly-check.sh) と [`Library/LaunchAgents/local.mole.weekly-check.plist.tmpl`](Library/LaunchAgents/local.mole.weekly-check.plist.tmpl) が配布され、[`run_onchange_after_register-mole-agent.sh.tmpl`](run_onchange_after_register-mole-agent.sh.tmpl) が launchd への登録まで行います。plist の内容が変わった場合も再登録されます。
+
+即時実行して確認するなら `launchctl kickstart -k "gui/$(id -u)/local.mole.weekly-check"`。停止するなら `launchctl bootout "gui/$(id -u)/local.mole.weekly-check"`。
+
+実行ログは `~/Library/Logs/mole/` 配下 (`weekly-check.log` / `weekly-check.err` / `weekly-clean.log`)。通知 backend の選定理由は [`docs/adr/0041-adopt-alerter-for-mole-weekly-notification.md`](docs/adr/0041-adopt-alerter-for-mole-weekly-notification.md) を参照してください。
+
 ## Python / Markdown lint
 
 repo 保守用 Python は `uv` で管理 (`uv sync`)。
