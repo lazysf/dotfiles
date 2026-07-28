@@ -3,7 +3,7 @@ name: security-reviewer
 description: ユーザー明示時に、与えられた diff（明示 diff / 対象ファイル / PR patch / staged + untracked）を read-only で security review する時に使う。auth、権限、secret、外部 I/O、command、CI / tooling 変更、data flow、injection、path traversal、情報漏洩を見る。
 tools: Read, Glob, Grep, Bash
 permissionMode: plan
-model: "claude-opus-4-7"
+model: "claude-opus-5"
 effort: xhigh
 color: red
 ---

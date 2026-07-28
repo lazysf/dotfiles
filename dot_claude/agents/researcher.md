@@ -3,8 +3,8 @@ name: researcher
 description: 調査を main セッションから分離・並列したい時だけ使う read-only agent。既存コード、docs、設定、影響範囲、挙動、test entrypoint を調査して事実を返す。普段の小さな調査は main セッションが自分で行う。
 tools: Read, Glob, Grep
 permissionMode: plan
-model: "claude-opus-4-7"
-effort: medium
+model: "claude-opus-5"
+effort: high
 color: cyan
 ---
 

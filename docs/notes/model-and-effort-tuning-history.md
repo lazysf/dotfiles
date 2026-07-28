@@ -58,6 +58,24 @@ Claude / Codex の model と reasoning effort を調整してきた経緯を、�
 - Codex 側 (`dot_codex/`) の effort は据え置き。Claude と Codex の effort 配分は今回非対称になる。
 - 注意: 高速モード (`/fast`) は settings.json で永続化する公式手段が未確認。現状は session 毎に UI / `/fast` で切替する運用。
 
+## 2026-07-28: Claude model を Opus 5 に更新
+
+- 動機: main session と全 custom agent を Opus 5 に上げる。従来どおり alias ではなく full model ID で pin し、解決ぶれを排除。
+- 変更:
+  - `dot_claude/settings.json.tmpl` の `model` を `claude-opus-4-7` -> `claude-opus-5`
+  - `dot_claude/agents/{quality-reviewer,security-reviewer,researcher}.md` frontmatter も同様に更新
+  - `dot_claude/agents/researcher.md` frontmatter `effort` を `medium` -> `high`
+- effort 見直しの根拠:
+  - Opus 4.7 の default effort は `xhigh` だったが、**Opus 5 の default は `high`**。さらに公式が「The effort scale is calibrated per model, so the same level name does not represent the same underlying value across models」と明記しているため、4.7 時代の配分をそのまま持ち越す根拠は弱い。
+  - `researcher` の `medium` は 2026-06-18 の「Codex 寄せ / コスト側に倒す」判断由来で、model 特性由来ではなかった。役割（影響範囲・挙動の調査）は網羅性が効き、取りこぼしが lead 側の誤判断に直結するため、Opus 5 default と同じ `high` に戻す。
+  - `quality-reviewer` / `security-reviewer` の `xhigh` は維持。default より一段上を意図的に取る。
+  - main の `effortLevel: xhigh` も維持。Opus 5 では default `high` に対する意図的な一段上げになる。
+- `max` は採用しない。subagent frontmatter では受け付けるが（settings.json は不可）、公式が "may show diminishing returns and is prone to overthinking. Test before adopting broadly" と警告している。
+- 注意:
+  - Opus 5 は Claude Code v2.1.219 以降が必要（公式 docs 記載）。古い client では選択できない。
+  - Opus 4.7 / 4.8 と違い、Opus 5 は「初回起動時に model 既定 effort へ寄せる hold」を持たない。既存の `effortLevel: xhigh` がそのまま引き継がれる。
+  - Codex 側 (`dot_codex/`) の effort は据え置き。researcher の effort は Claude `high` / Codex `low` で非対称のまま。
+
 ## 過去 request の所在
 
 | 退避前 path | 主題 |
