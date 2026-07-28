@@ -18,8 +18,8 @@
 | `disableBypassPermissionsMode: "disable"` | `settings.json.tmpl` permissions | 値は文字列 `"disable"`。`bypassPermissions` / `auto` モードの利用を防ぐためのキーで、user-level / managed-settings どちらでも有効 |
 | `permissions.defaultMode: "auto"` | `settings.json.tmpl` permissions | `default` / `acceptEdits` / `plan` / `auto` / `dontAsk` / `bypassPermissions` を受け付ける |
 | `language: "japanese"` | `settings.json.tmpl` | 応答言語、voice dictation、自動生成セッションタイトルに反映される正式キー |
-| `model: "claude-opus-4-7"` | `settings.json.tmpl` / agent frontmatter | full model ID 形式。`--model` フラグと同じ値域を受け付ける |
-| subagent `effort: xhigh` / `medium` | `agents/*.md` frontmatter | `low` / `medium` / `high` / `xhigh` / `max`。利用可能な値はモデル依存 |
+| `model: "claude-opus-5"` | `settings.json.tmpl` / agent frontmatter | full model ID 形式。`--model` フラグと同じ値域を受け付ける |
+| subagent `effort: xhigh` / `high` | `agents/*.md` frontmatter | `low` / `medium` / `high` / `xhigh` / `max`。利用可能な値はモデル依存。`max` は settings.json では不可だが subagent frontmatter では受け付ける |
 | subagent `permissionMode: plan` | `agents/*.md` frontmatter | `default` / `acceptEdits` / `auto` / `dontAsk` / `bypassPermissions` / `plan`。plugin subagent では無視される |
 | subagent `color: orange` / `cyan` / `red` | `agents/*.md` frontmatter | `red` / `blue` / `green` / `yellow` / `purple` / `orange` / `pink` / `cyan` |
 
@@ -27,5 +27,5 @@
 
 - `effortLevel` の採用根拠は [model-and-effort-tuning-history.md](./model-and-effort-tuning-history.md) の 2026-06-18 エントリ（"xhigh for coding/agentic" 公式推奨に寄せた）に記録済み。
 - `disableBypassPermissionsMode` は user-level 配置でも機能する。公式 docs に「A user can set it in their own settings to lock themselves out of bypass mode.」と明記。
-- `model` の例値として公式 docs は `claude-opus-4-6` / `claude-opus-4-8` を示すが、これは例示であり、`claude-opus-4-7` を含む同形式の full model ID を弾く根拠はない。
+- `model` は alias（`opus` 等）と full model name の両方を受け付ける。公式 docs は version 固定の例として `claude-opus-5` を明示している。Opus 5 の利用には Claude Code v2.1.219 以降が必要。
 - 本 note は確認時点の Claude Code 公式仕様に基づく。将来仕様が変わったら出典 URL を辿り直して再確認する。
