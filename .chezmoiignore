@@ -23,7 +23,6 @@ scripts
 .tombi.toml
 AGENTS.md
 CLAUDE.md
-.codex/config.toml
 LICENSE
 package.json
 package-lock.json
