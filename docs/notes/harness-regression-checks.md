@@ -296,7 +296,10 @@
   - `dot_claude/agents/*.md` の frontmatter と役割が崩れていない
   - `dot_codex/rules/*.rules` と `dot_claude/rules/*.md` の説明責務が崩れていない
   - `dot_codex/`、`dot_claude/`、`docs/` 配下の参照先が実在する
-  - `dot_codex/private_config.toml.tmpl` と `dot_codex/CONTEXT.md` の target は、意図した場合を除き `.chezmoiignore` で配布対象外のまま保たれている
+  - Codex の runtime 設定（`~/.codex/config.toml`）を source 管理へ戻していない。戻す場合は Codex app 側の書き込み（`marketplaces` / `projects` / `desktop` / `mcp_servers`）との衝突を確認する
+  - `dot_codex/agents/*.toml` の `model` / `model_reasoning_effort` が、実機 `~/.codex/config.toml` の lead 設定から意図せず乖離していない（意図した値は [lightweight-workflow.md](./lightweight-workflow.md) の「意図した設定値」）
+  - `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が効いているかは、session の Bash で presence だけ見て確認する（例: `printenv ANTHROPIC_API_KEY > /dev/null; echo $?` が `1` を返す）。値そのものは出力しない
+  - `sandbox.network.allowedDomains` は `github.com` / npm / PyPI の 3 系統だけに保つ。uv の CPython download や GitHub release asset が `codeload.github.com` / `objects.githubusercontent.com` へ落ちて prompt になるのは想定挙動で、許可 host を増やして解決しない
   - root `CLAUDE.md` は repo-local import shim として配布対象外のまま保たれている
   - knowledge の置き場として project-local `.codex` / `.claude` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する

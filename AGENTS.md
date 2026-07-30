@@ -20,7 +20,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
   - [Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
   - [Evaluating skills](https://agentskills.io/skill-creation/evaluating-skills)
   - [Using scripts](https://agentskills.io/skill-creation/using-scripts)
-  - [Codex Agent Skills](https://developers.openai.com/codex/skills)
+  - [Codex Agent Skills](https://learn.chatgpt.com/docs/build-skills)
   - [Claude Code skills](https://code.claude.com/docs/en/skills)
 - Agent Skills 公式情報を確認した場合は、最終返答で参照した公式ページを簡潔に明示する。確認が必要だったが確認できない場合は、その事実と理由を明示し、進め方を相談する
 - `SKILL.md` へ仕様や長い手順を転載せず、必要な詳細は `references/` などの progressive disclosure に分ける
@@ -34,7 +34,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
   - 両 surface の agent 定義（`dot_codex/agents/*.toml` / `dot_claude/agents/*.md`）
   - 両 surface の rules（`dot_codex/rules/*.rules` / `dot_claude/rules/*.md`）
   - `dot_claude/output-styles/*.md`
-  - runtime 設定（`dot_codex/private_config.toml.tmpl` / `dot_claude/settings.json.tmpl`）
+  - runtime 設定（`dot_claude/settings.json.tmpl`）
 
 ### 軽量例外
 
@@ -47,29 +47,30 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## Codex 本体に関する作業
 
-- Codex の設定、権限、実行環境、AGENTS.md、MCP、hooks、rules、skills、subagents、plugins、CLI / app / IDE extension、運用方針に関わる判断を行う場合は、事前に [Codex Docs](https://developers.openai.com/codex) と [Docs MCP](https://developers.openai.com/learn/docs-mcp) を参照する
-- Codex の運用方針や作業設計を判断する場合は、[Best practices](https://developers.openai.com/codex/learn/best-practices) を参照する
+- Codex の設定、権限、実行環境、AGENTS.md、MCP、hooks、rules、skills、subagents、plugins、CLI / app / IDE extension、運用方針に関わる判断を行う場合は、事前に [Codex Docs](https://learn.chatgpt.com/docs) と [Docs MCP](https://developers.openai.com/learn/docs-mcp) を参照する
+- Codex の運用方針や作業設計を判断する場合は、[Best practices](https://learn.chatgpt.com/guides/best-practices) を参照する
 - 判断対象ごとに該当する公式ページを参照する:
-  - 初期導入 / 概要: [Quickstart](https://developers.openai.com/codex/quickstart)
-  - ユースケース: [Codex use cases](https://developers.openai.com/codex/use-cases)
-  - `AGENTS.md`: [Custom instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md)
-  - `~/.codex/config.toml` 基本: [Config basics](https://developers.openai.com/codex/config-basic)
-  - config 応用: [Advanced Configuration](https://developers.openai.com/codex/config-advanced)
-  - config 詳細: [Configuration Reference](https://developers.openai.com/codex/config-reference)
-  - environment variables: [Environment variables](https://developers.openai.com/codex/environment-variables)
-  - config 例: [Sample Configuration](https://developers.openai.com/codex/config-sample)
-  - permissions / sandbox / approvals: [Permissions](https://developers.openai.com/codex/permissions)
-  - rules: [Rules](https://developers.openai.com/codex/rules)
-  - hooks: [Hooks](https://developers.openai.com/codex/hooks)
-  - MCP: [Model Context Protocol](https://developers.openai.com/codex/mcp)
-  - plugins: [Plugins](https://developers.openai.com/codex/plugins)
-  - skills: [Agent Skills](https://developers.openai.com/codex/skills)
-  - subagents: [Subagents](https://developers.openai.com/codex/subagents)
-  - CLI: [CLI](https://developers.openai.com/codex/cli)
-  - app: [App](https://developers.openai.com/codex/app)
-  - IDE extension: [IDE extension](https://developers.openai.com/codex/ide)
-  - app troubleshooting: [Troubleshooting](https://developers.openai.com/codex/app/troubleshooting)
-  - changelog / release 確認: [Changelog](https://developers.openai.com/codex/changelog)
+  - 初期導入 / 概要: [Quickstart](https://learn.chatgpt.com/docs/quickstart)
+  - ユースケース: [Codex use cases](https://learn.chatgpt.com/use-cases)
+  - `AGENTS.md`: [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
+  - `~/.codex/config.toml` 基本: [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic)
+  - config 応用: [Advanced Configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)
+  - config 詳細: [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference)
+  - environment variables: [Environment variables](https://learn.chatgpt.com/docs/config-file/environment-variables)
+  - config 例: [Sample Configuration](https://learn.chatgpt.com/docs/config-file/config-sample)
+  - permissions / approvals: [Permissions](https://learn.chatgpt.com/docs/permissions)
+  - sandbox: [Sandboxing](https://learn.chatgpt.com/docs/sandboxing)
+  - rules: [Rules](https://learn.chatgpt.com/docs/agent-configuration/rules)
+  - hooks: [Hooks](https://learn.chatgpt.com/docs/hooks)
+  - MCP: [Model Context Protocol](https://learn.chatgpt.com/docs/extend/mcp)
+  - plugins: [Plugins](https://learn.chatgpt.com/docs/plugins)
+  - skills: [Agent Skills](https://learn.chatgpt.com/docs/build-skills)
+  - subagents: [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+  - CLI: [CLI](https://learn.chatgpt.com/docs/codex/cli)
+  - app: [App](https://learn.chatgpt.com/docs/app)
+  - IDE extension: [IDE extension](https://learn.chatgpt.com/docs/codex/ide)
+  - app troubleshooting: [Troubleshooting](https://learn.chatgpt.com/docs/reference/troubleshooting)
+  - changelog / release 確認: [Changelog](https://learn.chatgpt.com/docs/changelog)
 
 ## Claude Code に関する作業
 

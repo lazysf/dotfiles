@@ -76,6 +76,16 @@ Claude / Codex の model と reasoning effort を調整してきた経緯を、�
   - Opus 4.7 / 4.8 と違い、Opus 5 は「初回起動時に model 既定 effort へ寄せる hold」を持たない。既存の `effortLevel: xhigh` がそのまま引き継がれる。
   - Codex 側 (`dot_codex/`) の effort は据え置き。researcher の effort は Claude `high` / Codex `low` で非対称のまま。
 
+## 2026-07-30: Codex agent を lead 設定へ揃える
+
+- 動機: 実機 `~/.codex/config.toml` の lead が `gpt-5.6-sol` / effort `high` に更新されていたのに対し、`dot_codex/agents/*.toml` は `gpt-5.5` 固定のままだった。lead と agent で model 世代が違う状態を解消する。
+- 変更:
+  - `dot_codex/agents/{researcher,quality-reviewer,security-reviewer}.toml` の `model` を `gpt-5.5` -> `gpt-5.6-sol`
+  - `dot_codex/agents/researcher.toml` の `model_reasoning_effort` を `low` -> `high`
+- researcher の根拠: 2026-07-28 エントリで Claude 側 researcher を `high` に戻した理由（調査は網羅性が効き、取りこぼしが lead の誤判断に直結する。`low` / `medium` は「Codex 寄せ / コスト側に倒す」判断由来で model 特性由来ではない）が Codex 側にもそのまま当てはまるため、同じ `high` にする。これで researcher の effort 非対称は解消。
+- reviewer 2 つは `high` 据え置き。Claude 側の `xhigh`（default より一段上）と非対称のまま。Codex lead が `high` なので、一段上げるなら `xhigh` にする選択肢は残す。
+- 出典: 実機 `~/.codex/config.toml`（2026-07-29 更新分）。
+
 ## 過去 request の所在
 
 | 退避前 path | 主題 |
