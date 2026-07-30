@@ -3,6 +3,7 @@ paths:
   - "docs/**/*.md"
   - "**/README.md"
   - "**/CLAUDE.md"
+  - "**/AGENTS.md"
 ---
 
 # Docs / Artifact Rules
