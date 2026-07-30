@@ -10,7 +10,8 @@
   "includeCoAuthoredBy": false,
   "cleanupPeriodDays": 30,
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1"
   },
   "permissions": {
     "defaultMode": "auto",
@@ -48,7 +49,35 @@
       "Bash(wget *)",
       "Bash(nc *)",
       "Bash(git remote set-url *)",
-      "Bash(git remote add *)"
+      "Bash(git remote add *)",
+      "Bash(npm publish)",
+      "Bash(npm publish *)",
+      "Bash(pnpm publish)",
+      "Bash(pnpm publish *)",
+      "Bash(yarn publish)",
+      "Bash(yarn publish *)",
+      "Bash(yarn npm publish)",
+      "Bash(yarn npm publish *)",
+      "PowerShell(Invoke-WebRequest *)",
+      "PowerShell(Invoke-RestMethod *)",
+      "PowerShell(iwr *)",
+      "PowerShell(irm *)",
+      "PowerShell(curl.exe *)",
+      "PowerShell(wget.exe *)",
+      "PowerShell(gh auth logout)",
+      "PowerShell(gh auth logout *)",
+      "PowerShell(op item delete *)",
+      "PowerShell(git remote set-url *)",
+      "PowerShell(git remote add *)",
+      "PowerShell(Format-Volume *)",
+      "PowerShell(Clear-Disk *)",
+      "PowerShell(Initialize-Disk *)",
+      "PowerShell(diskpart)",
+      "PowerShell(diskpart *)",
+      "PowerShell(format *)",
+      "PowerShell(Remove-Item -Recurse -Force C:\\*)",
+      "PowerShell(Remove-Item -Recurse -Force $HOME*)",
+      "PowerShell(Remove-Item -Recurse -Force $env:USERPROFILE*)"
     ]
   },
   "sandbox": {
@@ -95,7 +124,10 @@
     },
     "network": {
       "allowedDomains": [
-        "github.com"
+        "github.com",
+        "registry.npmjs.org",
+        "pypi.org",
+        "files.pythonhosted.org"
       ],
       "allowUnixSockets": [
         "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
