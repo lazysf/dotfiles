@@ -65,4 +65,4 @@
 - `dot_claude/skills/`: `~/.claude/skills/` へ展開する skill 手順と、その `references/` を置く
 - `dot_claude/agents/`: `~/.claude/agents/` へ展開する Claude Code subagent 定義を置く
 - `dot_claude/rules/`, `dot_claude/output-styles/`, `dot_claude/settings.json.tmpl`: `~/.claude/` 配下へ展開する rules、output styles、settings を置く
-- `dot_codex/private_config.toml.tmpl`: repo 内の参照用 source。展開先の `.codex/config.toml` は `.chezmoiignore` で配布対象外
+- Codex の runtime 設定（source 管理外）: `~/.codex/config.toml` は Codex app 自身が書き換えるため repo に source を持たない。意図した設定値と経緯は [lightweight-workflow.md](./notes/lightweight-workflow.md) を参照
