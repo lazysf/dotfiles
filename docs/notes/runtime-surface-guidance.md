@@ -6,7 +6,7 @@
 現行運用では要求分類を入口判断の軸にしない。
 現在の managed surface は、`dot_codex/AGENTS.md`、`dot_codex/skills/`、`dot_codex/agents/`、`dot_codex/rules/`、`dot_claude/CLAUDE.md`、`dot_claude/skills/`、`dot_claude/agents/`、`dot_claude/rules/`、`dot_claude/output-styles/`、`dot_claude/settings.json` とする。skill 名の命名規約は kebab-case に統一する。
 `caveman`、`git-commit`、`git-push` は明示依頼で使う手動入口とし、それ以外の skill は文脈上必要なら自動使用する入口として扱う。
-root `CLAUDE.md` は repo-local import shim、`dot_codex/private_config.toml.tmpl` の target は repo 内の参照用 source として現在 `.chezmoiignore` で配布対象外にする（`dot_codex/CONTEXT.md` の記述は ADR 0037 で撤去済み）。managed surface の実効確認では `chezmoi managed` を正本にする。
+root `CLAUDE.md` は repo-local import shim として配布対象外にする（`dot_codex/CONTEXT.md` の記述は ADR 0037 で撤去済み）。Codex の runtime 設定 `~/.codex/config.toml` は source 管理しない（2026-07-30 に `dot_codex/private_config.toml.tmpl` を廃止、経緯は [lightweight-workflow.md](./lightweight-workflow.md)）。managed surface の実効確認では `chezmoi managed` を正本にする。
 
 ## Surface の責務
 
