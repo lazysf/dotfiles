@@ -6,7 +6,7 @@
   - [adr-ledger-model.md](./notes/adr-ledger-model.md): ADR を状態付き判断台帳として扱う運用
   - [adr-workflow-review-pitfalls.md](./notes/adr-workflow-review-pitfalls.md): ADR 台帳フロー拡張時の review 観点
   - [claude-code-permission-policy.md](./notes/claude-code-permission-policy.md): `settings.json` permissions（allow / deny）の方針と根拠
-  - [claude-code-settings-spec-verification.md](./notes/claude-code-settings-spec-verification.md): `settings.json` / subagent frontmatter のキーと値が Claude Code 公式仕様に準拠していることの確認記録
+  - [claude-code-settings-spec-verification.md](./notes/claude-code-settings-spec-verification.md): `settings.json` / subagent frontmatter のキーと値が Claude Code 公式仕様に準拠していることの確認記録と、auto mode / sandbox の挙動確認
   - [runtime-surface-guidance.md](./notes/runtime-surface-guidance.md): runtime surface guidance と prefix なし skill surface の扱い
   - [git-add-approval-friction-diagnosis.md](./notes/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
