@@ -303,6 +303,7 @@
   - `sandbox.network.allowedDomains` は `github.com` / npm / PyPI の 3 系統だけに保つ。uv の CPython download や GitHub release asset が `codeload.github.com` / `objects.githubusercontent.com` へ落ちて prompt になるのは想定挙動で、許可 host を増やして解決しない
   - `sandbox.autoAllowBashIfSandboxed` に `false` を書いていない。default の `true` に任せる。`false` は "Regular permissions mode" で、auto mode では sandbox 済み Bash も 1 本ごとに classifier 往復が入る
   - `autoMode` を設定していない。classifier の誤 block が実際に観測されるまでは built-in のまま使い、入れる場合も 4 配列に `"$defaults"` を含める（欠けるとその配列の built-in が丸ごと消える）
+  - `sandbox.excludedCommands` が `git` だけに保たれている。SSH remote への `git push` は sandbox 内では通らない（`allowedDomains` は HTTP(S) proxy 用で SSH には効かない）ため入れた例外で、`allowUnsandboxedCommands` を `true` に戻す代わりの最小手段として扱う
   - root `CLAUDE.md` は repo-local import shim として配布対象外のまま保たれている
   - knowledge の置き場として project-local `.codex` / `.claude` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
