@@ -67,5 +67,5 @@
   - `PowerShell(...)` pattern 内の `\`（例: `Remove-Item -Recurse -Force C:\*`）が escape として扱われるか。escape される実装なら `*` が literal 化し、rule が silent no-op になる。
   - matcher の case sensitivity。PowerShell は case-insensitive なので `iwr` / `IWR` / `invoke-webrequest` を書ける。case-sensitive matcher なら大文字形が素通りする。
   - `sandbox.network.allowedDomains` の bare domain が subdomain を含むか。公式 example が `github.com` と `*.npmjs.org` を併記しているので wildcard 必須と読めるが明記はない。含む場合 `pypi.org` の許可で `upload.pypi.org`（認証付き upload endpoint）まで入る。
-- `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` は sandboxing docs に「set [...] to strip Anthropic and cloud provider credentials from all subprocesses」と記載があり、他箇所も "When ... is set" という presence 前提の書き方。**受け付ける値そのものは env-vars docs で確認できなかった**ため、他の flag と同じ慣例で `"1"` を置いている。将来 env-vars docs 側で値が明示されたら再確認する。
+- `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` は 2026-08-05 に削除した。値を公式 docs で確認できないまま慣例で `"1"` を置いていた設定で、実際には permission mode を `default` に強制し、auto mode を無効化していた。実測と判断は [claude-code-permission-policy.md](./claude-code-permission-policy.md) の「`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` を外した理由」。
 - 本 note は確認時点の Claude Code 公式仕様に基づく。将来仕様が変わったら出典 URL を辿り直して再確認する。
