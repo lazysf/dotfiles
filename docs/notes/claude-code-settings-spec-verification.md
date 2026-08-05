@@ -38,25 +38,23 @@
 ## 2026-08-05 追加分
 
 - 出典: [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [Configure permissions](https://code.claude.com/docs/en/permissions)
-- 契機: `defaultMode: "auto"` を設定しているのに session が Manual に落ち、応答が遅くなる事象の切り分け。
+- 契機: `defaultMode: "auto"` を設定しているのに session が Manual に落ちる事象の切り分け。**真因は `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`** で、経緯は [claude-code-permission-policy.md](./claude-code-permission-policy.md) の「`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` を外した理由」。以下は切り分け中に確認した仕様で、真因の説明ではない。
 
 | 確認対象 | 場所 | 公式仕様 |
 | --- | --- | --- |
-| `sandbox.autoAllowBashIfSandboxed` | `settings.json.tmpl` sandbox | default は `true`。`true` は auto-allow mode で、sandbox 内で実行できる Bash を prompt なしで自動承認する。`false` は "Regular permissions mode" となり、sandbox 済み Bash も通常の permission flow を通る（auto mode ではその flow が classifier） |
+| `sandbox.autoAllowBashIfSandboxed` | 未設定（default 依存） | default は `true`。`true` は auto-allow mode で、sandbox 内で実行できる Bash を prompt なしで自動承認する。`false` は "Regular permissions mode" となり、sandbox 済み Bash も通常の permission flow を通る（auto mode ではその flow が classifier） |
 | auto mode の fallback 閾値 | 挙動 | classifier が **3回連続** または **累計20回** block すると auto mode が pause し、prompt が再開する。閾値は設定不可。prompt を承認すると auto に戻る。allow が 1 回入ると連続カウンタは reset、累計カウンタは session 中保持。`-p` の非対話実行では pause でなく session abort |
 | auto mode 進入時の allow rule 除外 | `settings.json.tmpl` permissions | auto mode に入ると、任意コード実行を与える広い allow rule（blanket `Bash(*)` / `PowerShell(*)`、`Bash(python*)` 等の wildcard interpreter、package manager の run command、**`Agent` allow rule**）が drop される。auto mode を抜けると復帰。`Bash(npm test)` のような narrow rule は残る |
 | `sandbox.allowUnsandboxedCommands: false` | `settings.json.tmpl` sandbox | `/sandbox` の Overrides タブで **Strict sandbox mode** と表示される状態。`dangerouslyDisableSandbox` parameter が完全に無視され、`excludedCommands` に列挙したもの以外は必ず sandbox 内で実行される（sandbox 制約で失敗した command を sandbox 外で retry できない） |
 | auto mode 下の sandbox network 要求 | 挙動 | sandbox の network access 要求は default 許可ではなく classifier に routed される。verdict は host + port 単位で再利用され、allow は新しい content が会話に入るまで、deny は対話 CLI では turn 終了まで（非対話 / Agent SDK では run 終了まで）保持される。permission mode や rule を変えると cache は全破棄 |
 | `defaultMode: "auto"` の置き場 | `settings.json.tmpl` | v2.1.142 以降、`.claude/settings.json` / `.claude/settings.local.json` の `auto` は無視される（repo が自分に auto を与えられないようにするため）。user settings（`~/.claude/settings.json`）に置く必要がある |
-| `autoMode.environment` | `settings.json.tmpl` | classifier に渡す自然文の環境宣言。20 個の slot（`Organization` / `Repository visibility` / `Source control` / `Sensitive data locations & audiences` 等）があり、既定は 17 slot が `None configured`、残りは保守的 heuristic。slot 名を一致させて書くとその slot が置き換わる |
-| `autoMode` の `"$defaults"` | `settings.json.tmpl` | `environment` / `allow` / `soft_deny` / `hard_deny` の 4 配列は、`"$defaults"` を含めない設定を書くとその配列の built-in が丸ごと置き換わる。配置位置に built-in が splice される |
-| `autoMode` の読み取り scope | `settings.json.tmpl` | user settings、managed settings、`--settings` / Agent SDK の inline JSON からのみ読む。`.claude/settings.json` / `.claude/settings.local.json` は無視（後者は v2.1.207 以降）。各 scope の entry は結合され、developer 側の追記で managed の entry は消せない |
+| `autoMode`（未採用） | 設定しない | classifier に渡す自然文の宣言。`environment` / `allow` / `soft_deny` / `hard_deny` の 4 配列があり、`"$defaults"` を含めずに設定するとその配列の built-in が丸ごと置き換わる。読み取り scope は user settings、managed settings、`--settings` / Agent SDK の inline JSON のみ（`.claude/settings*.json` は無視）。採用方針は [claude-code-permission-policy.md](./claude-code-permission-policy.md) |
 
-- 上記を受けて `sandbox.autoAllowBashIfSandboxed` を `false` から default の `true` に戻した。`false` のままだと Bash 1 本ごとに classifier の往復が入って遅く、classifier block が fallback カウンタに積まれて auto mode が pause しやすい。`true` に戻しても sandbox 境界（`denyRead` / `denyWrite` / `allowedDomains`）は OS が強制し、`permissions.deny`、内容指定 ask rule、`rm -rf /` 等の circuit breaker は従来どおり効く。
+- `sandbox.autoAllowBashIfSandboxed` はキーごと書かず、default の `true` に任せる。一度 `false` を明示していたが、`false` だと Bash 1 本ごとに classifier の往復が入って遅く、classifier block が fallback カウンタに積まれる。default 値をわざわざ書かない代わりに、再発防止は [harness-regression-checks.md](./harness-regression-checks.md) の項目 23 で見る。
 - `allowUnsandboxedCommands: false` と `failIfUnavailable: true` は据え置き。`allowedDomains` の拡張で解決しないことは [harness-regression-checks.md](./harness-regression-checks.md) の項目 23 で既に方針化済み（`github.com` / npm / PyPI の 3 系統に保ち、prompt になる host を許可で潰さない）。sandbox 外実行がどうしても要る場合の選択肢は `excludedCommands` だけで、これも実害が出てから検討する。
 - `permissions.allow` の `Agent(researcher)` / `Agent(quality-reviewer)` / `Agent(security-reviewer)` は auto mode 下では drop されるため、auto mode で動いている限り standing authorization の実効は classifier 判断に委ねられている。今回は rule を変更していない。
 - 実機 version は **2.1.221**。desktop app 経由の install で `claude` は PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`。このフルパスで `auto-mode defaults` / `auto-mode config` / `auto-mode critique` を実行できる。上記の version 依存挙動はすべて 2.1.221 で満たす。
-- 実機 `claude auto-mode defaults` の built-in 件数は `allow` 17 / `soft_deny` 65 / `hard_deny` 1 / `environment` 20。`"$defaults"` の書き損じ検出はこの件数と突き合わせる。
+- 実機 `claude auto-mode defaults` の built-in 件数は `allow` 17 / `soft_deny` 65 / `hard_deny` 1 / `environment` 20（2.1.221 時点）。将来 `autoMode` を設定する時は、`claude auto-mode config` の件数をこれと突き合わせて `"$defaults"` の書き損じを検出する。
 
 ## 補足
 
