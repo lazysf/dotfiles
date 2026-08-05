@@ -15,6 +15,18 @@
 - secret の env 経路は `env` の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` で塞ぐ。sandboxed Bash は親プロセスの環境変数を継承するため、file 側（`denyRead`）だけでは credential が subprocess から見える。
 - `sandbox.network.allowedDomains` は `github.com` に加え、repo 保守で実際に使う `registry.npmjs.org`（npm）/ `pypi.org` / `files.pythonhosted.org`（uv・prek）だけ許可する。`strictAllowlist` は採用せず、許可外 host は従来どおり session ごとの prompt で判断する。
 
+## `autoMode`（classifier 層）
+
+permissions とは別レイヤとして扱う。permissions（`deny` / `allow` / 既定 prompt）は tool call 前に pattern で解決し、`autoMode` は auto mode 中に classifier が読む自然文の文脈と rule を与える。評価順は permissions が先で、`deny` と内容指定 `ask` は classifier より前に効く。
+
+- `autoMode.environment` だけを設定し、`allow` / `soft_deny` / `hard_deny` は built-in のまま使う。設定するのは信頼範囲と sensitive 範囲の宣言までとし、block rule 自体は上書きしない。
+- **4 配列のいずれを設定する場合も `"$defaults"` を含める。** 含めないとその配列の built-in rule が丸ごと置き換わる。force push、`curl | bash`、production deploy などは `soft_deny` の built-in に入っている。
+- `environment` の entry は、実機 `claude auto-mode defaults` が使う slot 名（`Organization`、`Repository visibility`、`Source control`、`Sensitive data locations & audiences` 等）に合わせて書く。slot 名が一致した時だけ、その slot の `None configured` や既定 heuristic が置き換わる。
+- 宣言は緩める方向だけでなく締める方向にも使う。credential store を `Sensitive data locations & audiences` に具体 path で列挙し、dotfiles repo の「自身の subject matter なら個人データも可」という built-in 例外に飲み込ませない。`Repository visibility: public` も事実として明示し、public repo への secret 混入を classifier に厳しく見させる。
+- **classifier の誤 block を permission 緩和で直さない。** `deny` を外す、`allowedDomains` を広げる、`allowUnsandboxedCommands` を `true` にする、はいずれも別レイヤの防御を削る操作になる。誤 block は `autoMode.environment` の文脈不足として扱い、`environment` への追記で直す。
+- `autoMode.classifyAllShell` は採用しない。narrow allow rule まで classifier 経由になり latency が増える。
+- `autoMode` は user settings と managed settings からしか読まれない。`.claude/settings.json` / `.claude/settings.local.json` へ置いても無視される。
+
 ## Windows の限界
 
 - Claude Code の sandbox は native Windows 非対応（公式明記）。`settings.json.tmpl` は Windows で `sandbox.enabled` を `false` にするため、`denyRead` / `denyWrite` / `allowedDomains` の防御はすべて効かない。

@@ -300,6 +300,10 @@
   - `dot_codex/agents/*.toml` の `model` / `model_reasoning_effort` が、実機 `~/.codex/config.toml` の lead 設定から意図せず乖離していない（意図した値は [lightweight-workflow.md](./lightweight-workflow.md) の「意図した設定値」）
   - `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が効いているかは、session の Bash で presence だけ見て確認する（例: `printenv ANTHROPIC_API_KEY > /dev/null; echo $?` が `1` を返す）。値そのものは出力しない
   - `sandbox.network.allowedDomains` は `github.com` / npm / PyPI の 3 系統だけに保つ。uv の CPython download や GitHub release asset が `codeload.github.com` / `objects.githubusercontent.com` へ落ちて prompt になるのは想定挙動で、許可 host を増やして解決しない
+  - `sandbox.autoAllowBashIfSandboxed` を `false` へ戻していない。`false` は "Regular permissions mode" で、auto mode では sandbox 済み Bash も 1 本ごとに classifier 往復が入る
+  - auto mode が Manual へ落ちたら、まず classifier の fallback 閾値（3 回連続 / 累計 20 回、設定不可）を疑う。permission rule や `allowedDomains` の緩和へ飛ばず、`autoMode.environment` の文脈不足として扱う
+  - `autoMode` の 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）を編集する時は `"$defaults"` を含める。欠けるとその配列の built-in rule が丸ごと消える（実測 `allow` 17 / `soft_deny` 65 / `hard_deny` 1 / `environment` 20 件）
+  - `autoMode` は user settings と managed settings からしか読まれない。`.claude/settings.json` / `.claude/settings.local.json` へ置いても無視される
   - root `CLAUDE.md` は repo-local import shim として配布対象外のまま保たれている
   - knowledge の置き場として project-local `.codex` / `.claude` を勧める文面が再流入していない
   - これらの観点は自動失敗ではなく、変更時の手動 review で確認する
