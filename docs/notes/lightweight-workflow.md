@@ -11,7 +11,7 @@
 | output-style | なし | `caveman` |
 | agents | `researcher`（high, read-only）/ `quality-reviewer`（high）/ `security-reviewer`（high）。toml + `sandbox_mode = "read-only"` | `researcher`（high）/ `quality-reviewer`（xhigh）/ `security-reviewer`（xhigh）。md frontmatter。researcher は `tools: Read, Glob, Grep`、reviewer 2 つは `tools: Read, Glob, Grep, Bash`（built-in read-only command の範囲で実質 read-only） |
 | rules | command guard 専用（`.rules`、`allow` / `forbidden`） | path 条件付き短い prose rule（coding-standards / docs-artifacts / harness-surface-consistency / vba） |
-| runtime config | `~/.codex/config.toml`（Codex app が書き換えるため source 管理しない。意図した設定値は下記「runtime config の扱い」に列挙） | `settings.json.tmpl`（model `claude-opus-5`、effortLevel `xhigh`、permissions / sandbox / env） |
+| runtime config | `~/.codex/config.toml`（Codex app が書き換えるため source 管理しない。意図した設定値は下記「runtime config の扱い」に列挙） | `settings.json.tmpl`（model `claude-opus-5`、effortLevel `high`、permissions / sandbox / env） |
 
 ## runtime config の扱い
 

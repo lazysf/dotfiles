@@ -14,7 +14,7 @@
 
 | 確認対象 | 場所 | 公式仕様 |
 | --- | --- | --- |
-| `effortLevel: "xhigh"` | `settings.json.tmpl` | `"low"`, `"medium"`, `"high"`, `"xhigh"` を受け付ける |
+| `effortLevel: "high"` | `settings.json.tmpl` | `"low"`, `"medium"`, `"high"`, `"xhigh"` を受け付ける |
 | `disableBypassPermissionsMode: "disable"` | `settings.json.tmpl` permissions | 値は文字列 `"disable"`。`bypassPermissions` / `auto` モードの利用を防ぐためのキーで、user-level / managed-settings どちらでも有効 |
 | `permissions.defaultMode: "auto"` | `settings.json.tmpl` permissions | `default` / `acceptEdits` / `plan` / `auto` / `dontAsk` / `bypassPermissions` を受け付ける |
 | `language: "japanese"` | `settings.json.tmpl` | 応答言語、voice dictation、自動生成セッションタイトルに反映される正式キー |
@@ -37,7 +37,7 @@
 
 ## 補足
 
-- `effortLevel` の採用根拠は [model-and-effort-tuning-history.md](./model-and-effort-tuning-history.md) の 2026-06-18 エントリ（"xhigh for coding/agentic" 公式推奨に寄せた）に記録済み。
+- `effortLevel` の採用根拠は [model-and-effort-tuning-history.md](./model-and-effort-tuning-history.md) の 2026-08-05 エントリ（Opus 5 の default effort `high` に合わせた）に記録済み。`xhigh` を採用していた経緯は同 notes の 2026-06-18 / 2026-07-28 エントリ。
 - `disableBypassPermissionsMode` は user-level 配置でも機能する。公式 docs に「A user can set it in their own settings to lock themselves out of bypass mode.」と明記。
 - `model` は alias（`opus` 等）と full model name の両方を受け付ける。公式 docs は version 固定の例として `claude-opus-5` を明示している。Opus 5 の利用には Claude Code v2.1.219 以降が必要。
 - 次の 3 点は公式 docs で確認できていない。実機で観測するまで「効いている」前提で書かない。
