@@ -83,9 +83,6 @@
     "enabled": {{ if eq .chezmoi.os "windows" }}false{{ else }}true{{ end }},
     "failIfUnavailable": true,
     "allowUnsandboxedCommands": false,
-    "excludedCommands": [
-      "git"
-    ],
     "filesystem": {
       "allowWrite": [
         "~/.cache/prek/"
