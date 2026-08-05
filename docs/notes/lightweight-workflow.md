@@ -23,7 +23,7 @@
 - ADR は書かない。複数案を実比較した判断だが、削除は git から復元でき影響も harness 内部に閉じるため「覆すコストが高い」を満たさない。判断と捨てた案はこの notes に残す。
 - `[agents] max_depth` は公式の設定キーに存在しない。公式 `[agents]` は `enabled` / `max_concurrent_threads_per_session` / `default_subagent_model` / `default_subagent_reasoning_effort` / `interrupt_message` で、`max_threads` は `max_concurrent_threads_per_session` の legacy alias。ADR 0020 が「深さを制御する設定」として挙げた `max_depth` は効いていない前提で読む。nested spawn を抑える実効は `dot_codex/AGENTS.md` の「lead が仲介する」契約だけ。
 - Claude の `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"` は experimental flag。lead が subagent を束ねる運用を有効にするために置いている。公式 docs に記載のない flag なので、廃止や改名で黙って挙動が変わり得る。subagent 周りの挙動が変わったらこの行を疑う。
-- Claude の `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB = "1"` は subprocess から Anthropic / cloud provider credential を除去する。狙いと限界は [claude-code-permission-policy.md](./claude-code-permission-policy.md)。
+- Claude の `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` は 2026-08-05 に削除した。permission mode を `default` に強制して auto mode を無効化するため。経緯と代替の防御層は [claude-code-permission-policy.md](./claude-code-permission-policy.md)。
 
 ### 意図した設定値（再セットアップ時の復元用）
 
