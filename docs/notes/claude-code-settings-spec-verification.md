@@ -50,7 +50,7 @@
 | `defaultMode: "auto"` の置き場 | `settings.json.tmpl` | v2.1.142 以降、`.claude/settings.json` / `.claude/settings.local.json` の `auto` は無視される（repo が自分に auto を与えられないようにするため）。user settings（`~/.claude/settings.json`）に置く必要がある |
 
 - 上記を受けて `sandbox.autoAllowBashIfSandboxed` を `false` から default の `true` に戻した。`false` のままだと Bash 1 本ごとに classifier の往復が入って遅く、classifier block が fallback カウンタに積まれて auto mode が pause しやすい。`true` に戻しても sandbox 境界（`denyRead` / `denyWrite` / `allowedDomains`）は OS が強制し、`permissions.deny`、内容指定 ask rule、`rm -rf /` 等の circuit breaker は従来どおり効く。
-- `allowUnsandboxedCommands: false` と `failIfUnavailable: true` は据え置き。sandbox 外実行が必要になった場合は、この 2 つを緩めるのではなく `allowedDomains` 追加か `excludedCommands` で対処する方針。
+- `allowUnsandboxedCommands: false` と `failIfUnavailable: true` は据え置き。`allowedDomains` の拡張で解決しないことは [harness-regression-checks.md](./harness-regression-checks.md) の項目 23 で既に方針化済み（`github.com` / npm / PyPI の 3 系統に保ち、prompt になる host を許可で潰さない）。sandbox 外実行がどうしても要る場合の選択肢は `excludedCommands` だけで、これも実害が出てから検討する。
 - `permissions.allow` の `Agent(researcher)` / `Agent(quality-reviewer)` / `Agent(security-reviewer)` は auto mode 下では drop されるため、auto mode で動いている限り standing authorization の実効は classifier 判断に委ねられている。今回は rule を変更していない。
 - 未確認: この環境の Claude Code version を確認できていない（`claude` binary が PATH 上に無く `claude --version` を実行できなかった）。上記の version 依存記述は公式 docs の記載であり、実機での照合はしていない。
 
