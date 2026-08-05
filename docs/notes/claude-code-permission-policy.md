@@ -12,7 +12,7 @@
 - reviewer subagent の Bash 契約（write 系を実行しない）の強制力は LLM 遵守依存のため、深層防御として exfiltration 経路の代表形（`Bash(git remote set-url *)` / `Bash(git remote add *)`）を `deny` で塞ぐ。網羅ではない。`git config remote.origin.url <URL>` や `git push <URL> HEAD` のような URL 直指定は覆えていない。`git commit *` / `git push *` 等の write 系 git は main session の `git-commit` / `git-push` skill が使うため deny 不可、契約 + Claude Code default prompt（built-in read-only set 外は prompt） + sandbox で防御する。
 - package publish は `npm` / `pnpm` / `yarn` / `yarn npm` の `publish` を bare 形と引数付きの 2 形で `deny` し、Codex の `dot_codex/rules/*-publish.rules`（`forbidden`）と対称にする。`registry.npmjs.org` を allowedDomains へ入れた結果、network 側が publish の checkpoint にならなくなったため、settings 側に明示的な歯止めを置く。deploy、release、push は引き続き settings で個別網羅せず、既定 prompt、専用 workflow、skill 停止線で扱う。
 - auto memory は secret persistence を避けるため無効化する。
-- secret の env 経路は `env` の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` で塞ぐ。sandboxed Bash は親プロセスの環境変数を継承するため、file 側（`denyRead`）だけでは credential が subprocess から見える。
+- secret の env 経路は塞がない。`env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` は 2026-08-05 に削除した（理由は下記「`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` を外した理由」）。sandboxed Bash は親プロセスの環境変数を継承するため、`printenv` 等で credential env が subprocess から見える状態を許容し、持ち出し側（network allowlist、`curl` / `wget` / `nc` の deny、credential store の `denyRead`）で止める設計にする。
 - `sandbox.network.allowedDomains` は `github.com` に加え、repo 保守で実際に使う `registry.npmjs.org`（npm）/ `pypi.org` / `files.pythonhosted.org`（uv・prek）だけ許可する。`strictAllowlist` は採用せず、許可外 host は従来どおり session ごとの prompt で判断する。
 
 ## `autoMode`（classifier 層）
@@ -26,6 +26,15 @@ permissions とは別レイヤとして扱う。permissions（`deny` / `allow` /
 - **classifier の誤 block を permission 緩和で直さない。** `deny` を外す、`allowedDomains` を広げる、`allowUnsandboxedCommands` を `true` にする、はいずれも別レイヤの防御を削る操作になる。誤 block は `autoMode.environment` の文脈不足として扱い、`environment` への追記で直す。
 - `autoMode.classifyAllShell` は採用しない。narrow allow rule まで classifier 経由になり latency が増える。
 - `autoMode` は user settings と managed settings からしか読まれない。`.claude/settings.json` / `.claude/settings.local.json` へ置いても無視される。
+
+## `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` を外した理由
+
+- **この env var は permission mode を `default` に強制する。** `--permission-mode auto` を明示して起動すると Claude Code 自身がこう警告する: `Permission mode forced to default — CLAUDE_CODE_SUBPROCESS_ENV_SCRUB is set (allowed_non_write_users hardening). Declare allowedTools explicitly, or set CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0 to opt out.` desktop app の UI では「このセッションでは自動モードを使用できません。代わりに権限をリクエストします」と表示される。
+- 対照実験（v2.1.221）: `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0` を付けて起動すると警告は出ない。未指定で settings の `"1"` を継承すると警告が出る。
+- この結果、`permissions.defaultMode: "auto"`、`sandbox.autoAllowBashIfSandboxed: true`、`autoMode.environment` はすべて死に設定になっていた。session は auto で始まったように見えて、最初の入力を処理する時点で `default` へ落ちる。transcript 上も最初の user entry が既に `permissionMode: "default"` で、classifier の block は 1 件も発生していない。
+- 警告が示すもう一方の道（`allowedTools` を明示宣言して scrub を維持）は採らない。auto mode では broad な allow rule が drop される仕様のため、実効性が検証できない。
+- **教訓**: この env var は「受け付ける値を公式 docs で確認できないまま、他 flag の慣例に合わせて `"1"` を置いた」設定だった。挙動を確認できない設定を防御目的で足すと、別の機構を黙って壊すことがある。値と副作用の両方を確認できない設定は入れない。
+- 失った層は「Anthropic / cloud provider credential を subprocess の環境変数から除去する」こと。残る層は sandbox network allowlist（4 host）、`Bash(curl *)` / `Bash(wget *)` / `Bash(nc *)` の deny、credential store の `denyRead` / `denyWrite`。
 
 ## Windows の限界
 
