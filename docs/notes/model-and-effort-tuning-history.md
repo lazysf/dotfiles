@@ -86,6 +86,14 @@ Claude / Codex の model と reasoning effort を調整してきた経緯を、�
 - reviewer 2 つは `high` 据え置き。Claude 側の `xhigh`（default より一段上）と非対称のまま。Codex lead が `high` なので、一段上げるなら `xhigh` にする選択肢は残す。
 - 出典: 実機 `~/.codex/config.toml`（2026-07-29 更新分）。
 
+## 2026-08-05: Claude main の effortLevel を high に戻す
+
+- 動機: Opus 5 の default effort は `high`。`xhigh` は 2026-06-18 の Opus 4.7 時代の判断（"xhigh for coding/agentic" 公式推奨）由来で、2026-07-28 に「default より一段上を意図的に取る」として維持していたが、その一段上げをやめて model 既定に合わせる。
+- 変更:
+  - `dot_claude/settings.json.tmpl` の `effortLevel` を `xhigh` -> `high`
+- subagent の effort は据え置き。`quality-reviewer` / `security-reviewer` は `xhigh`、`researcher` は `high` のまま。結果として reviewer 2 つだけが main より一段上になる。
+- Codex 側 (`dot_codex/`) の effort は据え置き。Codex lead は `high` なので、main の effort は Claude / Codex で揃った。
+
 ## 過去 request の所在
 
 | 退避前 path | 主題 |
