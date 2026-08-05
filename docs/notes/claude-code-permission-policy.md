@@ -15,23 +15,14 @@
 - secret の env 経路は塞がない。`env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` は 2026-08-05 に削除した（理由は下記「`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` を外した理由」）。sandboxed Bash は親プロセスの環境変数を継承するため、`printenv` 等で credential env が subprocess から見える状態を許容し、持ち出し側（network allowlist、`curl` / `wget` / `nc` の deny、credential store の `denyRead`）で止める設計にする。
 - `sandbox.network.allowedDomains` は `github.com` に加え、repo 保守で実際に使う `registry.npmjs.org`（npm）/ `pypi.org` / `files.pythonhosted.org`（uv・prek）だけ許可する。`strictAllowlist` は採用せず、許可外 host は従来どおり session ごとの prompt で判断する。
 
-## `autoMode`（classifier 層）
-
-permissions とは別レイヤとして扱う。permissions（`deny` / `allow` / 既定 prompt）は tool call 前に pattern で解決し、`autoMode` は auto mode 中に classifier が読む自然文の文脈と rule を与える。評価順は permissions が先で、`deny` と内容指定 `ask` は classifier より前に効く。
-
-- `autoMode.environment` だけを設定し、`allow` / `soft_deny` / `hard_deny` は built-in のまま使う。設定するのは信頼範囲と sensitive 範囲の宣言までとし、block rule 自体は上書きしない。
-- **4 配列のいずれを設定する場合も `"$defaults"` を含める。** 含めないとその配列の built-in rule が丸ごと置き換わる。force push、`curl | bash`、production deploy などは `soft_deny` の built-in に入っている。
-- `environment` の entry は、実機 `claude auto-mode defaults` が使う slot 名（`Organization`、`Repository visibility`、`Source control`、`Sensitive data locations & audiences` 等）に合わせて書く。slot 名が一致した時だけ、その slot の `None configured` や既定 heuristic が置き換わる。
-- 宣言は緩める方向だけでなく締める方向にも使う。credential store を `Sensitive data locations & audiences` に具体 path で列挙し、dotfiles repo の「自身の subject matter なら個人データも可」という built-in 例外に飲み込ませない。`Repository visibility: public` も事実として明示し、public repo への secret 混入を classifier に厳しく見させる。
-- **classifier の誤 block を permission 緩和で直さない。** `deny` を外す、`allowedDomains` を広げる、`allowUnsandboxedCommands` を `true` にする、はいずれも別レイヤの防御を削る操作になる。誤 block は `autoMode.environment` の文脈不足として扱い、`environment` への追記で直す。
-- `autoMode.classifyAllShell` は採用しない。narrow allow rule まで classifier 経由になり latency が増える。
-- `autoMode` は user settings と managed settings からしか読まれない。`.claude/settings.json` / `.claude/settings.local.json` へ置いても無視される。
+- `autoMode` は設定せず、classifier の built-in rule をそのまま使う。auto mode 中の誤 block を `deny` の緩和、`allowedDomains` の拡張、`allowUnsandboxedCommands: true` で直さない。それらは別レイヤの防御を削る操作になる。誤 block が実際に観測されたら、`autoMode.environment` に必要な entry だけを足す。その際は 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含める。含めないとその配列の built-in（force push、`curl | bash`、production deploy 等）が丸ごと置き換わる。
+- `sandbox.autoAllowBashIfSandboxed` は書かず、default の `true` に任せる。`false` にすると "Regular permissions mode" になり、auto mode では sandbox 済み Bash も 1 本ごとに classifier 往復が入る。
 
 ## `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` を外した理由
 
 - **この env var は permission mode を `default` に強制する。** `--permission-mode auto` を明示して起動すると Claude Code 自身がこう警告する: `Permission mode forced to default — CLAUDE_CODE_SUBPROCESS_ENV_SCRUB is set (allowed_non_write_users hardening). Declare allowedTools explicitly, or set CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0 to opt out.` desktop app の UI では「このセッションでは自動モードを使用できません。代わりに権限をリクエストします」と表示される。
 - 対照実験（v2.1.221）: `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0` を付けて起動すると警告は出ない。未指定で settings の `"1"` を継承すると警告が出る。
-- この結果、`permissions.defaultMode: "auto"`、`sandbox.autoAllowBashIfSandboxed: true`、`autoMode.environment` はすべて死に設定になっていた。session は auto で始まったように見えて、最初の入力を処理する時点で `default` へ落ちる。transcript 上も最初の user entry が既に `permissionMode: "default"` で、classifier の block は 1 件も発生していない。
+- この結果、`permissions.defaultMode: "auto"` と、切り分け中に追加した `sandbox.autoAllowBashIfSandboxed: true` / `autoMode.environment`（どちらも真因判明後に削除）はすべて死に設定になっていた。session は auto で始まったように見えて、最初の入力を処理する時点で `default` へ落ちる。transcript 上も最初の user entry が既に `permissionMode: "default"` で、classifier の block は 1 件も発生していない。
 - 警告が示すもう一方の道（`allowedTools` を明示宣言して scrub を維持）は採らない。auto mode では broad な allow rule が drop される仕様のため、実効性が検証できない。
 - **教訓**: この env var は「受け付ける値を公式 docs で確認できないまま、他 flag の慣例に合わせて `"1"` を置いた」設定だった。挙動を確認できない設定を防御目的で足すと、別の機構を黙って壊すことがある。値と副作用の両方を確認できない設定は入れない。
 - 失った層は「Anthropic / cloud provider credential を subprocess の環境変数から除去する」こと。残る層は sandbox network allowlist（4 host）、`Bash(curl *)` / `Bash(wget *)` / `Bash(nc *)` の deny、credential store の `denyRead` / `denyWrite`。
