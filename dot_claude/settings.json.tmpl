@@ -79,27 +79,10 @@
       "PowerShell(Remove-Item -Recurse -Force $env:USERPROFILE*)"
     ]
   },
-  "autoMode": {
-    "environment": [
-      "$defaults",
-      "Organization: individual developer, no company or team.",
-      "Primary use of Claude Code: maintaining a personal dotfiles repository and its Codex / Claude Code agent harness on macOS.",
-      "Repository visibility: public. The working repository is github.com/lazysf/dotfiles, a public personal dotfiles repository whose own subject matter is shell, editor, chezmoi, Codex, and Claude Code configuration.",
-      "Source control: GitHub, github.com/lazysf. No other source-control org is trusted.",
-      "Cloud provider(s): none.",
-      "CI/CD deploy targets: none. This repository has no deploy pipeline; changes land by commit and push only.",
-      "Secrets management: 1Password, via the op CLI and its SSH agent socket.",
-      "Org-specific CLIs: chezmoi for dotfiles apply, op for 1Password, gh for GitHub, uv for Python, prek for pre-commit hooks.",
-      "Internal package registry: none. Public npm and PyPI are the intended registries.",
-      "Network posture: sandboxed Bash reaches only github.com, registry.npmjs.org, pypi.org, and files.pythonhosted.org. Any other host is judged case by case, not pre-approved.",
-      "Sensitive data locations & audiences: ~/.ssh, ~/.aws, ~/.config/gh, ~/.gnupg, ~/.kube, ~/.docker/config.json, ~/.netrc, ~/.npmrc, ~/.pypirc, and any .env file. These are never an acceptable source for repository content, commit contents, pushes, or any outbound message. This repository being a dotfiles repository does not clear them."
-    ]
-  },
   "sandbox": {
     "enabled": {{ if eq .chezmoi.os "windows" }}false{{ else }}true{{ end }},
     "failIfUnavailable": true,
     "allowUnsandboxedCommands": false,
-    "autoAllowBashIfSandboxed": true,
     "filesystem": {
       "allowWrite": [
         "~/.cache/prek/"
