@@ -15,7 +15,7 @@
 | 確認対象 | 場所 | 公式仕様 |
 | --- | --- | --- |
 | `effortLevel: "high"` | `settings.json.tmpl` | `"low"`, `"medium"`, `"high"`, `"xhigh"` を受け付ける |
-| `disableBypassPermissionsMode: "disable"` | `settings.json.tmpl` permissions | 値は文字列 `"disable"`。`bypassPermissions` / `auto` モードの利用を防ぐためのキーで、user-level / managed-settings どちらでも有効 |
+| `disableBypassPermissionsMode: "disable"` | `settings.json.tmpl` permissions | 値は文字列 `"disable"`。user-level / managed-settings どちらでも有効。**このキーが防ぐのは `bypassPermissions` だけ**で、`auto` を防ぐのは別キーの `permissions.disableAutoMode`（2026-08-05 追記。実機でもこの設定下で auto mode が動作している） |
 | `permissions.defaultMode: "auto"` | `settings.json.tmpl` permissions | `default` / `acceptEdits` / `plan` / `auto` / `dontAsk` / `bypassPermissions` を受け付ける |
 | `language: "japanese"` | `settings.json.tmpl` | 応答言語、voice dictation、自動生成セッションタイトルに反映される正式キー |
 | `model: "claude-opus-5"` | `settings.json.tmpl` / agent frontmatter | full model ID 形式。`--model` フラグと同じ値域を受け付ける |
@@ -48,11 +48,15 @@
 | `sandbox.allowUnsandboxedCommands: false` | `settings.json.tmpl` sandbox | `/sandbox` の Overrides タブで **Strict sandbox mode** と表示される状態。`dangerouslyDisableSandbox` parameter が完全に無視され、`excludedCommands` に列挙したもの以外は必ず sandbox 内で実行される（sandbox 制約で失敗した command を sandbox 外で retry できない） |
 | auto mode 下の sandbox network 要求 | 挙動 | sandbox の network access 要求は default 許可ではなく classifier に routed される。verdict は host + port 単位で再利用され、allow は新しい content が会話に入るまで、deny は対話 CLI では turn 終了まで（非対話 / Agent SDK では run 終了まで）保持される。permission mode や rule を変えると cache は全破棄 |
 | `defaultMode: "auto"` の置き場 | `settings.json.tmpl` | v2.1.142 以降、`.claude/settings.json` / `.claude/settings.local.json` の `auto` は無視される（repo が自分に auto を与えられないようにするため）。user settings（`~/.claude/settings.json`）に置く必要がある |
+| `autoMode.environment` | `settings.json.tmpl` | classifier に渡す自然文の環境宣言。20 個の slot（`Organization` / `Repository visibility` / `Source control` / `Sensitive data locations & audiences` 等）があり、既定は 17 slot が `None configured`、残りは保守的 heuristic。slot 名を一致させて書くとその slot が置き換わる |
+| `autoMode` の `"$defaults"` | `settings.json.tmpl` | `environment` / `allow` / `soft_deny` / `hard_deny` の 4 配列は、`"$defaults"` を含めない設定を書くとその配列の built-in が丸ごと置き換わる。配置位置に built-in が splice される |
+| `autoMode` の読み取り scope | `settings.json.tmpl` | user settings、managed settings、`--settings` / Agent SDK の inline JSON からのみ読む。`.claude/settings.json` / `.claude/settings.local.json` は無視（後者は v2.1.207 以降）。各 scope の entry は結合され、developer 側の追記で managed の entry は消せない |
 
 - 上記を受けて `sandbox.autoAllowBashIfSandboxed` を `false` から default の `true` に戻した。`false` のままだと Bash 1 本ごとに classifier の往復が入って遅く、classifier block が fallback カウンタに積まれて auto mode が pause しやすい。`true` に戻しても sandbox 境界（`denyRead` / `denyWrite` / `allowedDomains`）は OS が強制し、`permissions.deny`、内容指定 ask rule、`rm -rf /` 等の circuit breaker は従来どおり効く。
 - `allowUnsandboxedCommands: false` と `failIfUnavailable: true` は据え置き。`allowedDomains` の拡張で解決しないことは [harness-regression-checks.md](./harness-regression-checks.md) の項目 23 で既に方針化済み（`github.com` / npm / PyPI の 3 系統に保ち、prompt になる host を許可で潰さない）。sandbox 外実行がどうしても要る場合の選択肢は `excludedCommands` だけで、これも実害が出てから検討する。
 - `permissions.allow` の `Agent(researcher)` / `Agent(quality-reviewer)` / `Agent(security-reviewer)` は auto mode 下では drop されるため、auto mode で動いている限り standing authorization の実効は classifier 判断に委ねられている。今回は rule を変更していない。
-- 未確認: この環境の Claude Code version を確認できていない（`claude` binary が PATH 上に無く `claude --version` を実行できなかった）。上記の version 依存記述は公式 docs の記載であり、実機での照合はしていない。
+- 実機 version は **2.1.221**。desktop app 経由の install で `claude` は PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`。このフルパスで `auto-mode defaults` / `auto-mode config` / `auto-mode critique` を実行できる。上記の version 依存挙動はすべて 2.1.221 で満たす。
+- 実機 `claude auto-mode defaults` の built-in 件数は `allow` 17 / `soft_deny` 65 / `hard_deny` 1 / `environment` 20。`"$defaults"` の書き損じ検出はこの件数と突き合わせる。
 
 ## 補足
 
