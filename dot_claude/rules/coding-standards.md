@@ -1,22 +1,9 @@
----
-paths:
-  - "**/src/**"
-  - "**/app/**"
-  - "**/lib/**"
-  - "**/packages/**"
-  - "**/test/**"
-  - "**/tests/**"
-  - "**/spec/**"
-  - "**/scripts/**"
-  - "**/tools/**"
----
-
 # Coding Standards
 
 ## 品質の優先順位
 
-正しさ・安全性 → 人による可読性・修正容易性 → 既存規約・近傍実装との一貫性 → 必要な性能 → DRY → 短さ・巧妙さ。
-上位を損なう下位適用はしない。
+正しさ・安全性 → 人による可読性・修正容易性 → 既存規約・近傍実装との一貫性 → 必要な性能 → DRY。
+上位を損なう下位適用はしない。短さと巧妙さは目標にしない。可読性の結果として短くなるのはよい。
 
 ## 適用の参照順
 
@@ -39,9 +26,9 @@ paths:
 ## 可読性の具体
 
 - **直線化**: 正常系を上から下へ読める形にする。異常系はガード節で早期 return して直線を保つ。
-- **命名**: ドメインの意味を表す。`data` / `tmp` / `result` / `manager` / `helper` / `util` / `handler` / `process` は、極小スコープで意味が自明な時だけ。
+- **命名**: ドメインの意味を表す。`data` / `tmp` / `result` / `manager` / `helper` / `util` のような中身を説明しない語は、極小スコープで意味が自明な時だけ。framework が定義する語（HTTP handler、event handler 等）はこれに当たらない。
 - **副作用の分離**: 純粋な計算・バリデーションと、DB / API / ファイル I/O / ログ / 通知を混ぜない。
-- **予防的抽象化を避ける**: Factory / Manager / Strategy / Provider / BaseClass は、今の変更圧力が出てから入れる。
+- **予防的抽象化を避ける**: 間接層（Factory / Strategy / BaseClass、helper、設定層 等）は、今の変更圧力が出てから入れる。framework の規約が要求する構造（React の Provider、Nest / Spring の DI container 等）はこれに当たらない。
 
 ## コメント
 

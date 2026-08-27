@@ -10,7 +10,7 @@
 | skills | `scribe` / `git-commit` / `git-push` / `caveman`（output-style 非対応のため skill） | `scribe` / `git-commit` / `git-push` |
 | output-style | なし | `caveman` |
 | agents | `researcher`（high, read-only）/ `quality-reviewer`（high）/ `security-reviewer`（high）。toml + `sandbox_mode = "read-only"` | `researcher`（high）/ `quality-reviewer`（xhigh）/ `security-reviewer`（xhigh）。md frontmatter。researcher は `tools: Read, Glob, Grep`、reviewer 2 つは `tools: Read, Glob, Grep, Bash`（built-in read-only command の範囲で実質 read-only） |
-| rules | command guard 専用（`.rules`、`allow` / `forbidden`） | path 条件付き短い prose rule（coding-standards / docs-artifacts / harness-surface-consistency / vba） |
+| rules | command guard 専用（`.rules`、`allow` / `forbidden`） | 短い prose rule。`coding-standards` は常時 load、`docs-artifacts` / `harness-surface-consistency` / `vba` は path 条件付き |
 | runtime config | `~/.codex/config.toml`（Codex app が書き換えるため source 管理しない。意図した設定値は下記「runtime config の扱い」に列挙） | `settings.json.tmpl`（model `claude-opus-5`、effortLevel `high`、permissions / sandbox / env） |
 
 ## runtime config の扱い
@@ -49,7 +49,7 @@ network_access = false
 
 ## 進行ガイド
 
-進行ガイドの正本は各 surface の `dot_codex/AGENTS.md` / `dot_claude/CLAUDE.md`。発火条件・掘り下げ 4 条件 AND・ADR 3 条件 AND・doc 3 層 silent skip 禁止・review 明示時のみ・停止線などは正本側を参照する。本 note は両 surface の構成差分の記録に絞る。
+進行ガイドの正本は各 surface の `dot_codex/AGENTS.md` / `dot_claude/CLAUDE.md`。発火条件・掘り下げ 4 条件 AND・ADR 3 条件 AND・doc 3 層 silent skip 禁止・review 明示時のみ・停止線などは正本側を参照する。本 note は両 surface の構成差分と、ADR 3 条件を満たさない harness 判断の記録を扱う。
 
 ## 両 surface の意図的差分
 
@@ -59,12 +59,50 @@ network_access = false
 | --- | --- | --- |
 | agent 間通信 | 直接通信なし、lead 仲介、handoff 出力 | direct subagent spawn（standing authorization 済み） |
 | 方針工程 | 会話ベース承認 | `EnterPlanMode` 自己発動 + 承認 |
-| `rules/` の責務 | command guard 専用（公式仕様） | 行動指針（path 条件付き）も可 |
+| `rules/` の責務 | command guard 専用（公式仕様） | 行動指針も可。常時 load と path 条件付きを rule ごとに選べる |
 | prose 行動指針の置き場 | `AGENTS.md` 集約 | `rules/` 分離 |
-| 行動指針の発火範囲 | `AGENTS.md` は常時 load | `rules/` は `paths` 条件付き。`coding-standards` は `**/src/**` 等に限定するため、この dotfiles repo のような layout では load されない（context 節約を取って許容する。常時 load したい場合は `paths` を外す） |
+| 行動指針の発火範囲 | `AGENTS.md` は常時 load | `coding-standards` は `paths` を外して常時 load（下記「coding-standards を常時 load にした判断」）。他の rule は path 条件付き |
 | 出力スタイル | `caveman` skill | `caveman` output-style |
 | reviewer の read-only 強制 | `sandbox_mode = "read-only"` + `rules/*.rules` で read-only git allow | `tools: Read, Glob, Grep, Bash` + Claude Code built-in read-only command（read-only forms of git 等） + session 全体の既存 deny rule |
 | reviewer の明示 diff fallback | `git status -sb` / `git diff` / `git diff --staged` / untracked content（`git status -sb` の `??` 行から特定）を sandbox 内 read-only git で取得（`rules/git-status.rules` / `git-diff.rules` の allow と整合） | 同左を built-in read-only git で取得（ADR 0038 で対称化） |
+
+## coding-standards を常時 load にした判断
+
+- Date: 2026-08-27
+- 出典: [Claude Code / How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Codex / Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
+
+`dot_claude/rules/coding-standards.md` の `paths`（`**/src/**` / `**/app/**` / `**/lib/**` / `**/packages/**` / `**/test/**` / `**/tests/**` / `**/spec/**` / `**/scripts/**` / `**/tools/**`）を削除し、常時 load へ変更した。
+
+- **Codex 側は絞れない。** 公式仕様上 `AGENTS.md` に glob / path scoping は無く、`~/.codex/AGENTS.md` は常時 load。Codex の常時適用は設計選択ではなく唯一の選択肢。対称化の方向は「Claude を常時へ寄せる」しかない。
+- **中身の大半がコード限定でない。** 品質の優先順位 / 適用の参照順 / 基本原則 / 最小差分（計 22 行）は `settings.json`、`AGENTS.md`、`docs/` の編集にも効く。コード限定は可読性の具体とコメントの約 10 行だけ。従来の path 条件はこの 22 行を巻き添えで無効化していた。
+- **path 条件の穴。** `cmd/` / `internal/` / `pkg/` / `apps/` / repo 直下のコードが漏れる。`paths` を外せばこの穴は構造的に消える。
+- **発火条件の不確実性。** 公式は path 条件付き rule を「Claude が match するファイルを **読んだ時**」に load すると規定する。auto mode で `cat` / `sed` を主経路にする運用では Read tool を通らず、発火しない可能性がある（未実証。`InstructionsLoaded` hook で検証可能）。常時 load はこの不確実性を回避する。
+- **実測。** 2026-08-27 に read-only subagent をこの repo で起動した際、配布済みの旧 `coding-standards`（`paths` 付き）は context へ注入されず、`docs-artifacts` / `harness-surface-consistency`（同じく `paths` 付きだが、subagent が読んだファイルに match する）は注入された。「この repo の layout では load されない」という主張の実地確認になる。ただし Read tool 経由の観測で、`cat` / `sed` 経路の不確実性は解消していない。
+- **節約量が誤差。** 変更後に常時 load されるのは `CLAUDE.md` 68 行と `coding-standards.md` 35 行の 2 ファイル（他 3 rule は path 条件付きのまま）。公式目安は 1 ファイル 200 行未満で、どちらも大きく下回る。
+
+捨てた案:
+
+- **常時適用部（22 行）と コード限定部（10 行）へ 2 ファイル分割**: 10 行の節約のために、path 条件の穴の再生産、Codex（品質節 1 枚）との構造非対称、共有 note 1 箇所（本 note の構成表）の追従、上記の発火条件不確実性への依存を買うことになる。コード限定部が大きく育った時に再検討する。
+- **現状維持（path 条件付き）**: 上記のとおり、この repo を含む多くの layout で最小差分規範ごと沈黙する。
+
+ADR は書かない。3 条件のうち「覆すコストが高い」を満たさない（frontmatter の削除で、git から復元でき影響は harness 内部に閉じる）。
+
+常時 load 化で、共通契約（`CLAUDE.md` / `AGENTS.md` の「実装・編集は最小直線で始める。共通化、抽象化、helper、設定層、新依存は実害が出てから入れる。」）と品質規範（YAGNI / 予防的抽象化を避ける）の重複が全セッションで顕在化した。共通契約側を「実装・編集は最小直線で始める。」へ短縮し、判断基準は品質規範へ一本化した。`helper` / `設定層` は予防的抽象化の例示へ移し、`新依存` は停止線（新しい依存は確認して止まる）が上位互換で受けるため移さない。
+
+この一本化により、Claude 側で削った共通契約の受け皿は `coding-standards.md` **のみ**になった。将来この rule に `paths` を戻すなら、共通契約側の記述も同時に復元する。片方だけ戻すと規範が全セッションから黙って消える。
+
+## 品質規範を名前ベースから判断基準ベースへ変えた
+
+- Date: 2026-08-27
+
+上記と同じ変更単位で入れたが、常時 load 化とは独立した変更。両 surface 対称に適用した。
+
+- **優先順位から「短さ・巧妙さ」を外した。** priority list に載せると「上位を損なわない範囲で巧妙さを追求してよい」と読める。巧妙さは可読性の敵で品質目標ではないため、「短さと巧妙さは目標にしない」と否定形へ改めた。`DRY` は「性能より下」という位置情報が有用なため list に残した。
+- **命名の汎用語リストから `handler` / `process` を外した。** HTTP handler / event handler は framework が定義する確立した語で、`data` / `tmp` と同列に禁じると誤爆する。例外の根拠は「近傍実装で使われている」ではなく「framework が定義する語である」に絞った。前者だと「この repo は既に `helpers/` を使っている」でリスト全体を無効化でき、かつ近傍実装との一貫性は「適用の参照順」の第 2 位で既に受けているため二重の緩和になる。
+- **予防的抽象化の禁止列挙から `Provider` / `Manager` を外し、例示化した。** React の Provider や Nest / Spring の DI container は framework 規約が要求する構造で、自作の間接層とは別物。逆に素の Node / Python で自作する DI container はこの規範が止めたい典型なので、例示は framework 名まで具体化した。
+- `manager` が命名リストに残り `Manager` が抽象化リストから外れたのは整合する。命名 rule は識別子の曖昧さ、抽象化 rule は間接層の早期導入と、対象軸が違う。
+
+[ADR 0035](../adr/0035-make-claude-surface-lightweight-llm-native.md) が本文に記録した優先順位「…→ DRY → 短さ」の末尾「短さ」は、本変更で外した。ADR 本文は履歴として書き換えない（ADR 0022）。
 
 ## 廃止したもの
 
