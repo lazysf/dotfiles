@@ -33,6 +33,9 @@
 | `PowerShell(...)` rule | `settings.json.tmpl` deny | 「PowerShell permission rules use the same shape as Bash rules」。`Bash(...)` とは別 namespace なので、Windows の PowerShell 経路は `Bash(...)` deny では覆えない |
 | `sandbox.enabled` の Windows 挙動 | `settings.json.tmpl` | sandbox は macOS / Linux / WSL2 のみ。native Windows 非対応で、公式は WSL2 上での実行を案内している |
 | `sandbox.network.allowedDomains` | `settings.json.tmpl` | 許可外 host は初回に prompt。許可すると当該 session 中は再 prompt しない。hard block は `strictAllowlist`（v2.1.219+、user / managed / CLI settings のみ）が必要 |
+| `WebFetch(domain:...)` rule 形式 | `settings.json.tmpl` permissions | 正式キー。hostname に対し case-insensitive match、trailing dot は両側で除去。`*` wildcard 可で、leading `*.` は任意深さの subdomain に match するが apex 自身には match しない。それ以外の位置の `*` は dot を跨がない。**`domain:` 形は sandbox の allowed / denied domain list へも合流する**が、bare `WebFetch` 形は sandbox を動かさない。sandbox が honor する wildcard は leading `*.` と bare `*` の 2 形のみ |
+| `WebFetch` の deny 形の違い | 未採用 | bare `WebFetch` を deny すると tool ごと削除。`WebFetch(domain:*)` を deny すると tool は残り全 fetch を拒否し、加えて sandboxed command が全 host へ到達不能になる。採用しない理由は [claude-code-permission-policy.md](./claude-code-permission-policy.md) |
+| `strictAllowlist` の適用範囲 | 未採用 | sandboxed command のみに強制。in-process tool（`WebFetch` / `WebSearch`）は permission rule に従い、sandbox の allowlist では止まらない |
 | rule frontmatter `paths` | `rules/*.md` | 正式キー。glob で指定し、`paths` なしの rule は launch 時に無条件 load。path 条件付き rule は「Claude が match するファイルを読んだ時」に load される |
 
 ## 2026-08-05 追加分
