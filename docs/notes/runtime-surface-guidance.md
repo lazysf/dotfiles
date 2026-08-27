@@ -22,7 +22,7 @@ root `CLAUDE.md` は repo-local import shim として配布対象外にする（
 - `scribe`: README、既存 docs、運用手順、設計メモ、request folder、PRD、要件定義、設計、task、実装記録、検証結果、review、traceability、CONTEXT、ADR などの doc / artifact 作成・更新・整形の入口。変更後の参照ずれや docs 追従更新は `doc-followup`、置き場判断や共有理解の問い詰めが必要な場合は `grill` を使う
 - `git-commit`, `git-push`: 通常 commit / push の正式入口。その他の Git 操作は skill を増やさず既定 prompt と停止線で扱う
 - `agents/`: Codex と Claude Code の subagent 定義の入口。Codex では TOML、Claude Code では Markdown + YAML frontmatter で、調査・検証 specialist agent と reviewer agent を定義する。review 本体は対応する agent 定義で扱う
-- `rules/`: 機械的な guard。Codex では安全に自走できる定番操作の `allow` と、root 削除、disk erase、filesystem format、package publish、auth logout、deploy / release など高リスク操作の `forbidden` を担う。Claude Code rules は対象 path 条件で読む短い運用ルールを担う
+- `rules/`: 機械的な guard。Codex では安全に自走できる定番操作の `allow` と、root 削除、disk erase、filesystem format、package publish、auth logout、deploy / release など高リスク操作の `forbidden` を担う。Claude Code rules は短い運用ルールを担い、rule ごとに常時 load と path 条件付きを選べる
 
 詳細なチェックリスト、テンプレート、例外規則は各 skill とその `references/` に集約する。旧 prefix ベースの surface の履歴は ADR にのみ残し、現行導線の説明には持ち込まない。
 要求分類は user-facing workflow として案内せず、依頼を固定分類へ当てはめるための正本も置かない。
