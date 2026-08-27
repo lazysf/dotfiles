@@ -1,8 +1,0 @@
-prefix_rule(
-  pattern = ["git", "branch", "-vv"],
-  decision = "allow",
-  justification = "`git-push` skill の upstream / ahead / behind 確認に必要な `git branch -vv` のみ許可する。",
-  match = [
-    "git branch -vv",
-  ],
-)
