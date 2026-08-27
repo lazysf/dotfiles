@@ -32,11 +32,12 @@
 | `Bash(curl *)` 形式 | `settings.json.tmpl` deny | `*` は任意位置で使え、末尾 `*` の前に空白があると word boundary を要求する（`Bash(ls *)` は `ls -la` に match、`lsof` には match しない）。`:*` suffix は末尾限定で同義 |
 | `PowerShell(...)` rule | `settings.json.tmpl` deny | 「PowerShell permission rules use the same shape as Bash rules」。`Bash(...)` とは別 namespace なので、Windows の PowerShell 経路は `Bash(...)` deny では覆えない |
 | `sandbox.enabled` の Windows 挙動 | `settings.json.tmpl` | sandbox は macOS / Linux / WSL2 のみ。native Windows 非対応で、公式は WSL2 上での実行を案内している |
-| `sandbox.network.allowedDomains` | `settings.json.tmpl` | 許可外 host は初回に prompt。許可すると当該 session 中は再 prompt しない。hard block は `strictAllowlist`（v2.1.219+、user / managed / CLI settings のみ）が必要 |
+| `sandbox.network.allowedDomains` | `settings.json.tmpl` | 公式では許可外 host は初回に prompt、許可すると当該 session 中は再 prompt しない。hard block は `strictAllowlist`（v2.1.219+、user / managed / CLI settings のみ）が必要。**実機では許可外 host でも prompt が出ず素通りする**（2026-08-27 実測、[claude-code-permission-policy.md](./claude-code-permission-policy.md)） |
 | `WebFetch(domain:...)` rule 形式 | `settings.json.tmpl` permissions | 正式キー。hostname に対し case-insensitive match、trailing dot は両側で除去。`*` wildcard 可で、leading `*.` は任意深さの subdomain に match するが apex 自身には match しない。それ以外の位置の `*` は dot を跨がない。**`domain:` 形は sandbox の allowed / denied domain list へも合流する**が、bare `WebFetch` 形は sandbox を動かさない。sandbox が honor する wildcard は leading `*.` と bare `*` の 2 形のみ |
 | `WebFetch` の deny 形の違い | 未採用 | bare `WebFetch` を deny すると tool ごと削除。`WebFetch(domain:*)` を deny すると tool は残り全 fetch を拒否し、加えて sandboxed command が全 host へ到達不能になる。採用しない理由は [claude-code-permission-policy.md](./claude-code-permission-policy.md) |
 | `strictAllowlist` の適用範囲 | 未採用 | sandboxed command のみに強制。in-process tool（`WebFetch` / `WebSearch`）は permission rule に従い、sandbox の allowlist では止まらない |
-| rule frontmatter `paths` | `rules/*.md` | 正式キー。glob で指定し、`paths` なしの rule は launch 時に無条件 load。path 条件付き rule は「Claude が match するファイルを読んだ時」に load される |
+| rule frontmatter `paths` | `rules/*.md` | 正式キー。glob で指定し、`paths` なしの rule は launch 時に無条件 load。path 条件付き rule は「Claude が match するファイルを読んだ時」に load される。**実測（2026-08-27）**: `paths` なしの `coding-standards` は `session_start` で load。path 条件付きの 3 本は `session_start` では load されないが、Read tool を使わず `cat` / `grep` だけのセッションでも context へ注入された。Bash 経路でも発火する |
+| `InstructionsLoaded` hook の payload | 未採用（検証用） | **公式 docs と実装が食い違う。** 公式は `reason` / `files`（配列、要素に `type`）と記載するが、実機（2.1.246）は 1 event 1 file で `load_reason` / `file_path` / `memory_type`（`User` / `Project`）、`include` 時は `parent_file_path`。`matcher` は `session_start` / `nested_traversal` / `path_glob_match` / `include` / `compact`。検証で使う時は実機の形を前提にする |
 
 ## 2026-08-05 追加分
 
@@ -55,8 +56,8 @@
 
 - `sandbox.autoAllowBashIfSandboxed` はキーごと書かず、default の `true` に任せる。一度 `false` を明示していたが、`false` だと Bash 1 本ごとに classifier の往復が入って遅く、classifier block が fallback カウンタに積まれる。default 値をわざわざ書かない代わりに、再発防止は [harness-regression-checks.md](./harness-regression-checks.md) の項目 23 で見る。
 - `allowUnsandboxedCommands: false` と `failIfUnavailable: true` は据え置き。`allowedDomains` の拡張で解決しないことは [harness-regression-checks.md](./harness-regression-checks.md) の項目 23 で既に方針化済み（`github.com` / npm / PyPI の 3 系統に保ち、prompt になる host を許可で潰さない）。sandbox 外実行がどうしても要る場合の選択肢は `excludedCommands` だけで、これも実害が出てから検討する。
-- `permissions.allow` の `Agent(researcher)` / `Agent(quality-reviewer)` / `Agent(security-reviewer)` は auto mode 下では drop されるため、auto mode で動いている限り standing authorization の実効は classifier 判断に委ねられている。今回は rule を変更していない。
-- 実機 version は **2.1.221**。desktop app 経由の install で `claude` は PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`。このフルパスで `auto-mode defaults` / `auto-mode config` / `auto-mode critique` を実行できる。上記の version 依存挙動はすべて 2.1.221 で満たす。
+- `permissions.allow` の `Agent(researcher)` / `Agent(quality-reviewer)` / `Agent(security-reviewer)` は auto mode 下では drop されるため、auto mode で動いている限り standing authorization の実効は classifier 判断に委ねられていた。2026-08-27 に「既定 mode で効かない rule は置かない」方針で削除（[claude-code-permission-policy.md](./claude-code-permission-policy.md)）。
+- 実機 version は 2026-08-05 時点で **2.1.221**、2026-08-27 時点で **2.1.246**。desktop app 経由の install で `claude` は PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`。このフルパスで `auto-mode defaults` / `auto-mode config` / `auto-mode critique` を実行できる。上記の version 依存挙動はすべて 2.1.221 で満たす。
 - 実機 `claude auto-mode defaults` の built-in 件数は `allow` 17 / `soft_deny` 65 / `hard_deny` 1 / `environment` 20（2.1.221 時点）。将来 `autoMode` を設定する時は、`claude auto-mode config` の件数をこれと突き合わせて `"$defaults"` の書き損じを検出する。
 
 ## 補足

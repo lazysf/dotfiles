@@ -302,7 +302,7 @@
   - permission mode 周りが疑わしい時は、`claude --permission-mode auto -p "..."` を 1 回叩いて startup 警告の有無を見る。settings を読むだけでは、mode を強制する env var の存在に気付けない
   - `sandbox.network.allowedDomains` は `github.com` / npm / PyPI の 3 系統だけに保つ。uv の CPython download や GitHub release asset が `codeload.github.com` / `objects.githubusercontent.com` へ落ちて prompt になるのは想定挙動で、許可 host を増やして解決しない。この不変条件は `allowedDomains` 配列そのものに掛かる（`WebFetch(domain:...)` からの合流分は次項）
   - sandbox の実効到達先は `allowedDomains` だけでは読めない。`permissions.allow` の `WebFetch(domain:...)` も sandbox allowlist へ合流するため、`allowedDomains` の entry 数 + `WebFetch(domain:...)` の entry 数で見る。**合流が auto mode 下でも起きるかは未検証**（[claude-code-permission-policy.md](./claude-code-permission-policy.md) の「auto mode 下での実効は未検証」に実測手順）。`WebFetch` の allow を足す時は Bash 側の到達先が増えることを確認する
-  - `WebFetch` を bare 形（`"deny": ["WebFetch"]`）でも `WebFetch(domain:*)` 形でも deny していない。前者は tool ごと消えて公式 docs 参照が不能になり、後者は sandbox の全 host 到達を殺す。理由は [claude-code-permission-policy.md](./claude-code-permission-policy.md) の「WebFetch / WebSearch」
+  - `WebFetch` を bare 形（`"deny": ["WebFetch"]`）でも `WebFetch(domain:*)` 形でも deny していない。前者は tool ごと消えて公式 docs 参照が不能になり、後者は sandbox の全 host 到達を殺す。理由は [claude-code-permission-policy.md](./claude-code-permission-policy.md) の「外向き通信の実効」
   - `sandbox.autoAllowBashIfSandboxed` に `false` を書いていない。default の `true` に任せる。`false` は "Regular permissions mode" で、auto mode では sandbox 済み Bash も 1 本ごとに classifier 往復が入る
   - `autoMode` を設定していない。classifier の誤 block が実際に観測されるまでは built-in のまま使い、入れる場合も 4 配列に `"$defaults"` を含める（欠けるとその配列の built-in が丸ごと消える）
   - `sandbox.excludedCommands` を追加していない。SSH remote への `git push` が sandbox 内で通らない件は `excludedCommands: ["git"]` でも解決しなかった（2026-08-05 実測）。push は人が手元の terminal で打つ運用とし、sandbox 緩和で解こうとしない
