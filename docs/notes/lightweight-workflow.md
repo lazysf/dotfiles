@@ -104,6 +104,36 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 [ADR 0035](../adr/0035-make-claude-surface-lightweight-llm-native.md) が本文に記録した優先順位「…→ DRY → 短さ」の末尾「短さ」は、本変更で外した。ADR 本文は履歴として書き換えない（ADR 0022）。
 
+## 契約と skill の摩擦を減らした判断
+
+- Date: 2026-08-27
+- 出典: [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) / [Agent Skills best practices](https://agentskills.io/skill-creation/best-practices) / この repo の commit 実績
+
+実測で欠陥が確定していた分（別記の常時 load 化と記録の是正）とは別に、運用して摩擦になる箇所を 3 件だけ直した。検討したが**見送った 2 件**も、同じ検討を繰り返さないために残す。
+
+### 実施
+
+- **commit の `<type>` 集合を `SKILL.md` へ明記。** Conventional Commits は `feat` / `fix` 以外の type を自由にしており（規格 clause 14）、skill 側も集合を決めていなかったため、commit ごとに語が揺れていた。この repo の実績 9 種（`docs` / `chore` / `feat` / `fix` / `refactor` / `style` / `revert` / `perf` / `build`）に `test` / `ci` を足した 11 種に固定。配置は `references/` でなく `SKILL.md` 本体で、公式の「毎回必要な内容は本体に置く」に従う。集合を絞るのは repo 側の選択で、規格違反ではない。
+- **停止線を判定可能な形へ。** 「公開インターフェースに影響する」は文字通り読むと新規関数 1 本でも停止するため、「変更・削除する」+「後から変えると外部を壊すもの（公開 API、永続化 schema、CLI 引数、設定キー）は新規でも含む」に置き換え、判定を 1 問へ集約した。「大きな設計変更」も主観語だったため、例示（module 境界の移動、data flow の作り直し、framework / library の入れ替え）で閾値を示す形にした。
+- **共通契約へ 1 行。** 「設定や防御は、実測で効いていることを確認するまで有効な層として数えない。」 本 note の他の項目で記録した失敗（allowlist を防御層として数えていた、`Agent` allow が既定 mode で死んでいた、path rule の発火を推測で断じた）は、すべてこの 1 行で防げた。
+
+### 見送り: root `AGENTS.md` の URL 表を notes へ移す
+
+契約側 45 行（うち URL 37 行）を `docs/notes/` へ移し、契約には参照義務と index リンクだけ残す案。**見送った。**
+
+- 効果は**この repo のセッション限定**で約 40 行。root `AGENTS.md` は `.chezmoiignore` で配布対象外のため、他 project の常時 load はもともと増えていない。
+- 一方この表は 2026-08-27 の作業で実際に機能した。Codex に path scoping が無いこと、in-process tool が sandbox の対象外であること、auto mode の allow drop 対象リスト — いずれも表から正しいページへ辿って確認できた。記憶で答えていれば誤っていた。
+- 移すと indirection が 1 段増え、index を読まずに済ませる経路ができる。**40 行の節約と引き換えに参照義務の実効を賭けることになる**ため、割に合わないと判断した。
+- 再検討の条件: 表が肥大して契約本文が読めなくなった時。その場合も「表は残して重複した導入文だけ削る」を先に試す。
+
+### 見送り: commit の `scope` 禁止を緩める
+
+「repo 規約が scope を要求する場合は停止して報告する」を「その規約に従う」へ緩める案。**保留。**
+
+- この repo の 368 commit で scope 付きは **0 件**。実害が観測されていない。
+- skill は user-global なので monorepo では摩擦があり得るが、それは想定であって実測ではない。今日の作業方針（実測で裏が取れた分だけ直す）に照らして先送りする。
+- 再検討の条件: 実際に monorepo で「停止して報告」に当たった時。
+
 ## 廃止したもの
 
 両 surface で同じ集合を廃止した（Claude 側は ADR 0035 で先行、Codex 側は ADR 0036 で対称化）:
