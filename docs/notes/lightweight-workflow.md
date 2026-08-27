@@ -76,7 +76,7 @@ network_access = false
 - **Codex 側は絞れない。** 公式仕様上 `AGENTS.md` に glob / path scoping は無く、`~/.codex/AGENTS.md` は常時 load。Codex の常時適用は設計選択ではなく唯一の選択肢。対称化の方向は「Claude を常時へ寄せる」しかない。
 - **中身の大半がコード限定でない。** 品質の優先順位 / 適用の参照順 / 基本原則 / 最小差分（計 22 行）は `settings.json`、`AGENTS.md`、`docs/` の編集にも効く。コード限定は可読性の具体とコメントの約 10 行だけ。従来の path 条件はこの 22 行を巻き添えで無効化していた。
 - **path 条件の穴。** `cmd/` / `internal/` / `pkg/` / `apps/` / repo 直下のコードが漏れる。`paths` を外せばこの穴は構造的に消える。
-- **発火条件の不確実性。** 公式は path 条件付き rule を「Claude が match するファイルを **読んだ時**」に load すると規定する。auto mode で `cat` / `sed` を主経路にする運用では Read tool を通らず、発火しない可能性がある（未実証。`InstructionsLoaded` hook で検証可能）。常時 load はこの不確実性を回避する。
+- ~~発火条件の不確実性~~（**2026-08-27 に否定**）。当初「auto mode で `cat` / `sed` を主経路にすると Read tool を通らず path 条件付き rule が発火しない可能性がある」を論拠の 1 つに挙げたが、実測で誤りと判明した。Read tool を一度も使わないセッションでも `docs-artifacts` / `harness-surface-consistency` は context へ注入された。`InstructionsLoaded` hook でも `coding-standards` が `session_start` で load されることを確認済み。**path 条件付き rule は正常に発火する**ため、残る 3 本は path 条件付きのまま維持する。この論拠は失効したが、上記の他の論拠で判断は変わらない。
 - **実測。** 2026-08-27 に read-only subagent をこの repo で起動した際、配布済みの旧 `coding-standards`（`paths` 付き）は context へ注入されず、`docs-artifacts` / `harness-surface-consistency`（同じく `paths` 付きだが、subagent が読んだファイルに match する）は注入された。「この repo の layout では load されない」という主張の実地確認になる。ただし Read tool 経由の観測で、`cat` / `sed` 経路の不確実性は解消していない。
 - **節約量が誤差。** 変更後に常時 load されるのは `CLAUDE.md` 68 行と `coding-standards.md` 35 行の 2 ファイル（他 3 rule は path 条件付きのまま）。公式目安は 1 ファイル 200 行未満で、どちらも大きく下回る。
 
