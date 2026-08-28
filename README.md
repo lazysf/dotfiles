@@ -102,4 +102,4 @@ npm run lint:fix
 - [`docs/notes/`](docs/notes/): repo-level の通常知見
 - [`docs/adr/`](docs/adr/): `Accepted` / `Superseded` を含む状態付き判断台帳
 
-共通ハーネスの source は `dot_codex/` と `dot_claude/` に置きます。root `CLAUDE.md` は Claude Code 向けの repo-local import shim で root `AGENTS.md` を参照します。
+共通ハーネスの source は `dot_claude/` に置きます。root `CLAUDE.md` は Claude Code 向けの repo-local import shim で root `AGENTS.md` を参照します。

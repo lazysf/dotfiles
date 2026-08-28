@@ -10,8 +10,8 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## Agent Skills に関する作業
 
-- Codex または Claude Code のスキルを新規作成する、既存スキルの設計を変更する、または description / trigger / 構成 / references / scripts / 品質評価について判断する場合は、判断前に必ず `skill-creator` スキルを使用する
-- スキル内容の検討・編集として、仕様、構造、description、progressive disclosure、best practice に関わる判断を行う場合は Agent Skills 公式情報を確認する。runtime 固有の発火、配置、権限、frontmatter は Codex / Claude Code の公式情報も確認する。既存スキルの内容を読み取るだけの場合は必須としない
+- Claude Code のスキルを新規作成する、既存スキルの設計を変更する、または description / trigger / 構成 / references / scripts / 品質評価について判断する場合は、判断前に必ず `skill-creator` スキルを使用する
+- スキル内容の検討・編集として、仕様、構造、description、progressive disclosure、best practice に関わる判断を行う場合は Agent Skills 公式情報を確認する。runtime 固有の発火、配置、権限、frontmatter は Claude Code の公式情報も確認する。既存スキルの内容を読み取るだけの場合は必須としない
   - [Overview](https://agentskills.io/home)
   - [Documentation Index](https://agentskills.io/llms.txt)
   - [Quickstart](https://agentskills.io/skill-creation/quickstart)
@@ -20,7 +20,6 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
   - [Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
   - [Evaluating skills](https://agentskills.io/skill-creation/evaluating-skills)
   - [Using scripts](https://agentskills.io/skill-creation/using-scripts)
-  - [Codex Agent Skills](https://learn.chatgpt.com/docs/build-skills)
   - [Claude Code skills](https://code.claude.com/docs/en/skills)
 - Agent Skills 公式情報を確認した場合は、最終返答で参照した公式ページを簡潔に明示する。確認が必要だったが確認できない場合は、その事実と理由を明示し、進め方を相談する
 - `SKILL.md` へ仕様や長い手順を転載せず、必要な詳細は `references/` などの progressive disclosure に分ける
@@ -29,10 +28,10 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 - 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
 - `scribe` 単独で進めない代表例:
-  - root `AGENTS.md` / `CLAUDE.md`、`dot_codex/AGENTS.md`、`dot_claude/CLAUDE.md`
-  - 両 surface の `skills/**`（`SKILL.md` と、判断や実行に影響する `references/` / `scripts/` / `assets/`）
-  - 両 surface の agent 定義（`dot_codex/agents/*.toml` / `dot_claude/agents/*.md`）
-  - 両 surface の rules（`dot_codex/rules/*.rules` / `dot_claude/rules/*.md`）
+  - root `AGENTS.md` / `CLAUDE.md`、`dot_claude/CLAUDE.md`
+  - `dot_claude/skills/**`（`SKILL.md` と、判断や実行に影響する `references/` / `scripts/` / `assets/`）
+  - agent 定義（`dot_claude/agents/*.md`）
+  - rules（`dot_claude/rules/*.md`）
   - `dot_claude/output-styles/*.md`
   - runtime 設定（`dot_claude/settings.json.tmpl`）
 
@@ -42,35 +41,8 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## Agent / Subagent 起動
 
-- 各 surface の運用契約（`dot_codex/AGENTS.md` / `dot_claude/CLAUDE.md`）で起動が認められている read-only specialist agent / subagent（`researcher` / `quality-reviewer` / `security-reviewer`）は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい
+- 運用契約（`dot_claude/CLAUDE.md`）で起動が認められている read-only specialist agent / subagent（`researcher` / `quality-reviewer` / `security-reviewer`）は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい
 - この許可は agent / subagent 起動だけを対象にする。各 agent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する
-
-## Codex 本体に関する作業
-
-- Codex の設定、権限、実行環境、AGENTS.md、MCP、hooks、rules、skills、subagents、plugins、CLI / app / IDE extension、運用方針に関わる判断を行う場合は、事前に [Codex Docs](https://learn.chatgpt.com/docs) と [Docs MCP](https://developers.openai.com/learn/docs-mcp) を参照する
-- Codex の運用方針や作業設計を判断する場合は、[Best practices](https://learn.chatgpt.com/guides/best-practices) を参照する
-- 判断対象ごとに該当する公式ページを参照する:
-  - 初期導入 / 概要: [Quickstart](https://learn.chatgpt.com/docs/quickstart)
-  - ユースケース: [Codex use cases](https://learn.chatgpt.com/use-cases)
-  - `AGENTS.md`: [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
-  - `~/.codex/config.toml` 基本: [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic)
-  - config 応用: [Advanced Configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)
-  - config 詳細: [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference)
-  - environment variables: [Environment variables](https://learn.chatgpt.com/docs/config-file/environment-variables)
-  - config 例: [Sample Configuration](https://learn.chatgpt.com/docs/config-file/config-sample)
-  - permissions / approvals: [Permissions](https://learn.chatgpt.com/docs/permissions)
-  - sandbox: [Sandboxing](https://learn.chatgpt.com/docs/sandboxing)
-  - rules: [Rules](https://learn.chatgpt.com/docs/agent-configuration/rules)
-  - hooks: [Hooks](https://learn.chatgpt.com/docs/hooks)
-  - MCP: [Model Context Protocol](https://learn.chatgpt.com/docs/extend/mcp)
-  - plugins: [Plugins](https://learn.chatgpt.com/docs/plugins)
-  - skills: [Agent Skills](https://learn.chatgpt.com/docs/build-skills)
-  - subagents: [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
-  - CLI: [CLI](https://learn.chatgpt.com/docs/codex/cli)
-  - app: [App](https://learn.chatgpt.com/docs/app)
-  - IDE extension: [IDE extension](https://learn.chatgpt.com/docs/codex/ide)
-  - app troubleshooting: [Troubleshooting](https://learn.chatgpt.com/docs/reference/troubleshooting)
-  - changelog / release 確認: [Changelog](https://learn.chatgpt.com/docs/changelog)
 
 ## Claude Code に関する作業
 
@@ -92,8 +64,8 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## 置き場の原則
 
-- 両 surface の `skills/`: 再利用する作業手順と通常作業の正式入口
-- 両 surface の運用契約: `dot_codex/AGENTS.md` / `dot_claude/CLAUDE.md`
+- `dot_claude/skills/`: 再利用する作業手順と通常作業の正式入口
+- 運用契約: `dot_claude/CLAUDE.md`
 - root `CLAUDE.md`: Claude Code 向けの repo-local import shim
 - `docs/notes/`: repo-level の通常知見や背景
 - `docs/adr/`: repo-level の判断記録

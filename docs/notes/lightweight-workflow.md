@@ -29,7 +29,7 @@
 
 廃止した template が持っていた設定と、その意図。値の現状は実機 `~/.codex/config.toml` を見る。
 
-- `model` / `model_reasoning_effort`: lead の意図値。`dot_codex/agents/*.toml` はこれに合わせる（乖離チェックは [harness-regression-checks.md](./harness-regression-checks.md)）。2026-07-30 時点の実機は `gpt-5.6-sol` / `high`。
+- `model` / `model_reasoning_effort`: lead の意図値。`dot_codex/agents/*.toml` はこれに合わせる。2026-07-30 時点の実機は `gpt-5.6-sol` / `high`。
 - `approval_policy = "on-request"` + `approvals_reviewer = "auto_review"`: 承認は都度要求し、review は reviewer subagent に回す。
 - `sandbox_mode = "workspace-write"`: workspace 外の書き込みを止める。
 - `[sandbox_workspace_write] network_access = false`: workspace-write sandbox からの外向き通信を止める意図。**実機 config には該当 section が無く、app 内部 state（`~/.codex/.codex-global-state.json`）で `networkAccess: false` を確認しただけの状態。** 公式 docs でこの key の既定値を確認できていないため、実機 config へ明示する運用にする（下記手順）。
@@ -144,6 +144,6 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 ## 共有 note との整合
 
-`runtime-surface-guidance.md` / `harness-regression-checks.md` / `harness-design-principles.md` は ADR 0035 時点では Codex 重 SDLC を Codex 側でだけ有効な前提として保持していた。ADR 0036 で Codex も軽量化したため、これら共有 note の重 SDLC 前提は両 surface とも無効になった。本文は履歴として保持し（ADR 0022）、各 note の scope banner で「現行は両 surface 軽量、詳細は本 note を参照」と示す。共有 note 全面 bilateral 書き換えは churn 大のため deferred。
+`runtime-surface-guidance.md` / `harness-design-principles.md` は ADR 0035 時点では Codex 重 SDLC を Codex 側でだけ有効な前提として保持していた。ADR 0036 で Codex も軽量化したため、これら共有 note の重 SDLC 前提は両 surface とも無効になった。本文は履歴として保持し（ADR 0022）、各 note の scope banner で「現行は両 surface 軽量、詳細は本 note を参照」と示す。共有 note 全面 bilateral 書き換えは churn 大のため deferred。
 
 `claude-code-permission-policy.md` の `Agent(...)` allow 例外は維持（read-only subagent の standing authorization）。

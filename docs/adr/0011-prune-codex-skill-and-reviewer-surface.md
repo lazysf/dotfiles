@@ -1,6 +1,7 @@
 # 0011: Codex skill and reviewer surface を整理する
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0042
 - Supersedes: 0009
 - Amended by: 0012, 0013, 0016, 0017, 0020, 0023, 0024, 0037
 
