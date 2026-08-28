@@ -74,14 +74,24 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 報告項目は `SKILL.md` にある。**報告は毎回書くもので、reference は必要な時だけ読むもの**という progressive disclosure の区分に従う。これで reference は異常系だけになり、`failure-handling` という名前が内容と一致する。
 
-ファイル名に `commit-` prefix を付けないのは、パスが `skills/git-commit/references/` で skill 名が既に文脈を決めているため。`scribe` の reference（`adr-format.md` など）も prefix なし。`git-push` の `push-guardrails.md` は同じ理由で rename の対象だが、再編時にまとめて処理する。
+ファイル名に `commit-` prefix を付けないのは、パスが `skills/git-commit/references/` で skill 名が既に文脈を決めているため。`scribe` の reference（`adr-format.md` など）も prefix なし。
 
 Gotchas に入れるのは、この環境で実際に踏んだか踏みかけたもの。**列挙は `SKILL.md` を正本とし、ここでは繰り返さない。** 実体を写すと片方だけ古くなる。
 
 `diff <(...)` が sandbox で失敗する件は skill に置いていない。git 固有ではなく sandbox 全般の制約で、commit の手順にも該当する操作が無いため。本来は rules に属するが `dot_claude/rules/` が未再構築なので、記録をここに残す。**`diff <(...)` は sandbox で失敗するので、比較は一時ファイルへ出力してから行う。**
 
+## push skill を持たない理由
+
+Git 操作の skill は `git-commit` だけで、push 用の skill は持たない。**sandbox 内から SSH push が通らない**ため、手順書を用意しても実行できない。
+
+`sandbox.network.allowedDomains` は HTTP(S) proxy 用の許可で SSH を運ばない。`git@github.com` への push は sandbox 内で `nc: authentication method negotiation failed` になる。`excludedCommands: ["git"]` を入れても解決しなかった（`53be6a5` → `9afdbb7` で revert）。`allowUnsandboxedCommands` を `true` へ戻す案は、失敗した全 command に sandbox 外再試行を開くので採らない。詳細は [claude-code-settings-design.md](./claude-code-settings-design.md)。
+
+そのため **push は人が手元の terminal で実行し、agent は commit までを担う**。`SKILL.md` の「扱わないもの」にこの分担を書いているのは、skill が無いと agent が自己流で `git push` を打って失敗するため。
+
+ADR は書かない。3 条件のうち「覆すコストが高い」を満たさない（skill の復元は archive branch から容易）。sandbox の方針が変われば push が通るようになり、その時は再検討する。
+
 ## 未確認
 
 - `settings.json` の `includeCoAuthoredBy: false` が実際に効いているかは切り分けできていない。373 commit すべてに `Co-authored-by` trailer が無いのは事実だが、commit を Bash 経由の `git commit` で作っており、harness が trailer を注入する経路を通っていない可能性がある。設定の効果か、skill 規定に従って書いていないだけかを区別できない。
-- `git-push` と `scribe` は未再構築。`SKILL.md` の description と「扱わないもの」がこの 2 つを参照しているため、この状態で `chezmoi apply` すると参照先が一時的に存在しなくなる。
+- `scribe` は未再構築。`SKILL.md` の description と「扱わないもの」が参照しているため、この状態で `chezmoi apply` すると参照先が一時的に存在しなくなる。
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
