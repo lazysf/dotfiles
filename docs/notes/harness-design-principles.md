@@ -85,7 +85,7 @@
 
 - [dot_codex/AGENTS.md](../../dot_codex/AGENTS.md)
 - [dot_claude/CLAUDE.md](../../dot_claude/CLAUDE.md)
-- [ADR Ledger Model](./adr-ledger-model.md)
+- [scribe skill の設計](./scribe-skill-design.md)
 - [Runtime Surface Guidance](./runtime-surface-guidance.md)
 - [ADR 0001](../adr/0001-common-codex-harness-lives-in-dot_codex.md)
 - [ADR 0002](../adr/0002-project-specific-knowledge-lives-in-project-docs.md)

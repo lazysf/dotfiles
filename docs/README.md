@@ -3,13 +3,14 @@
 この `docs/` は、この dotfiles repo を保守するときに参照する知見の置き場です。
 
 - `docs/notes/`: repo-level の通常知見を置く
-  - [adr-ledger-model.md](./notes/adr-ledger-model.md): ADR を状態付き判断台帳として扱う運用
-  - [adr-workflow-review-pitfalls.md](./notes/adr-workflow-review-pitfalls.md): ADR 台帳フロー拡張時の review 観点
+  - [claude-code-output-style-design.md](./notes/claude-code-output-style-design.md): caveman output style が今の形になっている理由
   - [claude-code-settings-design.md](./notes/claude-code-settings-design.md): `settings.json` が default との差分だけで組まれている理由と、sandbox / permissions の実測記録
   - [runtime-surface-guidance.md](./notes/runtime-surface-guidance.md): runtime surface guidance と prefix なし skill surface の扱い
+  - [git-commit-skill-design.md](./notes/git-commit-skill-design.md): `git-commit` skill が今の形になっている理由と commit 履歴の実測
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [lightweight-workflow.md](./notes/lightweight-workflow.md): 両 surface 軽量 workflow の構成と意図的差分
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
+  - [scribe-skill-design.md](./notes/scribe-skill-design.md): `scribe` skill が今の形になっている理由
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
   - [0002-project-specific-knowledge-lives-in-project-docs.md](./adr/0002-project-specific-knowledge-lives-in-project-docs.md)
