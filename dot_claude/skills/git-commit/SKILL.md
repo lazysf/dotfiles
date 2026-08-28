@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Git の変更を commit したい依頼で使う。「commit して」「これをコミット」「変更を確定させて」のように、作業結果を Git 履歴へ残したい時が対象。1 commit 1 変更に分け、明示 path で stage し、staged diff を確認してから通常 commit だけを行う。push は `git-push`、doc の作成・更新は `scribe`。
+description: Git の変更を commit したい依頼で使う。「commit して」「これをコミット」「変更を確定させて」のように、作業結果を Git 履歴へ残したい時が対象。1 commit 1 変更に分け、明示 path で stage し、staged diff を確認してから通常 commit だけを行う。push は扱わない。doc の作成・更新は `scribe`。
 ---
 
 # Git Commit
@@ -66,7 +66,7 @@ body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっ
 
 通常 commit だけを行う。push、rebase、amend、squash、`--no-verify`、直接の refs 操作、知見の蓄積は扱わない。commit が失敗しても、これらへ切り替えて回避しない。
 
-push は `git-push` skill が扱う。知見の蓄積（README / docs、ADR、notes）は `scribe` skill が扱う。
+push は人が手元の terminal で実行する。sandbox の proxy は SSH を運ばないため、agent が実行しても失敗する。知見の蓄積（README / docs、ADR、notes）は `scribe` skill が扱う。
 
 ## 出力
 
