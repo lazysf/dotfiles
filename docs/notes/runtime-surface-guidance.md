@@ -46,7 +46,7 @@ CONTEXT は spec、作業メモ、実装判断を扱わない。
 - generic review から `security-reviewer` への自動昇格は行わない
 - `grill` は問い詰めと共有理解の整理専用であり、review 本体を担わない
 - reviewer agent は、親がそのまま利用者へ渡しても読みやすい形で結果を返す
-- `docs/README.md` は index、`dot_codex/AGENTS.md` と `dot_claude/CLAUDE.md` は運用契約と薄い surface 案内、`docs/notes/harness-regression-checks.md` は手動回帰シナリオを担当する
+- `docs/README.md` は index、`dot_codex/AGENTS.md` と `dot_claude/CLAUDE.md` は運用契約と薄い surface 案内を担当する
 
 ## Frontmatter Description 設計ルール
 

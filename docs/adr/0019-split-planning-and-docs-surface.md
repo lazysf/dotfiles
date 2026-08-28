@@ -1,6 +1,7 @@
 # 0019: planning と docs surface を grill / scribe に分割する
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0042
 - Supersedes: 0017
 - Amended by: 0020, 0023
 
