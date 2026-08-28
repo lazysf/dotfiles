@@ -1,8 +1,8 @@
 # 0017: planning skill surface を統合する
 
 - Status: Superseded
-- Supersedes: 0010
 - Superseded-By: 0019
+- Supersedes: 0010
 - Amends: 0011, 0012, 0013
 
 実装前の要件確認、計画作成、設計、docs-aware grilling、成果物 draft は、別々の user-facing skill に分けると発火条件と責務境界が重なりやすい。計画や設計を共有理解に到達するまで一問ずつ問い詰め、既存 docs、ADR、code、domain language と照合する入口を `planning` に統合する。

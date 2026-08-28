@@ -3,7 +3,7 @@
 - Status: Superseded
 - Superseded-By: 0042
 - Supersedes: 0025, 0026, 0029, 0030, 0032, 0035
-- Amended by: 0039
+- Amended-By: 0039
 
 ## 背景
 

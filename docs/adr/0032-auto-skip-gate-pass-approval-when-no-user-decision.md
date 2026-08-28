@@ -3,8 +3,8 @@
 - Status: Superseded
 - Superseded-By: 0036
 - Supersedes: 0031
+- Amended-By: 0033
 - Amends: 0029
-- Amended by: 0033
 
 ## Context
 

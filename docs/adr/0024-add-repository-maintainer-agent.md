@@ -2,8 +2,8 @@
 
 - Status: Superseded
 - Superseded-By: 0034
+- Amended-By: 0027, 0028
 - Amends: 0006, 0011, 0020, 0023
-- Amended by: 0027, 0028
 
 実装・検証後の docs 追従、repo hygiene、tooling 設定の仕上げを、完了前に同じ差分文脈で行いたい。これを lead が直接抱えると自己点検に寄り、developer / verifier に持たせると実装や検証の責務と混ざる。
 

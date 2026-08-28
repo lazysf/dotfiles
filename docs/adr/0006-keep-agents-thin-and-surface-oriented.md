@@ -2,7 +2,7 @@
 
 - Status: Superseded
 - Superseded-By: 0042
-- Amended by: 0020, 0024
+- Amended-By: 0020, 0024
 
 ## Context
 
