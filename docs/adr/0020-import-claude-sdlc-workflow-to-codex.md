@@ -1,10 +1,10 @@
 # 0020: Claude Code SDLC workflow を Codex に逆輸入する
 
 - Status: Superseded
-- Supersedes: 0016
 - Superseded-By: 0040
+- Supersedes: 0016
+- Amended-By: 0023, 0024, 0025, 0027, 0028, 0033
 - Amends: 0006, 0011, 0019
-- Amended by: 0023, 0024, 0025, 0027, 0028, 0033
 
 `dot_claude/` で育てた Agent Teams 型の SDLC workflow は、要求、要件、設計、task、実装、検証、review の責務を artifact と agent で分離できる。Codex でも custom subagent と multi-agent feature が公式に提供されており、`dot_codex/private_config.toml.tmpl` には `[agents] max_threads / max_depth` と、multi-agent tools を有効にする既存の `[features] multi_agent = true` がある。
 
