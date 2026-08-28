@@ -3,11 +3,6 @@
 この root `AGENTS.md` は、この dotfiles repo を保守するときの repo-local な案内として扱い、chezmoi の展開対象にはしない。
 root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱い、`AGENTS.md` を参照させるだけにする。
 
-## 基本姿勢
-
-- 日本語で返答する
-- 事実に基づいて判断し、推測や憶測で処理を進めない
-
 ## Agent Skills に関する作業
 
 - Claude Code のスキルを新規作成する、既存スキルの設計を変更する、または description / trigger / 構成 / references / scripts / 品質評価について判断する場合は、判断前に必ず `skill-creator` スキルを使用する
@@ -39,11 +34,6 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 - 誤字修正、単純な diff 確認、commit / push、合意済み文言の機械的反映、パスや現状確認だけの場合は、`skill-creator` や公式情報確認を必須とはしない。ただし、scripts / references / trigger / 権限 / secret / 外部 I/O / 実行挙動に触れる変更は除く
 
-## Agent / Subagent 起動
-
-- 運用契約（`dot_claude/CLAUDE.md`）で起動が認められている read-only specialist agent / subagent（`researcher` / `quality-reviewer` / `security-reviewer`）は、ユーザーの standing authorization があるものとして lead が追加確認なしで起動してよい
-- この許可は agent / subagent 起動だけを対象にする。各 agent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する
-
 ## Claude Code に関する作業
 
 - Claude Code の設定や編集に関わる判断を行う場合は、事前に [Claude Code Docs](https://code.claude.com/docs) と [Docs index](https://code.claude.com/docs/llms.txt) を参照する
@@ -64,8 +54,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## 置き場の原則
 
-- `dot_claude/skills/`: 再利用する作業手順と通常作業の正式入口
-- 運用契約: `dot_claude/CLAUDE.md`
+- `dot_claude/`: 全 project へ配る運用契約、rules、skills、output-styles、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
 - root `CLAUDE.md`: Claude Code 向けの repo-local import shim
 - `docs/notes/`: repo-level の通常知見や背景
 - `docs/adr/`: repo-level の判断記録
