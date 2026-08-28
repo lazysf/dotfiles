@@ -61,69 +61,29 @@ network_access = false
 | 方針工程 | 会話ベース承認 | `EnterPlanMode` 自己発動 + 承認 |
 | `rules/` の責務 | command guard 専用（公式仕様） | 行動指針も可。常時 load と path 条件付きを rule ごとに選べる |
 | prose 行動指針の置き場 | `AGENTS.md` 集約 | `rules/` 分離 |
-| 行動指針の発火範囲 | `AGENTS.md` は常時 load | `coding-standards` は `paths` を外して常時 load（下記「coding-standards を常時 load にした判断」）。他の rule は path 条件付き |
+| 行動指針の発火範囲 | `AGENTS.md` は常時 load | `coding-standards` は `paths` を外して常時 load（理由は [rules-design.md](./rules-design.md)）。他の rule は path 条件付き |
 | 出力スタイル | `caveman` skill | `caveman` output-style |
 | reviewer の read-only 強制 | `sandbox_mode = "read-only"` + `rules/*.rules` で read-only git allow | `tools: Read, Glob, Grep, Bash` + Claude Code built-in read-only command（read-only forms of git 等） + session 全体の既存 deny rule |
 | reviewer の明示 diff fallback | `git status -sb` / `git diff` / `git diff --staged` / untracked content（`git status -sb` の `??` 行から特定）を sandbox 内 read-only git で取得（`rules/git-status.rules` / `git-diff.rules` の allow と整合） | 同左を built-in read-only git で取得（ADR 0038 で対称化） |
-
-## coding-standards を常時 load にした判断
-
-- Date: 2026-08-27
-- 出典: [Claude Code / How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Codex / Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
-
-`dot_claude/rules/coding-standards.md` の `paths`（`**/src/**` / `**/app/**` / `**/lib/**` / `**/packages/**` / `**/test/**` / `**/tests/**` / `**/spec/**` / `**/scripts/**` / `**/tools/**`）を削除し、常時 load へ変更した。
-
-- **Codex 側は絞れない。** 公式仕様上 `AGENTS.md` に glob / path scoping は無く、`~/.codex/AGENTS.md` は常時 load。Codex の常時適用は設計選択ではなく唯一の選択肢。対称化の方向は「Claude を常時へ寄せる」しかない。
-- **中身の大半がコード限定でない。** 品質の優先順位 / 適用の参照順 / 基本原則 / 最小差分（計 22 行）は `settings.json`、`AGENTS.md`、`docs/` の編集にも効く。コード限定は可読性の具体とコメントの約 10 行だけ。従来の path 条件はこの 22 行を巻き添えで無効化していた。
-- **path 条件の穴。** `cmd/` / `internal/` / `pkg/` / `apps/` / repo 直下のコードが漏れる。`paths` を外せばこの穴は構造的に消える。
-- ~~発火条件の不確実性~~（**2026-08-27 に否定**）。当初「auto mode で `cat` / `sed` を主経路にすると Read tool を通らず path 条件付き rule が発火しない可能性がある」を論拠の 1 つに挙げたが、実測で誤りと判明した。Read tool を一度も使わないセッションでも `docs-artifacts` / `harness-surface-consistency` は context へ注入された。`InstructionsLoaded` hook でも `coding-standards` が `session_start` で load されることを確認済み。**path 条件付き rule は正常に発火する**ため、残る 3 本は path 条件付きのまま維持する。この論拠は失効したが、上記の他の論拠で判断は変わらない。
-- **実測。** 2026-08-27 に read-only subagent をこの repo で起動した際、配布済みの旧 `coding-standards`（`paths` 付き）は context へ注入されず、`docs-artifacts` / `harness-surface-consistency`（同じく `paths` 付きだが、subagent が読んだファイルに match する）は注入された。「この repo の layout では load されない」という主張の実地確認になる。ただし Read tool 経由の観測で、`cat` / `sed` 経路の不確実性は解消していない。
-- **節約量が誤差。** 変更後に常時 load されるのは `CLAUDE.md` 68 行と `coding-standards.md` 35 行の 2 ファイル（他 3 rule は path 条件付きのまま）。公式目安は 1 ファイル 200 行未満で、どちらも大きく下回る。
-
-捨てた案:
-
-- **常時適用部（22 行）と コード限定部（10 行）へ 2 ファイル分割**: 10 行の節約のために、path 条件の穴の再生産、Codex（品質節 1 枚）との構造非対称、共有 note 1 箇所（本 note の構成表）の追従、上記の発火条件不確実性への依存を買うことになる。コード限定部が大きく育った時に再検討する。
-- **現状維持（path 条件付き）**: 上記のとおり、この repo を含む多くの layout で最小差分規範ごと沈黙する。
-
-ADR は書かない。3 条件のうち「覆すコストが高い」を満たさない（frontmatter の削除で、git から復元でき影響は harness 内部に閉じる）。
-
-常時 load 化で、共通契約（`CLAUDE.md` / `AGENTS.md` の「実装・編集は最小直線で始める。共通化、抽象化、helper、設定層、新依存は実害が出てから入れる。」）と品質規範（YAGNI / 予防的抽象化を避ける）の重複が全セッションで顕在化した。共通契約側を「実装・編集は最小直線で始める。」へ短縮し、判断基準は品質規範へ一本化した。`helper` / `設定層` は予防的抽象化の例示へ移し、`新依存` は停止線（新しい依存は確認して止まる）が上位互換で受けるため移さない。
-
-この一本化により、Claude 側で削った共通契約の受け皿は `coding-standards.md` **のみ**になった。将来この rule に `paths` を戻すなら、共通契約側の記述も同時に復元する。片方だけ戻すと規範が全セッションから黙って消える。
-
-## 品質規範を名前ベースから判断基準ベースへ変えた
-
-- Date: 2026-08-27
-
-上記と同じ変更単位で入れたが、常時 load 化とは独立した変更。両 surface 対称に適用した。
-
-- **優先順位から「短さ・巧妙さ」を外した。** priority list に載せると「上位を損なわない範囲で巧妙さを追求してよい」と読める。巧妙さは可読性の敵で品質目標ではないため、「短さと巧妙さは目標にしない」と否定形へ改めた。`DRY` は「性能より下」という位置情報が有用なため list に残した。
-- **命名の汎用語リストから `handler` / `process` を外した。** HTTP handler / event handler は framework が定義する確立した語で、`data` / `tmp` と同列に禁じると誤爆する。例外の根拠は「近傍実装で使われている」ではなく「framework が定義する語である」に絞った。前者だと「この repo は既に `helpers/` を使っている」でリスト全体を無効化でき、かつ近傍実装との一貫性は「適用の参照順」の第 2 位で既に受けているため二重の緩和になる。
-- **予防的抽象化の禁止列挙から `Provider` / `Manager` を外し、例示化した。** React の Provider や Nest / Spring の DI container は framework 規約が要求する構造で、自作の間接層とは別物。逆に素の Node / Python で自作する DI container はこの規範が止めたい典型なので、例示は framework 名まで具体化した。
-- `manager` が命名リストに残り `Manager` が抽象化リストから外れたのは整合する。命名 rule は識別子の曖昧さ、抽象化 rule は間接層の早期導入と、対象軸が違う。
-
-[ADR 0035](../adr/0035-make-claude-surface-lightweight-llm-native.md) が本文に記録した優先順位「…→ DRY → 短さ」の末尾「短さ」は、本変更で外した。ADR 本文は履歴として書き換えない（ADR 0022）。
 
 ## 契約と skill の摩擦を減らした判断
 
 - Date: 2026-08-27
 - 出典: [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) / [Agent Skills best practices](https://agentskills.io/skill-creation/best-practices) / この repo の commit 実績
 
-実測で欠陥が確定していた分（別記の常時 load 化と記録の是正）とは別に、運用して摩擦になる箇所を 3 件だけ直した。検討したが**見送った 2 件**も、同じ検討を繰り返さないために残す。
+運用して摩擦になる箇所を直した記録。検討したが**見送った 2 件**も、同じ検討を繰り返さないために残す。
 
 ### 実施
 
 - **commit の `<type>` 集合を `SKILL.md` へ明記。** Conventional Commits は `feat` / `fix` 以外の type を自由にしており（規格 clause 14）、skill 側も集合を決めていなかったため、commit ごとに語が揺れていた。この repo の実績 9 種（`docs` / `chore` / `feat` / `fix` / `refactor` / `style` / `revert` / `perf` / `build`）に `test` / `ci` を足した 11 種に固定。配置は `references/` でなく `SKILL.md` 本体で、公式の「毎回必要な内容は本体に置く」に従う。集合を絞るのは repo 側の選択で、規格違反ではない。
-- **停止線を判定可能な形へ。** 「公開インターフェースに影響する」は文字通り読むと新規関数 1 本でも停止するため、「変更・削除する」+「後から変えると外部を壊すもの（公開 API、永続化 schema、CLI 引数、設定キー）は新規でも含む」に置き換え、判定を 1 問へ集約した。「大きな設計変更」も主観語だったため、例示（module 境界の移動、data flow の作り直し、framework / library の入れ替え）で閾値を示す形にした。
-- **共通契約へ 1 行。** 「設定や防御は、実測で効いていることを確認するまで有効な層として数えない。」 本 note の他の項目で記録した失敗（allowlist を防御層として数えていた、`Agent` allow が既定 mode で死んでいた、path rule の発火を推測で断じた）は、すべてこの 1 行で防げた。
 
 ### 見送り: root `AGENTS.md` の URL 表を notes へ移す
 
-契約側 45 行（うち URL 37 行）を `docs/notes/` へ移し、契約には参照義務と index リンクだけ残す案。**見送った。**
+公式ページへの URL 表を `docs/notes/` へ移し、契約には参照義務と index リンクだけ残す案。**見送った。**
 
-- 効果は**この repo のセッション限定**で約 40 行。root `AGENTS.md` は `.chezmoiignore` で配布対象外のため、他 project の常時 load はもともと増えていない。
-- 一方この表は 2026-08-27 の作業で実際に機能した。Codex に path scoping が無いこと、in-process tool が sandbox の対象外であること、auto mode の allow drop 対象リスト — いずれも表から正しいページへ辿って確認できた。記憶で答えていれば誤っていた。
-- 移すと indirection が 1 段増え、index を読まずに済ませる経路ができる。**40 行の節約と引き換えに参照義務の実効を賭けることになる**ため、割に合わないと判断した。
+- 効果は**この repo のセッション限定**。root `AGENTS.md` は `.chezmoiignore` で配布対象外のため、他 project の常時 load はもともと増えていない。
+- 一方この表は実際に機能した。in-process tool が sandbox の対象外であること、auto mode の allow drop 対象リスト — どちらも表から正しいページへ辿って確認できた。記憶で答えていれば誤っていた。
+- 移すと indirection が 1 段増え、index を読まずに済ませる経路ができる。**数十行の節約と引き換えに参照義務の実効を賭けることになる**ため、割に合わないと判断した。
 - 再検討の条件: 表が肥大して契約本文が読めなくなった時。その場合も「表は残して重複した導入文だけ削る」を先に試す。
 
 ### 見送り: commit の `scope` 禁止を緩める
