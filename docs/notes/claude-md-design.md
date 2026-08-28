@@ -1,0 +1,44 @@
+# CLAUDE.md の設計
+
+- Date: 2026-08-28
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / `dot_claude/CLAUDE.md` / この環境での実測
+
+`dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
+
+## ここに置くものの基準
+
+CLAUDE.md は全セッションの先頭で読まれる。入れるのは、どの依頼でも要る契約と、工程の発火条件だけ。手順そのものは `skills/`、判断基準は `rules/` にあり、ここでは重複させない。
+
+公式目安は 1 ファイル 200 行。CLAUDE.md 66 行と `rules/coding-standards.md` 35 行を足した 101 行が常時 load の総量で、余裕がある。
+
+## push を工程表に書いている理由
+
+push は sandbox の proxy が SSH を運ばないため agent が実行しても失敗する。この事実は `skills/git-commit` にも書いてあるが、**その skill は commit 依頼でしか発火しない**。「push して」とだけ言われた時、skill 側の記述はどこからも読まれず、agent は失敗する経路へ進む。
+
+常時読まれる側に 1 文だけ置く必要がある。
+
+## doc 要否の規律をここが持つ理由
+
+「実装が一段落した時と commit 前に doc 追従の要否を明示する」という規律は、その 2 つの瞬間に `scribe` が起動していない。commit 前に起動しているのは `git-commit` で、実装の区切りでは何も起動していない。skill 側に書いても実効しないため、常時 load されるここが置き場になる。
+
+要否を判断した後の書き方（3 条件、書式、既存 ADR の扱い）は `skills/scribe` が正本で、ここには持ち込まない。
+
+## 停止線を判定可能な形にしてある理由
+
+「公開インターフェースに影響する」と書くと、文字通り読めば新規関数 1 本でも停止する。「変更・削除する」に絞り、「後から変えると外部を壊すもの（公開 API、永続化 schema、CLI 引数、設定キー）は新規でも含む」を添えて、判定を 1 問へ集約してある。
+
+「大きな設計変更」も主観語なので使わない。module 境界の移動、data flow の作り直し、framework / library の入れ替えという例示で閾値を示す。
+
+## 「実測で確認するまで有効な層と数えない」を共通契約に置く理由
+
+この環境で踏んだ失敗——allowlist を防御層として数えていた、`Agent` allow が既定 mode で死んでいた、path 条件付き rule の発火を推測で断じた——は、すべてこの 1 行で防げた。公式 docs の記述を確認の代わりにしたことが共通の原因だったため、契約側で一度だけ言う。
+
+## agents を書いていない理由
+
+`researcher` / `quality-reviewer` / `security-reviewer` の記述と、工程表の review 行を持たない。**agent 定義の実体がまだ無い**ため。存在しないものへの導線を契約に書くと、読み手が起動できると誤解する。
+
+agent を再構築する時に、CLAUDE.md の review 工程と置き場、root `AGENTS.md` の standing authorization を同時に戻す。それまで「レビューして」という依頼は main セッションが自分で読む形になる。
+
+## 未確認
+
+- CLAUDE.md をまだ `chezmoi apply` していないため、`~/.claude/CLAUDE.md` は旧版のまま。旧版は `git-push` と agents を参照している。
