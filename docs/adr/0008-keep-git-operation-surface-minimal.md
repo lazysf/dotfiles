@@ -1,6 +1,7 @@
 # 0008: Git 操作 surface を最小に保つ
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0042
 - Amended by: 0018
 
 ## Context

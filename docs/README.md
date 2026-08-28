@@ -8,13 +8,9 @@
   - [claude-code-permission-policy.md](./notes/claude-code-permission-policy.md): `settings.json` permissions（allow / deny）の方針と根拠
   - [claude-code-settings-spec-verification.md](./notes/claude-code-settings-spec-verification.md): `settings.json` / subagent frontmatter のキーと値が Claude Code 公式仕様に準拠していることの確認記録と、auto mode / sandbox の挙動確認
   - [runtime-surface-guidance.md](./notes/runtime-surface-guidance.md): runtime surface guidance と prefix なし skill surface の扱い
-  - [git-add-approval-friction-diagnosis.md](./notes/git-add-approval-friction-diagnosis.md): `git add` の approval friction を rule と sandbox で切り分けるメモ
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
-  - [harness-regression-checks.md](./notes/harness-regression-checks.md): ハーネス更新時の手動回帰チェック
   - [lightweight-workflow.md](./notes/lightweight-workflow.md): 両 surface 軽量 workflow の構成と意図的差分
-  - [model-and-effort-tuning-history.md](./notes/model-and-effort-tuning-history.md): Claude / Codex の model と reasoning effort 調整の経緯
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
-  - [vba-implementation-reference-design.md](./notes/vba-implementation-reference-design.md): VBA 実装 reference の設計・review 観点
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
   - [0002-project-specific-knowledge-lives-in-project-docs.md](./adr/0002-project-specific-knowledge-lives-in-project-docs.md)
@@ -57,12 +53,4 @@
   - [0039-retire-docs-requests-artifacts.md](./adr/0039-retire-docs-requests-artifacts.md)
   - [0040-retire-orchestrate-era-decisions.md](./adr/0040-retire-orchestrate-era-decisions.md)
   - [0041-adopt-alerter-for-mole-weekly-notification.md](./adr/0041-adopt-alerter-for-mole-weekly-notification.md)
-- `dot_codex/AGENTS.md`: `~/.codex/AGENTS.md` へ展開する運用契約と薄い surface 案内を置く
-- `dot_codex/skills/`: `~/.codex/skills/` へ展開する prefix なしの skill 手順と、その `references/` を置く
-- `dot_codex/agents/`: `~/.codex/agents/` へ展開する Codex 用の read-only specialist agent / reviewer agent を置く
-- `dot_codex/rules/`: `~/.codex/rules/` へ展開する allow / forbidden の機械的 guard を置く
-- `dot_claude/CLAUDE.md`: `~/.claude/CLAUDE.md` へ展開する Claude Code surface 側の運用契約を置く
-- `dot_claude/skills/`: `~/.claude/skills/` へ展開する skill 手順と、その `references/` を置く
-- `dot_claude/agents/`: `~/.claude/agents/` へ展開する Claude Code subagent 定義を置く
-- `dot_claude/rules/`, `dot_claude/output-styles/`, `dot_claude/settings.json.tmpl`: `~/.claude/` 配下へ展開する rules、output styles、settings を置く
-- Codex の runtime 設定（source 管理外）: `~/.codex/config.toml` は Codex app 自身が書き換えるため repo に source を持たない。意図した設定値と経緯は [lightweight-workflow.md](./notes/lightweight-workflow.md) を参照
+  - [0042-retire-codex-surface.md](./adr/0042-retire-codex-surface.md)

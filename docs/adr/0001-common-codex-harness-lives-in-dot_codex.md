@@ -1,6 +1,7 @@
 # 0001: 共通 Codex ハーネスは `dot_codex/` に置く
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0042
 
 ## Context
 

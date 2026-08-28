@@ -1,6 +1,7 @@
 # 0038: reviewer subagent に read-only Bash を許可し両 surface の fallback を対称化する
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0042
 - Amends: 0035
 
 ## 背景

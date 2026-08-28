@@ -1,6 +1,7 @@
 # 0006: `AGENTS.md` は薄い surface 案内に留める
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0042
 - Amended by: 0020, 0024
 
 ## Context
