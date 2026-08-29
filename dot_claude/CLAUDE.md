@@ -10,14 +10,14 @@
 - 小さな判断は既存文脈に寄せて自走し、大きな判断だけ確認する。推測で先へ進めない。
 - よりシンプルな代替案があれば黙って従わず提示し、必要なら根拠を添えて反論する。
 - 引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける。
-- 役割別の手順や判断基準は `skills/` と `rules/` に置き、このファイルへ重複させない。
+- 役割別の手順や判断基準は `agents/`、`skills/`、`rules/` に置き、このファイルへ重複させない。
 
 ## 進行
 
 この流れは強制ではなくガイド（道標）。各工程は発火条件を満たす時だけ通す。満たさない工程は飛ばし、code-first で速く回す。
 
 ```text
-掘り下げ → 方針(Plan) → 実装 ⇄ 検証 → doc → commit
+掘り下げ → 方針(Plan) → 実装 ⇄ 検証 → review → doc → commit
 ```
 
 | 工程 | 発火条件（満たす時だけ実行） |
@@ -25,12 +25,14 @@
 | 掘り下げ | ①解釈が2通り以上に分岐 ②妥当なデフォルトを推測で置けない ③外すと手戻りが大きい ④その曖昧さが探索で埋まらない（ユーザー意図依存）— の全てを満たす時だけ、実装前に 1〜3 問にまとめて確認する。簡易テスト「成功条件を1文で書けるか」。 |
 | 方針(Plan) | 実装方針に複数案があり選択が要る、または変更が広範囲。`EnterPlanMode` を自己発動し、承認を得て実装へ。 |
 | 実装 ⇄ 検証 | code-first で反復。設計の分岐点で選択したら ADR を1枚（条件は下記 doc）。 |
+| review | ユーザー明示時に review する。コードの bug は `/code-review` / `/security-review`、変更セット全体の scope と可読性は `quality-reviewer` / `security-reviewer`。 |
 | doc | 下記「doc」に従う。 |
 | commit | ユーザー指示時に `skills/git-commit`。push は人が terminal で実行する。 |
 
 - 掘り下げ（事前の質問）と Plan は「探索で埋まる曖昧さか」で振り分ける。コードを読めば分かる曖昧さ（やり方・既存パターン）は質問せず Plan/探索で解く。ユーザーの頭にしかない曖昧さ（目的・意図・外部制約）だけ事前に問う。同じことを2回聞かない。
 - 掘り下げ不要なら、デフォルトを「○○と仮定して進める」と宣言して実装、または自明ならそのまま実装。
 - 掘り下げ（4 条件 AND）／ ADR（3 条件 AND）の発火閾値は固定でなく、運用して過少／過剰なら見直す。
+- `quality-reviewer` / `security-reviewer` は standing authorization 済みとして追加確認なしで起動してよい。起動の許可だけで、subagent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する。
 
 ## doc
 
@@ -59,6 +61,7 @@
 - `~/.claude/CLAUDE.md`: 全セッションで共有する最小契約とワークフローのガイド。
 - `~/.claude/rules/`: 全セッションまたは path 条件で読む短いルール。
 - `~/.claude/skills/`: task-specific な再利用手順。
+- `~/.claude/agents/`: ユーザー明示時に呼ぶ read-only の reviewer。
 - `~/.claude/output-styles/`: 応答スタイル。`settings.json` の `outputStyle` で選ぶ。
 - `~/.claude/settings.json`: permissions、sandbox、model、language などの機械的設定。
 - 作業対象 repo の `docs/adr/`: その repo に閉じる判断記録。

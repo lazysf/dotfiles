@@ -11,6 +11,7 @@
   - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
   - [lightweight-workflow.md](./notes/lightweight-workflow.md): 両 surface 軽量 workflow の構成と意図的差分
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
+  - [reviewer-agents-design.md](./notes/reviewer-agents-design.md): reviewer agent を 2 つだけ置いている理由と、起動実績の実測
   - [rules-design.md](./notes/rules-design.md): `rules/` の常時 load と path 条件の使い分け、その理由
   - [scribe-skill-design.md](./notes/scribe-skill-design.md): `scribe` skill が今の形になっている理由
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
