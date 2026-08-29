@@ -49,6 +49,5 @@ skill 側に残したのは起動後の責務だけ。doc が不要と判断し�
 
 ## 未確認
 
-- skill をまだ `chezmoi apply` していないため、`~/.claude/skills/scribe/` は旧版のまま。description による発火は未検証。
+- description による自動発火は未検証。skill として登録されていることは確認済み。
 - 関係メタデータの並び順は、書く側の規定としては決めたが、逸脱を検出する仕組みは持たせていない。
-- doc 要否の規律をどこに置くかは未決。現状は旧 `~/.claude/CLAUDE.md` と旧 `~/.claude/rules/docs-artifacts.md` が deploy されたまま効いている。両者の再構築時に置き場を決める必要がある。

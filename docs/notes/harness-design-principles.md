@@ -9,6 +9,12 @@
 
 新しく得た調査結果や運用知見は、まず `docs/` に repo-level knowledge として残す。そこから `dot_claude/` へ上げるのは、展開後にも価値があり、workspace 横断で再利用するものだけ。配布する設定が増えると、全 project で常時 load とメンテの対象が増える。
 
+## source から消しても配布先には残る
+
+`chezmoi apply` は source から消えたファイルを target から削除しない。managed の対象外になるだけで実体は残り、skill / rule / agent を廃止しても `~/.claude/` を手で消すまで古い定義が有効なままになる。2026-08-29 の apply では、配布をやめた `researcher` agent と `git-push` skill、rule 2 本、rename 前の reference 2 本が残った。
+
+廃止した時は `chezmoi managed` の一覧と target 側の実体を突き合わせ、差分を手で消す。
+
 ## skill description の書き方
 
 `description` は skill の主な発火面で、ここに書いた語で呼ばれるかが決まる。

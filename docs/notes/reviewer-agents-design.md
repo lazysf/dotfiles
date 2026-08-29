@@ -63,5 +63,4 @@ reviewer は 1 度呼ばれて指摘を返すだけで、main のように往復
 
 ## 未確認
 
-- agents をまだ `chezmoi apply` していないため、`~/.claude/agents/` は旧版 3 本のまま。配布しない `researcher` は削除されずに残る。
 - auto mode の classifier が subagent の write 系 Bash をどう扱うかは未検証。`tools` の allowlist とは別の層として数えていない。

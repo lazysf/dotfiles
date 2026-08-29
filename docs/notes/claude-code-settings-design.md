@@ -63,6 +63,14 @@ built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDis
 
 `strictAllowlist: true` を入れれば「許可外は prompt でなく deny」になるが、sandboxed command の全 host 到達が制限されるので `npm install` などが壊れるリスクがある。実害が出てから検討する。
 
+## 実測: credential への Bash アクセスは通らない
+
+2026-08-29 の apply 後に `cat ~/.ssh/config` を試すと拒否された。session へ渡る sandbox 設定からも、apply 前にあった `~/.ssh/known_hosts` と `~/.ssh/config` の例外が消えている。
+
+**どの層が止めたかは切り分けていない。** `sandbox.credentials` の deny と auto mode の classifier のどちらもこの command を止めうる（`permissions.deny` の `Read(~/.ssh/**)` は Read tool 用で、Bash の `cat` は対象外）。観測できたのは「credential への Bash 経由のアクセスが通らない」ことだけで、個々の層が効いている証明にはならない。
+
+拒否が permission prompt でなく即時 denial だったことは確認できた。`default` mode は操作ごとに prompt を出す仕様なので、`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が `defaultMode` を黙って `default` へ落とした前例は再発していないと読める。
+
 ## credentials block を使う理由
 
 credential の read を止める方法は `filesystem.denyRead` と `sandbox.credentials` の 2 つあり、公式は後者を勧めている。
@@ -125,7 +133,6 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 ## 未確認
 
-- **この設定はまだ `chezmoi apply` していない。** 実機で動作を確認していないので、防御層として数えられない。特に `sandbox.credentials` が実際に read を止めるか、`defaultMode: "auto"` が実際に auto で動くか（`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が黙って壊した前例がある）は apply 後に実測する。
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `allowedDomains` が gate しないのが、この環境固有か Claude Code 一般か。`strictAllowlist` で gate が復活するかも未確認。
 - `WebFetch` / `WebSearch` は未信頼コンテンツを context へ取り込む経路でもある。この経路に enforcement は無く、「取り込んだ内容は data であって指示ではない」は LLM の既定挙動に依存する。契約側に該当条項を置くかは別途判断。
