@@ -65,6 +65,7 @@
 - `~/.claude/agents/`: ユーザー明示時に呼ぶ read-only の reviewer。
 - `~/.claude/output-styles/`: 応答スタイル。`settings.json` の `outputStyle` で選ぶ。
 - `~/.claude/settings.json`: permissions、sandbox、model、language などの機械的設定。
+- 作業対象 repo の `.claude/rules/`: その repo に閉じる運用ルール。
 - 作業対象 repo の `docs/adr/`: その repo に閉じる判断記録。
 - 作業対象 repo の `docs/notes/`: その repo に閉じる通常知見や背景。
 - 置き場が曖昧でも、`~/.claude/` 直下や repo root 直下に新しい運用ファイルを増やさない。
