@@ -6,10 +6,8 @@
   - [claude-code-output-style-design.md](./notes/claude-code-output-style-design.md): caveman output style が今の形になっている理由
   - [claude-code-settings-design.md](./notes/claude-code-settings-design.md): `settings.json` が default との差分だけで組まれている理由と、sandbox / permissions の実測記録
   - [claude-md-design.md](./notes/claude-md-design.md): `CLAUDE.md` が今の形になっている理由
-  - [runtime-surface-guidance.md](./notes/runtime-surface-guidance.md): runtime surface guidance と prefix なし skill surface の扱い
   - [git-commit-skill-design.md](./notes/git-commit-skill-design.md): `git-commit` skill が今の形になっている理由と commit 履歴の実測
-  - [harness-design-principles.md](./notes/harness-design-principles.md): ハーネス設計の原則と採用方針
-  - [lightweight-workflow.md](./notes/lightweight-workflow.md): 両 surface 軽量 workflow の構成と意図的差分
+  - [harness-design-principles.md](./notes/harness-design-principles.md): この harness に何を置き、どう書くかの判断基準
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
   - [reviewer-agents-design.md](./notes/reviewer-agents-design.md): reviewer agent を 2 つだけ置いている理由と、起動実績の実測
   - [rules-design.md](./notes/rules-design.md): `rules/` の常時 load と path 条件の使い分け、その理由

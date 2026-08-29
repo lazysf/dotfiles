@@ -3,7 +3,7 @@
 - Status: Accepted
 - Supersedes: 0020, 0023, 0027, 0033, 0034
 
-ADR 0035 / 0036 で両 surface を軽量 LLM-native へ再設計した結果、`orchestrate` / `grill` / `architecture` / `implement` / `inspect` / `doc-followup` skill、`inspector` / `requirements-reviewer` / `design-reviewer` / `analyst` / `requirements-engineer` / `architect` / `task-planner` / `developer` / `verifier` / `repository-maintainer` agent、tier / Phase / Gate / request folder / SDLC artifact / traceability ID 体系は両 surface とも廃止された。現行構成は [docs/notes/lightweight-workflow.md](../notes/lightweight-workflow.md) を正本とする。
+ADR 0035 / 0036 で両 surface を軽量 LLM-native へ再設計した結果、`orchestrate` / `grill` / `architecture` / `implement` / `inspect` / `doc-followup` skill、`inspector` / `requirements-reviewer` / `design-reviewer` / `analyst` / `requirements-engineer` / `architect` / `task-planner` / `developer` / `verifier` / `repository-maintainer` agent、tier / Phase / Gate / request folder / SDLC artifact / traceability ID 体系は両 surface とも廃止された。現行構成は `dot_claude/` の実体を正本とする。
 
 これにより次の ADR の判断は前提を失った。0036 本文の `Supersedes` リストは作成時点で明示されたものに限ったため、これらを補完する目的で本 ADR を起こす。
 
