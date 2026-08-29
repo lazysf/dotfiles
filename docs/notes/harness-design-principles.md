@@ -15,6 +15,12 @@
 
 廃止した時は `chezmoi managed` の一覧と target 側の実体を突き合わせ、差分を手で消す。
 
+## apply の反映は設定の種類で違う
+
+`chezmoi apply` で更新した設定のうち、sandbox は実行中の session に即反映される。`allowUnixSockets` を足して apply した直後、それまで拒否されていた agent socket へ接続できた。
+
+`CLAUDE.md` と `rules/` は session 開始時に load されるため、apply しても動いている session は旧版のまま走り続ける。新版になるのは次に session を開いた時から。契約や rule を直した効果を確かめるには session を開き直す。
+
 ## skill description の書き方
 
 `description` は skill の主な発火面で、ここに書いた語で呼ばれるかが決まる。
