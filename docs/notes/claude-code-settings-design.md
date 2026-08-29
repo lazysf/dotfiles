@@ -123,13 +123,6 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 | auto mode の fallback | classifier が 3 回連続または累計 20 回 block すると auto mode が pause し prompt が再開する。閾値は設定不可 |
 | auto mode の allow rule drop | auto mode に入ると、任意コード実行を与える広い allow rule（blanket `Bash(*)` / `PowerShell(*)`、wildcard interpreter、package manager の run、`Agent`、`Monitor`）が drop される。narrow rule は残る |
 
-## 未解消のリンク切れ
-
-削除済みの `claude-code-permission-policy.md` を指す参照が 3 ファイルに残っている。
-
-- `docs/adr/0038-allow-reviewer-subagents-read-only-bash.md` — リンク切れ自体は ADR の編集境界が許す修正（判断内容を変えない）。ただしこの ADR は「Codex reviewer と fallback を対称化する」ことを目的としており、Codex 廃止で前提を失っている。同じ箇所が削除済みの `Bash(git remote set-url *)` deny にも言及しており、参照先の差し替えだけでは辻褄が合わない。Codex 廃止をまとめる ADR で `Superseded` にする時に処理する。
-- `docs/notes/harness-regression-checks.md`（5 箇所）と `docs/notes/lightweight-workflow.md`（2 箇所） — どちらも Codex 併用期の note で再構築対象。そちらを整理する時に解消する。
-
 ## 未確認
 
 - **この設定はまだ `chezmoi apply` していない。** 実機で動作を確認していないので、防御層として数えられない。特に `sandbox.credentials` が実際に read を止めるか、`defaultMode: "auto"` が実際に auto で動くか（`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が黙って壊した前例がある）は apply 後に実測する。
