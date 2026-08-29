@@ -32,3 +32,5 @@ push は sandbox の proxy が SSH を運ばないため agent が実行して�
 ## 「実測で確認するまで有効な層と数えない」を共通契約に置く理由
 
 この環境で踏んだ失敗——allowlist を防御層として数えていた、`Agent` allow が既定 mode で死んでいた、path 条件付き rule の発火を推測で断じた——は、すべてこの 1 行で防げた。公式 docs の記述を確認の代わりにしたことが共通の原因だったため、契約側で一度だけ言う。
+
+同じ項目に「外す時も、その設定を使っているものが無いことを確認する」を持たせているのは、入れる時と外す時で確認の向きが逆になるため。`sandbox.network.allowUnixSockets` を「push に使えないので用途が無い」と判断して落とし、commit 署名を壊した（詳細は [claude-code-settings-design.md](./claude-code-settings-design.md)）。入れる側だけを規範にすると、削除の判断が実測なしで通る。
