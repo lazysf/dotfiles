@@ -93,5 +93,4 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 ## 未確認
 
 - `settings.json` の `includeCoAuthoredBy: false` が実際に効いているかは切り分けできていない。373 commit すべてに `Co-authored-by` trailer が無いのは事実だが、commit を Bash 経由の `git commit` で作っており、harness が trailer を注入する経路を通っていない可能性がある。設定の効果か、skill 規定に従って書いていないだけかを区別できない。
-- `scribe` は未再構築。`SKILL.md` の description と「扱わないもの」が参照しているため、この状態で `chezmoi apply` すると参照先が一時的に存在しなくなる。
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
