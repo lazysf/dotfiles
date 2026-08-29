@@ -33,12 +33,6 @@ push は sandbox の proxy が SSH を運ばないため agent が実行して�
 
 この環境で踏んだ失敗——allowlist を防御層として数えていた、`Agent` allow が既定 mode で死んでいた、path 条件付き rule の発火を推測で断じた——は、すべてこの 1 行で防げた。公式 docs の記述を確認の代わりにしたことが共通の原因だったため、契約側で一度だけ言う。
 
-## agents を書いていない理由
-
-`researcher` / `quality-reviewer` / `security-reviewer` の記述と、工程表の review 行を持たない。**agent 定義の実体がまだ無い**ため。存在しないものへの導線を契約に書くと、読み手が起動できると誤解する。
-
-agent を再構築する時に、CLAUDE.md の review 工程と置き場、root `AGENTS.md` の standing authorization を同時に戻す。それまで「レビューして」という依頼は main セッションが自分で読む形になる。
-
 ## 未確認
 
-- CLAUDE.md をまだ `chezmoi apply` していないため、`~/.claude/CLAUDE.md` は旧版のまま。旧版は `git-push` と agents を参照している。
+- CLAUDE.md をまだ `chezmoi apply` していないため、`~/.claude/CLAUDE.md` は旧版のまま。旧版は `git-push` と `researcher` を参照している。
