@@ -69,6 +69,8 @@ built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDis
 
 **どの層が止めたかは切り分けていない。** `sandbox.credentials` の deny と auto mode の classifier のどちらもこの command を止めうる（`permissions.deny` の `Read(~/.ssh/**)` は Read tool 用で、Bash の `cat` は対象外）。観測できたのは「credential への Bash 経由のアクセスが通らない」ことだけで、個々の層が効いている証明にはならない。
 
+副作用として `chezmoi status` が途中で止まる。`~/.config/gh` の lstat が拒否されるため、repo 全体の未 apply 差分を取れない。代わりに `chezmoi managed` の一覧と実体を突き合わせる。
+
 拒否が permission prompt でなく即時 denial だったことは確認できた。`default` mode は操作ごとに prompt を出す仕様なので、`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が `defaultMode` を黙って `default` へ落とした前例は再発していないと読める。
 
 ## credentials block を使う理由
