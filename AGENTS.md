@@ -56,5 +56,6 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 - `dot_claude/`: 全 project へ配る運用契約、rules、skills、output-styles、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
 - root `CLAUDE.md`: Claude Code 向けの repo-local import shim
+- `.claude/rules/`: この repo に閉じる運用ルール。chezmoi は `.` 始まりを配布しない
 - `docs/notes/`: repo-level の通常知見や背景
 - `docs/adr/`: repo-level の判断記録

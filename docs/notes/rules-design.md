@@ -44,8 +44,4 @@ doc の書き方は `skills/scribe` が正本で、「doc 追従の要否を黙�
 
 ## repo 固有の rule を配らない理由
 
-`~/.claude/rules/` は全 project へ配布される。`dot_claude/**` のような、この repo の path を `paths` に持つ rule は、他の project では一度も match せず、死んだ設定として残る。repo に閉じる rule は、その repo の `.claude/rules/` に置く。
-
-## 未確認
-
-- `harness-surface-consistency` を repo の `.claude/rules/` へ置き直すかは未決。
+`~/.claude/rules/` は全 project へ配布される。`dot_claude/**` のような、この repo の path を `paths` に持つ rule は、他の project では一度も match せず、死んだ設定として残る。repo に閉じる rule は、その repo の `.claude/rules/` に置く。chezmoi は source 内の `.` 始まりを配布しないので、`dot_claude/` と衝突しない。この repo では `harness-surface-consistency` がそれに当たる。
