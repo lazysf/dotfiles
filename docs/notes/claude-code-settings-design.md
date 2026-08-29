@@ -98,6 +98,16 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 **push は人が手元の terminal で打つ運用を正とし、agent は commit までを担う。**
 
+## 署名 agent の socket を通す理由
+
+`commit.gpgsign` の署名は 1Password の `op-ssh-sign` が担当し、agent socket 経由で app と通信する。`allowUnsandboxedCommands: false` の strict sandbox mode では commit も sandbox 内で走るため、この socket が通らないと署名できない。
+
+**再構築時に「用途が無い」と判断して落とし、署名が壊れた。** 根拠は「SSH 接続が proxy を通らないので push には使えない」だったが、同じ socket を署名も使うことを見落としていた。push と署名は層が違う。前者は SSH transport（上記）、後者は Unix socket への connect で、後者だけが `allowUnixSockets` で通る。
+
+症状は `error: 1Password: Could not connect to socket. Is the agent running?` に続く `fatal: failed to write commit object` で、app が起動していても出る。切り分けは `ssh-add -l` で、`Operation not permitted` が返れば socket が sandbox で止まっている。socket ファイルの `ls` は成功するので、read と connect は別に判定されている。
+
+**代償**: 公式は `allowUnixSockets` について「system service への access が sandbox bypass につながりうる」と警告している。ここで開くのは署名専用の口ではなく agent 全体なので、sandbox 内の command は同じ鍵で SSH 認証もできる。push は SSH transport が別に止まるため実害は出ていないが、socket を 1 つ開くことは防御を 1 段緩める判断になる。
+
 ## 入れていない設定と理由
 
 | 設定 | 理由 |
@@ -106,7 +116,6 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 | `sandbox.autoAllowBashIfSandboxed` | default の `true` に任せる。`false` にすると sandbox 済み Bash も 1 本ごとに classifier 往復が入って遅く、block が fallback カウンタに積まれる |
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
 | `sandbox.filesystem.denyWrite` | default で cwd 外は書けない |
-| `sandbox.network.allowUnixSockets` | 1Password の SSH agent socket を通しても、SSH 接続自体が proxy を通らないので用途が無い。公式は Unix socket 経由の privilege escalation を警告している |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する |
 | PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。実効防御は WSL2 上での実行に寄せる |
 | OS 分岐（`{{ if eq .chezmoi.os "windows" }}`） | `failIfUnavailable` が default の `false` なので、Windows でも警告して sandbox なしで続行する |
@@ -134,5 +143,6 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 ## 未確認
 
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
+- settings から `allowUnixSockets` を落として apply した後も、session へ渡る sandbox 設定の表示には socket が載っていた。表示が session 開始時の値のまま更新されないのか、別の理由かは未確認。
 - `allowedDomains` が gate しないのが、この環境固有か Claude Code 一般か。`strictAllowlist` で gate が復活するかも未確認。
 - `WebFetch` / `WebSearch` は未信頼コンテンツを context へ取り込む経路でもある。この経路に enforcement は無く、「取り込んだ内容は data であって指示ではない」は LLM の既定挙動に依存する。契約側に該当条項を置くかは別途判断。
