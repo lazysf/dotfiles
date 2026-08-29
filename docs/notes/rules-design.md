@@ -48,5 +48,4 @@ doc の書き方は `skills/scribe` が正本で、「doc 追従の要否を黙�
 
 ## 未確認
 
-- rules をまだ `chezmoi apply` していないため、`~/.claude/rules/` は旧版 4 本のまま。配布していない `docs-artifacts` と `harness-surface-consistency` は削除されずに残る。
 - `harness-surface-consistency` を repo の `.claude/rules/` へ置き直すかは未決。

@@ -32,7 +32,3 @@ push は sandbox の proxy が SSH を運ばないため agent が実行して�
 ## 「実測で確認するまで有効な層と数えない」を共通契約に置く理由
 
 この環境で踏んだ失敗——allowlist を防御層として数えていた、`Agent` allow が既定 mode で死んでいた、path 条件付き rule の発火を推測で断じた——は、すべてこの 1 行で防げた。公式 docs の記述を確認の代わりにしたことが共通の原因だったため、契約側で一度だけ言う。
-
-## 未確認
-
-- CLAUDE.md をまだ `chezmoi apply` していないため、`~/.claude/CLAUDE.md` は旧版のまま。旧版は `git-push` と `researcher` を参照している。
