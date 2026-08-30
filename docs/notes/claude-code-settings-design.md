@@ -15,7 +15,7 @@ Claude Code の default と auto mode の built-in classifier が既にかなり
 | --- | --- | --- |
 | sandbox の write | cwd とセッション temp のみ書ける | 要らない。ただし pre-commit が `~/.cache/prek/` に書くので `allowWrite` を 1 件足す |
 | sandbox の read | **computer 全体を読める。credential も読める** | **要る**。公式が「this default still allows reading credential files such as `~/.aws/credentials` and `~/.ssh/`」と明記 |
-| sandbox の network | pre-allow なし。初回に prompt | 要らない。`allowedDomains` は prompt を省くための設定で、遮断のための設定ではない |
+| sandbox の network | pre-allow なし。新しい host は prompt、auto mode では classifier に回る | 要らない。`allowedDomains` だけでは遮断にならず、遮断には `strictAllowlist` が要る（「入れていない設定と理由」） |
 | Bash の危険操作 | auto mode の built-in が判断 | ほぼ要らない（下記） |
 | Read tool | permission rule のみ | **要る**。sandbox は Bash 経由の read を守るが、Read tool は permission rule でしか止まらない |
 
@@ -53,7 +53,7 @@ built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDis
 | --- | --- |
 | filesystem の read/write 制限 | **効いている**。`~/.config/gh` を deny した状態で `gh` を実行すると `operation not permitted` で落ちる（2026-08-28 実測） |
 | raw socket / DNS | **遮断**（`gaierror`）。egress は local の認証付き proxy に強制される |
-| `network.allowedDomains` | **domain gate として機能しない**（2026-08-27 実測）。allowlist にも `WebFetch(domain:)` にも無い host へ prompt なしで到達した |
+| `network.allowedDomains` | **単体では domain gate にならない**。allowlist にも `WebFetch(domain:)` にも無い host へ prompt なしで到達する（2026-08-27 と 2026-08-29 に実測、後者は `curl https://example.com` が 200）。この環境固有ではなく、公式が「pre-allow なし、新しい host は prompt か classifier」と定める既定の挙動 |
 | `Bash(curl *)` / `wget` / `nc` の deny | permission rule としては有効だが**名前ベース**。`python3 -c "import urllib.request; ..."` で素通りする（実測） |
 | `WebFetch` | 公式仕様上 sandbox の対象外 |
 
@@ -61,7 +61,7 @@ built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDis
 
 切り分けの注意: proxy の拒否は HTTP status ではなく `URLError: Tunnel connection failed` として現れる。HTTP status を deny の証拠と読むと誤判定する（406 を返す origin に到達しているだけ、ということがある）。
 
-`strictAllowlist: true` を入れれば「許可外は prompt でなく deny」になるが、sandboxed command の全 host 到達が制限されるので `npm install` などが壊れるリスクがある。実害が出てから検討する。
+境界を作るには `strictAllowlist` が要る。入れていない理由は「入れていない設定と理由」にある。
 
 ## 実測: credential への Bash アクセスは通らない
 
@@ -118,6 +118,7 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 | `sandbox.autoAllowBashIfSandboxed` | default の `true` に任せる。`false` にすると sandbox 済み Bash も 1 本ごとに classifier 往復が入って遅く、block が fallback カウンタに積まれる |
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
 | `sandbox.filesystem.denyWrite` | default で cwd 外は書けない |
+| `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`sandbox.credentials` が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する |
 | PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。実効防御は WSL2 上での実行に寄せる |
 | OS 分岐（`{{ if eq .chezmoi.os "windows" }}`） | `failIfUnavailable` が default の `false` なので、Windows でも警告して sandbox なしで続行する |
@@ -146,5 +147,4 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - settings から `allowUnixSockets` を落として apply した後も、session へ渡る sandbox 設定の表示には socket が載っていた。表示が session 開始時の値のまま更新されないのか、別の理由かは未確認。
-- `allowedDomains` が gate しないのが、この環境固有か Claude Code 一般か。`strictAllowlist` で gate が復活するかも未確認。
 - `WebFetch` / `WebSearch` は未信頼コンテンツを context へ取り込む経路でもある。この経路に enforcement は無く、「取り込んだ内容は data であって指示ではない」は LLM の既定挙動に依存する。契約側に該当条項を置くかは別途判断。
