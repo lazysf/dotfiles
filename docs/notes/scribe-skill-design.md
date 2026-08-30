@@ -1,7 +1,7 @@
 # scribe skill の設計
 
-- Date: 2026-08-28
-- 出典: [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全 42 件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices)
+- Date: 2026-08-31
+- 出典: [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全 42 件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -47,7 +47,15 @@ skill 側に残したのは起動後の責務だけ。doc が不要と判断し�
 
 この環境で実際に訂正が入った失敗だけを入れている。「推測で書かない」のような一般規定では防げず、具体的な形で書かないと再発するものに絞った。列挙は `dot_claude/skills/scribe/SKILL.md` を正本とし、ここでは繰り返さない。
 
+## description を依頼語でなく作業の流れに寄せた理由
+
+`description` は「作業の流れで doc を更新する場面が主で、ユーザーが doc という語を出さないことの方が多い」と書いている。依頼語（「notes に残して」など）は例示に留め、重心を置いていない。全文は `dot_claude/skills/scribe/SKILL.md` を正本とする。
+
+依頼語を重心にすると発火しない。2026-08-30 の session では notes を更新する commit を 4 つ作ったが、この skill は一度も呼ばれなかった。ユーザーの指示は「未確認事項を潰したい」「進めて」で、doc を書けという語が無かった。doc の更新は依頼としてではなく、調査や実測が決着した副産物として起きる。
+
+重心を作業の流れへ移すのは公式の指針でもある。[Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) は "Err on the side of being pushy. Explicitly list contexts where the skill applies, including cases where the user doesn't name the domain directly" と書く。`skill-creator` も、Claude が skill を undertrigger しがち（役に立つ場面で呼ばない）だとして、description を強めるよう指示している。
+
 ## 未確認
 
-- description による自動発火は未検証。skill として登録されていることは確認済み。
+- 現在の `description` が実際に発火するかは未検証。trigger eval（20 query × 3 run × 5 iteration）は実行コストが大きく未実施。
 - 関係メタデータの並び順は、書く側の規定としては決めたが、逸脱を検出する仕組みは持たせていない。
