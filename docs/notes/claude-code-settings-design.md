@@ -155,4 +155,3 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 ## 未確認
 
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
-- settings から `allowUnixSockets` を落として apply した後も、session へ渡る sandbox 設定の表示には socket が載っていた。表示が session 開始時の値のまま更新されないのか、別の理由かは未確認。
