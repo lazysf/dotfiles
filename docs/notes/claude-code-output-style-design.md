@@ -39,7 +39,9 @@ JuliusBrussee 版は自作の短縮と因果矢印を明示的に否定してい
 
 > No causal arrows (→) either own token, save nothing.
 
-**この「tokenizer で節約ゼロ」という主張は日本語では未検証。** そのため禁止規定として写さず、「短くならないなら通常形を使う」という共通原則 1 本に集約している。略語・矢印・caveman 語順の 3 つがこれで処理でき、判断基準も揃う。
+**「tokenizer で節約ゼロ」は検証していない**（`count_tokens` API は認証が要り、この環境から叩けない）。そのため断定として写さず、「短くならないなら通常形を使う」という共通原則 1 本に集約している。略語・矢印・caveman 語順の 3 つがこれで処理でき、判断基準も揃う。
+
+検証は要らない。略語は引用元自身が "reader still decode" も根拠に挙げており、token の結果に関わらず避ける理由が立つ。矢印は token 根拠しかないが、共通原則が「短くならないなら」と都度の判断に落としているため、事前に一般解を持つ必要がない。
 
 略語を推奨すると `rules/coding-standards.md` の命名規約（ドメインの意味を表す名前を使い、中身を説明しない語を避ける）と衝突する。output style は system prompt を変えるため、文体指示が識別子やコメントへ漏れうる。
 
@@ -66,6 +68,4 @@ subagent には output style が適用されない（公式: "Output styles appl
 
 ## 未確認
 
-- 「`req` などの短縮が tokenizer で節約ゼロ」は日本語で未検証。英語での主張をそのまま採らず、共通原則で処理している。
 - 強度切替（`caveman ultra` 等）が長い session で維持されるかは未実測。
-- JuliusBrussee/caveman の star 数は WebFetch が 2 回とも「101.3k」と読んだが、commits 399 との比率が不自然で読み取り誤りの可能性がある。数字を根拠に使う場合は再確認が要る。
