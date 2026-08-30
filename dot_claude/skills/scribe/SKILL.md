@@ -1,6 +1,6 @@
 ---
 name: scribe
-description: 実装が固まった後に doc を書く依頼で使う。「README を更新して」「ADR を書いて」「notes に残して」のように、確定した事実を第三者が読める形にしたい時が対象。仕様（README / docs）、ADR（なぜそうしたか）、notes（背景・調査・現在の設計の理由）の 3 層を扱う。開発を駆動する事前 doc は作らない。commit message は `git-commit`。
+description: 確定した事実を doc に残す時に使う。直接の依頼（「README を更新して」「ADR を書いて」「notes に残して」）に加えて、調査や実測の結果が出た時、設計判断が固まった時、既存の doc が実態とずれた時にも使う。作業の流れで doc を更新する場面が主で、ユーザーが doc という語を出さないことの方が多い。仕様（README / docs）、ADR（なぜそうしたか）、notes（背景・調査・現在の設計の理由）の 3 層を扱う。開発を駆動する事前 doc は作らない。commit message は `git-commit`。
 ---
 
 # Scribe
