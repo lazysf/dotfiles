@@ -34,7 +34,7 @@ message 生成だけに絞ると、停止条件・staging 規律・staged diff �
 
 代替案の枠は持たない。373 commit の body を検索しても代替案を記録した実例は無く、うち 1 件は「alternatives in the notes」と書いて notes へ寄せている。捨てた案の置き場は doc 3 層で ADR か notes と定義済みなので、commit body に枠を作ると二重管理になる。採らなかった案の理由が要る場合は `Why:` に含める。
 
-AI 帰属の禁止は skill に書かない。`settings.json` の `includeCoAuthoredBy: false` が担う。設定で機械的に制御できるものを skill の文言へ二重化しない。
+AI 帰属の禁止は skill に書かない。後述の「Co-authored-by は default で付かない」のとおり trailer は default で付かないので、禁じる対象が存在しない。
 
 ## footer と issue 参照
 
