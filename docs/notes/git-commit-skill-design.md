@@ -34,11 +34,11 @@ message 生成だけに絞ると、停止条件・staging 規律・staged diff �
 
 代替案の枠は持たない。373 commit の body を検索しても代替案を記録した実例は無く、うち 1 件は「alternatives in the notes」と書いて notes へ寄せている。捨てた案の置き場は doc 3 層で ADR か notes と定義済みなので、commit body に枠を作ると二重管理になる。採らなかった案の理由が要る場合は `Why:` に含める。
 
-AI 帰属の禁止は skill に書かない。`settings.json` の `includeCoAuthoredBy: false` が担う。設定で機械的に制御できるものを skill の文言へ二重化しない。
+AI 帰属の禁止は skill に書かない。後述の「Co-authored-by は default で付かない」のとおり trailer は default で付かないので、禁じる対象が存在しない。
 
 ## footer と issue 参照
 
-git trailer 形式（`Refs: #123` など）を規定するが、この repo では trailer も `#123` 形式の issue 参照も 373 commit で 0 件。個人 dotfiles で issue を運用していないため。規定は残す（skill は user-global で、issue を使う repo でも読まれる）が、**例セクションには架空の trailer を置かない**。
+git trailer 形式（`Refs: #123` など）を規定するが、この repo では skill が書く trailer も `#123` 形式の issue 参照も 373 commit で 0 件。個人 dotfiles で issue を運用していないため。規定は残す（skill は user-global で、issue を使う repo でも読まれる）が、**例セクションには架空の trailer を置かない**。
 
 git trailer の仕様はコロンあり・なしの両方を許すが、この repo はコロンありに統一する。`Closes #42` は GitHub の自動クローズ構文で、trailer 仕様に寄せる理由がない。
 
@@ -90,7 +90,15 @@ Git 操作の skill は `git-commit` だけで、push 用の skill は持たな�
 
 ADR は書かない。3 条件のうち「覆すコストが高い」を満たさない（skill の復元は archive branch から容易）。sandbox の方針が変われば push が通るようになり、その時は再検討する。
 
+## Co-authored-by は default で付かない
+
+`includeCoAuthoredBy: false` を外して apply しても、Bash 経由の `git commit` に trailer は付かなかった（2026-08-30、Claude Desktop app の local agent mode で probe commit を作って確認）。設定の有無で挙動が変わらないので、この設定は効いていない。
+
+cloud session でも同じだった（2026-08-30、`claude --cloud` で作った session に空 commit を作らせて確認）。cloud session は `~/.claude/` を読まず（公式の比較表: `Uses your local config — No, repo only`）、この repo に `.claude/settings.json` も無いので、設定を一切読まない素の状態での観測になる。そこでも `Co-authored-by` も claude.ai の session link も付かなかった。**trailer が付かないのは default 挙動**で、設定で抑えているのではない。
+
+公式は `includeCoAuthoredBy` の default を「N/A (deprecated)」とし、後継 `attribution` の default も明示していない。実測が上記のとおりなので、`attribution` を設定する理由がない。
+
 ## 未確認
 
-- `settings.json` の `includeCoAuthoredBy: false` が実際に効いているかは切り分けできていない。373 commit すべてに `Co-authored-by` trailer が無いのは事実だが、commit を Bash 経由の `git commit` で作っており、harness が trailer を注入する経路を通っていない可能性がある。設定の効果か、skill 規定に従って書いていないだけかを区別できない。
+- `attribution` を明示設定した時の挙動は試していない。実測したのは設定なしの default 挙動だけ。`attribution.pr` が指す PR description の attribution line も、この repo で PR を作っていないので未確認。
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
