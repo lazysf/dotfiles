@@ -29,6 +29,12 @@ reviewer 内部（sidechain）の tool 使用は Bash 196 / Read 50 / Grep 0 / G
 
 呼び出し元が明示 diff を渡し忘れた時に reviewer が自力で取得する fallback が、実際に機能している。Bash を外すと、渡し忘れのたびに reviewer が停止して呼び出し元が再起動することになる。
 
+## read-only は規範が担保している
+
+Write / Edit tool は持たないが、Bash があるので cwd 内なら書ける。subagent 内で `git add` を試すと prompt なしで通り、classifier は関与しなかった。cwd 外への write だけは sandbox が EPERM で落とす（`Operation not permitted` であって permission denial ではない）。
+
+つまり技術的な強制はなく、agent 定義の「write 系操作は責務外として実行しない」が担保している。規範は守られていて、上記の Bash のうち write 系は 0 件だった。reviewer が write を実行した時は hook による強制を検討する。
+
 ## 2 つに分けたままにする理由
 
 session 単位では常に両方が起動され、単独起動は 0 件だった。ただし同一メッセージからの並列起動が 5 回あり、統合すると並列性を失う。
@@ -59,8 +65,4 @@ reviewer は 1 度呼ばれて指摘を返すだけで、main のように往復
 
 ## permissionMode を書かない理由
 
-`settings.json` が `permissions.defaultMode: "auto"` である限り、subagent は auto mode を継承し、**frontmatter の `permissionMode` は無視される**（公式仕様）。効かない設定を書くと「read-only が permissionMode で守られている」と誤読される。実際に守っているのは `tools` の allowlist。
-
-## 未確認
-
-- auto mode の classifier が subagent の write 系 Bash をどう扱うかは未検証。`tools` の allowlist とは別の層として数えていない。
+`settings.json` が `permissions.defaultMode: "auto"` である限り、subagent は auto mode を継承し、**frontmatter の `permissionMode` は無視される**（公式仕様）。効かない設定を書くと、read-only が permission 層で守られていると誤読される。実際の担保は「read-only は規範が担保している」のとおり。
