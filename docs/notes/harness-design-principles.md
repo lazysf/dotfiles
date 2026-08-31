@@ -1,6 +1,6 @@
 # harness の設計原則
 
-- Date: 2026-08-29
+- Date: 2026-08-31
 - 出典: `dot_claude/` / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この環境での実測
 
 この harness に何を置き、どう書くかの判断基準を残す。個別の設定や skill が今の形である理由は、それぞれの設計 note にある。
@@ -18,6 +18,8 @@
 ## apply の反映は設定の種類で違う
 
 `chezmoi apply` で更新した設定のうち、sandbox は実行中の session に即反映される。`allowUnixSockets` を足して apply した直後、それまで拒否されていた agent socket へ接続できた。
+
+skill の `description` も即反映される。`scribe` の description を書き換えて apply した直後、session を開き直さずに、session へ渡る skill 一覧の記述が新しいものへ変わった（2026-08-31）。
 
 `CLAUDE.md` と `rules/` は session 開始時に load されるため、apply しても動いている session は旧版のまま走り続ける。新版になるのは次に session を開いた時から。契約や rule を直した効果を確かめるには session を開き直す。
 
