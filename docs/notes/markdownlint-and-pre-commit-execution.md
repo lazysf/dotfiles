@@ -1,7 +1,7 @@
 # markdownlint / pre-commit の実行経路
 
 - Date: 2026-08-31
-- 出典: `.pre-commit-config.yaml` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / 導入 commit `be928f2`
+- 出典: `.pre-commit-config.yaml` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / markdownlint 0.40.0 の API による rule 単体実測 / commit `287cc7b` `be928f2`
 
 Markdown lint は「手で走らせる経路」と「commit 時に走る経路」の 2 本があり、同じ設定ファイルを読むが別の binary を実行する。設定を触る前にどちらが動くかを取り違えないための記録。
 
@@ -39,7 +39,13 @@ hook 自体が発火するのは staged に `.md` がある時だけ（hook 定�
 
 どちらも「今の commit と無関係な file が原因で止まる」ので、失敗時はまず対象 file 名を見る。書き換える hook の一覧と失敗時の扱いは [git-commit-skill-design.md](./git-commit-skill-design.md) にある。
 
+## MD013 / MD024 を切っている理由
+
+どちらも commit message に理由の記載がないので、rule を単体で有効にした時の違反数を実測した（`{ "default": false, "<rule>": true }` を markdownlint の API へ渡す。設定ファイルの `config` は `--config` より優先されるため、CLI からは上書きできない）。
+
+- **`MD013`（line-length、既定 80）**: `287cc7b`（2026-04-21）で無効化。markdownlint-cli2 導入より前で、当時から理由の記載はない。現在の tree で有効に戻すと 70 file 中 62 file・460 件。この repo の Markdown は日本語の段落を 1 行で書き hard wrap しないので、規則自体が書き方と噛み合わない。
+- **`MD024`（no-duplicate-heading）**: `be928f2` で markdownlint-cli2 導入と同時に無効化。その時点の tree で有効にすると 164 件 / 8 file 出て、全て `docs/requests/**/test.md` の繰り返し見出し（「対応」「種別」「手順」）だった。この artifact 群は [ADR 0039](../adr/0039-retire-docs-requests-artifacts.md) で削除済みで、現在の tree では有効にしても 0 件。**無効化の原因は既に消えている。**
+
 ## 未確認
 
-- `MD013` / `MD024` を無効化した理由は、導入 commit `be928f2` にも記録がない。
 - `check-toml` / `check-yaml` は登録されていない。repo に `.tombi.toml` や `nvim.yml` があるので対象は存在するが、意図的に外したのか未検討なのかは不明。
