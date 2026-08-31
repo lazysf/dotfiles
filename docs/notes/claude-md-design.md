@@ -1,7 +1,7 @@
 # CLAUDE.md の設計
 
 - Date: 2026-08-31
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / `dot_claude/CLAUDE.md` / この環境での実測
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Hooks reference](https://code.claude.com/docs/en/hooks) / `dot_claude/CLAUDE.md` / この環境での実測
 
 `dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
 
@@ -50,3 +50,11 @@ commit は実装と doc で分けたままにする。review は変更セット�
 作業の開始時点で決まる話なので、skill や rules では拾えない。`skills/` は起動後の手順、`rules/` は書き方の判断基準で、どちらも「今どのスコープにいるか」を持たない。
 
 この環境では 2 つの形で逸脱した。1 つは、ある領域の作業中に別の領域へ着手して止められたこと。もう 1 つは、観点の点検を依頼されて答えを出した後、そのまま文言の推敲へ流れ、何度も推敲した末に案そのものが不要だと分かったこと。前者は範囲の逸脱、後者は目的の逸脱で、どちらも各ステップ単体では要求どおりに見える。全体を通してスコープが動いていることは、作業を俯瞰する側でしか気づけない。
+
+## スキル名の列挙をここに置く理由
+
+「使用したスキル名を列挙する」は応答の書式だが、`output-styles/` には置かない。style を切り替えると読まれなくなるため。どの output style でも効かせたいので、常時 load される側が置き場になる。
+
+hook で機械化していない。hook が出せる `systemMessage` は harness がユーザーへ見せるメッセージで、assistant の返答本文ではない。求めているのは返答そのものに含まれることなので、hook では形が違う。
+
+そのため遵守は LLM 依存になる。公式は CLAUDE.md を enforced configuration でなく context と位置付け、矛盾する指示があると任意に選ぶとしている。`output-styles/caveman.md` の「前置き、tool 実行の予告、進捗、実況を書かない」とは、列挙を「最終返答の末尾」に限定することで実況と区別してあるが、競合と読まれる余地は残る。
