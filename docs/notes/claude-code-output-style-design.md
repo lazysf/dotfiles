@@ -1,6 +1,6 @@
 # Claude Code Output Style の設計
 
-- Date: 2026-08-28
+- Date: 2026-08-31
 - 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/caveman.md`
 
 `caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
@@ -28,6 +28,8 @@ JuliusBrussee 版が skill なのは移植性（Claude Code 以外の 30 以上�
 `/caveman ultra` の slash 形も採れない。`/` 始まりの入力は skill 名として解決されるため、skill でない output style には作れない。
 
 `caveman lite` のように接頭辞を必須にしているのは、裸の `lite` が「lite 版のライブラリ」のような文脈で誤発火するため。切替の実効は LLM 遵守依存で、機械的な担保は無い。
+
+担保が無いのは、harness の注入するリマインダーが強度を含まないため。届くのは "caveman output style is active. Remember to follow the specific guidelines for this style." だけで、style 本体は system prompt から毎ターン渡るが、強度は会話履歴にしか無い。2026-08-31 に `caveman ultra` で測ったところ、commit を 5 つ作り `chezmoi apply` を 3 回挟む間は崩れなかった。
 
 ## 略語と矢印を規定しない理由
 
@@ -68,4 +70,4 @@ subagent には output style が適用されない（公式: "Output styles appl
 
 ## 未確認
 
-- 強度切替（`caveman ultra` 等）が長い session で維持されるかは未実測。
+- compaction を跨いだ時に強度が残るかは未確認。強度は会話履歴にしか無いので、summary に残るかどうかで決まる。
