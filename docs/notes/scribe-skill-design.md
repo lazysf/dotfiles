@@ -1,7 +1,7 @@
 # scribe skill の設計
 
 - Date: 2026-08-31
-- 出典: [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全 42 件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
+- 出典: [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 

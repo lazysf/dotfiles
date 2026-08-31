@@ -9,7 +9,7 @@
 
 CLAUDE.md は全セッションの先頭で読まれる。入れるのは、どの依頼でも要る契約と、工程の発火条件だけ。手順そのものは `skills/`、判断基準は `rules/` にあり、ここでは重複させない。
 
-公式目安は 1 ファイル 200 行。CLAUDE.md 72 行と `rules/coding-standards.md` 35 行を足した 107 行が常時 load の総量で、余裕がある。
+公式目安は 1 ファイル 200 行。常時 load されるのは `CLAUDE.md` と `rules/coding-standards.md` の 2 つで、合計はこの目安に収まっている。
 
 ## push を工程表に書いている理由
 
