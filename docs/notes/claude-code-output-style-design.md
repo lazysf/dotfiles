@@ -23,7 +23,7 @@ JuliusBrussee 版が skill なのは移植性（Claude Code 以外の 30 以上�
 
 ## 強度切替が style ファイル内にある理由
 
-ファイルを分けて `/config` で選ぶ形は採れない。output style は session 開始時に一度だけ読まれ、変更は `/clear` か新しい session でしか反映されない（公式: "reads once at session start"）。session 途中に切り替えられない。
+ファイルを分けて `/config` で選ぶ形は採れない。どの style を使うかは session 開始時に決まり、`outputStyle` を変えても `/clear` か新しい session でしか反映されない（公式: "reads once at session start"）。session 途中に別の style へ切り替えられない。ファイルの内容も同じく session 開始時に読まれる（`harness-design-principles.md` の「apply の反映は設定の種類で違う」）。
 
 `/caveman ultra` の slash 形も採れない。`/` 始まりの入力は skill 名として解決されるため、skill でない output style には作れない。
 
