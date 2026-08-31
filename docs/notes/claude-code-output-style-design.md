@@ -1,7 +1,7 @@
 # Claude Code Output Style の設計
 
 - Date: 2026-08-31
-- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
+- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Hooks reference](https://code.claude.com/docs/en/hooks)
 
 `caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
 
@@ -87,6 +87,14 @@ output style は system prompt を変えるため、chat 応答以外にも影�
 - **文体指示の漏れ**: 圧縮の指示がコードコメントや識別子に適用されうる。歯止めは「境界」節の列挙だけで、機械的な担保は無い。列挙漏れがそのまま穴になる。
 
 subagent には output style が適用されない（公式: "Output styles apply to the main conversation only"）。fork のみ例外。
+
+## 前置きと英語の混入は規則で直らない
+
+共通規則の「前置き、tool 実行の予告、進捗、実況を書かない」と、`settings.json` の `language: "japanese"`（system prompt に `Always respond in japanese.` として入る）は、どちらも tool 呼び出しの合間に挟まる短い行で破られることがある。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。
+
+規則が無いのではなく守られていない状態なので、規則を足しても直らない。同じ内容を二度書くと、次に読む人がどちらを正とするか判断する手間だけ増える。
+
+機械的な担保も持てない。hook は tool と permission の層で動き、生成されたテキストには介入しない。assistant のテキスト表示中に走る `MessageDisplay` も display-only で、内容を変えられない。`--append-system-prompt` は毎回渡す必要があり対話利用に向かない。強度切替と同じく LLM 遵守に依存する。
 
 ## 未確認
 
