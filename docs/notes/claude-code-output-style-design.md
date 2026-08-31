@@ -1,7 +1,7 @@
 # Claude Code Output Style の設計
 
 - Date: 2026-08-31
-- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/caveman.md`
+- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
 
 `caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
 
@@ -27,9 +27,19 @@ JuliusBrussee 版が skill なのは移植性（Claude Code 以外の 30 以上�
 
 `/caveman ultra` の slash 形も採れない。`/` 始まりの入力は skill 名として解決されるため、skill でない output style には作れない。
 
-`caveman lite` のように接頭辞を必須にしているのは、裸の `lite` が「lite 版のライブラリ」のような文脈で誤発火するため。切替の実効は LLM 遵守依存で、機械的な担保は無い。
+`caveman ultra` のように接頭辞を必須にしているのは、裸の `ultra` が「ultra wide」のような語の一部として現れた時に誤発火するため。切替の実効は LLM 遵守依存で、機械的な担保は無い。
 
 担保が無いのは、harness の注入するリマインダーが強度を含まないため。届くのは "caveman output style is active. Remember to follow the specific guidelines for this style." だけで、style 本体は system prompt から毎ターン渡るが、強度は会話履歴にしか無い。2026-08-31 に `caveman ultra` で測ったところ、commit を 5 つ作り `chezmoi apply` を 3 回挟む間は崩れなかった。
+
+## 強度を 2 段階にしている理由
+
+`full` / `ultra` の 2 段階で、`lite`（敬体と完結した文を保つ）は持たない。読み手が単一で、chat で敬体へ戻す場面が無いため。「境界」節は chat の外を通常の文体と定めているが、この repo の doc と設定は常体で書かれており、敬体の受け皿にはならない。
+
+段数を見直した動機は `full` の出力が冗長なことだった。ただし解は段数ではなく `full` 側の規定にある。「求められた範囲だけ答える。捨てた案、検討過程、周辺情報を並べない。」がそれで、段数の削減とは別の整理。
+
+`ultra` 固定（1 段階）は採らない。強度が system prompt へ固定されるため、強度が会話履歴にしか無いという弱点と、compaction を跨いだ時の未確認事項が構造的に消える利点はある。採らない理由は、`ultra` の「結論だけ出し、理由は聞かれてから出す」が実際の使い方と逆を向くこと。設計の相談では結論だけ返すと根拠を聞き直されるため、往復が増えて合計は減らない。
+
+`lite` が持っていた「過剰な保留表現を削る」は共通規則にある。段階的強度で `full` / `ultra` へ継承される前提の規定だったため、`lite` を持たない構成では共通規則側が受け持つ。
 
 ## 略語と矢印を規定しない理由
 
@@ -46,6 +56,16 @@ JuliusBrussee 版は自作の短縮と因果矢印を明示的に否定してい
 検証は要らない。略語は引用元自身が "reader still decode" も根拠に挙げており、token の結果に関わらず避ける理由が立つ。矢印は token 根拠しかないが、共通原則が「短くならないなら」と都度の判断に落としているため、事前に一般解を持つ必要がない。
 
 略語を推奨すると `rules/coding-standards.md` の命名規約（ドメインの意味を表す名前を使い、中身を説明しない語を避ける）と衝突する。output style は system prompt を変えるため、文体指示が識別子やコメントへ漏れうる。
+
+## 修飾の規定に数値しきい値を持たない理由
+
+共通規則の「修飾を浅く保つ」は、連結する名詞の数も連体修飾の段数も数えない。日本語には分かち書きが無く、`設定ファイル` を 1 語と数えるか 2 語と数えるかが決まらないため。害があるのは定着した複合語ではなくその場で作った連結で、語数はその区別の代理指標にならない。
+
+数値を置かないのは「略語と矢印を規定しない理由」と同じ設計による。事前に一般解を持たず、都度の判断へ落とす。
+
+根拠は ISO 24495-1 の「主語と述語を近づける、曖昧さを避ける」に置いている。ASD-STE100 の noun cluster 規則（連結を 3 語まで）は分かち書きを前提とするため日本語へ移らない。同規格の承認語彙（約 900 語）と英文法固有の規則も同じ理由で採らない。
+
+規格名は `caveman.md` 側には書かない。規則本文に規格名があると、本文を読んでいない読み手が全条項を想定する。ISO 24495-1 は有料規格で、本文は未取得。
 
 ## 応答の型と共通規則は別物
 
