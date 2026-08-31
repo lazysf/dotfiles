@@ -55,9 +55,13 @@ skill 側に残したのは起動後の責務だけ。doc が不要と判断し�
 
 依頼語を重心にすると発火しない。2026-08-30 の session では notes を更新する commit を 4 つ作ったが、この skill は一度も呼ばれなかった。ユーザーの指示は「未確認事項を潰したい」「進めて」で、doc を書けという語が無かった。doc の更新は依頼としてではなく、調査や実測が決着した副産物として起きる。
 
+手動で 1 回ずつ確認した（2026-08-31）。「`docs/notes/rules-design.md` が今の `dot_claude/rules/` の実態と合っているか確認して。ずれていたら直して」という形の依頼で、ずれ検出後だけを条件にしていた時は発火せず、点検の入口を足した後は同じ形の依頼で発火した。点検依頼で発火した 2 例とも、`Skill` の呼び出しは調査の後で prompt の直後ではない。
+
+発火の測定には、skill 自身の path を含む依頼を使わない。`docs/notes/scribe-skill-design.md` と `dot_claude/skills/scribe/SKILL.md` の点検を題材にすると、依頼文に skill 名と path が入り、作業として `SKILL.md` 全文を読むため、description と無関係に発火する。
+
 description を依頼語に絞らない一般則は `harness-design-principles.md` の「skill description の書き方」にある。
 
 ## 未確認
 
-- 現在の `description` が実際に発火するかは未検証。trigger eval（20 query × 3 run × 5 iteration）は実行コストが大きく未実施。
+- 発火の確認は各条件 1 回ずつの手動観測にとどまる。trigger rate は測っていない。公式が model behavior は nondeterministic と明記しているため、1 回の発火と未発火では改善を断定できない。trigger eval（20 query × 3 run × 5 iteration）は、失敗事例が 1 件では eval query を実測から作れないため未実施。
 - 関係メタデータの並び順は、書く側の規定としては決めたが、逸脱を検出する仕組みは持たせていない。
