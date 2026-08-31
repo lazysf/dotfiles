@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Git の変更を commit したい依頼で使う。「commit して」「これをコミット」「変更を確定させて」のように、作業結果を Git 履歴へ残したい時が対象。1 commit 1 変更に分け、明示 path で stage し、staged diff を確認してから通常 commit だけを行う。push は扱わない。doc の作成・更新は `scribe`。
+description: Git の変更を commit する時に使う。直接の依頼（「commit して」「これをコミット」「変更を確定させて」）に加えて、作業が一段落して変更を確定させる時にも使う。ユーザーが commit という語を出さなくても、変更を Git 履歴へ残すなら対象。1 commit 1 変更に分け、明示 path で stage し、staged diff を確認してから通常 commit だけを行う。push と履歴の書き換え（rebase / amend / squash）は扱わない。doc の作成・更新は `scribe`。
 ---
 
 # Git Commit
