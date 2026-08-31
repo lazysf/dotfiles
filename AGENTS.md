@@ -28,7 +28,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
   - agent 定義（`dot_claude/agents/*.md`）
   - rules（`dot_claude/rules/*.md`）
   - `dot_claude/output-styles/*.md`
-  - runtime 設定（`dot_claude/settings.json.tmpl`）
+  - runtime 設定（`dot_claude/settings.json`）
 
 ### 軽量例外
 
