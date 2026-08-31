@@ -53,7 +53,7 @@ skill 側に残したのは起動後の責務だけ。doc が不要と判断し�
 
 依頼語を重心にすると発火しない。2026-08-30 の session では notes を更新する commit を 4 つ作ったが、この skill は一度も呼ばれなかった。ユーザーの指示は「未確認事項を潰したい」「進めて」で、doc を書けという語が無かった。doc の更新は依頼としてではなく、調査や実測が決着した副産物として起きる。
 
-重心を作業の流れへ移すのは公式の指針でもある。[Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) は "Err on the side of being pushy. Explicitly list contexts where the skill applies, including cases where the user doesn't name the domain directly" と書く。`skill-creator` も、Claude が skill を undertrigger しがち（役に立つ場面で呼ばない）だとして、description を強めるよう指示している。
+description を依頼語に絞らない一般則は `harness-design-principles.md` の「skill description の書き方」にある。
 
 ## 未確認
 
