@@ -1,6 +1,6 @@
 # rules の設計
 
-- Date: 2026-08-28
+- Date: 2026-08-31
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / `dot_claude/rules/` / この環境での実測
 
 `dot_claude/rules/` が今の形になっている理由を残す。rule 本体を読んでも分からない前提と判断に絞る。
@@ -45,3 +45,11 @@ doc の書き方は `skills/scribe` が正本で、「doc 追従の要否を黙�
 ## repo 固有の rule を配らない理由
 
 `~/.claude/rules/` は全 project へ配布される。`dot_claude/**` のような、この repo の path を `paths` に持つ rule は、他の project では一度も match せず、死んだ設定として残る。repo に閉じる rule は、その repo の `.claude/rules/` に置く。chezmoi は source 内の `.` 始まりを配布しないので、`dot_claude/` と衝突しない。この repo では `harness-surface-consistency` がそれに当たる。
+
+## ADR 本文を追従対象から外している理由
+
+`harness-surface-consistency` は変更した path を `rg` で検索して追従漏れを見ることを求めるが、ADR 本文はその対象から外している。ADR は採用時点の記録で、その後の rename や削除を反映しないため。
+
+2026-08-31 に `docs/` 全体を検査した。Markdown のリンク形式で書かれた参照は切れが 0 件で、code span で書かれた path のうち存在しない `docs/notes/` を指すものが 7 件あった。参照元は全て ADR 本文で、notes 側には 1 件も無い。参照している ADR は 11 件、うち 8 件が Superseded。参照先は退役したか、統合先はあってもそこが前提を書き換えており、当時の記述を指し直せない。
+
+書く側の規定（`skills/scribe`、理由は [scribe-skill-design.md](./scribe-skill-design.md)）が ADR 本文を触らないと決めている以上、検査側で閉じないと、`rg` がヒットするたびに同じ判断を繰り返すことになる。
