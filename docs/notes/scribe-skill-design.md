@@ -1,7 +1,7 @@
 # scribe skill の設計
 
 - Date: 2026-08-31
-- 出典: [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全 42 件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
+- 出典: [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全 42 件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -42,6 +42,14 @@ SKILL.md が持つのはどの層を選ぶかの判断で、書式は選択後�
 この規律が効くべき 2 つの瞬間（実装の区切りと commit 前）に `scribe` は起動していない。skill に書いても実効しないため、常時 load される `CLAUDE.md` が持つ。理由は [claude-md-design.md](./claude-md-design.md)。
 
 skill 側に残したのは起動後の責務だけ。doc が不要と判断した場合もその旨と理由を返す、という部分は「出力」が持つ。
+
+## 用語の一貫を doc 側だけに持たせた理由
+
+「共通の進め方」に「1 つの概念に 1 つの語を使い、doc の途中で言い換えない」を置いている。同じ節の「既存の章構成、用語、粒度、文体に寄せ」が既存 doc への追従を担い、この 1 文が同一 doc の中での一貫を担う。
+
+根拠は ISO 24495-1 の Understandable にある「同じ語を一貫して使う」。対になる「修飾を浅く保つ」は `caveman.md` の共通規則にあり、その理由は [claude-code-output-style-design.md](./claude-code-output-style-design.md) にある。
+
+2 つを別の場所へ置いているのは適用範囲が違うため。修飾の深さは chat の応答フォーマットなので output style が持つ（公式の区分で「default response format every turn」）。用語の一貫は doc を書く時だけ要るので skill が持つ（同じく「task-specific instructions」）。`rules/` へ置く案は採らない。[rules-design.md](./rules-design.md) の「doc / artifact の rule を持たない理由」が、doc の書き方は skill を正本とすると定めている。
 
 ## Gotchas に入れたものの基準
 
