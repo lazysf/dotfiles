@@ -34,7 +34,7 @@ message 生成だけに絞ると、停止条件・staging 規律・staged diff �
 
 代替案の枠は持たない。373 commit の body を検索しても代替案を記録した実例は無く、うち 1 件は「alternatives in the notes」と書いて notes へ寄せている。捨てた案の置き場は doc 3 層で ADR か notes と定義済みなので、commit body に枠を作ると二重管理になる。採らなかった案の理由が要る場合は `Why:` に含める。
 
-AI 帰属の禁止は skill に書かない。後述の「Co-authored-by は default で付かない」のとおり trailer は default で付かないので、禁じる対象が存在しない。
+AI 帰属の禁止は skill に書かない。後述の「Co-authored-by trailer は skill の外で決まる」のとおり制御点が settings 側にあり、skill が書く層ではない。
 
 ## footer と issue 参照
 
@@ -100,15 +100,12 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 `dot_claude/CLAUDE.md` の工程表は「commit | ユーザー指示時に `skills/git-commit`」と書いている。description の「ユーザーが commit という語を出さなくても対象」と緊張して見えるが、層が違う。CLAUDE.md は commit してよいかという実行条件、description は skill を通すかどうかという発火面で、指示なしに commit してよくなるわけではない。
 
-## Co-authored-by は default で付かない
+## Co-authored-by trailer は skill の外で決まる
 
-`includeCoAuthoredBy: false` を外して apply しても、Bash 経由の `git commit` に trailer は付かなかった（2026-08-30、Claude Desktop app の local agent mode で probe commit を作って確認）。設定の有無で挙動が変わらないので、この設定は効いていない。
+skill は trailer を規定していない。付くかどうかは実行する harness の system prompt が決め、制御点は settings の `attribution` にある。この repo では `attribution` で止めている（理由と実測は [claude-code-settings-design.md](./claude-code-settings-design.md)）。
 
-cloud session でも同じだった（2026-08-30、`claude --cloud` で作った session に空 commit を作らせて確認）。cloud session は `~/.claude/` を読まず（公式の比較表: `Uses your local config — No, repo only`）、この repo に `.claude/settings.json` も無いので、設定を一切読まない素の状態での観測になる。そこでも `Co-authored-by` も claude.ai の session link も付かなかった。**trailer が付かないのは default 挙動**で、設定で抑えているのではない。
-
-公式は `includeCoAuthoredBy` の default を「N/A (deprecated)」とし、後継 `attribution` の default も明示していない。実測が上記のとおりなので、`attribution` を設定する理由がない。
+**履歴に残る不揃いは skill の不備ではない。**
 
 ## 未確認
 
-- `attribution` を明示設定した時の挙動は試していない。実測したのは設定なしの default 挙動だけ。`attribution.pr` が指す PR description の attribution line も、この repo で PR を作っていないので未確認。
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。

@@ -1,13 +1,19 @@
 # Claude Code Settings の設計
 
 - Date: 2026-08-31
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246）
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
 ## 方針: default が塞いでいない穴だけ書く
 
 Claude Code の default と auto mode の built-in classifier が既にかなりの範囲を守る。設定に書くのは、それらが塞いでいない穴だけにする。default と同じ値を書くと、default が変わった時に気づけず、設定を読む人が「これは意図的な選択だ」と誤解する。
+
+## user settings が届かない実行経路
+
+web session（claude.ai や mobile app から動かす cloud VM 上の session）は local config を読まない（公式の比較表 `Uses your local config` の行が `No, repo only`）。この repo に `.claude/settings.json` も無いので、web session は設定を一切読まない素の状態で走る。desktop app も cloud session を選んだ時は同じ。
+
+Remote Control と terminal CLI は自分のマシンで走るので、ここに書く設定が効く。Remote Control は claude.ai や mobile app から操作しても実行はローカルなので、web session とは別に扱う。**判定軸は操作元ではなくコードが動く場所**で、cloud VM 上で走る session だけが設定を読まない。
 
 ## default で足りるもの・足りないもの
 
@@ -127,6 +133,20 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 
 **保存内容を制御できない。** 何が保存されたかは `/memory` で見に行くまで分からない。毎セッション context に載る内容は、`CLAUDE.md` と `rules/` のように明示的に管理したい。
 
+## commit trailer を止める理由
+
+`attribution.commit` を空文字にし、`attribution.sessionUrl` を `false` にする。
+
+**trailer が付くかは実行する harness で違う。** CLI の `-p` session では `attribution` 未設定でも付かない。desktop app の session では system prompt へ model 名を含む標準の attribution 文言を付ける指示が入り、`37ed169` から `f66fa17` まで（両端を含む 18 commit、2026-08-31 時点）の 15 件はこれによる。指示なので遵守は保証されず、残る 3 件には付いていない（うち 2 件は履歴書き換えを通っているので、指示に従わなかったと確実に言えるのは `f66fa17` の 1 件）。**非決定的に付くより、付けないことを設定で決める。**
+
+`attribution.commit` に文字列を設定すると CLI の commit message にその文言が現れるので、キーは挙動へ届く。空文字は付けない側の明示で、CLI では未設定と同じ結果になる。desktop app では apply 後に開いた session で空 commit を作らせ、trailer が付かないことを確認した（2026-08-31）。設定前に開いた session の system prompt には指示が入っていたので、前後で挙動は変わっている。ただし同じ session 内の A/B ではなく、apply を挟んだ比較になる。
+
+`sessionUrl` は `commit` と独立していて、`Claude-Session` trailer を付ける。`commit` を空文字にしてもこれは消えないので両方を書く。`claude --settings <file> --remote-control` で振ると、`true` では `Claude-Session: https://claude.ai/code/session_...` が付き、`false` では消えた（2026-08-31）。**操作が terminal からでも、session が Remote Control なら付く。** schema は web session も対象と書くが、そちらは user settings が届かないので確かめていない。
+
+trailer を止めると以後の commit では AI の関与が履歴に残らないが（既存の trailer はそのまま残る）、個人 dotfiles で変更の責任は author に一元化されるため許容する。
+
+**確認は commit message を直接読む形で行う。** system prompt の内容を子 session へ自己申告させる方法は、同じ設定で結果が割れて再現しなかった（2026-08-31）。空 commit を作らせて `git log` を読む形に変えると 3 条件とも一貫した（`claude --settings <file> -p ...` で `{}` / `commit: ""` / `commit: "Probe-Trailer: explicit"`、v2.1.247）。
+
 ## 入れていない設定と理由
 
 | 設定 | 理由 |
@@ -135,7 +155,7 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 | `sandbox.autoAllowBashIfSandboxed` | default の `true` に任せる。`false` にすると sandbox 済み Bash も 1 本ごとに classifier 往復が入って遅く、block が fallback カウンタに積まれる |
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
 | `sandbox.filesystem.denyWrite` | default で cwd 外は書けない |
-| `includeCoAuthoredBy` / `attribution` | 前者は公式で deprecated（default は「N/A」）。後継の `attribution` は default に明示がないため実測した（2026-08-30）。設定を外したローカルでも、設定を一切読まない cloud session でも、Bash 経由の `git commit` に trailer は付かない。付かないのが default なので、設定する理由がない |
+| `includeCoAuthoredBy` | 公式で deprecated。同じ制御は後継の `attribution` で書く（「commit trailer を止める理由」） |
 | `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`sandbox.credentials` が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する |
 | PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。実効防御は WSL2 上での実行に寄せる |
@@ -158,9 +178,13 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 | `autoUpdatesChannel` | default は `latest`。`stable` は約 1 週間前の版で、major regression のある版を飛ばす |
 | `autoMemoryEnabled` | default は `true`。`~/.claude/projects/<project>/memory/` へ自動保存する |
 | `cleanupPeriodDays` | default は `30` |
+| `includeCoAuthoredBy` | schema の default は `true`。公式 docs 表の「N/A」は deprecated の表記であって default 値ではない |
+| `attribution.commit` | 設定した文言が commit message に現れる（CLI で確認）。未設定の CLI session には trailer が付かない |
+| `attribution.sessionUrl` | default は `true`。Remote Control session の commit に `Claude-Session` trailer を付ける（実測）。`attribution.commit` とは独立で、空文字にしても消えない |
 | auto mode の fallback | classifier が 3 回連続または累計 20 回 block すると auto mode が pause し prompt が再開する。閾値は設定不可 |
 | auto mode の allow rule drop | auto mode に入ると、任意コード実行を与える広い allow rule（blanket `Bash(*)` / `PowerShell(*)`、wildcard interpreter、package manager の run、`Agent`、`Monitor`）が drop される。narrow rule は残る |
 
 ## 未確認
 
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
+- `attribution.pr` が指す PR description の attribution line。この repo で PR を作っていないので確認していない。
