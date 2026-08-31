@@ -8,6 +8,7 @@
   - [claude-md-design.md](./notes/claude-md-design.md): `CLAUDE.md` が今の形になっている理由
   - [git-commit-skill-design.md](./notes/git-commit-skill-design.md): `git-commit` skill が今の形になっている理由と commit 履歴の実測
   - [harness-design-principles.md](./notes/harness-design-principles.md): この harness に何を置き、どう書くかの判断基準
+  - [markdownlint-and-pre-commit-execution.md](./notes/markdownlint-and-pre-commit-execution.md): markdownlint / pre-commit の 2 経路と、prek による実行の実測
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
   - [reviewer-agents-design.md](./notes/reviewer-agents-design.md): reviewer agent を 2 つだけ置いている理由と、起動実績の実測
   - [rules-design.md](./notes/rules-design.md): `rules/` の常時 load と path 条件の使い分け、その理由
