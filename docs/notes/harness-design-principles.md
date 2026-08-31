@@ -21,7 +21,9 @@
 
 skill の `description` も即反映される。`scribe` の description を書き換えて apply した直後、session を開き直さずに、session へ渡る skill 一覧の記述が新しいものへ変わった（2026-08-31）。
 
-`CLAUDE.md` と `rules/` は session 開始時に load されるため、apply しても動いている session は旧版のまま走り続ける。新版になるのは次に session を開いた時から。契約や rule を直した効果を確かめるには session を開き直す。
+`CLAUDE.md`、`rules/`、output style は session 開始時に load されるため、apply しても動いている session は旧版のまま走り続ける。新版になるのは次に session を開いた時から。契約や rule を直した効果を確かめるには session を開き直す。
+
+output style について公式が書く "reads once at session start" は `outputStyle` 設定（どの style を選ぶか）についてで、ファイル内容の編集には触れていない。内容も同じく session 開始時であることは実測した（2026-08-31、`caveman.md` へ probe 文字列を足して apply し、同じ session で応答が変わらないことを確認）。
 
 ## skill description の書き方
 
