@@ -27,13 +27,15 @@ skill の `description` も即反映される。`scribe` の description を書�
 
 `description` は skill の主な発火面で、ここに書いた語で呼ばれるかが決まる。
 
-- ユーザーが言いそうな依頼語を先頭に置く。何をする skill かより、どんな時に呼ぶかを先に読ませる。
+- どんな時に呼ぶかを先頭に置く。何をする skill かより先に読ませる。依頼語だけに絞らず、作業の流れで必要になる場面も書く。依頼語に絞ると、ユーザーがその語を出さない場面で発火しない。
 - その skill が何を整理・実行・出力するかを示す。
 - 近接 skill との差分、渡し先、対象外を明示する。
 - 他の skill や agent を案内する時は「〜したい時は `skill-name` スキルを使う」のように surface 種別まで書く。skill 名の裸参照だけで意味を持たせない。
 - 短さより境界語の明確さを優先する。
 
 文数の上限は置かない。公式も "a few sentences to a short paragraph" を目安としている。
+
+強めに書く方へ倒す。[Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) は "Err on the side of being pushy. Explicitly list contexts where the skill applies, including cases where the user doesn't name the domain directly" と書く。`skill-creator` も、Claude が skill を undertrigger しがち（役に立つ場面で呼ばない）だとして、同じ対策を挙げている。
 
 ## AGENTS.md の URL 表を notes へ移さない理由
 

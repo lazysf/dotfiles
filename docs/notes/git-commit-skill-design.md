@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-08-28
+- Date: 2026-08-31
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -89,6 +89,16 @@ Git 操作の skill は `git-commit` だけで、push 用の skill は持たな�
 そのため **push は人が手元の terminal で実行し、agent は commit までを担う**。`SKILL.md` の「扱わないもの」にこの分担を書いているのは、skill が無いと agent が自己流で `git push` を打って失敗するため。
 
 ADR は書かない。3 条件のうち「覆すコストが高い」を満たさない（skill の復元は archive branch から容易）。sandbox の方針が変われば push が通るようになり、その時は再検討する。
+
+## description の重心と境界
+
+依頼語に絞らず、作業が一段落して変更を確定させる場面も拾う。明示依頼では通ったが、「進めて」「直して」の流れで commit する場面では通っていなかった（2026-08-31 に実測）。一般則は `harness-design-principles.md` の「skill description の書き方」にある。
+
+「push と履歴の書き換え（rebase / amend / squash）は扱わない」も description に書いている。body の「扱わないもの」と重なるが、description は skill を読む前に見える唯一の面なので、境界はここにも要る。commit の作業には履歴の組み直しが混ざりやすく、2026-08-31 の session では `amend` と `reset` を繰り返し使って、その都度この skill の範囲外だと明示する必要があった。
+
+## CLAUDE.md の実行条件と重ならない理由
+
+`dot_claude/CLAUDE.md` の工程表は「commit | ユーザー指示時に `skills/git-commit`」と書いている。description の「ユーザーが commit という語を出さなくても対象」と緊張して見えるが、層が違う。CLAUDE.md は commit してよいかという実行条件、description は skill を通すかどうかという発火面で、指示なしに commit してよくなるわけではない。
 
 ## Co-authored-by は default で付かない
 
