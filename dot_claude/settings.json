@@ -5,6 +5,10 @@
   "outputStyle": "caveman",
   "autoUpdatesChannel": "stable",
   "autoMemoryEnabled": false,
+  "attribution": {
+    "commit": "",
+    "sessionUrl": false
+  },
   "permissions": {
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable",
