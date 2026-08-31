@@ -119,9 +119,13 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 system prompt が変わった場合に気づく手段は無い。ただし契約へ書いても検知はできないので、書く側の利点にはならない。
 
-## 自動 memory を切る理由
+## auto memory を切る理由
 
-`autoMemoryEnabled: false` は、memory を自動保存させたくないため。default は `true`（「仕様の確認記録」）。
+理由は 2 つ。
+
+**保存先が二重になる。** auto memory は `~/.claude/projects/<project>/memory/` へ machine-local に保存され、git にも入らず他のマシンとも共有されない。この repo は知見を `docs/notes/` と `docs/adr/` に集約する方針なので、同じ知見が 2 箇所に散り、どちらが正本か分からなくなる。
+
+**保存内容を制御できない。** 何が保存されたかは `/memory` で見に行くまで分からない。毎セッション context に載る内容は、`CLAUDE.md` と `rules/` のように明示的に管理したい。
 
 ## 入れていない設定と理由
 
