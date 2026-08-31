@@ -13,16 +13,18 @@ message 生成だけに絞ると、停止条件・staging 規律・staged diff �
 
 ## title の規定
 
-- **scope を使わない。** 理由は title の可読性。scope が入ると title が長くなり `git log --oneline` で読み取りにくくなる。実測（2026-08-27 時点）で 373 commit のうち scope 付きは 0 件。
-- **英語で書く。** 実測 373 commit すべて英語。応答言語が日本語（`settings.json` の `language`）なので、規定が無いと日本語 title を書きうる。「50 文字以内」の単位も、全角か半角かで実質の長さが倍近く変わって曖昧になる。
-- **50 文字を目安、72 文字を上限。** 実測で 79%（295 件）が既に 50 文字以下、中央値は 41 文字、73 文字以上は 2 件。現状追認になる。
+以下の数値は 2026-08-27 時点の commit 履歴の実測。
+
+- **scope を使わない。** 理由は title の可読性。scope が入ると title が長くなり `git log --oneline` で読み取りにくくなる。全 commit のうち scope 付きは 0 件。
+- **英語で書く。** 全 commit が英語。応答言語が日本語（`settings.json` の `language`）なので、規定が無いと日本語 title を書きうる。「50 文字以内」の単位も、全角か半角かで実質の長さが倍近く変わって曖昧になる。
+- **50 文字を目安、72 文字を上限。** 79% が既に 50 文字以下、中央値は 41 文字、73 文字以上は 2 件。現状追認になる。
 - 命令形、末尾ピリオド禁止、emoji 禁止は `caveman-commit` から採った。
 
 `repo 規約が scope を要求する場合は停止して報告する` を「その規約に従う」へ緩める案は 2026-08-27 に検討して保留した。skill は user-global なので monorepo では摩擦があり得るが、それは想定であって実測ではない。再検討の条件は「実際に monorepo で停止に当たった時」。
 
 ## body の規定
 
-`Why:` / `What:` / `Impact:` はラベルごとに要否が違う。実測（body を持つ commit 66 件）では `Why:` 56 / `What:` 56 / `Impact:` 55 と、ほぼ機械的に 3 点セットで書かれていた。任意規定が惰性化していたので、ラベルごとに条件を付けている。
+`Why:` / `What:` / `Impact:` はラベルごとに要否が違う。実測（2026-08-27 時点、body を持つ commit 66 件）では `Why:` 56 / `What:` 56 / `Impact:` 55 と、ほぼ機械的に 3 点セットで書かれていた。任意規定が惰性化していたので、ラベルごとに条件を付けている。
 
 `Impact:` の中身は 3 種類に分かれる。
 
@@ -32,13 +34,13 @@ message 生成だけに絞ると、停止条件・staging 規律・staged diff �
 
 2 の用途が固有なのでラベルを残し、3 を禁じている。
 
-代替案の枠は持たない。373 commit の body を検索しても代替案を記録した実例は無く、うち 1 件は「alternatives in the notes」と書いて notes へ寄せている。捨てた案の置き場は doc 3 層で ADR か notes と定義済みなので、commit body に枠を作ると二重管理になる。採らなかった案の理由が要る場合は `Why:` に含める。
+代替案の枠は持たない。全 commit の body を検索しても代替案を記録した実例は無く、うち 1 件は「alternatives in the notes」と書いて notes へ寄せている。捨てた案の置き場は doc 3 層で ADR か notes と定義済みなので、commit body に枠を作ると二重管理になる。採らなかった案の理由が要る場合は `Why:` に含める。
 
 AI 帰属の禁止は skill に書かない。後述の「Co-authored-by trailer は skill の外で決まる」のとおり制御点が settings 側にあり、skill が書く層ではない。
 
 ## footer と issue 参照
 
-git trailer 形式（`Refs: #123` など）を規定するが、この repo では skill が書く trailer も `#123` 形式の issue 参照も 373 commit で 0 件。個人 dotfiles で issue を運用していないため。規定は残す（skill は user-global で、issue を使う repo でも読まれる）が、**例セクションには架空の trailer を置かない**。
+git trailer 形式（`Refs: #123` など）を規定するが、この repo では skill が書く trailer も `#123` 形式の issue 参照も全 commit で 0 件。個人 dotfiles で issue を運用していないため。規定は残す（skill は user-global で、issue を使う repo でも読まれる）が、**例セクションには架空の trailer を置かない**。
 
 git trailer の仕様はコロンあり・なしの両方を許すが、この repo はコロンありに統一する。`Closes #42` は GitHub の自動クローズ構文で、trailer 仕様に寄せる理由がない。
 

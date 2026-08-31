@@ -1,7 +1,7 @@
 # reviewer agent の設計
 
 - Date: 2026-08-29
-- 出典: [Create custom subagents](https://code.claude.com/docs/en/sub-agents) / `~/.claude/projects/` の全 42 session transcript / `dot_claude/agents/`
+- 出典: [Create custom subagents](https://code.claude.com/docs/en/sub-agents) / `~/.claude/projects/` の全 42 session transcript（2026-08-29 時点） / `dot_claude/agents/`
 
 reviewer agent 2 つが今の形になっている理由と、他の agent を置いていない理由を残す。agent 定義を読んでも分からない前提と判断に絞る。
 
@@ -16,7 +16,7 @@ reviewer agent 2 つが今の形になっている理由と、他の agent を�
 
 ## researcher を持たない理由
 
-調査は読んだ結果から次に読む対象を決める往復で進むため、切り出すと往復ができない。分離や並列が要る場面は 42 session で一度も起きていない。
+調査は読んだ結果から次に読む対象を決める往復で進むため、切り出すと往復ができない。分離や並列が要る場面は全 session で一度も起きていない。
 
 将来その場面が来ても、組み込みの `Explore` と `general-purpose` がそのまま使える。自前定義の利点は役割を絞った prompt だが、それを評価する需要が観測されていない。
 
