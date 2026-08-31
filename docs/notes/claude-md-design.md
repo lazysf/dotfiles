@@ -57,4 +57,4 @@ commit は実装と doc で分けたままにする。review は変更セット�
 
 hook で機械化していない。hook が出せる `systemMessage` は harness がユーザーへ見せるメッセージで、assistant の返答本文ではない。求めているのは返答そのものに含まれることなので、hook では形が違う。
 
-そのため遵守は LLM 依存になる。公式は CLAUDE.md を enforced configuration でなく context と位置付け、矛盾する指示があると任意に選ぶとしている。`output-styles/caveman.md` の「前置き、tool 実行の予告、進捗、実況を書かない」とは、列挙を「最終返答の末尾」に限定することで実況と区別してあるが、競合と読まれる余地は残る。
+そのため遵守は LLM 依存になる。公式は CLAUDE.md を enforced configuration でなく context と位置付け、矛盾する指示があると任意に選ぶとしている。`output-styles/caveman.md` の「前置き、tool 実行の予告、進捗、実況を書かない」とは、列挙を「最終返答の末尾」に限定することで実況と区別してあるが、競合と読まれる余地は残る。2026-08-31 に、会話文脈のない新しい session で `skills/git-commit` を発火させたところ、`caveman` が有効なまま末尾へ列挙が出た。1 回の観測なので、競合しない担保にはならない。
