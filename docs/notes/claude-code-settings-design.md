@@ -1,9 +1,9 @@
 # Claude Code Settings の設計
 
-- Date: 2026-08-28
+- Date: 2026-08-31
 - 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246）
 
-`dot_claude/settings.json.tmpl` が今の形になっている理由を残す。
+`dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
 ## 方針: default が塞いでいない穴だけ書く
 
