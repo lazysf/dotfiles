@@ -27,6 +27,7 @@ LICENSE
 package.json
 package-lock.json
 README.md
+TODO.md
 nvim.log
 nvim.yml
 pyproject.toml
