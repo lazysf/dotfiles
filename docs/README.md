@@ -13,6 +13,7 @@
   - [reviewer-agents-design.md](./notes/reviewer-agents-design.md): reviewer agent を 2 つだけ置いている理由と、起動実績の実測
   - [rules-design.md](./notes/rules-design.md): `rules/` の常時 load と path 条件の使い分け、その理由
   - [scribe-skill-design.md](./notes/scribe-skill-design.md): `scribe` skill が今の形になっている理由
+  - [self-review-skill-design.md](./notes/self-review-skill-design.md): `self-review` skill が今の形になっている理由と、reviewer agent との使い分け
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
   - [0002-project-specific-knowledge-lives-in-project-docs.md](./adr/0002-project-specific-knowledge-lives-in-project-docs.md)

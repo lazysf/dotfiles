@@ -1,6 +1,6 @@
 ---
 name: security-reviewer
-description: ユーザー明示時に、与えられた diff（明示 diff / 対象ファイル / PR patch / staged + untracked）を read-only で security review する時に使う。auth、権限、secret、外部 I/O、command、CI / tooling 変更、data flow、injection、path traversal、情報漏洩を見る。
+description: 独立 context で security review が要る時に使う。ユーザーが「じっくり」「独立で」と言った時、agent 名を出した時、または `self-review` skill が条件に該当して提案した時に起動する。与えられた diff（明示 diff / 対象ファイル / PR patch / staged + untracked）を read-only で見て、auth、権限、secret、外部 I/O、command、CI / tooling 変更、data flow、injection、path traversal、情報漏洩を判断する。自分の変更を自分で見直すのは `self-review` skill。
 tools: Read, Glob, Grep, Bash
 model: "claude-opus-5"
 effort: xhigh

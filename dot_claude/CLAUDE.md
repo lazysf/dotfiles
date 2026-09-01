@@ -28,14 +28,14 @@
 | 方針(Plan) | 実装方針に複数案があり選択が要る、または変更が広範囲。`EnterPlanMode` を自己発動し、承認を得て実装へ。 |
 | 実装 ⇄ 検証 | code-first で反復。設計の分岐点で選択したら ADR を1枚（条件は下記 doc）。 |
 | doc | 下記「doc」に従う。 |
-| review | commit 前に自分の変更を確認し、指摘が無くなるまで直す。ユーザー明示時は、コードの bug を `/code-review` / `/security-review`、変更セット全体の scope と可読性を `quality-reviewer` / `security-reviewer`。 |
+| review | commit 前に `skills/self-review` で自分の変更を見直し、指摘が無くなるまで直す。独立 context が要る条件に当たったら、skill が `quality-reviewer` / `security-reviewer` を提案する。コードの bug はユーザー明示時に `/code-review` / `/security-review`。 |
 | commit | ユーザー指示時に `skills/git-commit`。push は人が terminal で実行する。 |
 
 - 1 つの作業（着手から commit まで）で扱うスコープは 1 つに保つ。作業中に別の問題へ気づいたら、その場で着手せずユーザーへ伝える。今のスコープを閉じてから扱う。
 - 掘り下げ（事前の質問）と Plan は「探索で埋まる曖昧さか」で振り分ける。コードを読めば分かる曖昧さ（やり方・既存パターン）は質問せず Plan/探索で解く。ユーザーの頭にしかない曖昧さ（目的・意図・外部制約）だけ事前に問う。同じことを2回聞かない。
 - 掘り下げ不要なら、デフォルトを「○○と仮定して進める」と宣言して実装、または自明ならそのまま実装。
 - 掘り下げ（4 条件 AND）／ ADR（3 条件 AND）の発火閾値は固定でなく、運用して過少／過剰なら見直す。
-- `quality-reviewer` / `security-reviewer` は standing authorization 済みとして追加確認なしで起動してよい。起動の許可だけで、subagent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する。
+- `quality-reviewer` / `security-reviewer` は standing authorization 済みで、起動に追加の許可を取らなくてよい。いつ起動するかは `skills/self-review` が定める。起動の許可だけで、subagent 内の tool 実行、sandbox escalation、secret / auth / 外部 I/O / 破壊的操作の停止線は維持する。
 
 ## doc
 
@@ -64,7 +64,7 @@
 - `~/.claude/CLAUDE.md`: 全セッションで共有する最小契約とワークフローのガイド。
 - `~/.claude/rules/`: 全セッションまたは path 条件で読む短いルール。
 - `~/.claude/skills/`: task-specific な再利用手順。
-- `~/.claude/agents/`: ユーザー明示時に呼ぶ read-only の reviewer。
+- `~/.claude/agents/`: 独立 context で呼ぶ read-only の reviewer。起動条件は `skills/self-review` が持つ。
 - `~/.claude/output-styles/`: 応答スタイル。`settings.json` の `outputStyle` で選ぶ。
 - `~/.claude/settings.json`: permissions、sandbox、model、language などの機械的設定。
 - 作業対象 repo の `.claude/rules/`: その repo に閉じる運用ルール。
