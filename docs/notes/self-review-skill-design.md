@@ -1,7 +1,7 @@
 # self-review skill の設計
 
 - Date: 2026-09-01
-- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / この repo の review 運用の実測
+- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
 
 `self-review` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -36,6 +36,36 @@ commit しない review がある。作業の区切り、方針の確認、書�
 5 つ（スコープ / 事実 / 整合性 / 過剰さ / doc）は、この repo で実際に指摘として出たものから採った。各 3 項目に留め、細かい判断まで指定していない。公式も code review を「観点を挙げて手順は縛らない」側の例に置いている。
 
 「事実」の 1 項目目に例を並べているのは、「観測を超えていないか」という抽象だけでは自分の書いた文に効かなかったため。実際に出た指摘では、強い語（「できない」「必ず」）に当たるものより、主語や述語を一段広く書いた型の方が多かった。
+
+## 「過剰さ」を doc とコードで分けている理由
+
+観点のうち「過剰さ」だけが、対象が doc かコードかで分岐している。消しても主張が変わらない記述と、単一実装の interface は、どちらも過剰だが探し方が違う。前者は書いた文を字面で読み直せば出るのに対し、後者は呼び出し元を数えないと出ない。1 つの箇条書きに混ぜると、doc を見ている巡で「呼び出し元が 1 つの層」を探す空振りが入る。
+
+観点は 5 つのままで、各側 3 項目に留めてある。ただしコード側は 1 項目が 2〜4 文で、doc 側の 1〜2 文より長い。上の「観点を 5 つに絞った理由」で挙げた、1 巡を軽く保って巡を重ねる方針に対しては、項目数は守り、文の長さは譲っている。
+
+コード側 1 項目目の例示（呼び出し元が 1 つの層、変わらない値の設定）は、security 境界の正しい形とそのまま一致する。auth middleware、sanitize wrapper、入力検証の入口は呼び出し元が 1 つであることが正しく、許可 origin 一覧や固定の algorithm 指定は今のところ変わらない値。除外を添えたのは、境界を 1 箇所へ集約した結果が、そのまま削除候補の特徴になるため。`coding-standards.md` が framework 規約の要求する構造を予防的抽象化の例外に置いているのと同じ型。
+
+コード側 2 項目目の後半（新しい依存を足していないか）は、description が「余分な依存」を観点に挙げているのに本体が拾っていなかった穴を埋めたもの。`coding-standards.md` の段 5 が書く前に止める側で、こちらが書いた後に拾う側になる。
+
+この項目にだけ security primitive の除外が付いているのは、`coding-standards.md` の carve-out と正面から逆を向くため。carve-out が「専用ライブラリを使え」と指示した結果の diff は、この項目からは「汎用機能で足りるのに依存を足した」に見える。1 項目目と 3 項目目の除外が「消させない」方向なのに対し、ここだけが「足したものを消させる」方向なので、蓋が要る。
+
+コード側 3 項目目に多層防御の除外を添えてあるのは、多層防御が定義上「正常系で振る舞いが変わらない」ため。timeout、`finally` の後始末、fail-safe な default、境界を越えた後の再検証は、通常入力とテストの範囲では消しても差が出ず、効くのは異常系と敵対的入力だけ。監査ログは性質が少し違い、正常系でも書かれるが、消しても呼び出し側の振る舞いは変わらず、効くのは後から追う時だけ。除外が無いと、この項目がそれらを毎回の削除候補として名指しする。しかもこの skill は commit 前の既定工程で回るのに対し、security の目は明示依頼の opt-in なので、削る側だけが既定で動くことになる。
+
+## security の検出を持たず、起動条件だけ持つ理由
+
+コード側 3 項目に足した security 関連の記述は、どれも除外であって検出ではない。この skill が security について担うのは「削って壊さない」ところまでで、脆弱性を見つけるのは `/security-review` の側。`coding-standards.md` が security primitive を汎用機能で代用させない一方、この skill にその検出を置いていないのは、責務の線がここにあるため。
+
+ただし**起動条件は別で、こちらが持つ**。独立 context を提案する条件に auth / 権限 / secret / 外部 I/O を入れてあるのは、上の「agent との使い分け」で書いたとおり、いつ起動するかの条件をこの skill が持つため。ここが持たないと、auth や secret に触る変更で security の目が入る自動経路が harness から消え、`/security-review` のユーザー明示だけが残る。
+
+この 4 つは `security-reviewer` の担当（command、CI / tooling 変更、data flow、injection、path traversal、情報漏洩も含む）より狭い。残りは既存の「契約、設定、skill / agent 定義など、間違うと影響が広い surface を触った」が拾う。CI や tooling の設定はそちらに当たる。agent の担当と 1 対 1 にすると、既存条件と重なる項目が並ぶ。
+
+## 過剰設計の review を別 skill にしていない理由
+
+公式は skill の粒度を関数と同じように考えるよう勧めていて、狭すぎる skill は 1 つのタスクに複数 load されて overhead と指示衝突を招く、と書く（Best practices の "Design coherent units"）。過剰設計だけを見る skill を独立させると、変更を閉じる時に `self-review` と 2 本呼ぶ運用になり、スコープと整合性の観点は両方に必要なので重複する。
+
+ponytail の `ponytail-review` が持つ tag 形式（`delete:` / `stdlib:` / `native:` / `yagni:` / `shrink:` と `net: -N lines possible.`）も採っていない。この skill の出力は `findings` / `verification` の項目で既に決まっており、tag と行数集計を足すと、同じ指摘に 2 つの書式が並ぶ。
+
+repo 全体を対象にした bloat の洗い出し（ponytail の `ponytail-audit` に当たる）は持たない。この skill は自分が加えた変更を見る入口で、repo 全体の走査は別の作業になる。必要になった時に作る。
 
 ## 巡の回し方を決めている理由
 
