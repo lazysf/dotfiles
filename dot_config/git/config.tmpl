@@ -4,8 +4,9 @@
 {{ if ne (lookPath "op") "" -}}
 {{ $opWhoami := output "op" "whoami" -}}
 [user]
-  name  = {{ onepasswordRead "op://Personal/GitHub/login" | quote }}
-  email = {{ onepasswordRead  "op://Personal/GitHub/qjzdqsz76dxnng7mnug25hbrda"| quote }}
+  name  = {{ onepasswordRead "op://Personal/GitHub/username" | quote }}
+  # noreply は commit に載る公開値なので 1Password ではなくリテラルで持つ
+  email = "346131960+lazysf@users.noreply.github.com"
   signingkey = {{ onepasswordRead "op://Personal/GitHub Signing Key/public key"| quote }}
 [gpg "ssh"]
   program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
