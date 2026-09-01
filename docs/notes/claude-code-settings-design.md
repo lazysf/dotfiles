@@ -1,6 +1,6 @@
 # Claude Code Settings の設計
 
-- Date: 2026-08-31
+- Date: 2026-09-01
 - 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
@@ -77,6 +77,8 @@ built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDis
 **どの層が止めたかは切り分けていない。** `sandbox.credentials` の deny、`permissions.deny` の `Read(~/.ssh/**)`、auto mode の classifier のいずれもこの command を止めうる。観測できたのは「credential への Bash 経由のアクセスが通らない」ことだけで、個々の層が効いている証明にはならない。
 
 副作用として `chezmoi status` が途中で止まる。`~/.config/gh` の lstat が拒否されるため、repo 全体の未 apply 差分を取れない。代わりに `chezmoi managed` の一覧と実体を突き合わせる。
+
+sandbox 内から子の `claude` session を起こそうとすると `401 OAuth access token has expired` で落ちる（2026-08-31 と 2026-09-01 に再現）。うち 2026-08-31 は、同じ日に terminal から起動した `claude` が動いていたので、token が失効しているわけではないと読める。**どこで止まるかは切り分けていない。** credential は Keychain の `Claude Code-credentials` エントリにあり（`~/.claude/.credentials.json` は存在しない）、その Keychain は sandbox 内からも見え、`security` でエントリのメタデータまで取れる。設定を変えた A/B は sandbox 外の terminal で取る。
 
 拒否が permission prompt でなく即時 denial だったことは確認できた。`default` mode は操作ごとに prompt を出す仕様なので、`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が `defaultMode` を黙って `default` へ落とした前例は再発していないと読める。
 
