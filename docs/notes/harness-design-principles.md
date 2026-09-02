@@ -19,6 +19,8 @@
 
 `chezmoi apply` で更新した設定のうち、sandbox は実行中の session に即反映される。`allowUnixSockets` を足して apply した直後、それまで拒否されていた agent socket へ接続できた。
 
+`permissions.deny` も即反映される。`Bash(diskutil *)` を足して apply した直後、同じ session で `diskutil list` が実行前に拒否された（2026-09-02）。
+
 session へ渡る skill 一覧も即反映される。`scribe` の description を書き換えて apply した直後、session を開き直さずに記述が新しいものへ変わった（2026-08-31）。新規 skill の追加も同じで、`self-review` を足すと apply の直後に一覧へ現れた（2026-09-01）。
 
 `SKILL.md` の本文も、書き換えて apply した後に同じ session で invoke すると新しいものが届いた（2026-09-01、`self-review` の手順で確認）。
