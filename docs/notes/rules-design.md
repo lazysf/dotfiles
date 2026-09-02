@@ -15,18 +15,18 @@
 
 ## coding-standards を常時 load にする理由
 
-`paths` を付けない。理由は 3 つ。
+`paths` を付けない。理由は 4 つ。
 
 - **中身の大半がコード限定でない。** 品質の優先順位、適用の参照順、基本原則、最小差分は `settings.json`、`CLAUDE.md`、`docs/` の編集にも効く。コード限定は可読性の具体とコメントだけ。`paths` を付けると、コード限定でない部分まで巻き添えで無効化される。
 - **path 条件には穴がある。** `**/src/**` 系の glob を並べても `cmd/` / `internal/` / `pkg/` / `apps/` / repo 直下のコードが漏れる。`paths` を持たなければこの穴は構造的に消える。
 - **節約量が誤差。** 常時 load の総量は公式目安に収まっている（[claude-md-design.md](./claude-md-design.md)）。
-- **`paths` を付けると発火しない。** この harness は Bash を主経路に指示するので、`paths` 付き rule は Read tool を通らず注入されない（上記）。付けた時点で rule 全体が死ぬ。
+- **`paths` を付けると発火が遵守依存になる。** この harness は Bash を主経路に指示し、`paths` 付き rule は Read tool を通らないと発火しない（「path 条件付き rule は Read tool でしか発火しない」）。`CLAUDE.md` で対抗しているが強制力は無いので、`paths` を付けた分だけ確実性が落ちる。
 
 捨てた案: 常時適用部とコード限定部へ 2 ファイル分割。コード限定部は小さく、分割で減る量に対して path 条件の穴を再生産することになる。コード限定部が大きく育った時に再検討する。
 
 `vba.md` は逆に `paths` を持つ。VBA の保存形式と識別子制約は `.bas` / `.cls` を触る時にしか意味がなく、他の作業では読む価値がない。条件は拡張子だけでなく `src/` 配下にも掛かっており（正本は `dot_claude/rules/vba.md`）、上に書いた src 前提の穴を形の上では持つ。ただし exported した `.bas` / `.cls` は `src/` 配下へ置く運用で固定しているため、この穴には当たらない。`src/` 外へ VBA source を置く運用に変わったら glob を広げる。
 
-**ただし現状この rule は発火していない。** 上記のとおり `paths` 付き rule は Read tool でしか注入されず、この harness は Bash を主経路に指示する。glob の形は正しい（公式が brace expansion のサポートを明記）が、`.bas` / `.cls` を `cat` で開く限り注入は起きない。
+**この rule の発火は契約の遵守に依存する。** `paths` 付き rule は Read tool でしか発火しないので、`.bas` / `.cls` を `cat` で開くと何も起きない。glob の形自体は正しい（公式が brace expansion のサポートを明記）ので、発火しないのは書き方の問題ではない。
 
 ## path 条件付き rule は Read tool でしか発火しない
 
@@ -34,9 +34,11 @@
 
 公式も「Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use」と書き、compaction の節では「a path-scoped rule that hasn't matched a file since」と、ファイルに match していない状態を前提にしている。
 
-**この harness では auto mode が Bash を主経路に指示する。** 「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」という指示が session へ入るため、`paths` 付き rule は実際には発火しない。macOS と Windows のどちらでも発火していない（2026-09-02 確認）。
+**この harness では auto mode が Bash を主経路に指示する。** 「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」という指示が session へ入る。これに従う限り `paths` 付き rule は発火しない。2026-09-02 時点で発火した実績は無く、macOS はこの環境での実測、Windows はユーザーの確認による。
 
 この Bash 優先の指示は system-reminder にのみ現れ、[Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) のいずれにも記載が無い。制御する設定キーがあるかは未確認で、文書化されていない以上いつ変わるかも分からない。
+
+対抗策として、`CLAUDE.md` の共通契約が Read / Edit / Write tool を使うよう定めている（置き場の理由は [claude-md-design.md](./claude-md-design.md)）。契約は強制力を持たないので、`paths` 付き rule が発火するかは遵守次第になる。
 
 ## 品質規範を名前ベースでなく判断基準ベースにする理由
 

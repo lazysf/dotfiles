@@ -1,6 +1,6 @@
 # CLAUDE.md の設計
 
-- Date: 2026-08-31
+- Date: 2026-09-02
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Hooks reference](https://code.claude.com/docs/en/hooks) / `dot_claude/CLAUDE.md` / この環境での実測
 
 `dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -64,3 +64,13 @@ hook で機械化していない。hook が出せる `systemMessage` は harness
 掘り下げの 4 条件と ADR の 3 条件は、どちらも AND で結んだ発火閾値を持つ。閾値が運用に合わなくなった時にどうするかは、工程表に書かない。
 
 「運用して過少／過剰なら見直す」は session 中に完結しない。見直すのは人が `CLAUDE.md` を触る時で、その時の置き場がこの notes になる。閾値が合っていないと agent が気づいた場合の経路は、スコープを 1 つに保つ規律が既に持っている。工程表へ置くと、全 session で読まれるのにどの依頼でも使われない行が残る。閾値を固定と扱っているわけではなく、置き場の話。
+
+## tool の使い分けをここに置く理由
+
+auto mode は「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」という指示を session へ入れる。これに従うと `paths` 付き rule が一度も発火しない（[rules-design.md](./rules-design.md)）。
+
+狙いは `paths` の仕組みを設計どおり働かせること。読み書き編集を 3 tool へ寄せれば、path 条件付き rule は対象ファイルに触れた時に発火する。現在 `paths` を持つ rule は `vba.md` の 1 本で、その対象（`src/**/*.{bas,cls}`）はこの repo に存在しないが、**判断は rule の本数ではなく仕組みを使えるようにするかで決めている**（2026-09-02）。`vba.md` の `paths` も維持する。
+
+`rules/` にも `skills/` にも置かない。`rules/` の既存 3 本は 1 つの主題を十数行以上で扱っており、3 文の規範に独立ファイルを立てるのは粒度が合わない。`skills/` は invoke か auto-trigger で発火するので、tool を選ぶ時点で読まれている保証が無い。
+
+強制力は無い。公式の位置付けは「スキル名の列挙をここに置く理由」と同じで、harness の指示とは正面から競合する。機械的に止めるなら PreToolUse hook になるが、ファイル読み取りに使える command は無数にあり、パターンの網羅が保守負荷になる。この規定が競合に勝つかも未確認で、確かめるには apply した後に session を開き直し、`paths` の対象ファイルを扱わせて rule が注入されるかを見る。
