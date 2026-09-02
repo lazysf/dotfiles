@@ -1,7 +1,7 @@
 # rules の設計
 
-- Date: 2026-09-01
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / `dot_claude/rules/` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この環境での実測
+- Date: 2026-09-02
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / `dot_claude/rules/` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この環境での実測（`paths` の発火経路は 2026-09-02、Claude Code v2.1.255）
 
 `dot_claude/rules/` が今の形になっている理由を残す。rule 本体を読んでも分からない前提と判断に絞る。
 
@@ -20,16 +20,23 @@
 - **中身の大半がコード限定でない。** 品質の優先順位、適用の参照順、基本原則、最小差分は `settings.json`、`CLAUDE.md`、`docs/` の編集にも効く。コード限定は可読性の具体とコメントだけ。`paths` を付けると、コード限定でない部分まで巻き添えで無効化される。
 - **path 条件には穴がある。** `**/src/**` 系の glob を並べても `cmd/` / `internal/` / `pkg/` / `apps/` / repo 直下のコードが漏れる。`paths` を持たなければこの穴は構造的に消える。
 - **節約量が誤差。** 常時 load の総量は公式目安に収まっている（[claude-md-design.md](./claude-md-design.md)）。
+- **`paths` を付けると発火しない。** この harness は Bash を主経路に指示するので、`paths` 付き rule は Read tool を通らず注入されない（上記）。付けた時点で rule 全体が死ぬ。
 
 捨てた案: 常時適用部とコード限定部へ 2 ファイル分割。コード限定部は小さく、分割で減る量に対して path 条件の穴を再生産することになる。コード限定部が大きく育った時に再検討する。
 
 `vba.md` は逆に `paths` を持つ。VBA の保存形式と識別子制約は `.bas` / `.cls` を触る時にしか意味がなく、他の作業では読む価値がない。条件は拡張子だけでなく `src/` 配下にも掛かっており（正本は `dot_claude/rules/vba.md`）、上に書いた src 前提の穴を形の上では持つ。ただし exported した `.bas` / `.cls` は `src/` 配下へ置く運用で固定しているため、この穴には当たらない。`src/` 外へ VBA source を置く運用に変わったら glob を広げる。
 
-## path 条件付き rule は正常に発火する
+**ただし現状この rule は発火していない。** 上記のとおり `paths` 付き rule は Read tool でしか注入されず、この harness は Bash を主経路に指示する。glob の形は正しい（公式が brace expansion のサポートを明記）が、`.bas` / `.cls` を `cat` で開く限り注入は起きない。
 
-`paths` 付きの rule は auto mode でも発火する。2026-08-27 の実測で、Read tool を一度も使わないセッションでも context へ注入されることを確認した。`InstructionsLoaded` hook でも `session_start` での load を確認している。
+## path 条件付き rule は Read tool でしか発火しない
 
-`cat` / `sed` を主経路にすると Read tool を通らないため発火しない、という推測は成り立たない。`paths` を避ける理由にはならない。
+`paths` 付きの rule が context へ注入されるのは、Claude が **Read tool** で match するファイルを開いた時だけ。Bash の `cat` では注入されない。2026-09-02 に `src/probe.bas` を作り、`cat` と Read tool の両方で読んで確認した（`cat` では何も起きず、Read tool の直後に `vba.md` の全文が注入された）。
+
+公式も「Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use」と書き、compaction の節では「a path-scoped rule that hasn't matched a file since」と、ファイルに match していない状態を前提にしている。
+
+**この harness では auto mode が Bash を主経路に指示する。** 「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」という指示が session へ入るため、`paths` 付き rule は実際には発火しない。macOS と Windows のどちらでも発火していない（2026-09-02 確認）。
+
+この Bash 優先の指示は system-reminder にのみ現れ、[Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) のいずれにも記載が無い。制御する設定キーがあるかは未確認で、文書化されていない以上いつ変わるかも分からない。
 
 ## 品質規範を名前ベースでなく判断基準ベースにする理由
 
