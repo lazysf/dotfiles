@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
 - Date: 2026-09-02
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -45,7 +45,15 @@ desktop app 経由の install では `claude` が PATH に無く、実体は `~/
 | `op item delete` | `soft_deny` の Secret-Store Writes の「or equivalent」 |
 | force push、remote branch 削除、`commit --amend` | `soft_deny` の Git Destructive |
 
-built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDisk`）** は「ローカルファイルの削除」ではないので Irreversible Local Destruction の射程外。これだけ自前で deny する。
+built-in が扱わないもの。**disk の format** は「ローカルファイルの削除」ではないので Irreversible Local Destruction の射程外。これだけ自前で deny する。
+
+`mkfs` と `mkfs.*` は macOS に存在しない（2026-09-02、`/sbin` `/usr/sbin` `/bin` `/usr/bin` を数えて 0 件）。等価は `/sbin/newfs_hfs` など `newfs_` 系の 6 本で、`Bash(newfs_* *)` の 1 行で覆う。`mkfs` 系を残しているのは、Linux / WSL2 で実行する場合を想定するため。
+
+**`diskutil` は verb を列挙せず全体を deny する。** 破壊 verb はトップレベル（`eraseDisk` / `partitionDisk` / `splitPartition` / `resizeVolume` など）だけでなく `apfs` / `appleRAID` / `coreStorage` の sub-verb にもあり、`diskutil [quiet] verb [subVerb] [options]` の階層に散る。列挙すると階層ごとにパターンを書き分けることになる。
+
+代償は、deny が allow で例外を作れないこと（公式: broad な deny は narrower な allow が match する呼び出しも block する）。読み取り用の `diskutil list` / `info` も止まる。現時点でこの代償は観測されない。sandbox 内では読み取り verb も動かず、`list` / `info /` / `apfs list` / `listFilesystems` のいずれも `Unable to run because unable to use the DiskManagement framework` で落ちる（2026-09-02 実測）。復活した場合の逃げ道は deny 行自体を狭めることで、allow rule では作れない。
+
+**この deny が disk 破壊を止めている層ではない。** どの層が実際に効いているかは「sandbox で効いている層と効いていない層」にある。
 
 `gh auth logout` も built-in に無いが、実害が小さいので置いていない。
 
@@ -62,6 +70,8 @@ built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDis
 | `network.allowedDomains` | **単体では domain gate にならない**。allowlist にも `WebFetch(domain:)` にも無い host へ prompt なしで到達する（2026-08-27 と 2026-08-29 に実測、後者は `curl https://example.com` が 200）。この環境固有ではなく、公式が「pre-allow なし、新しい host は prompt か classifier」と定める既定の挙動 |
 | `permissions.deny` の `Read(...)` | **効いている。sandbox の read 制限にも合流する**。`credentials` に無い `$TMPDIR/probe/secrets/x.txt` を python から開くと `PermissionError`（2026-08-31 実測）。公式も、`Read` deny rule は Bash の `cat` / `head` / `tail` / `sed` に適用され、sandbox 設定の構築にも使われると書く |
 | `Bash(curl *)` / `wget` / `nc` の deny | permission rule としては有効だが**名前ベース**。`python3 -c "import urllib.request; ..."` で素通りする（実測） |
+| `Bash(newfs_* *)` / `Bash(diskutil *)` の deny | 同じく**名前ベース**。`sudo` / 絶対パス / `sh -c` を覆わない（下記） |
+| `sudo` | **sandbox が止める**。`sudo -n true` が `operation not permitted` で落ちる（2026-09-02 実測） |
 | `WebFetch` | 公式仕様上 sandbox の対象外 |
 
 **Bash の外向き通信に実効的な domain 境界は無い。** 歯止めは LLM 契約と停止線、および credential 側の deny。
@@ -69,6 +79,15 @@ built-in が扱わないもの。**disk の format（`mkfs` / `diskutil eraseDis
 切り分けの注意: proxy の拒否は HTTP status ではなく `URLError: Tunnel connection failed` として現れる。HTTP status を deny の証拠と読むと誤判定する（406 を返す origin に到達しているだけ、ということがある）。
 
 境界を作るには `strictAllowlist` が要る。入れていない理由は「入れていない設定と理由」にある。
+
+**disk 破壊を実際に止めているのは deny rule ではない。** 公式が strip する wrapper は `timeout` / `time` / `nice` / `nohup` / `stdbuf` / `command` / `builtin` / `noglob` と flag 無しの `xargs` だけで、`sudo` は含まれない。最初の `*` より前は literal に match するので、`sudo diskutil eraseDisk ...` も `/usr/sbin/diskutil ...` も `sh -c '...'` も rule から外れる。効いているのは次の 4 つで、deny rule はその後ろに置く speed bump として持つ。上の層が無い環境（sandbox 無効、root 実行、Linux / WSL2）でだけ前に出る。
+
+- sandbox が `sudo` を止める（上記）
+- `/dev/disk0` は `brw-r----- root:operator` で、session の uid 501 は `operator` の member でない（2026-09-02 実測）
+- sandbox の write allowlist に `/dev/disk*` が無い
+- auto mode の classifier。raw device への write を試した probe が block された（2026-09-02 観測）
+
+**sandbox の層は `excludedCommands` に載せた command には掛からない。** `allowUnsandboxedCommands: false` でも公式は「all commands must run sandboxed or be explicitly listed in `excludedCommands`」と書く。この配列は session が読む全 scope から merge され、managed settings で締める手段も無い（公式: 「`excludedCommands` has no equivalent managed-only lockdown」）。現在は未設定なので穴は開いていないが、project scope が 1 行足せば開く。
 
 ## 実測: credential への Bash アクセスは通らない
 
@@ -193,3 +212,5 @@ trailer を止めると以後の commit では AI の関与が履歴に残らな
 
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution.pr` に空文字を設定した効果。この repo で PR を作っていないので実測していない。
+- `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる（どちらも実行前に拒否するのに対し、返るのは `diskutil` 自身の error なので実行されている）。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
+- disk 破壊の deny rule が、どの呼び出し形なら block するか。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられるのは、apply 後に `diskutil list` が deny されるかどうかだけ。
