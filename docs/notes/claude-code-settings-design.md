@@ -70,7 +70,7 @@ built-in が扱わないもの。**disk の format** は「ローカルファイ
 | `network.allowedDomains` | **単体では domain gate にならない**。allowlist にも `WebFetch(domain:)` にも無い host へ prompt なしで到達する（2026-08-27 と 2026-08-29 に実測、後者は `curl https://example.com` が 200）。この環境固有ではなく、公式が「pre-allow なし、新しい host は prompt か classifier」と定める既定の挙動 |
 | `permissions.deny` の `Read(...)` | **効いている。sandbox の read 制限にも合流する**。`credentials` に無い `$TMPDIR/probe/secrets/x.txt` を python から開くと `PermissionError`（2026-08-31 実測）。公式も、`Read` deny rule は Bash の `cat` / `head` / `tail` / `sed` に適用され、sandbox 設定の構築にも使われると書く |
 | `Bash(curl *)` / `wget` / `nc` の deny | permission rule としては有効だが**名前ベース**。`python3 -c "import urllib.request; ..."` で素通りする（実測） |
-| `Bash(newfs_* *)` / `Bash(diskutil *)` の deny | 同じく**名前ベース**。`sudo` / 絶対パス / `sh -c` を覆わない（下記） |
+| `Bash(newfs_* *)` / `Bash(diskutil *)` の deny | **効いている**。`diskutil list` が実行前に拒否される（2026-09-02 実測）。ただし**名前ベース**で、`sudo` / 絶対パス / `sh -c` は覆わない（下記） |
 | `sudo` | **sandbox が止める**。`sudo -n true` が `operation not permitted` で落ちる（2026-09-02 実測） |
 | `WebFetch` | 公式仕様上 sandbox の対象外 |
 
@@ -213,4 +213,4 @@ trailer を止めると以後の commit では AI の関与が履歴に残らな
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution.pr` に空文字を設定した効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる（どちらも実行前に拒否するのに対し、返るのは `diskutil` 自身の error なので実行されている）。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
-- disk 破壊の deny rule が、どの呼び出し形なら block するか。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられるのは、apply 後に `diskutil list` が deny されるかどうかだけ。
+- disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
