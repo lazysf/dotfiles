@@ -73,4 +73,6 @@ auto mode は「read files with cat, head, or sed -n ... rather than using the d
 
 `rules/` にも `skills/` にも置かない。`rules/` の既存 3 本は 1 つの主題を十数行以上で扱っており、3 文の規範に独立ファイルを立てるのは粒度が合わない。`skills/` は invoke か auto-trigger で発火するので、tool を選ぶ時点で読まれている保証が無い。
 
-強制力は無い。公式の位置付けは「スキル名の列挙をここに置く理由」と同じで、harness の指示とは正面から競合する。機械的に止めるなら PreToolUse hook になるが、ファイル読み取りに使える command は無数にあり、パターンの網羅が保守負荷になる。この規定が競合に勝つかも未確認で、確かめるには apply した後に session を開き直し、`paths` の対象ファイルを扱わせて rule が注入されるかを見る。
+強制力は無い。公式の位置付けは「スキル名の列挙をここに置く理由」と同じで、harness の指示とは正面から競合する。機械的に止めるなら PreToolUse hook になるが、ファイル読み取りに使える command は無数にあり、パターンの網羅が保守負荷になる。
+
+**競合しても契約が通ることは確認した。** apply 後に開いた別 session で `.bas` を扱わせたところ、Bash ではなく専用 tool が使われた（2026-09-02）。ただし 1 回の観測なので、常に勝つ担保にはならない。`output-styles/caveman.md` の強度切替と同じく、遵守は LLM 依存のまま。
