@@ -1,6 +1,6 @@
 # harness の設計原則
 
-- Date: 2026-09-01
+- Date: 2026-09-02
 - 出典: `dot_claude/` / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この環境での実測
 
 この harness に何を置き、どう書くかの判断基準を残す。個別の設定や skill が今の形である理由は、それぞれの設計 note にある。
@@ -25,9 +25,11 @@ session へ渡る skill 一覧も即反映される。`scribe` の description �
 
 `SKILL.md` の本文も、書き換えて apply した後に同じ session で invoke すると新しいものが届いた（2026-09-01、`self-review` の手順で確認）。
 
-`CLAUDE.md`、`rules/`、output style は session 開始時に load されるため、apply しても動いている session は旧版のまま走り続ける。新版になるのは次に session を開いた時から。契約や rule を直した効果を確かめるには session を開き直す。
+`outputStyle` の値も即反映される。`~/.claude/settings.json` を `caveman` → `Concise` → `caveman` と書き換えたところ、`/clear` も新しい session も挟まずに切り替わった（2026-09-02、同じ session 内で往復 2 回）。公式は「Changes take effect after `/clear` or a new session」と書くので、挙動が食い違う。ただし観測できたのは harness が注入する reminder の文言と、それに沿って応答が変わったことまでで、system prompt の style 本体が差し替わったかは切り分けていない。
 
-output style について公式が書く "reads once at session start" は `outputStyle` 設定（どの style を選ぶか）についてで、ファイル内容の編集には触れていない。内容も同じく session 開始時であることは実測した（2026-08-31、`caveman.md` へ probe 文字列を足して apply し、同じ session で応答が変わらないことを確認）。
+`CLAUDE.md` と `rules/` は session 開始時に load されるため、apply しても動いている session は旧版のまま走り続ける。新版になるのは次に session を開いた時から。契約や rule を直した効果を確かめるには session を開き直す。
+
+同じ output style でも、style ファイルの内容を編集した場合は session 開始時のままになる。2026-08-31 に `caveman.md` へ probe 文字列を足して apply し、同じ session で応答が変わらないことを確認した。公式の "reads once at session start" は `outputStyle` 設定について書かれていて内容の編集に触れていないが、実測では内容の側が公式の記述どおりに振る舞い、値の側が食い違う。
 
 ## skill description の書き方
 
