@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-08-31
+- Date: 2026-09-02
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -49,6 +49,16 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 停止条件は手順全体にかかる制約として書いている。後半 2 つ（分割の単位が判断できない / ファイル単位で分けられない）は範囲を決める段階まで分からず、手順 1 の `git status -sb` では判定できない。ステップにすると位置が固定され、後の段階で判明する条件と噛み合わない。
 
 混在差分そのものは停止理由にしない。分割して複数 commit にすれば済む場面が多い。停止するのは分割の単位が判断できない時と、1 ファイル内で無関係な変更が混ざりファイル単位で分けられない時。後者は hunk 単位の staging に `git add -p` が要るが、この環境では interactive flag が動かない。
+
+## surface の変更と doc を同じ commit にしない理由
+
+`dot_claude/` などの surface を変えた時、その理由を書いた `docs/notes/` は別 commit にする。skill 側の「性質の違う変更が混ざっていれば分割」をこの組み合わせへ当てた結果で、skill 本文は判断の材料を持たない。
+
+同じ commit に入れる案も成立する。理由の記録は変更に従属するので、`git revert` した時に理由だけ残ると存在しない状態を説明する doc になる。それでも分けているのは、type を正確に保つ方を取ったため。1 commit にすると `feat` と `docs` のどちらを名乗っても片方が嘘になり、`git log --oneline` を type で追えなくなる。revert の齟齬は、戻す時に doc も直せば閉じる。
+
+`docs/notes/` 側が実測の記録である場合は、そもそも変更に従属しない。単独で真なので分けるかどうかを判断するまでもない。
+
+2026-09-01 時点の履歴で、`dot_claude/` と `docs/notes/` を同じ commit で触ったものは 30 件ある。ただしその大半は surface を作り替える `refactor` / `chore` で、単一の rule や skill を足す変更では分かれている。
 
 ## 機密混入の確認方法
 
