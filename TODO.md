@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-09-01
+- Date: 2026-09-02
 
 このファイルは、着手を保留している項目の一覧。
 
@@ -154,8 +154,38 @@ git push -u origin archive/pre-reset-20260827
 
 ---
 
+## 8. disk 以外の破壊 command が deny に無い
+
+- 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
+
+`permissions.deny` が名前で挙げているのは `mkfs` 系 / `newfs_` 系 / `diskutil` だけ。2026-09-02 に実在を確認した未 deny の破壊系は次のとおり。
+
+`dd` / `fdisk` / `gpt` / `asr` / `hdiutil` / `pdisk` / `apfs_hfs_convert` / `fsck_apfs` / `fsck_hfs` / `nvram` / `bless` / `csrutil` / `tmutil`。
+
+reviewer は `tmutil`（Time Machine backup の削除）の期待損失が disk format より大きい可能性を挙げている。
+
+**ただし名前を足しても境界は動かない。** 理由は `docs/notes/claude-code-settings-design.md` の「sandbox で効いている層と効いていない層」に書いてある。deny は名前ベースで `sudo` / 絶対パス / `sh -c` を覆わず、実効的な層は別にある。`dd` は引数順が自由なため、`Bash(dd *)` で全 dd を止めない限り prefix match では捕まらない。
+
+着手前に「この層に何を期待するか」を決める必要がある。事故と model の誤りへの speed bump と割り切るなら名前を増やす価値はあるが、境界として数えるなら別の層（hook など）が要る。
+
+---
+
+## 9. chezmoi source の `settings.json` が protected path でない
+
+- 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
+
+sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/.claude/settings.json` という**名前**。chezmoi source の `dot_claude/settings.json` は作業ディレクトリ配下の別名なので、この保護に入らない。sandbox 内の command が書き換え、`chezmoi apply` で `~/.claude/settings.json` へ昇格できる。
+
+つまり `dot_claude/settings.json` に書いた rule は、事故と model の誤りへの guardrail であって、侵害されたプロセスに対する境界ではない。
+
+**書き込みが通ることは確認済み。** session へ渡される sandbox 設定の write deny 一覧に `<repo>/.claude/settings.json` は入っているが `<repo>/dot_claude/settings.json` は入っておらず、2026-09-02 にこの経路で実際に編集した（disk 破壊 deny の変更そのもの）。
+
+---
+
 ## 依存関係
 
 1 から 3 は互いに独立していて、どれからでも着手できる。3 は 1 行の修正で単独で閉じる。
 
 4 と 5 は `dot_config/git/config.tmpl` を触るため、同時に扱うと差分が小さくなる。
+
+8 と 9 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、8 は rule の中身、9 は rule を置くファイル自体の保護で、別々に閉じられる。
