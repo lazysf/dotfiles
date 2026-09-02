@@ -84,6 +84,16 @@ security に関わる上限を marker の対象から外しているのは、`CL
 
 **この規約は新規で、既存実態は 0 件。** 2026-09-01 時点、Markdown を除く tracked file を `rg` で見て marker は無い。この repo のコードは Neovim の Lua 設定が大半（tracked file の拡張子で Lua 28 / PowerShell 3 / zsh 2 / sh 2）なので、規約が効くのは主に配布先の project になる。
 
+## privacy を独立した rule にしている理由
+
+`coding-standards.md` へ足さず別ファイルにしてある。対象が違うため。`coding-standards` は実装の質を扱い、`privacy` は成果物に残る値を扱う。混ぜると、コードを書かない作業（doc、設定、commit message）でも品質規範を全部読ませることになる。
+
+`paths` を付けない。混入はコードに限らず、doc、設定、commit message のいずれでも起きる。path で絞ると、そのうち glob に載らない経路が外れる。
+
+`CLAUDE.md` の停止線と重ならない。停止線が挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。2026-09-01 時点で、識別子の方を扱う記述は `CLAUDE.md`、`coding-standards.md`、`skills/git-commit`、`skills/self-review` のどこにも無かった。
+
+**強制層は持たない。** 公式 docs は rule を context であって enforced configuration ではないと明示しており、Claude の判断に関わらず止めたいなら PreToolUse hook を使えとしている。ここでは機械的検査を採らず、rule だけを置いている。既存の rule と skill も同じく強制力を持たないので、層の性質を揃えてある。
+
 ## doc / artifact の rule を持たない理由
 
 doc の書き方は `skills/scribe` が正本で、「doc 追従の要否を黙って飛ばさない」は `CLAUDE.md` の `## doc` が常時側を担う。rule を足すと同じ規定が三重になり、scribe を直すたびに rule も直すことになる。
