@@ -4,11 +4,6 @@ rev = "1db18bb"
 hash = "eff8ff12fa4e5f035a10d8aeeb4c258d"
 
 [[plugin.deps]]
-use = "yazi-rs/plugins:git"
-rev = "1db18bb"
-hash = "c8d30a70659f1b880407e61c564ab4e8"
-
-[[plugin.deps]]
 use = "yazi-rs/plugins:smart-enter"
 rev = "1db18bb"
 hash = "187cc58ba7ac3befd49c342129e6f1b6"
@@ -17,11 +12,6 @@ hash = "187cc58ba7ac3befd49c342129e6f1b6"
 use = "yazi-rs/plugins:smart-paste"
 rev = "1db18bb"
 hash = "3f8d49413bc8691b4c652eb417a20178"
-
-[[plugin.deps]]
-use = "yazi-rs/plugins:vcs-files"
-rev = "1db18bb"
-hash = "6b141fbed3c74b45558fbc7088c805ee"
 
 [flavor]
 deps = []
