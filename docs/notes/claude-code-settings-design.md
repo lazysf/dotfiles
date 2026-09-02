@@ -110,6 +110,19 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 `deny` の効果は `filesystem.denyRead` と同じ。組み込みの deny リストは無いので、守りたい path は自分で列挙する。v2.1.187 以降。
 
+**同じ path を `permissions.deny` の `Read(...)` にも書いている。重複は意図したもので、射程が違う。**
+
+| | 止める対象 |
+| --- | --- |
+| `permissions.deny` の `Read(...)` | Read tool、Bash の `cat` / `head` / `tail` / `sed`、および sandbox の read 制限 |
+| `sandbox.credentials` の file entry | **sandboxed Bash command のみ**（公式: 「affects sandboxed Bash commands only」） |
+
+`credentials` 側だけでは Read tool を止められないので、`permissions.deny` は外せない。逆に `credentials` 固有なのは環境変数の unset / mask で、file 保護の方は filesystem 層の一部なので `filesystem.disabled` にすると消える（env 保護は残る）。公式仕様の上では、**file の deny に限れば `credentials` は `permissions.deny` の上に層を足していない**。実測での切り分けはしていない。
+
+2 つの列挙は完全には一致していないが、片方にしか無い path は他方がカバーしている。`//**/secrets/**` は `permissions.deny` にだけあり、その範囲は「sandbox で効いている層と効いていない層」の実測が示す。`~/.env` は `credentials` にだけあり、`Read(//**/.env)` が filesystem-wide に match する。**揃えていないのは、揃えても塞がる穴が無いため。**
+
+`credentials` 側を外していないのは、外しても read が止まることの確認に設定を変えた A/B が要り、それは sandbox 外の terminal でしか取れないため（「実測: credential への Bash アクセスは通らない」）。現状で実害が出ていないので、確認のコストに見合わない。環境変数の保護を書く時はこのブロックが置き場になる。
+
 **注意**: `credentials` の deny は例外を作れない可能性がある。公式は「A `deny` entry only ever narrows access, so any scope can add one, but **no scope can remove one** that another scope added」と書く。`denyRead: ~/.ssh` + `allowRead: ~/.ssh/known_hosts` のような例外が要るなら、`filesystem` 側で書く必要があるかもしれない。未検証。
 
 ## bypassPermissions を封じる理由
