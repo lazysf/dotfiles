@@ -1,6 +1,6 @@
 # Claude Code Output Style の設計
 
-- Date: 2026-08-31
+- Date: 2026-09-02
 - 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Hooks reference](https://code.claude.com/docs/en/hooks)
 
 `caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
@@ -23,7 +23,9 @@ JuliusBrussee 版が skill なのは移植性（Claude Code 以外の 30 以上�
 
 ## 強度切替が style ファイル内にある理由
 
-ファイルを分けて `/config` で選ぶ形は採れない。どの style を使うかは session 開始時に決まり、`outputStyle` を変えても `/clear` か新しい session でしか反映されない（公式: "reads once at session start"）。session 途中に別の style へ切り替えられない。ファイルの内容も同じく session 開始時に読まれる（`harness-design-principles.md` の「apply の反映は設定の種類で違う」）。
+ファイルを分けて `/config` で選ぶ形は採らない。理由は切り替えの手間。`/config` のメニューが出るのは terminal と VS Code 拡張だけで、desktop app では settings ファイルを直接編集することになる（公式）。style ファイル内に強度を持てば、会話中に `caveman ultra` と書くだけで切り替わる。
+
+`outputStyle` の値そのものは session 途中でも切り替わる（`harness-design-principles.md` の「apply の反映は設定の種類で違う」）。ただしファイルの内容は session 開始時に読まれるため、style を分けても中身の調整は次の session まで効かない。
 
 `/caveman ultra` の slash 形も採れない。`/` 始まりの入力は skill 名として解決されるため、skill でない output style には作れない。
 
