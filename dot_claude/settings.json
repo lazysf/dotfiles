@@ -28,7 +28,8 @@
       "Read(~/.pypirc)",
       "Bash(mkfs *)",
       "Bash(mkfs.* *)",
-      "Bash(diskutil eraseDisk *)"
+      "Bash(newfs_* *)",
+      "Bash(diskutil *)"
     ]
   },
   "sandbox": {
