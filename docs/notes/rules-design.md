@@ -38,7 +38,7 @@
 
 この Bash 優先の指示は system-reminder にのみ現れ、[Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) のいずれにも記載が無い。制御する設定キーがあるかは未確認で、文書化されていない以上いつ変わるかも分からない。
 
-対抗策として、`CLAUDE.md` の共通契約が Read / Edit / Write tool を使うよう定めている（置き場の理由は [claude-md-design.md](./claude-md-design.md)）。契約は強制力を持たないので、`paths` 付き rule が発火するかは遵守次第になる。
+対抗策として、`CLAUDE.md` の共通契約が Read / Edit / Write tool を使うよう定めている（置き場の理由は [claude-md-design.md](./claude-md-design.md)）。apply 後の別 session で契約が優先されることは確認した（2026-09-02）。ただし契約は強制力を持たないので、`paths` 付き rule が発火するかは遵守次第のまま。
 
 ## 品質規範を名前ベースでなく判断基準ベースにする理由
 
