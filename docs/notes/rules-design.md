@@ -9,28 +9,48 @@
 
 常時 load される総量は公式目安（1 ファイル 200 行）に収まっている。統合しても容量では困らない。
 
-分けているのは、統合すると 1 ファイル内で重複が再発するため。共通契約と品質規範は「最小差分で始める」「予防的抽象化を避ける」のように内容が近く、同じファイルに置くと両方に書かれて片方が古くなる。分離した状態で、共通契約側を「実装・編集は最小差分で始める。」の 1 行へ短縮し、判断基準は `coding-standards.md` へ一本化してある。
+分けているのは、統合すると 1 ファイル内で重複が再発するため。共通契約と品質規範は「最小差分で始める」「予防的抽象化を避ける」のように内容が近く、同じファイルに置くと両方に書かれて片方が古くなる。分離した状態で、共通契約側を「実装・編集は最小差分で始める。」の 1 行へ短縮し、判断基準は `rules/quality.md` へ一本化してある。
 
-**この一本化により、共通契約から削った規範の受け皿は `coding-standards.md` だけになっている。** この rule に `paths` を付けるなら、共通契約側の記述も同時に戻す。片方だけ戻すと規範が全セッションから黙って消える。
+**この一本化により、共通契約から削った規範の受け皿は `rules/quality.md` だけになっている。** この rule に `paths` を付けるなら、共通契約側の記述も同時に戻す。片方だけ戻すと規範が全セッションから黙って消える。
 
-## coding-standards を常時 load にする理由
+## `paths` を使わない
 
-`paths` を付けない。理由は 4 つ。
+path 条件付き rule は Read tool でしか発火せず（下記）、この harness は auto mode で Bash を主経路に指示する。`CLAUDE.md` で対抗する案は実際に効いたが、auto mode では Bash の方が効率と正確さで優るため外した（[claude-md-design.md](./claude-md-design.md)）。結果として `paths` は構造的に発火しないので、rule には付けない。
 
-- **中身の大半がコード限定でない。** 品質の優先順位、適用の参照順、基本原則、最小差分は `settings.json`、`CLAUDE.md`、`docs/` の編集にも効く。コード限定は可読性の具体とコメントだけ。`paths` を付けると、コード限定でない部分まで巻き添えで無効化される。
-- **path 条件には穴がある。** `**/src/**` 系の glob を並べても `cmd/` / `internal/` / `pkg/` / `apps/` / repo 直下のコードが漏れる。`paths` を持たなければこの穴は構造的に消える。
-- **節約量が誤差。** 常時 load の総量は公式目安に収まっている（[claude-md-design.md](./claude-md-design.md)）。
-- **`paths` を付けると発火が遵守依存になる。** この harness は Bash を主経路に指示し、`paths` 付き rule は Read tool を通らないと発火しない（「path 条件付き rule は Read tool でしか発火しない」）。`CLAUDE.md` で対抗しているが強制力は無いので、`paths` を付けた分だけ確実性が落ちる。
+## rule と skill の使い分け
 
-捨てた案: 常時適用部とコード限定部へ 2 ファイル分割。コード限定部は小さく、分割で減る量に対して path 条件の穴を再生産することになる。コード限定部が大きく育った時に再検討する。
+`paths` を捨てると、置き場は常時 load される `rules/` か、description で発火する `skills/` の 2 択になる。判断は 2 段。
 
-`vba.md` は逆に `paths` を持つ。VBA の保存形式と識別子制約は `.bas` / `.cls` を触る時にしか意味がなく、他の作業では読む価値がない。条件は拡張子だけでなく `src/` 配下にも掛かっており（正本は `dot_claude/rules/vba.md`）、上に書いた src 前提の穴を形の上では持つ。ただし exported した `.bas` / `.cls` は `src/` 配下へ置く運用で固定しているため、この穴には当たらない。`src/` 外へ VBA source を置く運用に変わったら glob を広げる。
+1. **どの依頼でも要るか。** 要るなら `rules/`。
+2. 要らないなら、**発火しなかった時の実害**を見る。security、privacy、データ損失に関わるなら確実性を取って `rules/` に置く。skill の発火は description 依存で、外れると守られない。
 
-**この rule の発火は契約の遵守に依存する。** `paths` 付き rule は Read tool でしか発火しないので、`.bas` / `.cls` を `cat` で開くと何も起きない。glob の形自体は正しい（公式が brace expansion のサポートを明記）ので、発火しないのは書き方の問題ではない。
+両方に当たらないものだけ `skills/` へ移す。2026-09-02 時点の判定は次のとおり。
+
+| rule | どの依頼でも要るか | 実害 | 置き場 |
+| --- | --- | --- | --- |
+| `quality` | はい | 中 | `rules/` |
+| `privacy` | はい | 大 | `rules/` |
+| `vba` | いいえ | 小 | `skills/` |
+
+## quality を常時 load にする理由
+
+残した 4 節（品質の優先順位、適用の参照順、基本原則、最小差分）は、コードに限らず `settings.json` や `docs/` の編集にも効く。「rule と skill の使い分け」の 1 段目に当たるので `rules/` に置く。
+
+2026-09-02 まではコード限定部（打ち切り順、可読性の具体、コメント）も同じファイルにあり、名前も `coding-standards.md` だった。分割したのは、`paths` を使わない方針が決まった時に中身を数え直し、実質 31 行（見出しと空行を除く）のうち 20 行がコードを書く時だけ要ると分かったため。移した先と経緯は [coding-skill-design.md](./coding-skill-design.md)。
+
+分割前は 2 ファイル分割案を「コード限定部は小さく、分割で減る量に対して path 条件の穴を再生産する」として捨てていた。`paths` を使わない今は穴が生じず、減る量も 20 行あるので、捨てた根拠が両方とも消えている。
+
+rename したのは、残った 4 節がコーディング限定でないため。`standards` が指す具体的な規約（命名、直線化、コメント）は skill へ移り、判断基準だけが残った。skill 名 `coding` との混同も避けている。
+
+## vba を rules に置かない理由
+
+VBA の保存形式と識別子制約は `.bas` / `.cls` を触る時にしか意味がなく、他の作業では読む価値がない。「rule と skill の使い分け」の 2 段を通すと、どの依頼でも要るわけではなく、発火しなくても実害は形式の崩れに留まるので `skills/` に当たる。実体は `dot_claude/skills/coding/references/vba.md` で、拡張子の衝突をどう扱っているかは [coding-skill-design.md](./coding-skill-design.md)。
+
+`paths` で絞る形は 2026-09-02 まで採っていたが、一度も発火していなかった。glob（`src/**/*.{bas,cls}`）の書き方は正しく、発火しない原因は経路の側にある（下記）。
 
 ## path 条件付き rule は Read tool でしか発火しない
 
-`paths` 付きの rule が context へ注入されるのは、Claude が **Read tool** で match するファイルを開いた時だけ。Bash の `cat` では注入されない。2026-09-02 に `src/probe.bas` を作り、`cat` と Read tool の両方で読んで確認した（`cat` では何も起きず、Read tool の直後に `vba.md` の全文が注入された）。
+`paths` 付きの rule が context へ注入されるのは、Claude が **Read tool** で match するファイルを開いた時だけ。Bash の `cat` では注入されない。2026-09-02 に `src/probe.bas` を作り、`cat` と Read tool の両方で読んで確認した（`cat` では何も起きず、Read tool の直後に `vba.md` の全文が注入された。当時 VBA の規約は `rules/vba.md` にあり、現在は skill）。
 
 公式も「Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use」と書き、compaction の節では「a path-scoped rule that hasn't matched a file since」と、ファイルに match していない状態を前提にしている。
 
@@ -38,68 +58,21 @@
 
 この Bash 優先の指示は system-reminder にのみ現れ、[Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) のいずれにも記載が無い。制御する設定キーがあるかは未確認で、文書化されていない以上いつ変わるかも分からない。
 
-対抗策として、`CLAUDE.md` の共通契約が Read / Edit / Write tool を使うよう定めている（置き場の理由は [claude-md-design.md](./claude-md-design.md)）。apply 後の別 session で契約が優先されることは確認した（2026-09-02）。ただし契約は強制力を持たないので、`paths` 付き rule が発火するかは遵守次第のまま。
+`CLAUDE.md` の共通契約で Read / Edit / Write tool を使うよう定める案を試し、apply 後の別 session で契約が harness の指示に勝つことを確認した（2026-09-02）。それでも外したのは、auto mode では Bash の方が効率と正確さで優るため（[claude-md-design.md](./claude-md-design.md)）。`paths` の側を諦めている。
 
-## 品質規範を名前ベースでなく判断基準ベースにする理由
+## 優先順位に「短さ・巧妙さ」を置かない理由
 
-- **優先順位に「短さ・巧妙さ」を置かない。** priority list に載せると「上位を損なわない範囲で巧妙さを追求してよい」と読める。巧妙さは可読性の敵なので、「短さと巧妙さは目標にしない」と否定形で書く。`DRY` は「性能より下」という位置情報が有用なので list に残す。
-- **命名の汎用語リストに `handler` / `process` を入れない。** HTTP handler / event handler は framework が定義する確立した語で、`data` / `tmp` と同列に禁じると誤爆する。例外の根拠は「近傍実装で使われている」ではなく「framework が定義する語である」に絞る。前者だと「この repo は既に `helpers/` を使っている」でリスト全体を無効化できてしまう。
-- **予防的抽象化の禁止列挙に `Provider` / `Manager` を入れず、例示に留める。** React の Provider や Nest / Spring の DI container は framework 規約が要求する構造で、自作の間接層とは別物。素の Node / Python で自作する DI container はこの規範が止めたい典型なので、例示は framework 名まで具体化する。
-- `manager` が命名リストに残り `Manager` が抽象化リストから外れているのは整合する。命名 rule は識別子の曖昧さ、抽象化 rule は間接層の早期導入と、対象軸が違う。
+priority list に載せると「上位を損なわない範囲で巧妙さを追求してよい」と読める。巧妙さは可読性の敵なので、「短さと巧妙さは目標にしない」と否定形で書く。`DRY` は「性能より下」という位置情報が有用なので list に残す。
 
-## 打ち切り順が品質の優先順位を上書きしない理由
-
-`coding-standards.md` は「何が良いか」の原則に加えて、「実装前の打ち切り順」として、コードを書く前にどの順で検討を打ち切るかを持つ。原則だけでは、YAGNI と予防的抽象化の回避が並んでいても、どちらから当てるかが読み手ごとに変わる。順序を持たせると、作らない判断が最初に来る。
-
-節名に『停止』を使っていない。この rule は `CLAUDE.md` と同じく常時 load される上、打ち切り順と停止線はどちらも「実装前」と「止まる」を使うので、語が衝突する。運用上の意味は逆で、停止線の「止まる」は実装せず人へ確認しろ、打ち切り順の「止まる」はその段で実装に入れ。「打ち切り順を通した」ことを「停止線を満たした」と読み替える余地を消すため。本文 1 行目の「止まる」は残っているが、目次と他所からの参照で使われるのは節名なので、取り違えの起点はそこにある。
-
-7 段は ponytail のラダーを下敷きにしているが、**段 6 だけ意図を変えて採ってある。** 原文の「一行にできるか → 一行にする」と "Shortest working diff wins" は、`coding-standards.md` 冒頭の「短さと巧妙さは目標にしない」を裏返す。ponytail 自身も `AGENTS.md` で "lazy means less code, not the flimsier algorithm" と補足しており意図は近いが、文言のままだと優先順位が入れ替わって読める。採ったのは「同じ振る舞いで実装量が少ない形があるか」で、不変条件を振る舞い（境界条件と失敗時を含む）に置き、可読性を落とす短縮も併せて禁じてある。短さは、その 2 つを満たした後に残る結果でしかない。
-
-打ち切り順の直後に「品質の優先順位の上位を削る根拠にはならない」を置いているのは、打ち切り順の節だけを読んだ時に入力検証や security を「作らなくてよいもの」として扱う読み方ができるため。ファイル冒頭の優先順位まで戻らせず、その場で閉じる。
-
-段リスト冒頭の carve-out 参照、段 2 の再利用前の確認、段 4 の client 側の扱い、security primitive の段落、段 5 の停止線接続、bug fix 段落の境界文は、いずれも原文に無い追加。
-
-段 2 と段 4 は、段が「成立した」と判定された瞬間に検討が止まる構造の穴を塞ぐもの。所有者検査の無い既存関数を段 2 で再利用する、`<input type="date">` を見て段 4 で日付検証を済ませたと判定する、がそれぞれの典型。段 4 は例の順序も DB 制約側へ寄せてある。
-
-段 2 は判定語に呼び出し元の権限を含め、耐えないと判定した後の行き先も書いてある。判定語を入力と信頼境界だけにすると、所有者検査（誰が呼んだか）が素直に入らず、`CLAUDE.md` 停止線の「認証認可、権限」とも語がずれる。行き先が無いと段 3 へ降りる読みになり、弱い既存実装を残したまま検証経路が 2 つに増える。それは bug fix 段落が禁じている形だが、あちらは「bug fix は」で始まるので、機能追加の途中で弱い helper を見つけた読み手には掛からない。
-
-段 5 の停止線接続と bug fix 段落の境界文を置いたのは、打ち切り順が「上から見て最初に成立した段で止まる」という手続き的で直近の指示だから。これだけを辿ると、新しい依存の追加や共有関数の書き換えが確認を経ずに通る経路が開く。停止線は `CLAUDE.md` にあって常時 load されるが、打ち切り順の節は手順として自己完結して読めるため、参照へ戻る契機が無い。
-
-「停止線」は段 2、段 5、security primitive の段落、bug fix 段落、コメント節の 5 箇所に出るが、定義元の `CLAUDE.md` を書いてあるのは段 2 の初出だけ。5 箇所すべてに付けると、同じ修飾が 1 つの節に 4 回並ぶ。
-
-## security primitive の carve-out を段リストの外に置いている理由
-
-打ち切り順のどの段も、security primitive では逆向きに働く。通常のコードなら「既にあるものを使う」「標準ライブラリで足りる」「新しい依存を足さない」は security にプラスだが、repo の自前 sanitizer を段 2 で再利用する、`Math.random()` を段 3 でトークン生成に使う、password hash を段 4 で DB の `SHA2()` に任せる、汎用 regex の依存を段 5 で sanitize に使う、という形で反転する。段 5 に加えて `CLAUDE.md` の停止線も新しい依存の追加を止めるので、security 用ライブラリの採用だけ 2 段のハードルを越えることになるのも理由。
-
-対象に SQL / shell / path の組み立てを入れてあるのは、injection の最大手が構築側にあるため。sanitize もパーサも解釈側を指す語なので、それだけだと文字列連結で query を組む経路が段 3 で成立して止まる。末尾に独自形式の行き先を書いてあるのは、用途向けのものも実績ある依存も無い形式で選択肢が尽きるのを避けるため。行き先の無い規範は迂回され、迂回が常態化すると carve-out 全体の効き目が落ちる。
-
-carve-out への参照を段リストの冒頭に置いてあるのは、実装の供給源が段 2（repo の既存実装）、段 3（標準ライブラリ）、段 4（platform のネイティブ機能）、段 5（既存の依存）、段 7（自前）と 5 つあり、security primitive の流用はそのどれでも起きるため。段ごとに参照を張ると同じ文が 4 回並び、段リストの後ろだけに置くと、どの段で止まった時点でも読まれない。なお段 5 が持つ停止線への接続は依存を足す判断をした後に効くもので、既存の汎用依存で代用できると判定してその段で止まる経路は塞がない。
-
-## bug fix の段落を打ち切り順と同じ節に置いている理由
-
-`coding-standards.md` は打ち切り順の末尾に、bug fix を症状でなく root cause で直す段落を持つ。出典は ponytail の `skills/ponytail/SKILL.md`（"Bug fix = root cause, not symptom."）で、打ち切り順のラダーとは別立ての規範。
-
-同じ節に置いたのは、この 2 つが同じ主張の裏表だから。ラダーは「作る量を減らす」、bug fix の段落は「呼び出し元ごとにガードを足すより、共有する側を 1 回直す方が差分が小さい」。どちらも実装量を減らす方向で、**根本原因を直すことと最小差分が対立しない**という点で繋がる。別の節に離すと、「最小差分」節だけを読んで症状パッチを選ぶ読み方が残る。
-
-末尾に境界文を置いているのは、この段落が差分を小さくする指示であると同時に、影響範囲を広げる指示でもあるため。共有する側が公開インターフェースを持てば `CLAUDE.md` の停止線に当たり、呼び出し元を全部 grep した結果その大半が依頼と無関係なら、同じく `CLAUDE.md` の「作業中に別の問題へ気づいたら、その場で着手せずユーザーへ伝える」と「修正せず言及に留める」（`coding-standards.md` の最小差分）に当たる。段落だけを読んで「全部直す」へ倒れないように、その場で確認へ繋いでいる。
-
-## コメント marker を `tradeoff:` にしている理由
-
-marker の書式は `coding-standards.md` を正本とする。上限と作り直す条件の両方を書かせているのは、条件が無い marker が、後から読んだ人には放置と区別が付かないため。追跡は `rg -i 'tradeoff:'` の走査だけで、強制力は無い。
-
-security に関わる上限を marker の対象から外しているのは、`CLAUDE.md` の停止線が要求する人への確認を、コメント 1 行が代替する形になるため。`# tradeoff: token 比較は == のまま。timing attack が問題になったら constant-time へ` は、書式としては規約に完全に適合してしまう。marker の再構築条件は「〜が問題になったら」という事後トリガで、security ではその時点が侵害後を意味する。
-
-語を `tradeoff:` にしたのは、`coding-standards.md` のコメント規約が既に「なぜ・制約・外部都合・トレードオフ」を挙げており、marker がその 4 番目の具体形になるため。ponytail の `ponytail:` をそのまま使うと、全 project へ配る contract に外部プロダクト名が残り、ponytail を参照しなくなった後も語だけが残る。
-
-**この規約は新規で、既存実態は 0 件。** 2026-09-01 時点、Markdown を除く tracked file を `rg` で見て marker は無い。この repo のコードは Neovim の Lua 設定が大半（tracked file の拡張子で Lua 28 / PowerShell 3 / zsh 2 / sh 2）なので、規約が効くのは主に配布先の project になる。
+命名と予防的抽象化について同じ型の判断があるが、そちらは `skills/coding` へ移った（[coding-skill-design.md](./coding-skill-design.md)）。
 
 ## privacy を独立した rule にしている理由
 
-`coding-standards.md` へ足さず別ファイルにしてある。対象が違うため。`coding-standards` は実装の質を扱い、`privacy` は成果物に残る値を扱う。混ぜると、コードを書かない作業（doc、設定、commit message）でも品質規範を全部読ませることになる。
+`rules/quality.md` へ足さず別ファイルにしてある。対象が違うため。`quality` は変更の質を扱い、`privacy` は成果物に残る値を扱う。混ぜると、コードを書かない作業（doc、設定、commit message）でも品質規範を全部読ませることになる。
 
 `paths` を付けない。混入はコードに限らず、doc、設定、commit message のいずれでも起きる。path で絞ると、そのうち glob に載らない経路が外れる。
 
-`CLAUDE.md` の停止線と重ならない。停止線が挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。2026-09-01 時点で、識別子の方を扱う記述は `CLAUDE.md`、`coding-standards.md`、`skills/git-commit`、`skills/self-review` のどこにも無かった。
+`CLAUDE.md` の停止線と重ならない。停止線が挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。2026-09-01 時点で、識別子の方を扱う記述は `CLAUDE.md`、`rules/quality.md`、`skills/git-commit`、`skills/self-review` のどこにも無かった。
 
 **強制層は持たない。** 公式 docs は rule を context であって enforced configuration ではないと明示しており、Claude の判断に関わらず止めたいなら PreToolUse hook を使えとしている。ここでは機械的検査を採らず、rule だけを置いている。既存の rule と skill も同じく強制力を持たないので、層の性質を揃えてある。
 

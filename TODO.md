@@ -54,15 +54,17 @@ skill の目的は「変更を見直す」でなく「**commit できる状態�
 
 ---
 
-## 2. `coding-standards` の reviewer 指摘（6 件）
+## 2. 打ち切り順の reviewer 指摘（6 件）
 
 - 記載: 2026-09-01（coding-standards への打ち切り順の導入）
 
 打ち切り順を入れた時の review で non-blocking とされた分。全て未対応。
 
+**2026-09-02 の分割で前提が変わった指摘がある。** 打ち切り順は `rules/coding-standards.md` から `skills/coding/SKILL.md` へ移り、rule 側には品質の優先順位・基本原則・最小差分だけが残った（`rules/quality.md` へ rename）。「段 1 が YAGNI とほぼ同文」は別ファイルへの分離で性質が変わり、「新節だけ書式が浮く」は skill 全体の構成が変わっている。着手前に各指摘が今も成立するか見る。
+
 ### security-reviewer
 
-**節内の語衝突。** `dot_claude/rules/coding-standards.md` の「最初に成立した段で止まる」（= その段で実装に入れ）と「停止線に従って確認する」（= 実装せず人へ）が、同じ番号付きリスト内に同居している。節名を「実装前の打ち切り順」へ rename して他所からの参照は分離したが、節を上から読む経路には残る。reviewer は実害小と判断。
+**節内の語衝突。** `dot_claude/skills/coding/SKILL.md` の「最初に成立した段で止まる」（= その段で実装に入れ）と「停止線に従って確認する」（= 実装せず人へ）が、同じ番号付きリスト内に同居している。節名を「実装前の打ち切り順」へ rename して他所からの参照は分離したが、節を上から読む経路には残る。reviewer は実害小と判断。
 
 ### quality-reviewer
 
@@ -70,7 +72,7 @@ skill の目的は「変更を見直す」でなく「**commit できる状態�
 - **段 6 と段 7 の境界が薄い。** 段 7「依頼を満たす最小の実装」が既に実装量の最小化を含むため、段 6 が独立して効く場面が読み取りにくい。「最初に成立した段で止まる」の「止まる」も、段 1-5 では打ち切りだが段 6-7 では結局書くので性質が違う
 - **新節だけ書式が浮く。** 他の節は bullet 中心、打ち切り順は番号リスト + 地の文 4 段落。常時 load の rule で地の文が続くと読み飛ばされやすい
 - **段 4 の例が web 寄り。** `<input type="date">`、CSS、DB 制約はこの repo の言語構成に当たらない
-- **MIT 由来の出典が配布物に残らない。** `docs/notes/` には ponytail v4.9.0 の URL があるが、`~/.claude/rules/coding-standards.md` として展開された rule 単体には出典が無い。この repo は MIT（`LICENSE`）で public remote。reviewer は「翻案量は小さいので品質上の欠陥ではないが、扱いはユーザーの判断事項」としている
+- **MIT 由来の出典が配布物に残らない。** `docs/notes/` には ponytail v4.9.0 の URL があるが、`~/.claude/skills/coding/SKILL.md` として展開された skill 単体には出典が無い。この repo は MIT（`LICENSE`）で public remote。reviewer は「翻案量は小さいので品質上の欠陥ではないが、扱いはユーザーの判断事項」としている
 
 ### 優先度
 
@@ -86,11 +88,11 @@ skill の目的は「変更を見直す」でなく「**commit できる状態�
 
 現状の記述は「追跡は `rg -i 'tradeoff:'` の走査だけで、強制力は無い」。`ponytail-debt` がやるのは marker の収集、整形、**昇格条件が書かれていない marker への `no-trigger` タグ付け**、集計の 4 つ。`rg` で足りるのは収集だけで、3 つ目は出ない。
 
-これが効くのは、`coding-standards.md` の marker 規約が「上限と作り直す条件を書く」を要求していて、notes 側も「条件が無い marker は放置と区別が付かない」と書いているため。**規約が要求していることを検査する手段が無い**、という事実が記録に残っていない。
+これが効くのは、`skills/coding` の marker 規約が「上限と作り直す条件を書く」を要求していて、notes 側も「条件が無い marker は放置と区別が付かない」と書いているため。**規約が要求していることを検査する手段が無い**、という事実が記録に残っていない。
 
 直す方向は「収集は `rg` で足りるが、条件が書かれているかの判定は出ない。marker を実際に付けたコードがまだ無いので検査を作らず、溜まってから判断する」の趣旨へ。
 
-2026-09-01 時点で `rg -i 'tradeoff:'` が拾うのは `coding-standards.md` の規約本文と `rules-design.md` の解説だけで、marker を付けた実装は 0 件。
+2026-09-01 時点で `rg -i 'tradeoff:'` が拾うのは規約本文と解説だけで、marker を付けた実装は 0 件（当時の置き場は `rules/coding-standards.md` と `rules-design.md`、現在は `skills/coding/SKILL.md` と `coding-skill-design.md`）。
 
 ---
 
