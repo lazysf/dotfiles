@@ -1,6 +1,6 @@
 # lapidary skill の設計
 
-- Date: 2026-09-03
+- Date: 2026-09-04
 - 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
 
 `lapidary` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
@@ -15,7 +15,7 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 ## `git-commit` に組み込まない理由
 
-commit しない review がある。作業の区切り、方針の確認、書いたものが仕上がったかの点検は、commit と独立して起きる。組み込むと review だけを呼べない。
+発火の起点が違う。この skill は変更が一段落した時点で自動で走り、出力は commit できる状態かの判定になる。`git-commit` は変更を Git 履歴へ残す流れで load され、commit 自体もユーザーが指示した時だけ実行する。組み込むと review が commit 指示に依存し、commit しない区切りでは走らない。review が人の呼び出しに依存する状態は、下の「自動で発火させる理由」で退けてある。
 
 `git-commit` の責務も膨らむ。あちらは停止条件、staging 規律、staged diff の検証を持つ。review の観点と混ざると、commit したいだけの時に観点表まで読むことになる。
 
