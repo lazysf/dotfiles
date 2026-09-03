@@ -41,13 +41,13 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 ## description を明示指定に絞っている理由
 
-`harness-design-principles.md` の「skill description の書き方」は 3 つを定めている。依頼語だけに絞らず作業の流れで必要になる場面も書く。短さより境界語の明確さを優先する。強めに書く方へ倒す。この skill はそこから外して、明示指定と工程表からの起動だけを書いている。
+`harness-design-principles.md` の「skill description の書き方」は 3 つを定めている。依頼語だけに絞らず作業の流れで必要になる場面も書く。短さより境界語の明確さを優先する。強めに書く方へ倒す。この skill はそこから外して、明示指定だけを書いている。
 
-**外せるのは、`CLAUDE.md` の工程表が無条件のトリガを持つため。** review 行は「commit 前に `skills/self-review` で、自分の変更を commit できる状態まで仕上げる」で、条件が付いていない。常時 load される側から毎回起動されるので、description の側で作業の流れを拾い直す必要がない。`git-commit` の工程表の行は「**ユーザー指示時に**」と条件付き。非明示の流れは description が拾っている（[git-commit-skill-design.md](./git-commit-skill-design.md)）。そこが違う。
+**外せるのは、この skill を自動で起動しないと決めているため。** `CLAUDE.md` の review 行も明示時だけに絞ってある。`git-commit` の工程表の行は「**ユーザー指示時に**」と条件付き。非明示の流れは description が拾っている（[git-commit-skill-design.md](./git-commit-skill-design.md)）。そこが違う。
 
 description の未発火をこの skill では実測していない。`scribe` と `git-commit` は未発火の実測を持ち、それが記述を強める根拠になっているが、こちらには対応する観測が無い。
 
-**代償はある。** commit を視野に入れていない場面で「問題ない？」とだけ聞かれた時、description の側からは発火しない。工程表が効くのは commit 前なので、そこから外れた点検依頼は取りこぼす。取りこぼしが実際に起きたら、その事例を根拠に記述を戻す。
+**代償はある。** commit を視野に入れていない場面で「問題ない？」とだけ聞かれた時、description の側からは発火しない。取りこぼしを理由に description を広げない。
 
 ## 検証を実行せず確認だけする理由
 

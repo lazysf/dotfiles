@@ -31,7 +31,7 @@
 
 - **掘り下げ**: ①解釈が 2 通り以上に分岐 ②妥当なデフォルトを推測で置けない ③外すと手戻りが大きい ④その曖昧さが探索で埋まらない（ユーザー意図依存）— の全てを満たす時だけ、実装前に 1〜3 問にまとめて確認する。満たさないなら「○○と仮定して進める」と宣言して実装する。コードを読めば分かる曖昧さは質問せず探索で解く。同じことを 2 回聞かない。
 - **方針(Plan)**: 実装方針に複数案があり選択が要る、または変更が広範囲なら、`EnterPlanMode` を自己発動し承認を得てから実装へ。
-- **review**: commit 前に `skills/self-review` で、自分の変更を commit できる状態まで仕上げる。独立 context が要る条件に当たったら、skill が `quality-reviewer` / `security-reviewer` を提案する。コードの bug はユーザー明示時に `/code-review` / `/security-review`。
+- **review**: `skills/self-review` はユーザー明示時だけ実行する。独立 context が要る条件に当たったら、skill が `quality-reviewer` / `security-reviewer` を提案する。コードの bug はユーザー明示時に `/code-review` / `/security-review`。
 - **commit**: ユーザー指示時に `skills/git-commit`。**push は人が terminal で実行する。** sandbox の proxy は SSH を運ばないため、agent が実行しても失敗する。
 
 1 つの作業（着手から commit まで）で扱うスコープは 1 つに保つ。作業中に別の問題へ気づいたら、その場で着手せずユーザーへ伝える。今のスコープを閉じてから扱う。

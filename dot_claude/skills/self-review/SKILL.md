@@ -1,6 +1,6 @@
 ---
 name: self-review
-description: 自分が加えた変更を commit できる状態まで仕上げる。ユーザーが明示的に指定した時と、`CLAUDE.md` の工程表が commit 前の review を通す時だけ使う。スコープ（未達と余分の双方向）、事実、整合性、適用、過剰さ、doc の追従を観点に通し、不足と過剰を直し切る。独立 context が要る時は `quality-reviewer` / `security-reviewer` を提案する。bug の検出は `/code-review`、doc は `scribe`、commit は `git-commit`。
+description: 自分が加えた変更を commit できる状態まで仕上げる。ユーザーが明示的に指定した時だけ使う。スコープ（未達と余分の双方向）、事実、整合性、適用、過剰さ、doc の追従を観点に通し、不足と過剰を直し切る。独立 context が要る時は `quality-reviewer` / `security-reviewer` を提案する。bug の検出は `/code-review`、doc は `scribe`、commit は `git-commit`。
 ---
 
 # Self Review
