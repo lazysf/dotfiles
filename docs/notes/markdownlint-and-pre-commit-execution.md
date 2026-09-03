@@ -1,9 +1,9 @@
 # markdownlint / pre-commit の実行経路
 
-- Date: 2026-08-31
+- Date: 2026-09-03
 - 出典: `.pre-commit-config.yaml` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / markdownlint 0.40.0 の API による rule 単体実測 / `node_modules/markdownlint/doc/md024.md` / commit `287cc7b` `be928f2`
 
-Markdown lint は「手で走らせる経路」と「commit 時に走る経路」の 2 本があり、同じ設定ファイルを読むが別の binary を実行する。設定を触る前にどちらが動くかを取り違えないための記録。
+Markdown lint は「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
 
 hook の一覧と設定値は `.pre-commit-config.yaml` と `.markdownlint-cli2.jsonc` を正本とし、ここでは繰り返さない。
 
@@ -44,8 +44,8 @@ hook 自体が発火するのは staged に `.md` がある時だけ（hook 定�
 どちらも commit message に理由の記載がないので、rule を単体で有効にした時の違反数を実測した（`{ "default": false, "<rule>": true }` を markdownlint の API へ渡す。設定ファイルの `config` は `--config` より優先されるため、CLI からは上書きできない）。
 
 - **`MD013`（line-length、既定 80）**: `287cc7b`（2026-04-21）で無効化。markdownlint-cli2 導入より前で、当時から理由の記載はない。2026-08-31 時点の tree で有効に戻すと 460 件。この repo の Markdown は日本語の段落を 1 行で書き hard wrap しないので、rule 自体が書き方と噛み合わない。
-- **`MD024`（no-duplicate-heading）**: `be928f2` で markdownlint-cli2 導入と同時に無効化。その時点の tree で有効にすると 164 件 / 8 file 出て、全て `docs/requests/**/test.md` の繰り返し見出し（「対応」「種別」「手順」）だった。この artifact 群は [ADR 0039](../adr/0039-retire-docs-requests-artifacts.md) で削除済みで、2026-08-31 時点の tree では有効にしても 0 件で、無効化の原因は消えている。
-  それでも無効のまま維持する。MD024 の目的は同名見出しから同じ anchor が生成される事故を防ぐことだが（`markdownlint` の `doc/md024.md`）、この repo の `.md` に anchor link（`](#...)`）は 0 件で、防ぐ対象が無い。MD024 は自動修正を持たないため、既定の `siblings_only: false` では将来 changelog 型の繰り返し見出しを書いた時に commit が止まり、手で直すことになる。anchor link を使い始めたら、既定ではなく `"MD024": { "siblings_only": true }` で入れ直す。
+- **`MD024`（no-duplicate-heading）**: `be928f2` で markdownlint-cli2 導入と同時に無効化。その時点の tree で有効にすると 164 件 / 8 file 出て、全て `docs/requests/**/test.md` の繰り返し見出し（「対応」「種別」「手順」）だった。この artifact 群は [ADR 0039](../adr/0039-retire-docs-requests-artifacts.md) で削除済み。2026-08-31 時点の tree では有効にしても 0 件で、無効化の原因は消えている。
+  それでも無効のまま維持する。MD024 の目的は、同名見出しから同じ anchor が生成される事故を防ぐこと（`markdownlint` の `doc/md024.md`）。ただしこの repo の `.md` に anchor link（`](#...)`）は 0 件で、防ぐ対象が無い。MD024 は自動修正を持たない。既定の `siblings_only: false` のままだと、将来 changelog 型の繰り返し見出しを書いた時に commit が止まり、手で直すことになる。anchor link を使い始めたら、既定ではなく `"MD024": { "siblings_only": true }` で入れ直す。
 
 ## 未確認
 

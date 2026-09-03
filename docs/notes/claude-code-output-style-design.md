@@ -1,15 +1,15 @@
 # Claude Code Output Style の設計
 
-- Date: 2026-09-02
-- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Hooks reference](https://code.claude.com/docs/en/hooks)
+- Date: 2026-09-03
+- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/Caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Hooks reference](https://code.claude.com/docs/en/hooks)
 
-`caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
+`Caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
 
-## 公式に caveman は無い
+## 公式に Caveman は無い
 
-Claude Code の built-in output style は Default / Concise / Proactive / Explanatory / Learning の 5 つで、`caveman` は含まれない。GitHub で見つかるものはすべて個人の非公式実装。
+Claude Code の built-in output style は Default / Concise / Proactive / Explanatory / Learning の 5 つ。`Caveman` は含まれない。GitHub で見つかるものはすべて個人の非公式実装。
 
-**Concise（v2.1.237 以降）の規定が自作 caveman と大きく重なる。** 結果を先に出し、preamble と narration を省き、既定で短く返す。error report、security warning、破壊的操作の確認は完全な内容を保つ。caveman を捨てるなら Concise が第一候補。
+**Concise（v2.1.237 以降）の規定が自作 Caveman と大きく重なる。** 結果を先に出し、preamble と narration を省き、既定で短く返す。error report、security warning、破壊的操作の確認は完全な内容を保つ。Caveman を捨てるなら Concise が第一候補。
 
 ## skill でなく output style である理由
 
@@ -21,27 +21,19 @@ Claude Code の built-in output style は Default / Concise / Proactive / Explan
 
 JuliusBrussee 版が skill なのは移植性（Claude Code 以外の 30 以上の agent へ対応）のため。Claude Code 単独ならこの理由は当たらない。
 
-## 強度切替が style ファイル内にある理由
+## 強度を持たず 1 段階にしている理由
 
-ファイルを分けて `/config` で選ぶ形は採らない。理由は切り替えの手間。`/config` のメニューが出るのは terminal と VS Code 拡張だけで、desktop app では settings ファイルを直接編集することになる（公式）。style ファイル内に強度を持てば、会話中に `caveman ultra` と書くだけで切り替わる。
+会話中に `caveman full` / `caveman ultra` と書いて切り替える 2 段階を持っていたが、`ultra` 相当の圧縮を既定にした 1 段階へ畳んだ。
 
-`outputStyle` の値そのものは session 途中でも切り替わる（`harness-design-principles.md` の「apply の反映は設定の種類で違う」）。ただしファイルの内容は session 開始時に読まれるため、style を分けても中身の調整は次の session まで効かない。
+**切り替えに機械的な担保が無かった。** harness が注入するリマインダーは style 名と遵守の指示だけで、強度を含まない（2026-08-31 に style 名が `caveman` だった時の観測: "caveman output style is active. Remember to follow the specific guidelines for this style."）。style 本体は system prompt から毎ターン渡る。強度は会話履歴にしか無く、compaction を跨いで残るかは測っていなかった。1 段階にすると強度も system prompt に固定され、この不確かさが構造的に消える。
 
-`/caveman ultra` の slash 形も採れない。`/` 始まりの入力は skill 名として解決されるため、skill でない output style には作れない。
+**旧 `ultra` の「結論だけ出し、理由は聞かれてから出す」は採っていない。** 設計の相談で結論だけ返すと根拠を聞き直され、往復が増えて合計は減らない。代わりに「結論の根拠は 1 文で添える。求められるまで伏せない」を規則へ置いた。採ったのは圧縮の本体（一文一事実、修飾を落とす）だけ。
 
-`caveman ultra` のように接頭辞を必須にしているのは、裸の `ultra` が「ultra wide」のような語の一部として現れた時に誤発火するため。切替の実効は LLM 遵守依存で、機械的な担保は無い。
+旧 `full` にあった「求められた範囲だけ答える。捨てた案、検討過程、周辺情報を並べない。」は規則へ移した。段数を見直す動機だった `full` の冗長さは、段数ではなくこの規定で解いている。
 
-担保が無いのは、harness の注入するリマインダーが強度を含まないため。届くのは "caveman output style is active. Remember to follow the specific guidelines for this style." だけで、style 本体は system prompt から毎ターン渡るが、強度は会話履歴にしか無い。2026-08-31 に `caveman ultra` で測ったところ、commit を 5 つ作り `chezmoi apply` を 3 回挟む間は崩れなかった。
+`lite`（敬体と完結した文を保つ）も持たない。読み手が単一で、chat で敬体へ戻す場面が無いため。「境界」節は chat の外を通常の文体と定めているが、この repo の doc と設定は常体で書かれており、敬体の受け皿にはならない。`lite` が持っていた「過剰な保留表現を削る」は規則が受け持つ。
 
-## 強度を 2 段階にしている理由
-
-`full` / `ultra` の 2 段階で、`lite`（敬体と完結した文を保つ）は持たない。読み手が単一で、chat で敬体へ戻す場面が無いため。「境界」節は chat の外を通常の文体と定めているが、この repo の doc と設定は常体で書かれており、敬体の受け皿にはならない。
-
-段数を見直した動機は `full` の出力が冗長なことだった。ただし解は段数ではなく `full` 側の規定にある。「求められた範囲だけ答える。捨てた案、検討過程、周辺情報を並べない。」がそれで、段数の削減とは別の整理。
-
-`ultra` 固定（1 段階）は採らない。強度が system prompt へ固定されるため、強度が会話履歴にしか無いという弱点と、compaction を跨いだ時の未確認事項が構造的に消える利点はある。採らない理由は、`ultra` の「結論だけ出し、理由は聞かれてから出す」が実際の使い方と逆を向くこと。設計の相談では結論だけ返すと根拠を聞き直されるため、往復が増えて合計は減らない。
-
-`lite` が持っていた「過剰な保留表現を削る」は共通規則にある。段階的強度で `full` / `ultra` へ継承される前提の規定だったため、`lite` を持たない構成では共通規則側が受け持つ。
+強度ごとに style ファイルを分ける形も採らない。`/config` のメニューが出るのは terminal と VS Code 拡張だけ。desktop app では settings ファイルを直接編集することになる（公式）。1 段階なら選び直す場面自体が無い。
 
 ## 略語と矢印を規定しない理由
 
@@ -61,43 +53,39 @@ JuliusBrussee 版は自作の短縮と因果矢印を明示的に否定してい
 
 ## 修飾の規定に数値しきい値を持たない理由
 
-共通規則の「修飾を浅く保つ」は、連結する名詞の数も連体修飾の段数も数えない。日本語には分かち書きが無く、`設定ファイル` を 1 語と数えるか 2 語と数えるかが決まらないため。害があるのは定着した複合語ではなくその場で作った連結で、語数はその区別の代理指標にならない。
+規則の「修飾を浅く保つ」は、連結する名詞の数も連体修飾の段数も数えない。日本語には分かち書きが無く、`設定ファイル` を 1 語と数えるか 2 語と数えるかが決まらないため。害があるのは定着した複合語ではなくその場で作った連結で、語数はその区別の代理指標にならない。
 
 数値を置かないのは「略語と矢印を規定しない理由」と同じ設計による。事前に一般解を持たず、都度の判断へ落とす。
 
 根拠は ISO 24495-1 の「主語と述語を近づける、曖昧さを避ける」に置いている。ASD-STE100 の noun cluster 規則（連結を 3 語まで）は分かち書きを前提とするため日本語へ移らない。同規格の承認語彙（約 900 語）と英文法固有の規則も同じ理由で採らない。
 
-規格名は `caveman.md` 側には書かない。規則本文に規格名があると、本文を読んでいない読み手が全条項を想定する。ISO 24495-1 は有料規格で、本文は未取得。
+規格名は `Caveman.md` 側には書かない。規則本文に規格名があると、本文を読んでいない読み手が全条項を想定する。ISO 24495-1 は有料規格で、本文は未取得。
 
-## 応答の型と共通規則は別物
+## 応答の型と規則は別物
 
-`短い回答はこの型に寄せる: [対象] [動作] [理由]. [次の手]。` は、共通規則の「前置き、tool 実行の予告、進捗、実況を書かない」と重複して見えるが役割が違う。共通規則は**何を削るか**、型は**何を含めどう並べるか**を規定していて、`[理由]` と `[次の手]` は他のどの規定にもない。
+`短い回答はこの型に寄せる: [対象] [動作] [理由]. [次の手]。` は、規則の「前置き、tool 実行の予告、進捗、実況を書かない」と重複して見えるが役割が違う。規則は**何を削るか**、型は**何を含めどう並べるか**を規定していて、`[理由]` と `[次の手]` は他のどの規定にもない。
 
-JuliusBrussee 版は Pattern の直後に Not / Yes の対比例を置いて意味を確定させている。自作版は共通規則が前置きの除去を明示しているため例を持たず、代わりに使用条件（短い回答に限る）を添えている。条件が無いと、比較表やレビュー結果まで 1 文に畳めと読める。
+JuliusBrussee 版は Pattern の直後に Not / Yes の対比例を置いて意味を確定させている。自作版は規則が前置きの除去を明示しているため対比例を持たず、代わりに使用条件（短い回答に限る）を添えている。条件が無いと、比較表やレビュー結果まで 1 文に畳めと読める。
 
 ## 応答言語は settings が持つ
 
 `settings.json` の `language: "japanese"` が応答言語を**固定**する。system prompt に `Always respond in japanese.` として現れる。
 
-caveman.md 側に「ユーザーの言語を保つ」（＝ユーザーが書いた言語への**追従**）を書くと、ユーザーが日本語以外で書いた場合に固定と追従で指示が割れる。そのため style 側は言語を規定しない。
+`Caveman.md` 側に「ユーザーの言語を保つ」（＝ユーザーが書いた言語への**追従**）を書くと、ユーザーが日本語以外で書いた場合に固定と追従で指示が割れる。そのため style 側は言語を規定しない。
 
 ## 成果物への影響
 
 output style は system prompt を変えるため、chat 応答以外にも影響しうる。経路は 2 つ。
 
-- **coding instructions の削除**: custom output style は既定で Claude Code の built-in software engineering instructions（変更範囲の決め方、コメントの書き方、検証の仕方）を落とす。`keep-coding-instructions: true` で保持する。caveman.md はこれを設定している。
+- **coding instructions の削除**: custom output style は既定で Claude Code の built-in software engineering instructions（変更範囲の決め方、コメントの書き方、検証の仕方）を落とす。`keep-coding-instructions: true` で保持する。`Caveman.md` はこれを設定している。
 - **文体指示の漏れ**: 圧縮の指示がコードコメントや識別子に適用されうる。歯止めは「境界」節の列挙だけで、機械的な担保は無い。列挙漏れがそのまま穴になる。
 
 subagent には output style が適用されない（公式: "Output styles apply to the main conversation only"）。fork のみ例外。
 
 ## 前置きと英語の混入は規則で直らない
 
-共通規則の「前置き、tool 実行の予告、進捗、実況を書かない」と、`settings.json` の `language: "japanese"`（system prompt に `Always respond in japanese.` として入る）は、どちらも tool 呼び出しの合間に挟まる短い行で破られることがある。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。
+規則の「前置き、tool 実行の予告、進捗、実況を書かない」と、`settings.json` の `language: "japanese"`。この 2 つは、どちらも tool 呼び出しの合間に挟まる短い行で破られることがある。`language` は system prompt に `Always respond in japanese.` として入る。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。
 
 規則が無いのではなく守られていない状態なので、規則を足しても直らない。同じ内容を二度書くと、次に読む人がどちらを正とするか判断する手間だけ増える。
 
-機械的な担保も持てない。hook は tool と permission の層で動き、生成されたテキストには介入しない。assistant のテキスト表示中に走る `MessageDisplay` も display-only で、内容を変えられない。`--append-system-prompt` は毎回渡す必要があり対話利用に向かない。強度切替と同じく LLM 遵守に依存する。
-
-## 未確認
-
-- compaction を跨いだ時に強度が残るかは未確認。強度は会話履歴にしか無いので、summary に残るかどうかで決まる。
+機械的な担保も持てない。hook は tool と permission の層で動き、生成されたテキストには介入しない。assistant のテキスト表示中に走る `MessageDisplay` も display-only で、内容を変えられない。`--append-system-prompt` は毎回渡す必要があり対話利用に向かない。LLM 遵守に依存する。
