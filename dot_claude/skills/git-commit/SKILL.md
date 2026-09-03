@@ -12,8 +12,8 @@ description: Git の変更を commit する時に使う。直接の依頼（「c
 3. 合意した範囲だけを明示 path で stage する。
 4. `git diff --staged --stat` と `git diff --staged` で内容を確認する。
 5. commit message を書き、通常 commit を実行する。
-6. `git log -1 --format='%h %s'` で結果を確認する。「出力」の `commit` に書く short SHA はここで得る。
-7. 「出力」の項目を返す。
+6. `git log -1 --format='%h %s'` で結果を確認する。
+7. 「出力」に従って返す。
 
 停止条件に当たった時、pre-commit hook が失敗した時、commit 自体が失敗した時は [references/failure-handling.md](references/failure-handling.md) を読む。
 
@@ -40,7 +40,7 @@ stage 後の確認では、意図しない削除、debug 出力、機密情報�
 
 title は `<type>: <description>` の 1 行。
 
-- `<type>` は `feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert` から選ぶ。Conventional Commits は `feat` / `fix` 以外の type を自由にしているため、集合を決めないと commit ごとに語が揺れて履歴を type で追えなくなる。どれにも当てはまらないと感じたら、type を増やす前に、その commit が複数の変更を含んでいないか疑う。
+- `<type>` は `feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert` から選ぶ。この集合を増やさない。どれにも当てはまらないと感じたら、その commit が複数の変更を含んでいないか疑う。
 - **scope は使わない。** `<type>(<scope>): <description>` の形にしない。repo 規約が scope を要求する場合は、scope 付き message を作らず停止して報告する。
 - 命令形で書く。`add` / `fix` / `remove` を使い、`added` / `adds` / `adding` は使わない。
 - 英語で書く。応答は日本語だが、`git log` を追う時に履歴の言語が混ざっていると読みにくい。
@@ -64,24 +64,10 @@ body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっ
 
 ## 扱わないもの
 
-通常 commit だけを行う。push、rebase、amend、squash、`--no-verify`、直接の refs 操作、知見の蓄積は扱わない。commit が失敗しても、これらへ切り替えて回避しない。
-
-push は人が手元の terminal で実行する。sandbox の proxy は SSH を運ばないため、agent が実行しても失敗する。知見の蓄積（README / docs、ADR、notes）は `scribe` skill が扱う。
+通常 commit だけを行う。push、rebase、amend、squash、`--no-verify`、直接の refs 操作は扱わず、commit が失敗してもこれらへ切り替えて回避しない。push は人が手元の terminal で実行する。sandbox の proxy は SSH を運ばないため、agent が実行しても失敗する。知見の蓄積（README / docs、ADR、notes）は `scribe` が扱う。
 
 ## 出力
 
-| 項目 | 内容 |
-| --- | --- |
-| `branch` | 現在の branch 名 |
-| `commit` | short SHA |
-| `message` | 実際に使った、または使おうとした commit message |
-| `files` | commit した path の要約 |
-| `verification` | staged diff で何を確認したか（削除、debug 出力、機密情報、無関係な整形）と、pre-commit hook の結果 |
-| `left_unstaged` | 無関係または意図的に除外した変更 |
-| `notes` | hook の warning、停止理由、失敗理由 |
+staged diff で何を確認したか（削除、debug 出力、機密情報、無関係な整形）と pre-commit hook の結果を書く。単語 1 つで済ませず、何を見て何が無かったかを書く。「確認した」だけでは、次に読む人が確認の範囲を再現できない。続けて、無関係または意図的に除外して unstaged で残した変更を書く。失敗、no-op、事前停止でも同じ 2 つを返し、確認を行わなかった場合はその理由を書く。
 
-失敗、no-op、事前停止でも同じ項目を返す。該当が無ければ `none`。`verification` だけは確認を行わなかった理由を書く。
-
-`verification` は単語 1 つでなく、何を見て何が無かったかを書く。「確認した」だけでは、次に読む人が確認の範囲を再現できない。
-
-エラー全文をそのまま貼らない。`git` の出力には認証 URL や token が混ざることがあり、報告に残すと秘密情報が履歴に残る。要点だけを `notes` に書く。
+エラー全文をそのまま貼らない。`git` の出力には認証 URL や token が混ざることがあり、報告に残すと秘密情報が履歴に残る。要点だけを書く。
