@@ -51,22 +51,7 @@ title の後に 1 行空けて書く。通常の英文で、先頭 1 文字は�
 
 ## 例
 
-title だけで足りる場合。
-
-```txt
-docs: fix a broken link in the setup guide
-```
-
-理由だけを残す場合。`What` は差分を読めば分かるので書かない。
-
-```txt
-refactor: replace the retry loop with exponential backoff
-
-Why: The fixed one-second interval kept the failing endpoint saturated
-during an outage, which extended the recovery time.
-```
-
-防御層に触れたので、変わったものと変わらなかったものを両方書く場合。
+防御層に触れたので、変わったものと変わらなかったものを両方書く場合。`What` は差分を読めば分かるので書かない。
 
 ```txt
 fix: drop the env var that forced permission mode to default
