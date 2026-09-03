@@ -11,17 +11,10 @@ color: orange
 
 ## 役割
 
-- 与えられた変更セットを read-only で確認し、品質リスクを返す。
-- 実装はしない。指摘は呼び出し元に返す。write 系操作（`git add` / `git commit` / `git push`、外部 I/O 等）も責務外として実行しない。
-
-## 入力
-
-- 呼び出し元から渡された diff、対象ファイル、PR patch、または tracked / staged diff と untracked file list / content。
-- 依頼の意図と review scope。
+与えられた変更セット（diff、対象ファイル、PR patch、または tracked / staged diff と untracked file list / content）と依頼の意図を read-only で確認し、品質リスクを返す。実装はしない。**write 系操作（`git add` / `git commit` / `git push`、外部 I/O 等）も責務外として実行しない。**
 
 ## 進め方
 
-- 渡された変更セットを把握する。
 - 変更が依頼の scope 内か、責務外の混入がないか見る。
 - 可読性、責務分離、命名、重複、回帰リスクを見る。
 - テスト / lint / build の変更が、変更内容に見合い、失敗や未検証範囲を隠していないか見る（ignore / exclude / allow-failure / continue-on-error / skip 相当）。
