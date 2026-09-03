@@ -1,11 +1,15 @@
 ---
 name: git-commit
-description: Git の変更を commit する時に使う。直接の依頼（「commit して」「これをコミット」「変更を確定させて」）に加えて、作業が一段落して変更を確定させる時にも使う。ユーザーが commit という語を出さなくても、変更を Git 履歴へ残すなら対象。1 commit 1 変更に分け、明示 path で stage し、staged diff を確認してから通常 commit だけを行う。push と履歴の書き換え（rebase / amend / squash）は扱わない。doc の作成・更新は `scribe`、commit 前の見直しは `self-review`。
+description: Git の変更を commit する時に使う。直接の依頼（「commit して」「これをコミット」「変更を確定させて」）に加えて、作業が一段落して変更を確定させる時にも使う。ユーザーが commit という語を出さなくても、変更を Git 履歴へ残す流れなら skill を通す。commit の実行はユーザーが指示した時だけ。1 commit 1 変更に分け、明示 path で stage し、staged diff を確認してから通常 commit だけを行う。push と履歴の書き換え（rebase / amend / squash）は扱わない。doc の作成・更新は `scribe`、commit 前の見直しは `lapidary`。
 ---
 
 # Git Commit
 
 ## 手順
+
+**今の変更セットについて、指示された段までしか進まない。** stage する段（手順 3）は stage か commit を指示された時、commit を作る段（手順 5〜6）は commit を指示された時だけ実行する。指示が無ければ、そこまでの確認結果を報告して止まる。
+
+指示に当たらないもの。「進めて」「直して」のような作業継続の語、この skill が load されたこと、`lapidary` など他の skill や agent が「commit できる状態」と判定したこと。skill が load されるのは、commit する流れで staging 規律と機密情報の検索を通すため。
 
 1. `git status -sb` で状態を確認する。必要なら `git diff --stat` / `git diff` / `git diff --staged` で差分を読む。
 2. 1 commit 1 変更になるよう範囲を決める。性質の違う変更が混ざっていれば分割し、1 つずつ commit する。
@@ -68,6 +72,6 @@ body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっ
 
 ## 出力
 
-staged diff で何を確認したか（削除、debug 出力、機密情報、無関係な整形）と pre-commit hook の結果を書く。単語 1 つで済ませず、何を見て何が無かったかを書く。「確認した」だけでは、次に読む人が確認の範囲を再現できない。続けて、無関係または意図的に除外して unstaged で残した変更を書く。失敗、no-op、事前停止でも同じ 2 つを返し、確認を行わなかった場合はその理由を書く。
+staged diff で何を確認したか（削除、debug 出力、機密情報、無関係な整形）と pre-commit hook の結果を書く。単語 1 つで済ませず、何を見て何が無かったかを書く。「確認した」だけでは、次に読む人が確認の範囲を再現できない。続けて、無関係または意図的に除外して unstaged で残した変更を書く。失敗、no-op、指示が無くて手前で止まった場合でも同じ 2 つを返し、確認を行わなかった場合はその理由を書く。
 
 エラー全文をそのまま貼らない。`git` の出力には認証 URL や token が混ざることがあり、報告に残すと秘密情報が履歴に残る。要点だけを書く。
