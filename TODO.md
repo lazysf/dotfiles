@@ -121,6 +121,28 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ---
 
+## 8. notes の「commit しない review がある」が目的変更に追従していない
+
+- 記載: 2026-09-03（`self-review` から `lapidary` への rename）
+
+`docs/notes/lapidary-skill-design.md` の「`git-commit` に組み込まない理由」の節が、根拠として「commit しない review がある。作業の区切り、方針の確認、書いたものが仕上がったかの点検は、commit と独立して起きる」を挙げている。
+
+**この記述は目的変更の前のもの。** f173129 で skill の目的が commit readiness へ変わり、`SKILL.md` の出力は commit 可否の判定を求めるようになった。組み込まない理由そのものは別の根拠（`git-commit` の責務が膨らむ）でも成立するが、1 つ目の根拠は現在の目的と噛み合わない。
+
+---
+
+## 9. `lapidary` に出力の秘密情報規定が無い
+
+- 記載: 2026-09-03（`lapidary` の自動発火化、`security-reviewer` の non-blocking 指摘）
+
+`dot_claude/skills/git-commit/SKILL.md` は「エラー全文をそのまま貼らない。`git` の出力には認証 URL や token が混ざることがあり、報告に残すと秘密情報が履歴に残る」を持つ。`lapidary` に対応する規定が無い。
+
+この skill は毎回 diff 全体を読み、確認内容を出力する。自動発火へ変えたことで実行回数が増えるため、tracked file に混ざった値を転記する経路が広がる。sandbox の deny は `.env` などの read を止めるが、tracked file 内の値は止めない。
+
+実際に転記が起きたかは未確認。規定を足すかどうかは、`git-commit` 側の文言をどこまで一般化できるかと合わせて決める。
+
+---
+
 ## 依存関係
 
 2 と 3 は `dot_config/git/config.tmpl` を触るため、同時に扱うと差分が小さくなる。

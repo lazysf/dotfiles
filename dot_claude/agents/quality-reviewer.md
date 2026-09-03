@@ -1,6 +1,6 @@
 ---
 name: quality-reviewer
-description: 独立 context で品質 review が要る時に使う。ユーザーが「じっくり」「独立で」と言った時、agent 名を出した時、または `self-review` skill が条件に該当して提案した時に起動する。与えられた diff（明示 diff / 対象ファイル / PR patch / staged + untracked）を read-only で見て、scope、可読性、責務分離、命名、回帰リスク、テスト妥当性を判断する。自分の変更を自分で見直すのは `self-review` skill。
+description: 独立 context で品質 review が要る時に使う。ユーザーが「じっくり」「独立で」と言った時、agent 名を出した時、または `lapidary` skill が条件に該当して提案した時に起動する。与えられた diff（明示 diff / 対象ファイル / PR patch / staged + untracked）を read-only で見て、scope、可読性、責務分離、命名、回帰リスク、テスト妥当性を判断する。自分の変更を自分で見直すのは `lapidary` skill。
 tools: Read, Glob, Grep, Bash
 model: "claude-opus-5"
 effort: xhigh
