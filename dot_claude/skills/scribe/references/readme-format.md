@@ -11,9 +11,7 @@ README を作成・更新する時に読む。repo root の `README.md` と `doc
 
 ## repo root の `README.md`
 
-repo が何であるか、どう使うかを書く。導入手順、前提、主要な構成。読み手は repo を初めて触る人。
-
-判断理由は書かない（ADR）。調査の背景も書かない（notes）。docs 配下の artifact 一覧も書かない（`docs/README.md`）。
+repo が何であるか、どう使うかを書く。導入手順、前提、主要な構成。読み手は repo を初めて触る人。判断理由（ADR）、調査の背景（notes）、docs 配下の artifact 一覧（`docs/README.md`）は書かない。
 
 形は repo の性質で変わるのでテンプレートを固定しない。既存の README があるなら、その構成を崩さずに追記する。
 
