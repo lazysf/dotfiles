@@ -57,9 +57,9 @@ session へ渡る skill 一覧も即反映される。`scribe` の description �
 
 ## 絞れる description の条件
 
-**`CLAUDE.md` の工程表が持つトリガが無条件なら description を絞れる。条件付きなら絞れない。** 発火の層が 2 つあり、片方が確実に効くならもう片方は要らない、という話。
+**description を絞れるのは、その skill を自動で起動しないと決めた時。** 発火の層が 2 つあり、片方が確実に効くならもう片方は要らない、という話。
 
-- 工程表が無条件（`skills/self-review` の「commit 前に」）: 常時 load される側から毎回起動される。description が作業の流れを拾い直す必要はない。明示指定と工程表からの起動だけ書けば足りる。
+- 自動で起動しない（`skills/self-review`）: 工程表も description も明示指定へ寄せる。
 - 工程表が条件付き（`skills/git-commit` の「ユーザー指示時に」）: 条件を外した流れでは工程表が起動しないので、description が拾う。
 
 `git-commit` の工程表を無条件へ変えて description を絞る形は採れない。「commit はユーザー指示時」は安全規定で、外すと指示なしに commit してよくなる。この skill は 2 層が別の役割を持つ。工程表が **commit してよいか**（実行条件）、description が **skill を通すか**（発火面）。description を絞ると、commit する流れで staging 規律と機密情報の検索が飛ぶ。実行条件は指示を要求したままなので、安全にはならず規律だけ失う。
