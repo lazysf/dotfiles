@@ -13,9 +13,9 @@
 
 surface を圧縮する時の基準は「その記述が無いと判断が変わるか」。変わらないものは、正しくても消す。
 
-**ただし、この harness の記述の多くは踏んだ失敗への対策として足されている。** 2026-09-03 の全面圧縮では、「理由の説明だから削れる」と分類した記述が実際には対策だった例が繰り返し出た。`skills/coding` の段 4「client 側の機能は検証に数えない」は、`<input type="date">` で日付検証を済ませたと判定する穴を塞ぐ。`skills/self-review` の各観点の `確認` は、それが無かった間は収束しなかったという実測に基づく。
+**ただし、この harness の記述の多くは踏んだ失敗への対策として足されている。** 2026-09-03 の全面圧縮では、「理由の説明だから削れる」と分類した記述が実際には対策だった例が繰り返し出た。`skills/coding` の段 4「client 側の機能は検証に数えない」は、`<input type="date">` で日付検証を済ませたと判定する穴を塞ぐ。`skills/lapidary` の各観点の `確認` は、それが無かった間は収束しなかったという実測に基づく。
 
-そのため**削る前に、対応する設計 note を読む。** note が「なぜこの記述がここにあるか」を持つ項目は、文言を縮めても規範としては残す。この順序を守らずに 3 回見落とした（`AGENTS.md` の URL 表、`rules/` の統合判断、`CLAUDE.md` の常時 load 側に置く理由 6 項目）。
+そのため**削る前に、対応する設計 note を読む。** note が「なぜこの記述がここにあるか」を持つ項目は、文言を縮めても規範としては残す。この順序を守らずに 4 回削った（`AGENTS.md` の URL 表、`rules/` の統合判断、`CLAUDE.md` の常時 load 側に置く理由 6 項目、`skills/lapidary` の空振りコスト）。
 
 分量そのものは指標にならない。判断に効くなら長くてよい。
 
@@ -31,9 +31,9 @@ surface を圧縮する時の基準は「その記述が無いと判断が変わ
 
 `permissions.deny` も即反映される。`Bash(diskutil *)` を足して apply した直後、同じ session で `diskutil list` が実行前に拒否された（2026-09-02）。
 
-session へ渡る skill 一覧も即反映される。`scribe` の description を書き換えて apply した直後、session を開き直さずに記述が新しいものへ変わった（2026-08-31）。新規 skill の追加も同じで、`self-review` を足すと apply の直後に一覧へ現れた（2026-09-01）。
+session へ渡る skill 一覧も即反映される。`scribe` の description を書き換えて apply した直後、session を開き直さずに記述が新しいものへ変わった（2026-08-31）。新規 skill の追加も同じで、`lapidary` を足すと apply の直後に一覧へ現れた（2026-09-01）。
 
-`SKILL.md` の本文も、書き換えて apply した後に同じ session で invoke すると新しいものが届いた（2026-09-01、`self-review` の手順で確認）。
+`SKILL.md` の本文も、書き換えて apply した後に同じ session で invoke すると新しいものが届いた（2026-09-01、`lapidary` の手順で確認）。
 
 `outputStyle` の値も即反映される。`~/.claude/settings.json` を `caveman` → `Concise` → `caveman` と書き換えたところ、`/clear` も新しい session も挟まずに切り替わった（2026-09-02、同じ session 内で往復 2 回）。公式は「Changes take effect after `/clear` or a new session」と書くので、挙動が食い違う。ただし観測できたのは、harness が注入する reminder の文言と、それに沿って応答が変わったことまで。system prompt の style 本体が差し替わったかは切り分けていない。
 
@@ -55,18 +55,17 @@ session へ渡る skill 一覧も即反映される。`scribe` の description �
 
 強めに書く方へ倒す。[Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) は "Err on the side of being pushy. Explicitly list contexts where the skill applies, including cases where the user doesn't name the domain directly" と書く。`skill-creator` も、Claude が skill を undertrigger しがち（役に立つ場面で呼ばない）だとして、同じ対策を挙げている。
 
-## 絞れる description の条件
+## 発火面と実行条件を分ける
 
-**description を絞れるのは、その skill を自動で起動しないと決めた時。** 発火の層が 2 つあり、片方が確実に効くならもう片方は要らない、という話。
+**skill を通すかと、その skill が実行してよいかは別の層。** `coding` / `scribe` / `lapidary` / `git-commit` は全て description で自動発火し、実行を縛る必要があるものだけが skill 本体の入口に条件を持つ。
 
-- 自動で起動しない（`skills/self-review`）: 工程表も description も明示指定へ寄せる。
-- 工程表が条件付き（`skills/git-commit` の「ユーザー指示時に」）: 条件を外した流れでは工程表が起動しないので、description が拾う。
+**その操作が skill 無しでも実行できるなら、発火の側で止めても安全にはならない。** description を絞っても `disable-model-invocation: true`（model 側からの起動を外す Claude Code の frontmatter）を置いても、skill が load されなくなるだけで、規律を持った手順ごと飛ぶ。`git commit` は Bash で打てるのでこれに当たる。skill 同梱の script でしか行えない操作なら、発火を止めることが能力を減らす層になるので、判断は変わる。
 
-`git-commit` の工程表を無条件へ変えて description を絞る形は採れない。「commit はユーザー指示時」は安全規定で、外すと指示なしに commit してよくなる。この skill は 2 層が別の役割を持つ。工程表が **commit してよいか**（実行条件）、description が **skill を通すか**（発火面）。description を絞ると、commit する流れで staging 規律と機密情報の検索が飛ぶ。実行条件は指示を要求したままなので、安全にはならず規律だけ失う。
+公式は逆を勧めている。Claude Code の skills doc は `disable-model-invocation: true` を "workflows with side effects or that you want to control timing, like `/commit`, `/deploy`" に使えと書く。`git-commit` で採らないのは、「commit して」という自然文では slash 起動にならず、staging 規律と機密情報の検索だけが落ちるため。
 
-誤発火のコストも非対称。`self-review` は commit を視野に入れていない場面で起動すると観点 6 つを空振りさせる。`git-commit` は手順 1 が `git status -sb` を読むだけなので、実害がほぼない。
+入口の条件が要るのは、作業ツリーの外へ出す操作を持つ skill。`git-commit` は履歴を作り push の対象にするので持つ。**可逆性では分けられない。** push 前の commit は reflog と reset で戻せる一方、未 commit の編集を上書きすると git に控えが無い。`lapidary` は作業ツリー内で閉じるが、そのぶん手順 3 が直す対象を自分の変更へ限っている。
 
-各 skill での適用は [self-review-skill-design.md](./self-review-skill-design.md) と [git-commit-skill-design.md](./git-commit-skill-design.md) にある。
+各 skill での適用は [lapidary-skill-design.md](./lapidary-skill-design.md) と [git-commit-skill-design.md](./git-commit-skill-design.md) にある。
 
 ## AGENTS.md の URL 表を notes へ移さない理由
 

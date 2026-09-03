@@ -110,9 +110,13 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 「push と履歴の書き換え（rebase / amend / squash）は扱わない」も description に書いている。body の「扱わないもの」と重なるが、description は skill を読む前に見える唯一の面なので、境界はここにも要る。commit の作業には履歴の組み直しが混ざりやすい。2026-08-31 の session では `amend` と `reset` を繰り返し使い、その都度この skill の範囲外だと明示する必要があった。
 
-## CLAUDE.md の実行条件と重ならない理由
+## 実行条件を skill 本体にも置く理由
 
-`dot_claude/CLAUDE.md` の工程表は「commit | ユーザー指示時に `skills/git-commit`」と書いている。description の「ユーザーが commit という語を出さなくても対象」と緊張して見えるが、層が違う。CLAUDE.md は commit してよいかという実行条件、description は skill を通すかどうかという発火面。指示なしに commit してよくなるわけではない。
+description は「変更を Git 履歴へ残す流れなら skill を通す」と広く取り、自動で発火させる。発火した先で commit まで走らないよう、手順の入口に実行条件を置いている。
+
+`dot_claude/CLAUDE.md` の工程表も「commit: ユーザー指示時に `skills/git-commit`」を持つ。二重に見えるが、効く位置が違う。工程表は skill を呼ぶかどうかの判断に効き、入口の条件は skill が load された後に効く。**skill 本体が持たないと、load された時点で手順 5 の commit まで止まるものが無い。**
+
+発火の側で止める形（description を絞る、`disable-model-invocation: true` を置く）は採らない。commit する流れで staging 規律と機密情報の検索ごと飛ぶ。一般則は `harness-design-principles.md` の「発火面と実行条件を分ける」にある。
 
 ## Co-authored-by trailer は skill の外で決まる
 
