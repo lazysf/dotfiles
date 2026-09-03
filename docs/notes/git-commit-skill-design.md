@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-09-02
+- Date: 2026-09-03
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -20,11 +20,13 @@ message 生成だけに絞ると、停止条件・staging 規律・staged diff �
 - **50 文字を目安、72 文字を上限。** 79% が既に 50 文字以下、中央値は 41 文字、73 文字以上は 2 件。現状追認になる。
 - 命令形、末尾ピリオド禁止、emoji 禁止は `caveman-commit` から採った。
 
+2026-09-03 に直近 60 commit で測り直した。中央値 49、最大 61、72 文字超 0 件、50 文字以下 62%。上限は守られているが、中央値は 41 から動いた。body を持つのは 6 件（10%）で、いずれも 6〜9 行。「body は原則不要」も守られている。
+
 `repo 規約が scope を要求する場合は停止して報告する` を「その規約に従う」へ緩める案は 2026-08-27 に検討して保留した。skill は user-global なので monorepo では摩擦があり得るが、それは想定であって実測ではない。再検討の条件は「実際に monorepo で停止に当たった時」。
 
 ## body の規定
 
-`Why:` / `What:` / `Impact:` はラベルごとに要否が違う。実測（2026-08-27 時点、body を持つ commit 66 件）では `Why:` 56 / `What:` 56 / `Impact:` 55 と、ほぼ機械的に 3 点セットで書かれていた。任意規定が惰性化していたので、ラベルごとに条件を付けている。
+`Why:` / `What:` / `Impact:` はラベルごとに要否が違う。実測（2026-08-27 時点、body を持つ commit 66 件）は `Why:` 56 / `What:` 56 / `Impact:` 55。ほぼ機械的に 3 点セットで書かれていた。任意規定が惰性化していたので、ラベルごとに条件を付けている。
 
 `Impact:` の中身は 3 種類に分かれる。
 
@@ -34,13 +36,13 @@ message 生成だけに絞ると、停止条件・staging 規律・staged diff �
 
 2 の用途が固有なのでラベルを残し、3 を禁じている。
 
-代替案の枠は持たない。全 commit の body を検索しても代替案を記録した実例は無く、うち 1 件は「alternatives in the notes」と書いて notes へ寄せている。捨てた案の置き場は doc 3 層で ADR か notes と定義済みなので、commit body に枠を作ると二重管理になる。採らなかった案の理由が要る場合は `Why:` に含める。
+代替案の枠は持たない。全 commit の body を検索しても、代替案を記録した実例は無い。うち 1 件は「alternatives in the notes」と書いて notes へ寄せている。捨てた案の置き場は doc 3 層で ADR か notes と定義済みなので、commit body に枠を作ると二重管理になる。採らなかった案の理由が要る場合は `Why:` に含める。
 
-AI 帰属の禁止は skill に書かない。後述の「Co-authored-by trailer は skill の外で決まる」のとおり制御点が settings 側にあり、skill が書く層ではない。
+AI 帰属の禁止は skill に書かない。制御点は settings 側にある（後述の「Co-authored-by trailer は skill の外で決まる」）。skill が書く層ではない。
 
 ## footer と issue 参照
 
-git trailer 形式（`Refs: #123` など）を規定するが、この repo では skill が書く trailer も `#123` 形式の issue 参照も全 commit で 0 件。個人 dotfiles で issue を運用していないため。規定は残す（skill は user-global で、issue を使う repo でも読まれる）が、**例セクションには架空の trailer を置かない**。
+git trailer 形式（`Refs: #123` など）を規定する。ただしこの repo では、skill が書く trailer も `#123` 形式の issue 参照も全 commit で 0 件。個人 dotfiles で issue を運用していないため。規定は残す。skill は user-global で、issue を使う repo でも読まれるため。ただし**例セクションには架空の trailer を置かない**。
 
 git trailer の仕様はコロンあり・なしの両方を許すが、この repo はコロンありに統一する。`Closes #42` は GitHub の自動クローズ構文で、trailer 仕様に寄せる理由がない。
 
@@ -64,7 +66,7 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 目視ではなく staged diff 全体に対する検索で確認する。diff が長いと目視は漏れる。**検索パターンは固定しない。** 言語や文脈に依存するため。
 
-## `verification` が自由記述である理由
+## 確認の報告を自由記述にしている理由
 
 「自分が行った staged diff の確認」と「pre-commit hook の結果」の 2 種類があり、単語 1 つの enum に収まらない。
 
@@ -82,7 +84,7 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 | `references/failure-handling.md` | 停止時の対応、pre-commit hook 対応、失敗時 |
 | `references/message-format.md` | body / footer / BREAKING CHANGE の書式、body 固有の禁止事項、Impact の要否条件 |
 
-公式の best practices は、reference を「いつ読むか」を条件で示すことと、環境固有で常識に反する事実（Gotchas）を `SKILL.md` 側へ置くことを勧めている。後者を reference に置くと、読むべき状況が来たことを認識できない。
+公式の best practices は 2 つを勧めている。reference は「いつ読むか」を条件で示す。環境固有で常識に反する事実（Gotchas）は `SKILL.md` 側へ置く。後者を reference に置くと、読むべき状況が来たことを認識できない。
 
 報告項目は `SKILL.md` にある。**報告は毎回書くもので、reference は必要な時だけ読むもの**という progressive disclosure の区分に従う。これで reference は異常系だけになり、`failure-handling` という名前が内容と一致する。
 
@@ -90,7 +92,7 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 Gotchas に入れるのは、この環境で実際に踏んだか踏みかけたもの。**列挙は `SKILL.md` を正本とし、ここでは繰り返さない。** 実体を写すと片方だけ古くなる。
 
-`diff <(...)` が sandbox で失敗する件は skill に置いていない。git 固有ではなく sandbox 全般の制約で、commit の手順にも該当する操作が無いため。本来は rules に属するが `dot_claude/rules/` が未再構築なので、記録をここに残す。**`diff <(...)` は sandbox で失敗するので、比較は一時ファイルへ出力してから行う。**
+`diff <(...)` が sandbox で失敗する件は skill に置いていない。git 固有ではなく sandbox 全般の制約で、commit の手順にも該当する操作が無いため。sandbox 全般の制約を置く surface が無いので、記録をここに残す。**`diff <(...)` は sandbox で失敗するので、比較は一時ファイルへ出力してから行う。**
 
 ## push skill を持たない理由
 
@@ -106,11 +108,11 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 依頼語に絞らず、作業が一段落して変更を確定させる場面も拾う。明示依頼では通ったが、「進めて」「直して」の流れで commit する場面では通っていなかった（2026-08-31 に実測）。一般則は `harness-design-principles.md` の「skill description の書き方」にある。
 
-「push と履歴の書き換え（rebase / amend / squash）は扱わない」も description に書いている。body の「扱わないもの」と重なるが、description は skill を読む前に見える唯一の面なので、境界はここにも要る。commit の作業には履歴の組み直しが混ざりやすく、2026-08-31 の session では `amend` と `reset` を繰り返し使って、その都度この skill の範囲外だと明示する必要があった。
+「push と履歴の書き換え（rebase / amend / squash）は扱わない」も description に書いている。body の「扱わないもの」と重なるが、description は skill を読む前に見える唯一の面なので、境界はここにも要る。commit の作業には履歴の組み直しが混ざりやすい。2026-08-31 の session では `amend` と `reset` を繰り返し使い、その都度この skill の範囲外だと明示する必要があった。
 
 ## CLAUDE.md の実行条件と重ならない理由
 
-`dot_claude/CLAUDE.md` の工程表は「commit | ユーザー指示時に `skills/git-commit`」と書いている。description の「ユーザーが commit という語を出さなくても対象」と緊張して見えるが、層が違う。CLAUDE.md は commit してよいかという実行条件、description は skill を通すかどうかという発火面で、指示なしに commit してよくなるわけではない。
+`dot_claude/CLAUDE.md` の工程表は「commit | ユーザー指示時に `skills/git-commit`」と書いている。description の「ユーザーが commit という語を出さなくても対象」と緊張して見えるが、層が違う。CLAUDE.md は commit してよいかという実行条件、description は skill を通すかどうかという発火面。指示なしに commit してよくなるわけではない。
 
 ## Co-authored-by trailer は skill の外で決まる
 

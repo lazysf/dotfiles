@@ -1,6 +1,6 @@
 # reviewer agent の設計
 
-- Date: 2026-08-29
+- Date: 2026-09-03
 - 出典: [Create custom subagents](https://code.claude.com/docs/en/sub-agents) / `~/.claude/projects/` の全 42 session transcript（2026-08-29 時点） / `dot_claude/agents/`
 
 reviewer agent 2 つが今の形になっている理由と、他の agent を置いていない理由を残す。agent 定義を読んでも分からない前提と判断に絞る。
@@ -22,7 +22,7 @@ reviewer agent 2 つが今の形になっている理由と、他の agent を�
 
 ## reviewer に Bash を持たせる理由
 
-reviewer 内部（sidechain）の tool 使用は Bash 196 / Read 50 / Grep 0 / Glob 0 で、Bash が主経路になっている。内訳は 2 種類に分かれる。
+reviewer 内部（sidechain）の tool 使用は Bash 196 / Read 50 / Grep 0 / Glob 0。Bash が主経路になっている。内訳は 2 種類に分かれる。
 
 - `grep` / `sed` / `ls` / `cat`: 検索と読み取り。`Grep` / `Read` でも代替できる。
 - **`git diff` / `git status` / `git show` / `git log`（計 48 回）**: 変更セットの取得。Bash なしでは代替できない。
@@ -35,17 +35,19 @@ Write / Edit tool は持たないが、Bash があるので cwd 内なら書け�
 
 つまり技術的な強制はなく、agent 定義の「write 系操作は責務外として実行しない」が担保している。規範は守られていて、上記の Bash のうち write 系は 0 件だった。reviewer が write を実行した時は hook による強制を検討する。
 
+強制する場合の機構は subagent の frontmatter にある。公式は `hooks` を "Lifecycle hooks scoped to subagent" と定義しており、その agent だけに掛かる PreToolUse を書ける。今は足さない。write 系 0 件で発動条件を満たしていない。`disallowedTools` は代わりにならない。`tools:` が allowlist なので `Write` / `Edit` は既に不可で、穴は Bash の中にあるため tool 単位の deny では塞げない。
+
 ## 2 つに分けたままにする理由
 
 session 単位では常に両方が起動され、単独起動は 0 件だった。ただし同一メッセージからの並列起動が 5 回あり、統合すると並列性を失う。
 
-観点も構造的に違う。security は auth、secret、injection、path traversal と見る場所が別で、1 つの agent に両方を負わせると片方で早く「重大な指摘なし」に到達する。
+観点も構造的に違う。security は auth、secret、injection、path traversal と見る場所が別。1 つの agent に両方を負わせると、片方で早く「重大な指摘なし」に到達する。
 
 ## built-in の review skill と併存させる理由
 
 `/code-review` と `/security-review` が built-in で使える。`--fix`、PR への inline comment、cloud の multi-agent review を持ち、機能はこちらが多い。
 
-ただし対象が違う。built-in の instructions は correctness bug（反転した条件、off-by-one、null 参照、await 漏れ、外れた guard、壊れた caller、race）を探すよう指定し、"Prefer real failure modes over style" と style 系の指摘を明示的に下げる。
+ただし対象が違う。built-in の instructions は correctness bug を探すよう指定する。反転した条件、off-by-one、null 参照、await 漏れ、外れた guard、壊れた caller、race。そのうえで "Prefer real failure modes over style" と、style 系の指摘を明示的に下げる。
 
 自前 reviewer が見る scope 逸脱、実体の二重管理、責務分離、回帰リスクはこの範囲に入らない。実際に agent 定義と `CLAUDE.md` の diff を `/code-review` へ通したところ findings 0 件だった。
 
@@ -65,4 +67,4 @@ reviewer は 1 度呼ばれて指摘を返すだけで、main のように往復
 
 ## permissionMode を書かない理由
 
-`settings.json` が `permissions.defaultMode: "auto"` である限り、subagent は auto mode を継承し、**frontmatter の `permissionMode` は無視される**（公式仕様）。効かない設定を書くと、read-only が permission 層で守られていると誤読される。実際の担保は「read-only は規範が担保している」のとおり。
+`settings.json` が `permissions.defaultMode: "auto"` である限り、subagent は auto mode を継承し、**frontmatter の `permissionMode` は無視される**。公式は "If the parent uses auto mode, the subagent inherits auto mode and any `permissionMode` in its frontmatter is ignored" と書く。効かない設定を書くと、read-only が permission 層で守られていると誤読される。実際の担保は「read-only は規範が担保している」のとおり。
