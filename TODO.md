@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-09-02
+- Date: 2026-09-03
 
 このファイルは、着手を保留している項目の一覧。
 
@@ -12,55 +12,13 @@
 
 ---
 
-## 1. self-review の目的変更を再適用する
-
-- 記載: 2026-09-01（self-review の観点・終了条件の再設計）
-
-### 背景
-
-skill の目的は「変更を見直す」でなく「**commit できる状態まで仕上げる**」。現在の skill は前者しか名乗っていない。差が出るのは 3 点。
-
-- 未達の検出。今のスコープ観点は「変更行が依頼にトレースできるか」（余分が無いか）が主で、逆方向（依頼に手を付けていないもの）が弱い
-- 検証の扱い。lint / test が通っているかを見る項目が無い
-- 出力の `next`。今は次の工程を挙げるだけで、commit できるかの判定になっていない
-
-### 確定済みの設計判断
-
-- **検証は skill では実行しない。** 済んでいるかを確認するだけ。`CLAUDE.md` の工程表で検証は review の前の別工程なので、実行すると二重になる。未実行なら review を止めて検証へ戻す
-- **スコープ観点を双方向にする。** 独立した観点を新設せず、既存 3 項目の 2 つ目を未達検出へ拡張する
-- `next` を commit 可否の判定にする
-
-### 適用する差分
-
-一度適用して、commit を分けるために戻した。文言はそのまま使える。
-
-`dot_claude/skills/self-review/SKILL.md` の 6 箇所。
-
-1. description 冒頭を `自分が加えた変更を閉じる前に見直す時に使う。` から `自分が加えた変更を commit できる状態まで仕上げる時に使う。` へ
-2. description の観点列挙を `スコープ（未達と余分の双方向）、事実の裏付け、整合性、適用（使う側から見て成立するか）、過剰さ、doc の追従を観点に通し、見つけた不足と過剰を直し切る。` へ（適用後 908 バイト、上限 1024）
-3. 本文冒頭を `変更を commit できる状態まで仕上げる。観点を通し、見つけた不足と過剰を直し切ってから次へ渡す。**目的は指摘を挙げることではなく、仕上げ切ること。**` へ
-4. 手順 4 に「commit できる状態かを判定して」を加える
-5. スコープ観点の 2 項目目を `依頼のうち手を付けていないものが無いか。TODO、仮実装、必要な検証を通していない箇所を残していないか。意図して外したなら、外したと言えるか。` へ置換し、検証を実行しない方針を独立した段落として追加した上で、`確認` を双方向の対応付けへ書き換える
-6. 出力表の `next` を `commit できる状態か。できないなら何が残っているか（未達 / 未検証 / ユーザー判断待ち）` へ
-
-検証の方針を `確認` から段落へ分けるのは、`確認` が 5 つの指示を持つと他の観点（1〜3 文）より突出するため。
-
-`dot_claude/CLAUDE.md` の工程表 31 行目も追従させる。skill の目的が変わるなら工程表の説明も変える。
-
-### 併せて必要な作業
-
-- `docs/notes/self-review-skill-design.md` へ理由を記録する。目的を広げた理由、検証を実行しない理由（工程表との重複回避）、スコープを双方向にした理由
-- `docs/notes/claude-md-design.md` の追従確認。review 工程の説明が目的変更後も成立するか
-
----
-
-## 2. 打ち切り順の reviewer 指摘（6 件）
+## 1. 打ち切り順の reviewer 指摘（6 件）
 
 - 記載: 2026-09-01（coding-standards への打ち切り順の導入）
 
 打ち切り順を入れた時の review で non-blocking とされた分。全て未対応。
 
-**2026-09-02 の分割で前提が変わった指摘がある。** 打ち切り順は `rules/coding-standards.md` から `skills/coding/SKILL.md` へ移り、rule 側には品質の優先順位・基本原則・最小差分だけが残った（`rules/quality.md` へ rename）。「段 1 が YAGNI とほぼ同文」は別ファイルへの分離で性質が変わり、「新節だけ書式が浮く」は skill 全体の構成が変わっている。着手前に各指摘が今も成立するか見る。
+**2026-09-02 の分割で前提が変わった指摘がある。** 打ち切り順は当時の `rules/coding-standards.md` から `skills/coding/SKILL.md` へ移り、品質の優先順位・基本原則・最小差分は `dot_claude/CLAUDE.md` に統合された。「段 1 が YAGNI とほぼ同文」は別ファイルへの分離で性質が変わり、「新節だけ書式が浮く」は skill 全体の構成が変わっている。着手前に各指摘が今も成立するか見る。
 
 ### security-reviewer
 
@@ -80,11 +38,11 @@ skill の目的は「変更を見直す」でなく「**commit できる状態�
 
 ---
 
-## 3. `ponytail-debt` の理由が不正確
+## 2. `ponytail-debt` の理由が不正確
 
 - 記載: 2026-09-01（coding-standards への打ち切り順の導入）
 
-不採用の判断は変えない。`docs/notes/rules-design.md` の marker 節に書いた理由が事実と合っていない。
+不採用の判断は変えない。`docs/notes/coding-skill-design.md` の marker 節に書いた理由が事実と合っていない。
 
 現状の記述は「追跡は `rg -i 'tradeoff:'` の走査だけで、強制力は無い」。`ponytail-debt` がやるのは marker の収集、整形、**昇格条件が書かれていない marker への `no-trigger` タグ付け**、集計の 4 つ。`rg` で足りるのは収集だけで、3 つ目は出ない。
 
@@ -92,11 +50,11 @@ skill の目的は「変更を見直す」でなく「**commit できる状態�
 
 直す方向は「収集は `rg` で足りるが、条件が書かれているかの判定は出ない。marker を実際に付けたコードがまだ無いので検査を作らず、溜まってから判断する」の趣旨へ。
 
-2026-09-01 時点で `rg -i 'tradeoff:'` が拾うのは規約本文と解説だけで、marker を付けた実装は 0 件（当時の置き場は `rules/coding-standards.md` と `rules-design.md`、現在は `skills/coding/SKILL.md` と `coding-skill-design.md`）。
+2026-09-01 時点で `rg -i 'tradeoff:'` が拾うのは規約本文と解説だけで、marker を付けた実装は 0 件（当時の置き場は `rules/coding-standards.md`、現在は `skills/coding/SKILL.md` と `coding-skill-design.md`）。
 
 ---
 
-## 4. `config.tmpl` の `$opWhoami` が未使用
+## 3. `config.tmpl` の `$opWhoami` が未使用
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -112,7 +70,7 @@ skill の目的は「変更を見直す」でなく「**commit できる状態�
 
 ---
 
-## 5. `gpg.ssh.allowedSignersFile` が未設定
+## 4. `gpg.ssh.allowedSignersFile` が未設定
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -128,7 +86,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 6. 削除済み notes 内の commit リンクが解決しない
+## 5. 削除済み notes 内の commit リンクが解決しない
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -140,7 +98,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 7. `archive/pre-reset-20260827` が未 push
+## 6. `archive/pre-reset-20260827` が未 push
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -156,7 +114,7 @@ git push -u origin archive/pre-reset-20260827
 
 ---
 
-## 8. disk 以外の破壊 command が deny に無い
+## 7. disk 以外の破壊 command が deny に無い
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -172,7 +130,7 @@ reviewer は `tmutil`（Time Machine backup の削除）の期待損失が disk 
 
 ---
 
-## 9. chezmoi source の `settings.json` が protected path でない
+## 8. chezmoi source の `settings.json` が protected path でない
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -186,8 +144,8 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ## 依存関係
 
-1 から 3 は互いに独立していて、どれからでも着手できる。3 は 1 行の修正で単独で閉じる。
+1 と 2 は互いに独立していて、どれからでも着手できる。2 は 1 行の修正で単独で閉じる。
 
-4 と 5 は `dot_config/git/config.tmpl` を触るため、同時に扱うと差分が小さくなる。
+3 と 4 は `dot_config/git/config.tmpl` を触るため、同時に扱うと差分が小さくなる。
 
-8 と 9 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、8 は rule の中身、9 は rule を置くファイル自体の保護で、別々に閉じられる。
+7 と 8 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、7 は rule の中身、8 は rule を置くファイル自体の保護で、別々に閉じられる。
