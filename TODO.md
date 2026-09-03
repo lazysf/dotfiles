@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-09-03
+- Date: 2026-09-04
 
 このファイルは、着手を保留している項目の一覧。
 
@@ -121,17 +121,7 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ---
 
-## 8. notes の「commit しない review がある」が目的変更に追従していない
-
-- 記載: 2026-09-03（`self-review` から `lapidary` への rename）
-
-`docs/notes/lapidary-skill-design.md` の「`git-commit` に組み込まない理由」の節が、根拠として「commit しない review がある。作業の区切り、方針の確認、書いたものが仕上がったかの点検は、commit と独立して起きる」を挙げている。
-
-**この記述は目的変更の前のもの。** f173129 で skill の目的が commit readiness へ変わり、`SKILL.md` の出力は commit 可否の判定を求めるようになった。組み込まない理由そのものは別の根拠（`git-commit` の責務が膨らむ）でも成立するが、1 つ目の根拠は現在の目的と噛み合わない。
-
----
-
-## 9. `lapidary` に出力の秘密情報規定が無い
+## 8. `lapidary` に出力の秘密情報規定が無い
 
 - 記載: 2026-09-03（`lapidary` の自動発火化、`security-reviewer` の non-blocking 指摘）
 
