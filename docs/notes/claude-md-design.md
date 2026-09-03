@@ -9,7 +9,7 @@
 
 CLAUDE.md は全セッションの先頭で読まれる。入れるのは、どの依頼でも要る契約と、工程の発火条件だけ。手順そのものは `skills/`、判断基準は `rules/` にあり、ここでは重複させない。
 
-公式目安は 1 ファイル 200 行。常時 load されるのは `CLAUDE.md` と `rules/coding-standards.md` の 2 つで、合計はこの目安に収まっている。
+公式目安は 1 ファイル 200 行。常時 load されるのは `CLAUDE.md`、`rules/quality.md`、`rules/privacy.md` の 3 つで、合計 127 行（2026-09-02）。目安に収まっている。
 
 ## push を工程表に書いている理由
 
@@ -65,14 +65,10 @@ hook で機械化していない。hook が出せる `systemMessage` は harness
 
 「運用して過少／過剰なら見直す」は session 中に完結しない。見直すのは人が `CLAUDE.md` を触る時で、その時の置き場がこの notes になる。閾値が合っていないと agent が気づいた場合の経路は、スコープを 1 つに保つ規律が既に持っている。工程表へ置くと、全 session で読まれるのにどの依頼でも使われない行が残る。閾値を固定と扱っているわけではなく、置き場の話。
 
-## tool の使い分けをここに置く理由
+## tool の使い分けを契約に書かない理由
 
 auto mode は「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」という指示を session へ入れる。これに従うと `paths` 付き rule が一度も発火しない（[rules-design.md](./rules-design.md)）。
 
-狙いは `paths` の仕組みを設計どおり働かせること。読み書き編集を 3 tool へ寄せれば、path 条件付き rule は対象ファイルに触れた時に発火する。現在 `paths` を持つ rule は `vba.md` の 1 本で、その対象（`src/**/*.{bas,cls}`）はこの repo に存在しないが、**判断は rule の本数ではなく仕組みを使えるようにするかで決めている**（2026-09-02）。`vba.md` の `paths` も維持する。
+対抗して「読み書き編集は Read / Edit / Write tool で行う」を共通契約へ置く案を試し、外した。契約は harness の指示に勝つ（2026-09-02、apply 後の別 session で確認）。外したのは効かないからではなく、auto mode では Bash の方が効率と正確さで優るため（2026-09-02 のユーザー判断。二次情報に基づくもので、一次情報での裏付けは取っていない）。
 
-`rules/` にも `skills/` にも置かない。`rules/` の既存 3 本は 1 つの主題を十数行以上で扱っており、3 文の規範に独立ファイルを立てるのは粒度が合わない。`skills/` は invoke か auto-trigger で発火するので、tool を選ぶ時点で読まれている保証が無い。
-
-強制力は無い。公式の位置付けは「スキル名の列挙をここに置く理由」と同じで、harness の指示とは正面から競合する。機械的に止めるなら PreToolUse hook になるが、ファイル読み取りに使える command は無数にあり、パターンの網羅が保守負荷になる。
-
-**競合しても契約が通ることは確認した。** apply 後に開いた別 session で `.bas` を扱わせたところ、Bash ではなく専用 tool が使われた（2026-09-02）。ただし 1 回の観測なので、常に勝つ担保にはならない。`output-styles/caveman.md` の強度切替と同じく、遵守は LLM 依存のまま。
+`paths` 側を諦める形になった。置き場の基準は [rules-design.md](./rules-design.md) にある。
