@@ -38,23 +38,7 @@
 
 ---
 
-## 2. `ponytail-debt` の理由が不正確
-
-- 記載: 2026-09-01（coding-standards への打ち切り順の導入）
-
-不採用の判断は変えない。`docs/notes/coding-skill-design.md` の marker 節に書いた理由が事実と合っていない。
-
-現状の記述は「追跡は `rg -i 'tradeoff:'` の走査だけで、強制力は無い」。`ponytail-debt` がやるのは marker の収集、整形、**昇格条件が書かれていない marker への `no-trigger` タグ付け**、集計の 4 つ。`rg` で足りるのは収集だけで、3 つ目は出ない。
-
-これが効くのは、`skills/coding` の marker 規約が「上限と作り直す条件を書く」を要求していて、notes 側も「条件が無い marker は放置と区別が付かない」と書いているため。**規約が要求していることを検査する手段が無い**、という事実が記録に残っていない。
-
-直す方向は「収集は `rg` で足りるが、条件が書かれているかの判定は出ない。marker を実際に付けたコードがまだ無いので検査を作らず、溜まってから判断する」の趣旨へ。
-
-2026-09-01 時点で `rg -i 'tradeoff:'` が拾うのは規約本文と解説だけで、marker を付けた実装は 0 件（当時の置き場は `rules/coding-standards.md`、現在は `skills/coding/SKILL.md` と `coding-skill-design.md`）。
-
----
-
-## 3. `config.tmpl` の `$opWhoami` が未使用
+## 2. `config.tmpl` の `$opWhoami` が未使用
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -70,7 +54,7 @@
 
 ---
 
-## 4. `gpg.ssh.allowedSignersFile` が未設定
+## 3. `gpg.ssh.allowedSignersFile` が未設定
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -86,7 +70,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 5. 削除済み notes 内の commit リンクが解決しない
+## 4. 削除済み notes 内の commit リンクが解決しない
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -98,7 +82,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 6. `archive/pre-reset-20260827` が未 push
+## 5. `archive/pre-reset-20260827` が未 push
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -114,7 +98,7 @@ git push -u origin archive/pre-reset-20260827
 
 ---
 
-## 7. disk 以外の破壊 command が deny に無い
+## 6. disk 以外の破壊 command が deny に無い
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -130,7 +114,7 @@ reviewer は `tmutil`（Time Machine backup の削除）の期待損失が disk 
 
 ---
 
-## 8. chezmoi source の `settings.json` が protected path でない
+## 7. chezmoi source の `settings.json` が protected path でない
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -144,8 +128,6 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ## 依存関係
 
-1 と 2 は互いに独立していて、どれからでも着手できる。2 は 1 行の修正で単独で閉じる。
+2 と 3 は `dot_config/git/config.tmpl` を触るため、同時に扱うと差分が小さくなる。
 
-3 と 4 は `dot_config/git/config.tmpl` を触るため、同時に扱うと差分が小さくなる。
-
-7 と 8 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、7 は rule の中身、8 は rule を置くファイル自体の保護で、別々に閉じられる。
+6 と 7 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、6 は rule の中身、7 は rule を置くファイル自体の保護で、別々に閉じられる。
