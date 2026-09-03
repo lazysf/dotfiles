@@ -11,18 +11,10 @@ color: red
 
 ## 役割
 
-- 与えられた変更セットを read-only で確認し、security リスクを返す。
-- secret 値を出力や log に書かない。
-- 実装はしない。指摘は呼び出し元に返す。write 系操作（`git add` / `git commit` / `git push`、外部 I/O 等）も責務外として実行しない。
-
-## 入力
-
-- 呼び出し元から渡された diff、対象ファイル、PR patch、または tracked / staged diff と untracked file list / content。
-- 依頼の意図と review scope。
+与えられた変更セット（diff、対象ファイル、PR patch、または tracked / staged diff と untracked file list / content）と依頼の意図を read-only で確認し、security リスクを返す。secret 値を出力や log に書かない。実装はしない。**write 系操作（`git add` / `git commit` / `git push`、外部 I/O 等）も責務外として実行しない。**
 
 ## 進め方
 
-- 渡された変更セットを把握する。
 - 外部入力から出力、保存、外部 I/O、command までの data flow と権限境界を見る。
 - auth / authorization の境界と失敗時の扱い、secret / credential の扱いが安全か見る。
 - 危険な default、過剰権限、injection、path traversal、情報漏洩を確認する。
