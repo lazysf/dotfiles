@@ -39,7 +39,7 @@ push は sandbox の proxy が SSH を運ばないため agent が実行して�
 
 工程表の review は commit 前の自己確認を含む。もともと `quality-reviewer` などの起動条件しか書いていなかったが、実際には commit 前に毎回自分で変更を確認していて、その運用が機能していた。契約に無い行為が実務を支えている状態だったので、契約側へ移した。
 
-観点はここに書かない。手順と観点は `skills/self-review` が持ち、工程表は「いつ通すか」だけを示す。CLAUDE.md は全 session で常時 load される。review の時にしか要らない詳細を置くと、review しない session でも context を占める。
+観点はここに書かない。手順と観点は `skills/lapidary` が持ち、工程表は「いつ通すか」だけを示す。CLAUDE.md は全 session で常時 load される。review の時にしか要らない詳細を置くと、review しない session でも context を占める。
 
 図を `doc → review` の順にしてあるのは、実装と doc をまとめて review するため。失敗は両者を跨ぐ形で出る。設定を消したのに notes が古い参照を持ったまま。skill の `description` を変えたのに notes の記述が対応していない。分けて review すると、実装だけを見る時点では doc がまだ無く、doc だけを見る時点では実装の差分を見ない。追従漏れを見つける場が消える。`.claude/rules/harness-surface-consistency.md` も両方を並べて見ることを前提にしている。
 

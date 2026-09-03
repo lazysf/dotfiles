@@ -1,9 +1,9 @@
-# self-review skill の設計
+# lapidary skill の設計
 
 - Date: 2026-09-03
-- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
+- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
 
-`self-review` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
+`lapidary` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
 ## skill に置く理由
 
@@ -21,7 +21,7 @@ commit しない review がある。作業の区切り、方針の確認、書�
 
 ## agent との使い分け
 
-`self-review` が入口で、`quality-reviewer` / `security-reviewer` は skill の中の選択肢として提案する。既定は自己確認で、独立 context は条件に当たった時だけ。
+`lapidary` が入口で、`quality-reviewer` / `security-reviewer` は skill の中の選択肢として提案する。既定は自己確認で、独立 context は条件に当たった時だけ。
 
 分ける根拠は、両者が拾う指摘の性質が違うこと。自己確認は自分が書いた文を見るのは得意で、指示語の空振り、掛かり先のずれ、誇張、表現のゆれ、参照の空振りを拾う。一方で**自分が調べた範囲の外は見えない**。実際に agent 側が拾ったのは 4 つ。`git log` の committer date が示す履歴書き換え、schema の実 default、観測を超えた一般化、スコープ外の混入。いずれも一次情報を取り直さないと出ない。
 
@@ -39,15 +39,25 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 - **検証の扱い。** lint / test が通っているかを見る項目が無かった。
 - **終わり方。** 出力が次の工程を挙げるだけで、commit できるかの判定になっていなかった。
 
-## description を明示指定に絞っている理由
+## 名前を `lapidary` にしている理由
 
-`harness-design-principles.md` の「skill description の書き方」は 3 つを定めている。依頼語だけに絞らず作業の流れで必要になる場面も書く。短さより境界語の明確さを優先する。強めに書く方へ倒す。この skill はそこから外して、明示指定だけを書いている。
+目的が「commit できる状態まで仕上げる」なので、`review` を名前に置くと合わない。review は指摘を挙げる語で、挙げた時点で終われてしまう。旧名 `self-review` はその読みを許していた。
 
-**外せるのは、この skill を自動で起動しないと決めているため。** `CLAUDE.md` の review 行も明示時だけに絞ってある。`git-commit` の工程表の行は「**ユーザー指示時に**」と条件付き。非明示の流れは description が拾っている（[git-commit-skill-design.md](./git-commit-skill-design.md)）。そこが違う。
+`lapidary` は宝石研磨師を指す。形容詞では「簡潔で彫琢された（文章）」の意を持つ。doc を主な対象にするこの skill と二重に噛み合う。`scribe`（写字生）と同じ職能名の型で揃う。
 
-description の未発火をこの skill では実測していない。`scribe` と `git-commit` は未発火の実測を持ち、それが記述を強める根拠になっているが、こちらには対応する観測が無い。
+名前の正本はディレクトリ名。Claude Code の personal skill では frontmatter `name` が表示ラベルだけを決め、`/lapidary` はディレクトリ名から来る。一方 Agent Skills spec は `name` とディレクトリ名の一致を必須にしているため、両方を揃えてある。
 
-**代償はある。** commit を視野に入れていない場面で「問題ない？」とだけ聞かれた時、description の側からは発火しない。取りこぼしを理由に description を広げない。
+**名前が説明を担わなくなった。** `self-review` は「自分の変更を自分で見る」ことを名前自体が説明していた。`lapidary` は説明しない。description の冒頭「自分が加えた変更を」がその役割を引き継いでいる。
+
+## 自動で発火させる理由
+
+明示指定だけにすると、人が呼ばない限り review 工程が通らない。2026-09-03、description を明示指定へ絞った状態でこの skill 自身と関連 notes を変更する作業を回したところ、一度も発火しなかった。設計どおりの挙動ではあるが、lint と参照検索が手で行われ、観点 6 つが通らないまま commit の手前まで進んだ。
+
+実装（`coding`）と doc（`scribe`）は自動で発火する。review だけが人の呼び出しに依存すると、`scribe` が書いた doc の仕上げが走らないまま commit へ進む。
+
+**空振りのコストは承知の上。** commit を視野に入れていない場面で発火すると、観点 6 つを空振りさせる。それでも自動発火を選ぶのは、通らずに commit へ進むコストの方が大きいため。`disable-model-invocation: true` も同じ理由で採らない。`/lapidary` と打った時しか走らないので、明示指定と変わらない。
+
+入口の実行条件は置いていない。この skill は作業ツリー内で閉じ、履歴も外部も触らない。代わりに手順 3 が直す対象を自分の変更へ限っている。`git-commit` が「ユーザー自身が編集した変更は unstaged のまま残す」を持つのと対になる。一般則は `harness-design-principles.md` の「発火面と実行条件を分ける」にある。
 
 ## 検証を実行せず確認だけする理由
 
@@ -67,7 +77,7 @@ description の未発火をこの skill では実測していない。`scribe` �
 
 ## 「過剰さ」を定義し直した理由
 
-**現在の定義（正本は `dot_claude/skills/self-review/SKILL.md`）は「読み手が理解・判断するのに必要な水準を超えている部分」。** 絶対評価ではなく、目的に対する相対評価にしてある。
+**現在の定義（正本は `dot_claude/skills/lapidary/SKILL.md`）は「読み手が理解・判断するのに必要な水準を超えている部分」。** 絶対評価ではなく、目的に対する相対評価にしてある。
 
 旧定義「消しても主張が変わらない記述がないか」は判定が主観で、何度読んでも「これも消せる」が出た。青天井の観点が 1 つあると全体が終わらない。
 
@@ -107,7 +117,7 @@ description の未発火をこの skill では実測していない。`scribe` �
 
 ## 過剰設計の review を別 skill にしていない理由
 
-公式は skill の粒度を関数と同じように考えるよう勧めている。狭すぎる skill は 1 つのタスクに複数 load され、overhead と指示衝突を招く（Best practices の "Design coherent units"）。過剰設計だけを見る skill を独立させると、変更を閉じる時に `self-review` と 2 本呼ぶ運用になり、スコープと整合性の観点は両方に必要なので重複する。
+公式は skill の粒度を関数と同じように考えるよう勧めている。狭すぎる skill は 1 つのタスクに複数 load され、overhead と指示衝突を招く（Best practices の "Design coherent units"）。過剰設計だけを見る skill を独立させると、変更を閉じる時に `lapidary` と 2 本呼ぶ運用になり、スコープと整合性の観点は両方に必要なので重複する。
 
 ponytail の `ponytail-review` が持つ tag 形式（`delete:` / `stdlib:` / `native:` / `yagni:` / `shrink:` と `net: -N lines possible.`）も採っていない。この skill の出力は「観点ごとに何を確認したか」で既に決まっており、tag と行数集計を足すと、同じ指摘に 2 つの書式が並ぶ。
 
@@ -117,8 +127,12 @@ repo 全体を対象にした bloat の洗い出し（ponytail の `ponytail-aud
 
 終了条件は「観点 6 つを通し切り、直しが新しい指摘を生まなくなったら閉じる」。回数では決めない。
 
-**以前は「2 巡続けて指摘 0」だった。これは機能しなかった。** 2 巡 0 で閉じた変更に対して `/self-review` を明示で 3 回呼び直したところ、9 件・7 件・7 件が出た（2026-09-01）。出たものには事実の誤りと、rule として機能しない箇所（段の判定が決まらない、参照が必要な段に届かない）が含まれていて、推敲の水掛け論ではない。
+**以前は「2 巡続けて指摘 0」だった。これは機能しなかった。** 2 巡 0 で閉じた変更に対して `/lapidary` を明示で 3 回呼び直したところ、9 件・7 件・7 件が出た（2026-09-01）。出たものには事実の誤りと、rule として機能しない箇所（段の判定が決まらない、参照が必要な段に届かない）が含まれていて、推敲の水掛け論ではない。
 
 原因は 2 つ。**観点に終わりの無いものが混ざっていた。** 旧「過剰さ」の「消しても主張が変わらない記述がないか」は判定が主観なので、厳密に適用すれば常に何か見つかる。もう 1 つは **読む角度が未定義だったこと**（上の「観点の数と項目を絞っている理由」）。「もう 1 巡回せば何か出る」は常に真になり、収束の判断に使えない。公式も、結果が回ごとにぶれる原因の 1 つとして「指示が曖昧でモデルが毎回違う解釈をする」を挙げている。
 
-直すと別の問題が生まれる、という観察自体は正しい（具体例は `dot_claude/skills/self-review/SKILL.md` を正本とし、ここでは繰り返さない）。だから手順に「直したら、その直しに関係する項目だけ再確認する」を残してある。全部やり直さないのは、通し切った項目をもう一度通しても、直しが触っていない箇所からは新しいものが出ないため。
+直すと別の問題が生まれる、という観察自体は正しい（具体例は `dot_claude/skills/lapidary/SKILL.md` を正本とし、ここでは繰り返さない）。だから手順に「直したら、その直しに関係する項目だけ再確認する」を残してある。全部やり直さないのは、通し切った項目をもう一度通しても、直しが触っていない箇所からは新しいものが出ないため。
+
+## 未確認
+
+自動発火が実際に効くかは未測定。description を書き換えた後、commit を視野に入れた流れでこの skill が発火するかを観測していない。公式が model behavior を nondeterministic と明記しているため、1 回の発火では判定できない（[scribe-skill-design.md](./scribe-skill-design.md) と同じ理由）。
