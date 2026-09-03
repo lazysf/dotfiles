@@ -1,7 +1,6 @@
 # AGENTS.md
 
-この root `AGENTS.md` は、この dotfiles repo を保守するときの repo-local な案内として扱い、chezmoi の展開対象にはしない。
-root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱い、`AGENTS.md` を参照させるだけにする。
+この dotfiles repo を保守するときの repo-local な案内。chezmoi の展開対象にしない。root `CLAUDE.md` はこのファイルを参照させるだけの import shim。
 
 ## Agent Skills に関する作業
 
@@ -22,13 +21,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 ### docs-only と扱わないもの
 
 - 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
-- `scribe` 単独で進めない代表例:
-  - root `AGENTS.md` / `CLAUDE.md`、`dot_claude/CLAUDE.md`
-  - `dot_claude/skills/**`（`SKILL.md` と、判断や実行に影響する `references/` / `scripts/` / `assets/`）
-  - agent 定義（`dot_claude/agents/*.md`）
-  - rules（`dot_claude/rules/*.md`）
-  - `dot_claude/output-styles/*.md`
-  - runtime 設定（`dot_claude/settings.json`）
+- `scribe` 単独で進めないのは `dot_claude/**` 全体（`CLAUDE.md`、`skills/`、`agents/`、`output-styles/`、`settings.json`）と、root `AGENTS.md` / `CLAUDE.md`
 
 ### 軽量例外
 
@@ -54,9 +47,7 @@ root `CLAUDE.md` は Claude Code 向けの repo-local import shim として扱�
 
 ## 置き場の原則
 
-- `dot_claude/`: 全 project へ配る運用契約、rules、skills、output-styles、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
-- root `CLAUDE.md`: Claude Code 向けの repo-local import shim
+- `dot_claude/`: 全 project へ配る運用契約、skills、agents、output-styles、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
 - `.claude/rules/`: この repo に閉じる運用ルール。chezmoi は `.` 始まりを配布しない
-- `docs/notes/`: repo-level の通常知見や背景
-- `docs/adr/`: repo-level の判断記録
+- `docs/notes/`: repo-level の通常知見や背景。`docs/adr/`: repo-level の判断記録
