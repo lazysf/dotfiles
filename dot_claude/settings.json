@@ -29,7 +29,12 @@
       "Bash(mkfs *)",
       "Bash(mkfs.* *)",
       "Bash(newfs_* *)",
-      "Bash(diskutil *)"
+      "Bash(diskutil *)",
+      "Bash(fdisk *)",
+      "Bash(gpt *)",
+      "Bash(pdisk *)",
+      "Bash(apfs_hfs_convert *)",
+      "Bash(asr *)"
     ]
   },
   "sandbox": {
