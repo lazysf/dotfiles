@@ -12,6 +12,7 @@
   signingkey = {{ onepasswordRead "op://Personal/GitHub Signing Key/public key"| quote }}
 [gpg "ssh"]
   program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+  allowedSignersFile = ~/.config/git/allowed_signers
 [gpg]
   format = ssh
 [commit]

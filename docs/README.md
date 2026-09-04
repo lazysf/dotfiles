@@ -7,6 +7,7 @@
   - [claude-code-settings-design.md](./notes/claude-code-settings-design.md): `settings.json` が default との差分だけで組まれている理由と、sandbox / permissions の実測記録
   - [claude-md-design.md](./notes/claude-md-design.md): `CLAUDE.md` が今の形になっている理由
   - [git-commit-skill-design.md](./notes/git-commit-skill-design.md): `git-commit` skill が今の形になっている理由と commit 履歴の実測
+  - [git-signature-verification-design.md](./notes/git-signature-verification-design.md): 手元で commit の署名を検証する構成の理由と、allowed_signers の形式の実測
   - [harness-design-principles.md](./notes/harness-design-principles.md): この harness に何を置き、どう書くかの判断基準
   - [lapidary-skill-design.md](./notes/lapidary-skill-design.md): `lapidary` skill が今の形になっている理由と、reviewer agent との使い分け
   - [memory-surface-design.md](./notes/memory-surface-design.md): 配布する memory を `CLAUDE.md` 1 枚にしている理由と、`paths` 付き rule が発火しない実測

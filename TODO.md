@@ -12,23 +12,7 @@
 
 ---
 
-## 1. `gpg.ssh.allowedSignersFile` が未設定
-
-- 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
-
-設定されておらず、ファイルも存在しない。このため手元では署名を検証できない。
-
-```text
-error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signature verification
-```
-
-`git log --show-signature` や `%G?` が自分の commit を未検証（`N`）と表示する。**GitHub 上の Verified 判定には影響しない**（そちらは GitHub に登録した signing key で検証される）。
-
-設定する場合は、署名鍵と identity の対応を書いたファイルを用意して `gpg.ssh.allowedSignersFile` から指す。鍵は 1Password の `GitHub Signing Key` を正本とするため、`dot_config/git/config.tmpl` と同じく template から生成するか、`config.local` 側に置くかの選択がある。
-
----
-
-## 2. `archive/pre-reset-20260827` が未 push
+## 1. `archive/pre-reset-20260827` が未 push
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 

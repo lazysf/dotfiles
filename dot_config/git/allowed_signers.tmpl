@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "darwin" -}}
+{{ if ne (lookPath "op") "" -}}
+{{/* 値は使わない。op が 1Password へ到達できない時に、鍵が落ちた行を静かに書き出さず、
+     ここで展開を失敗させるための呼び出し。 */ -}}
+{{ $opWhoami := output "op" "whoami" -}}
+{{/* principal は鍵の識別名。git 2.55.0 は検証時に照合しないが、%GS へそのまま出るので
+     config.tmpl の user.email と揃える。namespaces は信頼を git の署名だけに絞る指定で、
+     別の値を書くと検証が B になる。 */ -}}
+346131960+lazysf@users.noreply.github.com namespaces="git" {{ onepasswordRead "op://Personal/GitHub Signing Key/public key" }}
+{{ end -}}
+{{ end -}}
