@@ -28,19 +28,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 2. 削除済み notes 内の commit リンクが解決しない
-
-- 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
-
-`docs/notes/model-and-effort-tuning-history.md` に、commit を指すリンクが 5 本ある。
-
-このファイルは既に retire 済みで、現在の tree には存在しない。履歴の中にのみ残る。リンクの URL は所有者名を新アカウントへ置換したが、**指している commit SHA は履歴書き換えで変わっており、解決しない**。
-
-現在の doc としては壊れていないため実害は無い。直すなら履歴の書き換えが必要で、費用対効果は低い。
-
----
-
-## 3. `archive/pre-reset-20260827` が未 push
+## 2. `archive/pre-reset-20260827` が未 push
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -56,7 +44,7 @@ git push -u origin archive/pre-reset-20260827
 
 ---
 
-## 4. disk 以外の破壊 command が deny に無い
+## 3. disk 以外の破壊 command が deny に無い
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -72,7 +60,7 @@ reviewer は `tmutil`（Time Machine backup の削除）の期待損失が disk 
 
 ---
 
-## 5. chezmoi source の `settings.json` が protected path でない
+## 4. chezmoi source の `settings.json` が protected path でない
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -86,4 +74,4 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ## 依存関係
 
-4 と 5 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、4 は rule の中身、5 は rule を置くファイル自体の保護で、別々に閉じられる。
+3 と 4 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、3 は rule の中身、4 は rule を置くファイル自体の保護で、別々に閉じられる。
