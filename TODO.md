@@ -33,23 +33,7 @@
 
 ---
 
-## 2. `config.tmpl` の `$opWhoami` が未使用
-
-- 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
-
-`dot_config/git/config.tmpl` の 5 行目で `output "op" "whoami"` の結果を変数へ代入しているが、どこからも参照していない。
-
-副作用として、**`op` が 1Password へ到達できない環境ではこのファイルの template 展開が失敗する**。`[user]` ブロックだけを落とす gate としては機能しない。
-
-2026-09-01 に sandbox 内で実測した範囲では、`chezmoi diff` / `chezmoi cat` / `chezmoi execute-template` がこの行で停止した。`chezmoi apply` が他のファイルの適用まで中断するかは未確認。
-
-`dot_ssh/private_config.tmpl` は同じ判定を `if` の条件式へ入れており、そちらは gate として働く。書式を揃えるなら後者に寄せる。
-
-着手前に、意図的な停止なのか gate のつもりだったのかを確認する必要がある。
-
----
-
-## 3. `gpg.ssh.allowedSignersFile` が未設定
+## 2. `gpg.ssh.allowedSignersFile` が未設定
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -65,7 +49,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 4. 削除済み notes 内の commit リンクが解決しない
+## 3. 削除済み notes 内の commit リンクが解決しない
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -77,7 +61,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 5. `archive/pre-reset-20260827` が未 push
+## 4. `archive/pre-reset-20260827` が未 push
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -93,7 +77,7 @@ git push -u origin archive/pre-reset-20260827
 
 ---
 
-## 6. disk 以外の破壊 command が deny に無い
+## 5. disk 以外の破壊 command が deny に無い
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -109,7 +93,7 @@ reviewer は `tmutil`（Time Machine backup の削除）の期待損失が disk 
 
 ---
 
-## 7. chezmoi source の `settings.json` が protected path でない
+## 6. chezmoi source の `settings.json` が protected path でない
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -121,7 +105,7 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ---
 
-## 8. `lapidary` に出力の秘密情報規定が無い
+## 7. `lapidary` に出力の秘密情報規定が無い
 
 - 記載: 2026-09-03（`lapidary` の自動発火化、`security-reviewer` の non-blocking 指摘）
 
@@ -135,6 +119,4 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ## 依存関係
 
-2 と 3 は `dot_config/git/config.tmpl` を触るため、同時に扱うと差分が小さくなる。
-
-6 と 7 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、6 は rule の中身、7 は rule を置くファイル自体の保護で、別々に閉じられる。
+5 と 6 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、5 は rule の中身、6 は rule を置くファイル自体の保護で、別々に閉じられる。
