@@ -6,8 +6,8 @@
      ここで展開を失敗させるための呼び出し。 */ -}}
 {{ $opWhoami := output "op" "whoami" -}}
 [user]
-  name  = {{ onepasswordRead "op://Personal/GitHub/username" | quote }}
-  # noreply は commit に載る公開値なので 1Password ではなくリテラルで持つ
+  # name / email は commit に載る公開値なので 1Password ではなくリテラルで持つ
+  name  = "lazysf"
   email = "346131960+lazysf@users.noreply.github.com"
   signingkey = {{ onepasswordRead "op://Personal/GitHub Signing Key/public key"| quote }}
 [gpg "ssh"]
