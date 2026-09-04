@@ -84,18 +84,6 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ---
 
-## 6. `lapidary` に出力の秘密情報規定が無い
-
-- 記載: 2026-09-03（`lapidary` の自動発火化、`security-reviewer` の non-blocking 指摘）
-
-`dot_claude/skills/git-commit/SKILL.md` は「エラー全文をそのまま貼らない。`git` の出力には認証 URL や token が混ざることがあり、報告に残すと秘密情報が履歴に残る」を持つ。`lapidary` に対応する規定が無い。
-
-この skill は毎回 diff 全体を読み、確認内容を出力する。自動発火へ変えたことで実行回数が増えるため、tracked file に混ざった値を転記する経路が広がる。sandbox の deny は `.env` などの read を止めるが、tracked file 内の値は止めない。
-
-実際に転記が起きたかは未確認。規定を足すかどうかは、`git-commit` 側の文言をどこまで一般化できるかと合わせて決める。
-
----
-
 ## 依存関係
 
 4 と 5 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、4 は rule の中身、5 は rule を置くファイル自体の保護で、別々に閉じられる。
