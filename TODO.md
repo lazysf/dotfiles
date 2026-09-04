@@ -41,15 +41,3 @@ git push -u origin archive/pre-reset-20260827
 ```
 
 送らない判断もあり得る。`main` の祖先なので、履歴そのものは `main` 側に残っている。
-
----
-
-## 3. chezmoi source の `settings.json` が protected path でない
-
-- 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
-
-sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/.claude/settings.json` という**名前**。chezmoi source の `dot_claude/settings.json` は作業ディレクトリ配下の別名なので、この保護に入らない。sandbox 内の command が書き換え、`chezmoi apply` で `~/.claude/settings.json` へ昇格できる。
-
-つまり `dot_claude/settings.json` に書いた rule は、事故と model の誤りへの guardrail であって、侵害されたプロセスに対する境界ではない。
-
-**書き込みが通ることは確認済み。** session へ渡される sandbox 設定の write deny 一覧に `<repo>/.claude/settings.json` は入っているが `<repo>/dot_claude/settings.json` は入っておらず、2026-09-02 にこの経路で実際に編集した（disk 破壊 deny の変更そのもの）。

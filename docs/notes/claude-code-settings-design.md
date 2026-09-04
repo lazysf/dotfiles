@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
 - Date: 2026-09-04
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04）
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04） / sandboxing docs の protected paths 節（2026-09-04 確認）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -106,6 +106,10 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 - auto mode の classifier。raw device への write を試した probe が block された（2026-09-02 観測）
 
 **sandbox の層は `excludedCommands` に載せた command には掛からない。** `allowUnsandboxedCommands: false` でも公式は「all commands must run sandboxed or be explicitly listed in `excludedCommands`」と書く。この配列は session が読む全 scope から merge される。managed settings で締める手段も無い。公式は「`excludedCommands` has no equivalent managed-only lockdown」と書く。現在は未設定なので穴は開いていないが、project scope が 1 行足せば開く。
+
+**protected paths は名前で決まる。** sandbox は書き込みを許した範囲の中でも、Claude Code が設定と code を load する path への書き込みを止める。対象は `.claude` の設定ファイル、`.claude/skills`、`.claude/agents`、`.claude/commands`、`.claude/hooks`、`~/.claude` の大半といった**名前**で、`allowWrite` でも `Edit` allow rule でも解除できない。この repo の `dot_claude/` は同じ内容の配布元だが、名前が違うのでこの保護に入らない。sandbox 内の command は `dot_claude/settings.json` を書き換えられる（2026-09-02 に実際にこの経路で編集した）。
+
+**つまり `dot_claude/settings.json` に書いた rule は、事故と model の誤りへの guardrail であって、侵害されたプロセスに対する境界ではない。** 境界として残るのは、live 側が protected paths に入っていることと、source の変更が人の `chezmoi apply` を経ないと効かないこと。`denyWrite` で塞がない理由は「入れていない設定と理由」にある。
 
 ## 実測: credential への Bash アクセスは通らない
 
@@ -218,7 +222,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | **permission mode を `default` に強制し、auto mode を黙って無効化する**（v2.1.221 で対照実験）。`--permission-mode auto` を明示すると Claude Code 自身が警告を出す。公式 docs に値の記載が無い |
 | `sandbox.autoAllowBashIfSandboxed` | default の `true` に任せる。`false` にすると sandbox 済み Bash も 1 本ごとに classifier 往復が入って遅く、block が fallback カウンタに積まれる |
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
-| `sandbox.filesystem.denyWrite` | default で cwd 外は書けない |
+| `sandbox.filesystem.denyWrite` | default で cwd 外は書けない。cwd 内の `dot_claude/` は protected paths に入らないが、そこはこの repo の編集対象そのもの。塞ぐと Bash からの編集と、そのファイルを置き換える `git checkout` / `merge` が落ちる。live 側は protected paths に入っており、source の変更は人の `chezmoi apply` を経ないと効かないので、そこを gate として持つ |
 | `includeCoAuthoredBy` | 公式で deprecated。同じ制御は後継の `attribution` で書く（「attribution を止める理由」） |
 | `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`sandbox.credentials` が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する |
