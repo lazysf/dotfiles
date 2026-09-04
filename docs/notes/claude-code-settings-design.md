@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
-- Date: 2026-09-03
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02）
+- Date: 2026-09-04
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -151,6 +151,16 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 **代償**: 公式は `allowUnixSockets` について「system service への access が sandbox bypass につながりうる」と警告している。ここで開くのは署名専用の口ではなく agent 全体なので、sandbox 内の command は同じ鍵で SSH 認証もできる。push は SSH transport が別に止まるため実害は出ていないが、socket を 1 つ開くことは防御を 1 段緩める判断になる。
 
+`error: 1Password: agent returned an error` は症状が違い、socket が sandbox で止まっているわけではない。2026-09-04 にこの error で commit が失敗した時、同じ session から `ssh-add -l` が鍵 2 本を列挙できていた。socket は通っていて、原因は app 側の状態（lock、承認の未応答）にある。1Password を操作してから retry すると署名付きで commit できた。
+
+## `op` CLI は sandbox 内から使えない
+
+`allowUnixSockets` で通しているのは署名 agent の socket 1 本だけで、`op` CLI が desktop app との通信に使う socket は通していない。2026-09-04 に sandbox 内で測ると、`op --version` は成功し、`op whoami` は desktop app へ接続できずに失敗する。binary はあり、app との通信だけが通らない。1Password の socket ディレクトリには `agent.sock` と `s.sock` を含む 37 個があり、許可しているのは `agent.sock` だけ。`op` がどれを使うかは特定していない。sandbox が塞いでいるためと読めるが、socket を足した A/B は取っていないので確定していない。
+
+影響は chezmoi に出る。`dot_config/git/config.tmpl` が `output "op" "whoami"` を呼ぶため、sandbox 内では template 展開がこの行で失敗する。`chezmoi cat` に target を 2 つ渡すと、1 つ目で止まって 2 つ目を出さない。同じ判定を持つ `dot_ssh/private_config.tmpl` は止まらない。あちらは `if` の条件式へ入れており、chezmoi の `exec` は command が失敗しても error を返さず false を返す（2026-09-04 実測）。
+
+**この socket は足さない。** `op` が通ると、sandbox 内の command が vault の項目を平文で読める。署名 agent の socket が与えるのは鍵で署名させるところまでで、権限の強さが違う。足して得られるのは sandbox 内で chezmoi の read 系が通る利便だけなので、釣り合わない。
+
 ## 未信頼コンテンツの取り込みは契約側で重ねない
 
 `WebFetch` / `WebSearch` は未信頼コンテンツを context へ取り込む経路でもある。settings 側に enforcement は無く、in-process tool なので `strictAllowlist` の対象にもならない。
@@ -223,6 +233,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 
 ## 未確認
 
+- `chezmoi apply` が、`op` 不達で失敗した template より後のファイルの適用まで中断するか。sandbox 内では `~/.config/gh` の lstat 拒否が先に出るため、切り分けられていない。
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution.pr` に空文字を設定した効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
