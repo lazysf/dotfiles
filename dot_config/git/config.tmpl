@@ -2,6 +2,8 @@
   path = ~/.config/git/config.local
 {{ if eq .chezmoi.os "darwin" -}}
 {{ if ne (lookPath "op") "" -}}
+{{/* 値は使わない。op が 1Password へ到達できない時に、署名設定が落ちた config を静かに書き出さず、
+     ここで展開を失敗させるための呼び出し。 */ -}}
 {{ $opWhoami := output "op" "whoami" -}}
 [user]
   name  = {{ onepasswordRead "op://Personal/GitHub/username" | quote }}
