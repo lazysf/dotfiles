@@ -111,6 +111,10 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 コード側 3 項目に足した security 関連の記述は、どれも除外であって検出ではない。この skill が security について担うのは「削って壊さない」ところまでで、脆弱性を見つけるのは `/security-review` の側。`skills/coding` が security primitive を汎用機能で代用させない一方、この skill にその検出を置いていないのは、責務の線がここにあるため。
 
+出力の転記規定も検出ではない。毎回 diff 全体を読み、観点ごとに何を見たかを出力するので、tracked file に混ざった値を報告へ写す経路が構造として在る。sandbox の deny は `.env` などの read を止めるが、tracked file 内の値は止めない。自分の出力に対する規律であって、値を探す仕事は増やしていない。
+
+`git-commit` の同種の規定と文言を揃えていないのは、露出する経路が違うため。あちらは `git` の command 出力に認証 URL や token が混ざる形で、こちらは読んだ file の中身を写す形になる。
+
 ただし**起動条件は別で、こちらが持つ**。独立 context を提案する条件に auth / 権限 / secret / 外部 I/O を入れた。いつ起動するかの条件をこの skill が持つため（上の「agent との使い分け」）。ここが持たないと、auth や secret に触る変更で security の目が入る自動経路が harness から消える。`/security-review` のユーザー明示だけが残る。
 
 この 4 つは `security-reviewer` の担当より狭い。あちらは command、CI / tooling 変更、data flow、injection、path traversal、情報漏洩も含む。残りは既存の「契約、設定、skill / agent 定義など、間違うと影響が広い surface を触った」が拾う。CI や tooling の設定はそちらに当たる。agent の担当と 1 対 1 にすると、既存条件と重なる項目が並ぶ。
@@ -134,5 +138,7 @@ repo 全体を対象にした bloat の洗い出し（ponytail の `ponytail-aud
 直すと別の問題が生まれる、という観察自体は正しい（具体例は `dot_claude/skills/lapidary/SKILL.md` を正本とし、ここでは繰り返さない）。だから手順に「直したら、その直しに関係する項目だけ再確認する」を残してある。全部やり直さないのは、通し切った項目をもう一度通しても、直しが触っていない箇所からは新しいものが出ないため。
 
 ## 未確認
+
+転記が実際に起きたかは確認していない。出力の規定は、経路が在ることに対して置いた。
 
 自動発火が実際に効くかは未測定。description を書き換えた後、commit を視野に入れた流れでこの skill が発火するかを観測していない。公式が model behavior を nondeterministic と明記しているため、1 回の発火では判定できない（[scribe-skill-design.md](./scribe-skill-design.md) と同じ理由）。
