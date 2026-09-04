@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
 - Date: 2026-09-04
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04）
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -27,7 +27,7 @@ Remote Control と terminal CLI は自分のマシンで走るので、ここに
 
 ## auto mode の built-in ルール
 
-`defaultMode: "auto"` の時だけ classifier が働き、実機（v2.1.246）で `allow` 17 / `soft_deny` 67 / `hard_deny` 1 / `environment` 20 のルールを持つ。件数と内容は次で確認できる。
+`defaultMode: "auto"` の時だけ classifier が働き、実機（v2.1.259）で `allow` 17 / `soft_deny` 69 / `hard_deny` 1 / `environment` 21 のルールを持つ。**件数は version で動く。** v2.1.246 では `soft_deny` 67 / `environment` 20 だった。ルールを根拠に判断する時は、その version で数え直す。件数と内容は次で確認できる。
 
 ```sh
 "$(ls -d ~/Library/Application\ Support/Claude/claude-code/*/claude.app/Contents/MacOS/claude | tail -1)" auto-mode defaults
@@ -45,7 +45,7 @@ desktop app 経由の install では `claude` が PATH に無く、実体は `~/
 | `op item delete` | `soft_deny` の Secret-Store Writes の「or equivalent」 |
 | force push、remote branch 削除、`commit --amend` | `soft_deny` の Git Destructive |
 
-built-in が扱わないもの。**disk の format** は「ローカルファイルの削除」ではない。Irreversible Local Destruction の射程から外れる。これだけ自前で deny する。
+built-in が扱わないもの。**disk と partition table の直接書き換え**は「ローカルファイルの削除」ではない。Irreversible Local Destruction の射程は local file に限る。ここだけ自前で deny する。
 
 `mkfs` と `mkfs.*` は macOS に存在しない（2026-09-02、`/sbin` `/usr/sbin` `/bin` `/usr/bin` を数えて 0 件）。等価は `/sbin/newfs_hfs` など `newfs_` 系の 6 本で、`Bash(newfs_* *)` の 1 行で覆う。`mkfs` 系を残しているのは、Linux / WSL2 で実行する場合を想定するため。
 
@@ -53,11 +53,29 @@ built-in が扱わないもの。**disk の format** は「ローカルファイ
 
 代償は、deny に allow で例外を作れないこと。公式は、broad な deny が narrower な allow の match する呼び出しも block すると書く。読み取り用の `diskutil list` / `info` も止まる。現時点でこの代償は観測されない。sandbox 内では読み取り verb も動かず、`list` / `info /` / `apfs list` / `listFilesystems` のいずれも `Unable to run because unable to use the DiskManagement framework` で落ちる（2026-09-02 実測）。復活した場合の逃げ道は deny 行自体を狭めることで、allow rule では作れない。
 
+**`diskutil` と同じ題目の command も deny する。** partition table を書き換えるもの、filesystem を変換するもの、volume を丸ごと復元するものが該当する。列挙は `dot_claude/settings.json` を正本とし、ここでは繰り返さない。
+
+足す基準は 3 つで、全部を満たすものだけ足す。既存の行と同じ題目に属すること。classifier のルール本文が名指ししないこと。read-only の verb を失っても実務に響かないこと。3 番目が要るのは、deny に例外を作れないため（上記）。
+
+2026-09-02 の `security-reviewer` は、macOS に実在して deny に無い破壊系を 13 本挙げた。13 本はすべて sandbox 内から起動できる（2026-09-04 実測）。うち 8 本は足さない。
+
+| command | 足さない理由 |
+| --- | --- |
+| `dd` | ファイルのコピーとテストデータの生成に使う。`Bash(dd *)` はその用途も止める。raw device への到達は別の 4 層が既に止める（「sandbox で効いている層と効いていない層」） |
+| `hdiutil` | `attach` による dmg のマウントと `info` が実務の用途で、sandbox 内で動く（2026-09-04 実測）。破壊は `create` と `segment` の `-ov`、`resize`、`erasekeys` に散る。`diskutil` と同じく、verb を列挙すると書き分けが増える |
+| `fsck_apfs` / `fsck_hfs` | 主な用途は診断。書き換えるのは修復オプションを付けた場合に限る |
+| `nvram` / `bless` / `csrutil` | disk の破壊ではなく boot と firmware の設定で、既存の行と題目が違う。設定の変更には、通常起動した macOS の sandbox 内から届かない権限が要る。man によると `bless` は root、`csrutil` は Recovery OS での起動、`nvram` は変数によって管理者権限 |
+| `tmutil` | classifier の Irreversible Deletion (general) が「unfamiliar CLIs with delete/destroy/teardown verbs」を挙げており、`tmutil delete` はこれに当たると読める（block の実測はしていない）。全体を deny すると `listbackups` と `destinationinfo` も止まる |
+
+足した 5 本は実行前に拒否される（2026-09-04 実測）。`Bash(gpt *)` は引数なしの `gpt` にも match した。**確認は `chezmoi apply` を挟んだ同じ session で取れた。** permission rule は session の起動時に固定されず、apply が動いている session へ届く。sandbox 設定が同じように届くかは確認していない。
+
+reviewer は `tmutil` の期待損失が disk の format より大きい可能性を挙げていた。この機の Time Machine は宛先が未設定で、`/` のローカルスナップショットも 0 件だった（2026-09-04 実測）。削除できる backup が今は無い。宛先を設定した時が、この判断を見直す入口になる。
+
 **この deny が disk 破壊を止めている層ではない。** どの層が実際に効いているかは「sandbox で効いている層と効いていない層」にある。
 
 `gh auth logout` も built-in に無いが、実害が小さいので置いていない。
 
-**auto mode でなければ classifier は働かない。** `defaultMode` を `default` にすると built-in の 68 ルールは一切効かず、毎回 prompt になる。
+**auto mode でなければ classifier は働かない。** `defaultMode` を `default` にすると built-in の 70 ルールは一切効かず、毎回 prompt になる。
 
 `defaultMode: "auto"` は user settings（`~/.claude/settings.json`）に置く必要がある。v2.1.142 以降、`.claude/settings.json` / `.claude/settings.local.json` の `auto` は無視される。
 
@@ -70,7 +88,7 @@ built-in が扱わないもの。**disk の format** は「ローカルファイ
 | `network.allowedDomains` | **単体では domain gate にならない**。allowlist にも `WebFetch(domain:)` にも無い host へ prompt なしで到達する（2026-08-27 と 2026-08-29 に実測、後者は `curl https://example.com` が 200）。この環境固有ではなく、公式が「pre-allow なし、新しい host は prompt か classifier」と定める既定の挙動 |
 | `permissions.deny` の `Read(...)` | **効いている。sandbox の read 制限にも合流する**。`credentials` に無い `$TMPDIR/probe/secrets/x.txt` を python から開くと `PermissionError`（2026-08-31 実測）。公式も、`Read` deny rule は Bash の `cat` / `head` / `tail` / `sed` に適用され、sandbox 設定の構築にも使われると書く |
 | `Bash(curl *)` / `wget` / `nc` の deny | permission rule としては有効だが**名前ベース**。`python3 -c "import urllib.request; ..."` で素通りする（実測） |
-| `Bash(newfs_* *)` / `Bash(diskutil *)` の deny | **効いている**。`diskutil list` が実行前に拒否される（2026-09-02 実測）。ただし**名前ベース**で、`sudo` / 絶対パス / `sh -c` は覆わない（下記） |
+| disk 系 command の `Bash(...)` deny | **効いている**。`diskutil list` が実行前に拒否される（2026-09-02 実測）。後から足した 5 本も同じく拒否される（2026-09-04 実測）。ただし**名前ベース**で、`sudo` / 絶対パス / `sh -c` は覆わない（下記） |
 | `sudo` | **sandbox が止める**。`sudo -n true` が `operation not permitted` で落ちる（2026-09-02 実測） |
 | `WebFetch` | 公式仕様上 sandbox の対象外 |
 
@@ -129,7 +147,7 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 `disableBypassPermissionsMode: "disable"` は `bypassPermissions` mode の 4 つの起動経路（`--permission-mode bypassPermissions`、`--dangerously-skip-permissions`、`--allow-dangerously-skip-permissions`、settings の `defaultMode`）を塞ぐ。公式は managed settings 向けと説明する。user settings でも機能する（「A user can set it in their own settings to lock themselves out of bypass mode.」）。
 
-この mode で残るのは deny rule と sandbox だけ。**auto mode の built-in 68 ルールが全部消え、protected paths（`.claude/settings.json` など）への書き込み保護も外れる。** 落差が大きいわりに、うっかり入る経路は無い（起動時に明示しない限り mode cycle にも現れない）ので、1 行で塞いでおく。
+この mode で残るのは deny rule と sandbox だけ。**auto mode の built-in 70 ルールが全部消え、protected paths（`.claude/settings.json` など）への書き込み保護も外れる。** 落差が大きいわりに、うっかり入る経路は無い（起動時に明示しない限り mode cycle にも現れない）ので、1 行で塞いでおく。
 
 `auto` mode は封じない。それは別キーの `disableAutoMode`。
 
