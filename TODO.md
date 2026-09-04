@@ -12,28 +12,7 @@
 
 ---
 
-## 1. 打ち切り順の reviewer 指摘（5 件）
-
-- 記載: 2026-09-01（coding-standards への打ち切り順の導入）
-
-打ち切り順を入れた時の review で non-blocking とされた分のうち、未対応の 5 件。
-
-**2026-09-02 の分割で前提が変わった指摘がある。** 打ち切り順は当時の `rules/coding-standards.md` から `skills/coding/SKILL.md` へ移り、品質の優先順位・基本原則・最小差分は `dot_claude/CLAUDE.md` に統合された。「段 1 が YAGNI とほぼ同文」は別ファイルへの分離で性質が変わり、「新節だけ書式が浮く」は skill 全体の構成が変わっている。着手前に各指摘が今も成立するか見る。
-
-### security-reviewer
-
-**節内の語衝突。** `dot_claude/skills/coding/SKILL.md` の「最初に成立した段で止まる」（= その段で実装に入れ）と「停止線に従って確認する」（= 実装せず人へ）が、同じ番号付きリスト内に同居している。節名を「実装前の打ち切り順」へ rename して他所からの参照は分離したが、節を上から読む経路には残る。reviewer は実害小と判断。
-
-### quality-reviewer
-
-- **段 1 が YAGNI とほぼ同文。** 「未確定の将来要件なら作らない」が同ファイルの基本原則と重複する
-- **段 6 と段 7 の境界が薄い。** 段 7「依頼を満たす最小の実装」が既に実装量の最小化を含むため、段 6 が独立して効く場面が読み取りにくい。「最初に成立した段で止まる」の「止まる」も、段 1-5 では打ち切りだが段 6-7 では結局書くので性質が違う
-- **新節だけ書式が浮く。** 他の節は bullet 中心、打ち切り順は番号リスト + 地の文 4 段落。常時 load の rule で地の文が続くと読み飛ばされやすい
-- **段 4 の例が web 寄り。** `<input type="date">`、CSS、DB 制約はこの repo の言語構成に当たらない
-
----
-
-## 2. `gpg.ssh.allowedSignersFile` が未設定
+## 1. `gpg.ssh.allowedSignersFile` が未設定
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -49,7 +28,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 3. 削除済み notes 内の commit リンクが解決しない
+## 2. 削除済み notes 内の commit リンクが解決しない
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -61,7 +40,7 @@ error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signa
 
 ---
 
-## 4. `archive/pre-reset-20260827` が未 push
+## 3. `archive/pre-reset-20260827` が未 push
 
 - 記載: 2026-09-01（GitHub アカウント再作成に伴う git identity 移行）
 
@@ -77,7 +56,7 @@ git push -u origin archive/pre-reset-20260827
 
 ---
 
-## 5. disk 以外の破壊 command が deny に無い
+## 4. disk 以外の破壊 command が deny に無い
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -93,7 +72,7 @@ reviewer は `tmutil`（Time Machine backup の削除）の期待損失が disk 
 
 ---
 
-## 6. chezmoi source の `settings.json` が protected path でない
+## 5. chezmoi source の `settings.json` が protected path でない
 
 - 記載: 2026-09-02（disk 破壊 deny の macOS 追従、`security-reviewer` の non-blocking 指摘）
 
@@ -105,7 +84,7 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ---
 
-## 7. `lapidary` に出力の秘密情報規定が無い
+## 6. `lapidary` に出力の秘密情報規定が無い
 
 - 記載: 2026-09-03（`lapidary` の自動発火化、`security-reviewer` の non-blocking 指摘）
 
@@ -119,4 +98,4 @@ sandbox が書き込みを止めるのは `~/.claude/settings.json` と `<repo>/
 
 ## 依存関係
 
-5 と 6 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、5 は rule の中身、6 は rule を置くファイル自体の保護で、別々に閉じられる。
+4 と 5 はどちらも `dot_claude/settings.json` の防御層をどう位置付けるかの話だが、4 は rule の中身、5 は rule を置くファイル自体の保護で、別々に閉じられる。
