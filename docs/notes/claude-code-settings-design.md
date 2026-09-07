@@ -75,7 +75,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 `gh auth logout` も built-in に無いが、実害が小さいので置いていない。
 
-**auto mode でなければ classifier は働かない。** `defaultMode` を `default` にすると built-in の 70 ルールは一切効かず、毎回 prompt になる。
+**auto mode でなければ classifier は働かない。** `defaultMode` を `default` にすると built-in ルールは一切効かず、毎回 prompt になる。
 
 `defaultMode: "auto"` は user settings（`~/.claude/settings.json`）に置く必要がある。v2.1.142 以降、`.claude/settings.json` / `.claude/settings.local.json` の `auto` は無視される。
 
@@ -151,7 +151,7 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 `disableBypassPermissionsMode: "disable"` は `bypassPermissions` mode の 4 つの起動経路（`--permission-mode bypassPermissions`、`--dangerously-skip-permissions`、`--allow-dangerously-skip-permissions`、settings の `defaultMode`）を塞ぐ。公式は managed settings 向けと説明する。user settings でも機能する（「A user can set it in their own settings to lock themselves out of bypass mode.」）。
 
-この mode で残るのは deny rule と sandbox だけ。**auto mode の built-in 70 ルールが全部消え、protected paths（`.claude/settings.json` など）への書き込み保護も外れる。** 落差が大きいわりに、うっかり入る経路は無い（起動時に明示しない限り mode cycle にも現れない）ので、1 行で塞いでおく。
+この mode で残るのは deny rule と sandbox だけ。**auto mode の built-in ルールが全部消え、protected paths（`.claude/settings.json` など）への書き込み保護も外れる。** 落差が大きいわりに、うっかり入る経路は無い（起動時に明示しない限り mode cycle にも現れない）ので、1 行で塞いでおく。
 
 `auto` mode は封じない。それは別キーの `disableAutoMode`。
 

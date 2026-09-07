@@ -26,6 +26,6 @@ git 2.55.0 で allowed_signers の 1 行を変え、直近 commit の `%G?` を�
 
 `allowedSignersFile` に書いた `~` は展開される（`HOME` を差し替えて確認）。
 
-## 実測: 未検証が 41 件残る
+## 実測: 署名の無い commit が残る
 
 `main` の 508 commit のうち 467 件が `G`、41 件が `N`（2026-09-04）。`N` は 2026-08-31 から 09-02 の commit で、署名そのものが付いていない。allowed_signers を置いても変わらない。`archive/pre-reset-20260827` は 370 件すべて `G`。
