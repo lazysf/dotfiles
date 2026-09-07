@@ -29,7 +29,6 @@ hook の実行環境（Node / Python）は prek が `~/.cache/prek/` 配下へ�
 ```console
 $ npx markdownlint-cli2 README.md
 Finding: README.md **/*.md !node_modules/** !.venv/** !.cache/** !.git/**
-Linting: 70 file(s)
 ```
 
 hook 自体が発火するのは staged に `.md` がある時だけ（hook 定義の `types: [markdown]`）。だが一度発火すると、staged していない Markdown の違反でも commit は止まる。使い捨て repo で `git commit` を実測した結果は次の 2 通りだった。
