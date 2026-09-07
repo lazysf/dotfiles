@@ -1,6 +1,6 @@
 # lapidary skill の設計
 
-- Date: 2026-09-04
+- Date: 2026-09-07
 - 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
 
 `lapidary` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
@@ -98,6 +98,16 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 この項目にだけ security primitive の除外が付いているのは、`skills/coding` の carve-out と正面から逆を向くため。carve-out が「専用ライブラリを使え」と指示した結果の diff は、この項目からは「汎用機能で足りるのに依存を足した」に見える。1 項目目と 3 項目目の除外が「消させない」方向なのに対し、ここだけが「足したものを消させる」方向なので、蓋が要る。
 
 コード側 3 項目目に多層防御の除外を添えてあるのは、多層防御が定義上「正常系で振る舞いが変わらない」ため。timeout、`finally` の後始末、fail-safe な default、境界を越えた後の再検証は、通常入力とテストの範囲では消しても差が出ない。効くのは異常系と敵対的入力だけ。監査ログは性質が少し違い、正常系でも書かれるが、消しても呼び出し側の振る舞いは変わらず、効くのは後から追う時だけ。除外が無いと、この項目がそれらを毎回の削除候補として名指しする。しかもこの skill は commit 前の既定工程で回る。security の目は明示依頼の opt-in。削る側だけが既定で動くことになる。
+
+## 指摘そのものを「過剰さ」の基準へ当て直す理由
+
+観点は不揃いと欠落を検出する。検出したことと、直す価値があることは別。後者を判定しないと、検出がそのまま報告へ流れる。
+
+2026-09-07 に実例が出た。「事実」観点の「実測値に測定時点が付いているか」に当てて、`docs/notes/markdownlint-and-pre-commit-execution.md` の実測 1 件に日付が無いことを検出した。これを「範囲外で 1 件」として報告へ載せた。ユーザーが対応の要否を聞き返した時点で段落を読み直すと、最終文が見直しの入口を持っていた。日付を足しても誰の判断も変わらない。
+
+原因は 2 つある。検出した項目を「これは誰のどの判断に効くか」へ当て直していない。「範囲外」というラベルが、判定の保留を正当化した。手順でラベルを免除条件として名指ししてあるのは、後者への対策。
+
+観点を増やさず手順へ置いた。観点は変更を見るもので、この判定は自分が出した指摘を見るもの。対象が違う。「過剰さ」観点の中へ足しても、その後に通す「doc」観点が拾ったものには当たらない。
 
 ## 「適用」観点を足した理由
 
