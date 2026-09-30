@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
-- Date: 2026-09-04
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04） / sandboxing docs の protected paths 節（2026-09-04 確認）
+- Date: 2026-09-30
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-09-30 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04） / sandboxing docs の protected paths 節（2026-09-04 確認）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -242,7 +242,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `PowerShell(...)` | `Bash(...)` とは別 namespace。Windows の PowerShell 経路は `Bash(...)` deny では覆えない |
 | `WebFetch(domain:...)` | hostname に case-insensitive match。`domain:` 形は sandbox の allowed domain list へも合流する |
 | `model` | alias（`opus` 等）と full model name の両方を受け付ける |
-| `effortLevel` | `low` / `medium` / `high` / `xhigh` / `max` / `auto` |
+| `effortLevel` | `low` / `medium` / `high` / `xhigh` / `max` / `auto`。最上位の `effortLevel` は、Opus 5.5 とそれ以降に出た model に効かない。`/effort` と `/model` picker は level を model ごとに `modelSettings` へ保存する |
 | `autoUpdatesChannel` | default は `latest`。`stable` は約 1 週間前の版で、major regression のある版を飛ばす |
 | `autoMemoryEnabled` | default は `true`。`~/.claude/projects/<project>/memory/` へ自動保存する |
 | `cleanupPeriodDays` | default は `30` |
