@@ -63,7 +63,7 @@ body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっ
 
 ## Gotchas
 
-- **pre-commit hook はファイルを書き換えることがある。** 自動修正型の hook が発火すると commit が失敗し、修正後の内容が unstaged で残る。この dotfiles repo では `fix end of files` と `markdownlint-cli2 --fix` が該当する。修正差分を確認してから再 stage して commit し直す。確認せずに再 stage しない。
+- **pre-commit hook はファイルを書き換えることがある。** 自動修正型の hook が発火すると commit が失敗し、修正後の内容が unstaged で残る。この dotfiles repo では `fix end of files`、`mixed line ending`、`markdownlint-cli2 --fix` が該当し、`trim trailing whitespace` も `.md` 以外で該当する。修正差分を確認してから再 stage して commit し直す。確認せずに再 stage しない。
 - **`git add -i` と `git add -p` は使えない。** この環境では interactive flag が動かないため、hunk 単位の staging ができない。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
 
 ## 扱わないもの
