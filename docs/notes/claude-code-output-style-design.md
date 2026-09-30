@@ -1,6 +1,6 @@
 # Claude Code Output Style の設計
 
-- Date: 2026-09-03
+- Date: 2026-09-30
 - 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/Caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Hooks reference](https://code.claude.com/docs/en/hooks)
 
 `Caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
@@ -63,7 +63,7 @@ JuliusBrussee 版は自作の短縮と因果矢印を明示的に否定してい
 
 ## 応答の型と規則は別物
 
-`短い回答はこの型に寄せる: [対象] [動作] [理由]. [次の手]。` は、規則の「前置き、tool 実行の予告、進捗、実況を書かない」と重複して見えるが役割が違う。規則は**何を削るか**、型は**何を含めどう並べるか**を規定していて、`[理由]` と `[次の手]` は他のどの規定にもない。
+`短い回答はこの型に寄せる: [対象] [動作] [理由]. [次の手]。` は、規則の「前置きと tool 実行の予告は書かない」と重複して見えるが役割が違う。規則は**何を削るか**、型は**何を含めどう並べるか**を規定していて、`[理由]` と `[次の手]` は他のどの規定にもない。
 
 JuliusBrussee 版は Pattern の直後に Not / Yes の対比例を置いて意味を確定させている。自作版は規則が前置きの除去を明示しているため対比例を持たず、代わりに使用条件（短い回答に限る）を添えている。条件が無いと、比較表やレビュー結果まで 1 文に畳めと読める。
 
@@ -84,7 +84,7 @@ subagent には output style が適用されない（公式: "Output styles appl
 
 ## 前置きと英語の混入は規則で直らない
 
-規則の「前置き、tool 実行の予告、進捗、実況を書かない」と、`settings.json` の `language: "japanese"`。この 2 つは、どちらも tool 呼び出しの合間に挟まる短い行で破られることがある。`language` は system prompt に `Always respond in japanese.` として入る。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。
+規則の「前置きと tool 実行の予告は書かない」と、`settings.json` の `language: "japanese"`。この 2 つは、どちらも tool 呼び出しの合間に挟まる短い行で破られることがある。`language` は system prompt に `Always respond in japanese.` として入る。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。
 
 規則が無いのではなく守られていない状態なので、規則を足しても直らない。同じ内容を二度書くと、次に読む人がどちらを正とするか判断する手間だけ増える。
 
