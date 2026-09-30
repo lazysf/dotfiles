@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-09-03
+- Date: 2026-09-30
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -70,7 +70,7 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 ## pre-commit hook の実態
 
-この repo の hook のうち**ファイルを書き換える**のは `fix end of files` と `markdownlint-cli2 --fix`。`trim trailing whitespace` は `.md` を exclude しており、skill / rules / docs のような主要ファイルには発火しない。
+この repo の hook のうち**ファイルを書き換える**のは `fix end of files`、`mixed line ending`、`markdownlint-cli2 --fix`。`trim trailing whitespace` も書き換えるが、`.md` を exclude しており、skill / rules / docs のような主要ファイルには発火しない。
 
 自動修正型が発火すると commit が失敗し、修正後の内容が unstaged で残る。差分を確認せずに再 stage すると、hook が何を変えたか分からないまま commit することになる。
 
