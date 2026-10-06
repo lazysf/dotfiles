@@ -1,6 +1,7 @@
 # 0042: Codex surface を廃止し Claude Code 単独にする
 
-- Status: Accepted
+- Status: Superseded
+- Superseded-By: 0043
 - Supersedes: 0001, 0004, 0006, 0008, 0011, 0013, 0015, 0018, 0019, 0036, 0038
 
 ## 背景
