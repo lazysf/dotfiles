@@ -1,0 +1,21 @@
+# sandbox 外へ出すコマンドの禁止。shell や script の全挙動は覆わない。
+commands = [
+    "mkfs", "mkfs.apfs", "mkfs.ext2", "mkfs.ext3", "mkfs.ext4",
+    "mkfs.fat", "mkfs.hfs", "mkfs.vfat", "mkfs.xfs",
+    "newfs_apfs", "newfs_exfat", "newfs_hfs", "newfs_msdos", "newfs_udf",
+    "diskutil", "fdisk", "gpt", "pdisk", "apfs_hfs_convert", "asr",
+]
+
+command_paths = commands + [
+    directory + command
+    for directory in ["/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"]
+    for command in commands
+]
+
+prefix_rule(
+    pattern = [command_paths],
+    decision = "forbidden",
+    justification = "ディスクの初期化・消去は人が terminal で行う。",
+    match = ["diskutil eraseDisk APFS example /dev/example", "mkfs.ext4 /dev/example", "/usr/sbin/diskutil list"],
+    not_match = ["git status", "df -h"],
+)
