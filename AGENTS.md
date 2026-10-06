@@ -4,7 +4,7 @@
 
 ## Agent Skills に関する作業
 
-- Claude Code のスキルを新規作成する、既存スキルの設計を変更する、または description / trigger / 構成 / references / scripts / 品質評価について判断する場合は、判断前に必ず `skill-creator` スキルを使用する
+- Claude Code / Codex のスキルを新規作成する、既存スキルの設計を変更する、または description / trigger / 構成 / references / scripts / 品質評価について判断する場合は、判断前に必ず `skill-creator` スキルを使用する
 - スキル内容の検討・編集として、仕様、構造、description、progressive disclosure、best practice に関わる判断を行う場合は Agent Skills 公式情報を確認する。runtime 固有の発火、配置、権限、frontmatter は Claude Code の公式情報も確認する。既存スキルの内容を読み取るだけの場合は必須としない
   - [Overview](https://agentskills.io/home)
   - [Documentation Index](https://agentskills.io/llms.txt)
@@ -21,7 +21,7 @@
 ### docs-only と扱わないもの
 
 - 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
-- `scribe` 単独で進めないのは `dot_claude/**` 全体（`CLAUDE.md`、`skills/`、`agents/`、`output-styles/`、`settings.json`）と、root `AGENTS.md` / `CLAUDE.md`
+- `scribe` 単独で進めないのは `dot_claude/**` と `dot_codex/**` 全体（契約、skills、agents、応答スタイル、runtime 設定、rules）と、root `AGENTS.md` / `CLAUDE.md`
 
 ### 軽量例外
 
@@ -45,9 +45,18 @@
   - output styles: [Output styles](https://code.claude.com/docs/en/output-styles)
   - 設定が効かない時: [Debug your configuration](https://code.claude.com/docs/en/debug-your-config)
 
+## Codex に関する作業
+
+- Codex の設定や運用を判断する場合は `openai-docs` を使い、対象の公式情報を確認する。
+- [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic)、[Permissions](https://learn.chatgpt.com/docs/permissions)、[Skills](https://learn.chatgpt.com/docs/build-skills)、[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[Rules](https://learn.chatgpt.com/docs/agent-configuration/rules) を判断対象に応じて参照する。
+- `dot_claude/` と `dot_codex/` を変えたら、共通の意図と runtime 固有の差を確認する。tool 名、配置、権限を機械的に揃えない。
+- 変更した path、skill / agent 名、設定キーの参照を `rg` で確認する。ADR 本文は採用時点の履歴として保持する。
+- `.gitignore` の追跡対象と `.chezmoiignore` の配布対象は独立に確認する。適用後は `chezmoi managed` と target の実体を突き合わせる。
+
 ## 置き場の原則
 
 - `dot_claude/`: 全 project へ配る運用契約、skills、agents、output-styles、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
+- `dot_codex/`: 全 project へ配る運用契約、skills、agents、config、rules。内訳は `dot_codex/AGENTS.md` の「置き場」を正本にする
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
 - `.claude/rules/`: この repo に閉じる運用ルール。chezmoi は `.` 始まりを配布しない
 - `docs/notes/`: repo-level の通常知見や背景。`docs/adr/`: repo-level の判断記録

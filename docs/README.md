@@ -59,3 +59,4 @@
   - [0040-retire-orchestrate-era-decisions.md](./adr/0040-retire-orchestrate-era-decisions.md)
   - [0041-adopt-alerter-for-mole-weekly-notification.md](./adr/0041-adopt-alerter-for-mole-weekly-notification.md)
   - [0042-retire-codex-surface.md](./adr/0042-retire-codex-surface.md)
+  - [0043-reintroduce-codex-from-current-claude.md](./adr/0043-reintroduce-codex-from-current-claude.md)
