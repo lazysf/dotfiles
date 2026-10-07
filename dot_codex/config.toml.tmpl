@@ -25,9 +25,15 @@ extends = ":read-only"
 "~/.pypirc" = "deny"
 "~/.env" = "deny"
 "~/.env.*" = "deny"
+{{- if eq .chezmoi.os "windows" }}
+"~/**/.env" = "deny"
+"~/**/.env.*" = "deny"
+"~/**/secrets" = "deny"
+{{- else }}
 "/**/.env" = "deny"
 "/**/.env.*" = "deny"
 "/**/secrets" = "deny"
+{{- end }}
 
 [permissions.protected.filesystem.":workspace_roots"]
 "**/.env" = "deny"
