@@ -106,52 +106,30 @@ npm run lint:fix
 
 ## Codex
 
-`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版です。運用契約は [`AGENTS.md`](dot_codex/AGENTS.md)、実行設定の source は [`config.toml.tmpl`](dot_codex/config.toml.tmpl) を参照してください。再導入の判断は [ADR 0043](docs/adr/0043-reintroduce-codex-from-current-claude.md) に記録しています。
+`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版です。運用契約は [`AGENTS.md`](dot_codex/AGENTS.md) を参照してください。`config.toml` はこの repo で管理・配布しません。再導入の判断は [ADR 0043](docs/adr/0043-reintroduce-codex-from-current-claude.md) に記録しています。
 
 ### 構成と権限
 
-skills は [`skills/`](dot_codex/skills/)、reviewer は [`agents/`](dot_codex/agents/) に置きます。通常作業の既定値は `gpt-6.1-sol` / `medium` です。作業ごとのモデルと effort は client で上書きできます。reviewer は親のモデル選択に依存せず、`gpt-6.1-sol` を使います。effort は品質 reviewer が `high`、security reviewer が `xhigh` です。通常の応答には `caveman` skill を使います。自動 memory は無効です。
+skills は [`skills/`](dot_codex/skills/)、reviewer は [`agents/`](dot_codex/agents/) に置きます。通常作業のモデル、effort、権限、自動 memory は実機側の設定に委ねます。reviewer は親のモデル選択に依存せず、`gpt-6.1-sol` を使います。effort は品質 reviewer が `high`、security reviewer が `xhigh` です。通常の応答には `caveman` skill を使います。
 
-`workspace` 権限プロファイルは workspace、一時領域、`~/.cache/prek/` への書き込みを許可します。`protected` は reviewer 用の既定の読み取り専用プロファイルです。両プロファイルに credential store、`.env` / `.env.*`、`secrets/` へのアクセス拒否を設定します。これらの権限はローカルの sandbox 内コマンドが対象です。[Apps / MCP などは別の制御に従います](https://learn.chatgpt.com/docs/permissions)。
+reviewer の既定の権限は [標準の `:read-only`](https://learn.chatgpt.com/docs/permissions) です。credential store などへの独自の deny 設定は、この標準プロファイルには追加していません。
 
-`.env` / `.env.*` / `secrets/` の拒否 glob は、Windows では home と workspace 内を対象にします。Unix 向けの `/**/...` は Windows の絶対パスとして扱われないため、home の指定には `~/**/...` を使います。macOS・Linux では従来の `/**/...` と workspace 内の指定を使います。
-
-Windows・Linux（WSL を含む）では、両プロファイルの `glob_scan_max_depth` を `16` に設定します。[非 macOS では、sandbox 起動前に拒否 glob を有限の深さで展開する必要があります](https://learn.chatgpt.com/docs/permissions)。探索上限を超えるパスや、起動後に作成された一致パスへの拒否は、この設定だけでは保証しません。より深い場所も対象にする場合は上限を見直してください。値を大きくすると起動時の探索量が増える場合があります。
-
-`protected` のネットワークは無効です。`workspace` は network proxy を有効にし、外部 domain の許可一覧を空に設定します。署名用の 1Password agent socket だけを許可します。Unix socket の許可には絶対パスが必要なため、chezmoi template で配布先の home directory を展開します。source に個人の絶対パスは保持しません。
-
-stage / commit 用に workspace root 直下の `.git` への書き込みも明示します。[標準の `workspace-write` では `.git` が読み取り専用になる](https://learn.chatgpt.com/docs/agent-approvals-security)ためです。この許可は `.git` 全体が対象で、Git 設定と hooks も含みます。Git worktree などで実際の Git directory が workspace 外にある場合は、別途実効権限を確認してください。
-
-[親のセッションで変更した sandbox と承認設定は、子の起動時にも適用されます](https://learn.chatgpt.com/docs/agent-configuration/subagents)。reviewer の `default_permissions = "protected"` と `approval_policy = "never"` より優先される場合があります。reviewer を使う際は、設定ファイルの既定値だけで読み取り専用と判断せず、実効権限を確認してください。
+[親のセッションで変更した sandbox と承認設定は、子の起動時にも適用されます](https://learn.chatgpt.com/docs/agent-configuration/subagents)。reviewer の `default_permissions = ":read-only"` と `approval_policy = "never"` より優先される場合があります。reviewer を使う際は、設定ファイルの既定値だけで読み取り専用と判断せず、実効権限を確認してください。
 
 [`destructive.rules`](dot_codex/rules/destructive.rules) は列挙したディスク操作コマンドを sandbox 外で禁止する設定です。コマンド名と `/bin/`、`/sbin/`、`/usr/bin/`、`/usr/sbin/` の絶対パスに対応します。未知の `mkfs.*` / `newfs_*` や任意の script は網羅しません。契約と設定は管理者による強制ではありません。
 
 ### 検証範囲
 
-移植時の記録では、Codex CLI 0.160.0 の一時 home で設定の strict 読み込みと `~/.codex/skills/` 相当のスキル発見を確認しています。[公式の user skill 配置](https://learn.chatgpt.com/docs/build-skills)は `~/.agents/skills/` です。client 更新後はスキル発見を再確認してください。
+2026-10-08 に macOS・Linux・Windows の3通りの OS 分岐で、一時領域への chezmoi 展開を確認しました。`config.toml` は管理対象から除外されます。既存 config の内容は保持され、存在しない場合も作成されません。AGENTS、skills、agents、rules の配布は継続します。macOS 上の Codex CLI 0.162.0-alpha.2 では、独自の `protected` がなくても両 reviewer のモデル・権限設定が読み込めることを確認しました。reviewer の実際の起動と Windows 実機での動作は未確認です。
 
-同じ記録では、macOS の合成ファイルで `.env` / `secrets/` のアクセス拒否、書き込み境界、ローカル TCP 接続の拒否を確認しています。検証コマンドと実行結果は repo に保存されていないため、この記述だけでは再現確認できません。
-
-他 OS での deny-read、approval の自動審査、配布した reviewer の実際の起動と応答は未検証です。
-
-2026-10-07 に Windows 用パスの修正を検証しました。macOS・Linux と、Windows の home をドライブ付き・バックスラッシュ・UNC 形式にした計5通りで、テンプレート展開と TOML の解析を確認しました。macOS・Linux の展開結果は修正前と同一です。Windows 実機での起動とアクセス拒否は未確認です。
-
-2026-10-08 に探索上限の追加を同じ5通りで検証しました。macOS の展開結果は変更前と同一です。他 OS の変更は両プロファイルへの探索上限の追加だけです。macOS 上の Codex CLI 0.162.0-alpha.2 で各 OS 分岐の設定読み込みを確認しました。上限を `0` にした設定が拒否されることも確認しました。Windows・Linux 実機での警告解消、起動時間、アクセス拒否は未確認です。
-
-`.git` の書き込み指定は Codex CLI 0.160.0 の strict 読み込みを通っています。2026-10-06 に ChatGPT アプリを再起動して分岐したセッションで、`git add` と pre-commit hook の成功を確認しています。proxy を有効にする前の `git commit` は 1Password の署名処理で停止しました。署名用 socket の接続検証も `PermissionError` で拒否されました。
-
-proxy と絶対パスを使う修正後の設定は strict 読み込みを通っています。2026-10-06 に実機の設定が修正案と一致することも確認しました。ただし、そのセッションでも socket 接続は `PermissionError`、`git commit` は 1Password の署名エラーで失敗しました。既存セッションでの native sandbox の検証は、proxy の loopback listener を確保できず停止しました。
-
-2026-10-06 にアプリを再起動して分岐したセッションで、1Password を使う署名付きコミットの成功を確認しました。外部通信の拒否は未確認です。
+移植時の記録では、Codex CLI 0.160.0 の一時 home で `~/.codex/skills/` 相当のスキル発見を確認しています。[公式の user skill 配置](https://learn.chatgpt.com/docs/build-skills)は `~/.agents/skills/` です。client 更新後はスキル発見を再確認してください。
 
 ### 適用前の確認
 
-配布前に `chezmoi diff ~/.codex` で内容を確認してください。`config.toml` は `config.toml.tmpl` からファイル単位で置き換わります。実機で変更した値や、アプリが追記した項目も再展開で上書きされます。
+配布前に `chezmoi diff ~/.codex` で内容を確認してください。`config.toml` は `.chezmoiignore` で除外しているため、chezmoi は作成・更新・削除しません。過去に配布した config も自動では消えません。
 
-MCP、plugin、通知などの追加設定は、配布後にアプリで必要に応じて設定し直してください。削除された項目がすべて自動で復元されることは前提にしません。共通設定の変更を再展開後も残す場合は、source に反映してください。個人や作業機を特定する値、秘密情報を repo の source へ取り込まないでください。
-
-[権限プロファイルと旧 sandbox 設定は併用できません](https://learn.chatgpt.com/docs/permissions)。読み込まれる user / project / profile の設定から `sandbox_mode` と `[sandbox_workspace_write]` を除き、起動時の `--sandbox` も併用しないでください。`sandbox_mode` や `--sandbox` が指定されると、旧方式が選ばれて今回の `default_permissions` が使われない場合があります。
+MCP、plugin、通知、モデル、権限などは、アプリまたは [実機の `~/.codex/config.toml`](https://learn.chatgpt.com/docs/config-file/config-basic) で管理してください。既存 config を手動で削除・変更する場合は、必要な追加設定を事前に退避してください。個人や作業機を特定する値、秘密情報を repo の source へ取り込まないでください。
 
 適用後は `chezmoi managed` と target の実体を突き合わせてください。source から削除したファイルが target に残る場合があります。
 
-Git の書き込み許可と署名接続の設定を反映したら、設定を読み直した新しいセッションで `workspace` を選び、stage / commit と外部通信の拒否を検証してください。既存セッションでの承認付き実行だけを根拠に、変更後の権限が有効だと判断しないでください。
+実機の権限設定を変更したら、設定を読み直した新しいセッションで必要な作業とアクセス境界を検証してください。既存セッションでの承認付き実行だけを根拠に、変更後の権限が有効だと判断しないでください。
