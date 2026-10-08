@@ -8,6 +8,9 @@
 # Local env
 .venv
 
+# Codex runtime settings are managed locally by the app.
+.codex/config.toml
+
 # Repo-only directories
 .vscode
 docs
