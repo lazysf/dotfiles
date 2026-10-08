@@ -116,6 +116,8 @@ skills は [`skills/`](dot_codex/skills/)、reviewer は [`agents/`](dot_codex/a
 
 `.env` / `.env.*` / `secrets/` の拒否 glob は、Windows では home と workspace 内を対象にします。Unix 向けの `/**/...` は Windows の絶対パスとして扱われないため、home の指定には `~/**/...` を使います。macOS・Linux では従来の `/**/...` と workspace 内の指定を使います。
 
+Windows・Linux（WSL を含む）では、両プロファイルの `glob_scan_max_depth` を `16` に設定します。[非 macOS では、sandbox 起動前に拒否 glob を有限の深さで展開する必要があります](https://learn.chatgpt.com/docs/permissions)。探索上限を超えるパスや、起動後に作成された一致パスへの拒否は、この設定だけでは保証しません。より深い場所も対象にする場合は上限を見直してください。値を大きくすると起動時の探索量が増える場合があります。
+
 `protected` のネットワークは無効です。`workspace` は network proxy を有効にし、外部 domain の許可一覧を空に設定します。署名用の 1Password agent socket だけを許可します。Unix socket の許可には絶対パスが必要なため、chezmoi template で配布先の home directory を展開します。source に個人の絶対パスは保持しません。
 
 stage / commit 用に workspace root 直下の `.git` への書き込みも明示します。[標準の `workspace-write` では `.git` が読み取り専用になる](https://learn.chatgpt.com/docs/agent-approvals-security)ためです。この許可は `.git` 全体が対象で、Git 設定と hooks も含みます。Git worktree などで実際の Git directory が workspace 外にある場合は、別途実効権限を確認してください。
@@ -133,6 +135,8 @@ stage / commit 用に workspace root 直下の `.git` への書き込みも明�
 他 OS での deny-read、approval の自動審査、配布した reviewer の実際の起動と応答は未検証です。
 
 2026-10-07 に Windows 用パスの修正を検証しました。macOS・Linux と、Windows の home をドライブ付き・バックスラッシュ・UNC 形式にした計5通りで、テンプレート展開と TOML の解析を確認しました。macOS・Linux の展開結果は修正前と同一です。Windows 実機での起動とアクセス拒否は未確認です。
+
+2026-10-08 に探索上限の追加を同じ5通りで検証しました。macOS の展開結果は変更前と同一です。他 OS の変更は両プロファイルへの探索上限の追加だけです。macOS 上の Codex CLI 0.162.0-alpha.2 で各 OS 分岐の設定読み込みを確認しました。上限を `0` にした設定が拒否されることも確認しました。Windows・Linux 実機での警告解消、起動時間、アクセス拒否は未確認です。
 
 `.git` の書き込み指定は Codex CLI 0.160.0 の strict 読み込みを通っています。2026-10-06 に ChatGPT アプリを再起動して分岐したセッションで、`git add` と pre-commit hook の成功を確認しています。proxy を有効にする前の `git commit` は 1Password の署名処理で停止しました。署名用 socket の接続検証も `PermissionError` で拒否されました。
 

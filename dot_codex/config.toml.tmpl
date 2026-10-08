@@ -14,6 +14,10 @@ description = "Read-only review with credential stores denied"
 extends = ":read-only"
 
 [permissions.protected.filesystem]
+{{- if ne .chezmoi.os "darwin" }}
+# 非 macOS では deny glob を起動前に展開するため、探索の深さを制限する。
+glob_scan_max_depth = 16
+{{- end }}
 "~/.ssh" = "deny"
 "~/.aws" = "deny"
 "~/.config/gh" = "deny"
@@ -48,6 +52,10 @@ description = "Workspace edits with credential stores denied"
 extends = "protected"
 
 [permissions.workspace.filesystem]
+{{- if ne .chezmoi.os "darwin" }}
+# protected から継承する deny glob にも同じ探索上限を明示する。
+glob_scan_max_depth = 16
+{{- end }}
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
 "~/.cache/prek" = "write"
