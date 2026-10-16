@@ -106,7 +106,7 @@ npm run lint:fix
 
 ## Codex
 
-`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版です。運用契約は [`AGENTS.md`](dot_codex/AGENTS.md) を参照してください。`config.toml` はこの repo で管理・配布しません。再導入の判断は [ADR 0043](docs/adr/0043-reintroduce-codex-from-current-claude.md) に記録しています。
+`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版です。運用契約は [`AGENTS.md`](dot_codex/AGENTS.md) を参照してください。`config.toml` はこの repo で管理・配布しません。再導入の判断は [ADR 0043](docs/adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](docs/adr/0044-manage-codex-runtime-config-per-device.md) に記録しています。
 
 ### 構成と権限
 
