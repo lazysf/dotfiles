@@ -258,7 +258,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `attribution.sessionUrl` | default は `true`。Remote Control session の commit に `Claude-Session` trailer を付ける（実測）。`attribution.commit` とは独立で、空文字にしても消えない |
 | auto mode の fallback | classifier が 3 回連続または累計 20 回 block すると auto mode が pause し prompt が再開する。閾値は設定不可 |
 | auto mode の allow rule drop | auto mode に入ると、任意コード実行を与える広い allow rule（blanket `Bash(*)` / `PowerShell(*)`、wildcard interpreter、package manager の run、`Agent`、`Monitor`）が drop される。narrow rule は残る |
-| `env.CLAUDE_CODE_PLUGIN_DIRS` | `~/.claude/settings.json` の `env` から読まれ、各 path を `--plugin-dir` と同じように読み込む。path は絶対 path か `~` 始まりで、相対 path は無視される。v2.1.280 以上。mod を配る理由は ADR 0045 |
+| `env.CLAUDE_CODE_PLUGIN_DIRS` | `~/.claude/settings.json` の `env` から読まれ、各 path を `--plugin-dir` と同じように読み込む。path は絶対 path か `~` 始まりで、相対 path は無視される。v2.1.280 以上。desktop app（v2.1.299）と terminal（v2.1.292）の session で mod が読み込まれ、帯が描かれることを実機で確認した（2026-10-16）。mod を配る理由は ADR 0045 |
 
 ## 未確認
 
@@ -266,5 +266,4 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution.pr` に空文字を設定した効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
-- `env.CLAUDE_CODE_PLUGIN_DIRS` の mod が実際の session で読み込まれること。公式 docs には書かれているが、terminal でも desktop app でもまだ確かめていない。folder を直接渡した `claude plugin validate` と `claude plugin test` は通る（2026-10-16）。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
