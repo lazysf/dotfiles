@@ -79,6 +79,7 @@ commit、doc、設定、その他の成果物に、書き手と作業機を特�
 - `~/.claude/skills/`: task-specific な再利用手順。
 - `~/.claude/agents/`: 独立 context で呼ぶ read-only の reviewer。起動条件は `skills/lapidary` が持つ。
 - `~/.claude/output-styles/`: 応答スタイル。`settings.json` の `outputStyle` で選ぶ。
+- `~/.claude/mods/`: Claude Code の UI や挙動を変える mod。`settings.json` の `env.CLAUDE_CODE_PLUGIN_DIRS` で読み込む。
 - `~/.claude/settings.json`: permissions、sandbox、model、language などの機械的設定。
 - 作業対象 repo の `.claude/rules/`: その repo に閉じる運用ルール。
 - 作業対象 repo の `docs/adr/`: 判断記録。`docs/notes/`: 通常知見や背景。

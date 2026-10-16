@@ -55,7 +55,7 @@
 
 ## 置き場の原則
 
-- `dot_claude/`: 全 project へ配る運用契約、skills、agents、output-styles、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
+- `dot_claude/`: 全 project へ配る運用契約、skills、agents、output-styles、mods、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
 - `dot_codex/`: 全 project へ配る運用契約、skills、agents、config、rules。内訳は `dot_codex/AGENTS.md` の「置き場」を正本にする
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
 - `.claude/rules/`: この repo に閉じる運用ルール。chezmoi は `.` 始まりを配布しない
