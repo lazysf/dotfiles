@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
-- Date: 2026-09-30
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-09-30 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04） / sandboxing docs の protected paths 節（2026-09-04 確認）
+- Date: 2026-10-16
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-09-30 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -117,6 +117,10 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 **どの層が止めたかは切り分けていない。** `sandbox.credentials` の deny、`permissions.deny` の `Read(~/.ssh/**)`、auto mode の classifier のいずれもこの command を止めうる。観測できたのは「credential への Bash 経由のアクセスが通らない」ことだけで、個々の層が効いている証明にはならない。
 
+`~/.codex/auth.json` は層を 1 つに絞って測れた。sandbox 内の python から開くと `PermissionError: [Errno 1] Operation not permitted` で拒否された（2026-10-16、Manual mode の session）。python の `open` は `Read(...)` rule の対象外で、Manual mode では classifier が働かないので、止めたのは sandbox の read 制限と読める。Errno 1（EPERM）は Seatbelt の拒否で、ファイル権限による拒否なら Errno 13（EACCES）になる。`permissions.deny` の合流と `credentials` のどちらの entry が効いたかは切り分けていない。
+
+**deny の実測は auto mode では取れない。** deny 済みの path を開く probe を、classifier が `Auto-Mode Bypass` として実行前に止めた（2026-10-16）。sandbox の deny を確かめる時は Manual mode の session で取る。
+
 副作用として `chezmoi status` が途中で止まる。`~/.config/gh` の lstat が拒否されるため、repo 全体の未 apply 差分を取れない。代わりに `chezmoi managed` の一覧と実体を突き合わせる。
 
 sandbox 内から子の `claude` session を起こそうとすると `401 OAuth access token has expired` で落ちる（2026-08-31 と 2026-09-01 に再現）。うち 2026-08-31 は、同じ日に terminal から起動した `claude` が動いていたので、token が失効しているわけではないと読める。**どこで止まるかは切り分けていない。** credential は Keychain の `Claude Code-credentials` エントリにある。`~/.claude/.credentials.json` は存在しない。この Keychain は sandbox 内からも見え、`security` でエントリのメタデータまで取れる。設定を変えた A/B は sandbox 外の terminal で取る。
@@ -142,6 +146,8 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 `credentials` 側だけでは Read tool を止められないので、`permissions.deny` は外せない。逆に `credentials` 固有なのは環境変数の unset / mask。file 保護の方は filesystem 層の一部で、`filesystem.disabled` にすると消える。env 保護は残る。公式仕様の上では、**file の deny に限れば `credentials` は `permissions.deny` の上に層を足していない**。実測での切り分けはしていない。
 
 2 つの列挙は完全には一致していないが、片方にしか無い path は他方がカバーしている。`//**/secrets/**` は `permissions.deny` にだけあり、その範囲は「sandbox で効いている層と効いていない層」の実測が示す。`~/.env` は `credentials` にだけあり、`Read(//**/.env)` が filesystem-wide に match する。**揃えていないのは、揃えても塞がる穴が無いため。**
+
+`~/.codex` は `auth.json` だけを両方に書く。Codex はログイン情報をこのファイルか OS の credential store に置く（[Codex authentication](https://learn.chatgpt.com/docs/auth)）。ディレクトリ全体を deny しないのは、`chezmoi apply` の後に配布先の `~/.codex/AGENTS.md` などを読んで source と突き合わせるため（`.claude/rules/harness-surface-consistency.md`）。
 
 `credentials` 側は外していない。外しても read が止まると確かめるには、設定を変えた A/B が要る。それは sandbox 外の terminal でしか取れない（「実測: credential への Bash アクセスは通らない」）。現状で実害が出ていないので、確認のコストに見合わない。環境変数の保護を書く時はこのブロックが置き場になる。
 
