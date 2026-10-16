@@ -104,6 +104,16 @@ npm run lint:fix
 
 共通ハーネスの source は [`dot_claude/`](dot_claude/) と [`dot_codex/`](dot_codex/) に置きます。root `CLAUDE.md` は Claude Code 向けの repo-local import shim で root `AGENTS.md` を参照します。
 
+## Claude Code の mod
+
+[`dot_claude/mods/`](dot_claude/mods/) は chezmoi で `~/.claude/mods/` へ配布する Claude Code の mod です。[`settings.json`](dot_claude/settings.json) の `env.CLAUDE_CODE_PLUGIN_DIRS` に列挙した folder を、この作業機で起動する session で読み込みます。帯を描くのは terminal と desktop app で、VS Code 拡張は描きません。この配布方法を選んだ理由は [ADR 0045](docs/adr/0045-distribute-claude-mods-via-plugin-dirs.md) に記録しています。
+
+| mod | 内容 |
+| --- | --- |
+| `usage-band` | プロンプトの上に、5 時間と週の使用率をバーで表示する。リセットまでの時間も示す |
+
+source の folder では `.claude-plugin/` を `dot_claude-plugin/` と書きます。そのため、`claude plugin validate` と `claude plugin test` は展開先の folder に対して実行してください。test の `*.test.ts` は mod と一緒に配布します。engine は test を読み込みません。
+
 ## Codex
 
 `dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版です。運用契約は [`AGENTS.md`](dot_codex/AGENTS.md) を参照してください。`config.toml` はこの repo で管理・配布しません。再導入の判断は [ADR 0043](docs/adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](docs/adr/0044-manage-codex-runtime-config-per-device.md) に記録しています。

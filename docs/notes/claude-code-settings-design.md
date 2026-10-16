@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
 - Date: 2026-10-16
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-09-30 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認）
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-09-30 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性と chezmoi の template 展開の実測（2026-09-04） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -258,6 +258,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `attribution.sessionUrl` | default は `true`。Remote Control session の commit に `Claude-Session` trailer を付ける（実測）。`attribution.commit` とは独立で、空文字にしても消えない |
 | auto mode の fallback | classifier が 3 回連続または累計 20 回 block すると auto mode が pause し prompt が再開する。閾値は設定不可 |
 | auto mode の allow rule drop | auto mode に入ると、任意コード実行を与える広い allow rule（blanket `Bash(*)` / `PowerShell(*)`、wildcard interpreter、package manager の run、`Agent`、`Monitor`）が drop される。narrow rule は残る |
+| `env.CLAUDE_CODE_PLUGIN_DIRS` | `~/.claude/settings.json` の `env` から読まれ、各 path を `--plugin-dir` と同じように読み込む。path は絶対 path か `~` 始まりで、相対 path は無視される。v2.1.280 以上。mod を配る理由は ADR 0045 |
 
 ## 未確認
 
@@ -265,4 +266,5 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution.pr` に空文字を設定した効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
+- `env.CLAUDE_CODE_PLUGIN_DIRS` の mod が実際の session で読み込まれること。公式 docs には書かれているが、terminal でも desktop app でもまだ確かめていない。folder を直接渡した `claude plugin validate` と `claude plugin test` は通る（2026-10-16）。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
