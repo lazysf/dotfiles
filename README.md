@@ -110,7 +110,7 @@ npm run lint:fix
 
 | mod | 内容 |
 | --- | --- |
-| `usage-band` | プロンプトの上に、5 時間と週の使用率をバーで表示する。リセットまでの時間も示す |
+| `usage-band` | プロンプトの上に、5 時間と週の使用率をバーで表示する。リセットまでの時間も示す。コンテキストの使用率も、応答が 1 度返った後にバーで表示する |
 
 source の folder では `.claude-plugin/` を `dot_claude-plugin/` と書きます。そのため、`claude plugin validate` と `claude plugin test` は展開先の folder に対して実行してください。test の `*.test.ts` は mod と一緒に配布します。engine は test を読み込みません。
 
