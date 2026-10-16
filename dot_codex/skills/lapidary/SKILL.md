@@ -97,7 +97,7 @@ doc・文章の変更:
 
 ## 扱わないもの
 
-read と自分の変更の修正だけを行う。commit、push、履歴の書き換えは扱わない。bug の検出は `quality-reviewer` agent、security は `security-reviewer` agent。doc の作成・更新は `scribe`。
+read と自分の変更の修正だけを行う。commit、push、履歴の書き換えは扱わない。bug の検出は `/review`、security は `security-reviewer` agent。doc の作成・更新は `scribe`。
 
 ## 出力
 
