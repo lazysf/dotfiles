@@ -26,6 +26,7 @@
       "Read(~/.netrc)",
       "Read(~/.npmrc)",
       "Read(~/.pypirc)",
+      "Read(~/.codex/auth.json)",
       "Bash(mkfs *)",
       "Bash(mkfs.* *)",
       "Bash(newfs_* *)",
@@ -61,7 +62,8 @@
         { "path": "~/.netrc", "mode": "deny" },
         { "path": "~/.npmrc", "mode": "deny" },
         { "path": "~/.pypirc", "mode": "deny" },
-        { "path": "~/.env", "mode": "deny" }
+        { "path": "~/.env", "mode": "deny" },
+        { "path": "~/.codex/auth.json", "mode": "deny" }
       ]
     }
   }
