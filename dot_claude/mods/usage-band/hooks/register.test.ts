@@ -44,8 +44,8 @@ test('draws a bar for each window on every surface', async ($, on) => {
 
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await $.ui.mount({ ...BAND, surface })
-    expect(await ui.find({ type: 'Text', text: /^5h █{11}░{9}\s+58% リセットまで 2h10m$/ })).toBeDefined()
-    expect(await ui.find({ type: 'Text', text: /^週 █{18}░{2}\s+92% リセットまで 3d3h$/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /^5h  █{11}░{9}\s+58% リセットまで 2h10m$/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /^週  █{18}░{2}\s+92% リセットまで 3d3h$/ })).toBeDefined()
     await ui.unmount()
   }
 })
@@ -61,7 +61,7 @@ test('text, color and bar agree at the thresholds', async ($, on) => {
   const ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
   expect((await ui.find({ type: 'Text', text: /^█+░+$/ }))?.props.color).toBe('warning')
   expect(await ui.find({ type: 'Text', text: /^5h .*\s89%/ })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: /^週 █{19}░\s+99%/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /^週  █{19}░\s+99%/ })).toBeDefined()
   expect((await ui.findAll({ type: 'Text', text: /^█+░+$/ }))[1]?.props.color).toBe('error')
   await ui.unmount()
 })
@@ -77,8 +77,25 @@ test('drops windows past their reset, without a reset time and of other kinds', 
 
   const ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
   expect(await ui.find({ type: 'Text', text: /^5h / })).toBeUndefined()
-  expect(await ui.find({ type: 'Text', text: /^週 █{2}░{18}\s+10%$/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /^週  █{2}░{18}\s+10%$/ })).toBeDefined()
   expect(await ui.find({ text: /120/ })).toBeUndefined()
+  await ui.unmount()
+})
+
+test('adds the context fill as a third row once a response reported it', async ($, on) => {
+  engine(on)
+  mock.clock(on, { now: NOW })
+  await $.session.measure(measure([FIVE_HOUR]))
+
+  const ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
+  expect(await ui.find({ text: /^ctx/ })).toBeUndefined()
+
+  await $.session.measure({ ...measure([FIVE_HOUR]), context: { window: 200000, tokens: 150000, percent: 75 } })
+  expect((await ui.findAll({ type: 'Text', text: /^(5h|ctx) .*%/ })).map(row => row.text)).toEqual([
+    '5h  ███████████░░░░░░░░░  58% リセットまで 2h10m',
+    'ctx ███████████████░░░░░  75%',
+  ])
+  expect((await ui.findAll({ type: 'Text', text: /^█+░+$/ }))[1]?.props.color).toBe('warning')
   await ui.unmount()
 })
 

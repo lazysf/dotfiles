@@ -4,11 +4,15 @@ import type { Register } from 'claude-code'
 import type { UsageWindow } from '../types'
 
 const windows = atom({ plugin: 'usage-band', key: 'windows' } as const, [] as UsageWindow[])
+const contextPercent = atom({ plugin: 'usage-band', key: 'contextPercent' } as const, null as number | null)
 
+// Every label takes three cells so the bars start in one column on the terminal.
 const ROWS = [
-  { kind: 'five_hour', label: '5h' },
-  { kind: 'seven_day', label: '週' },
+  { kind: 'five_hour', label: '5h ' },
+  { kind: 'seven_day', label: '週 ' },
 ] as const
+
+const CONTEXT_ROW = { kind: 'context', label: 'ctx' } as const
 
 const BAR_CELLS = 20
 
@@ -33,14 +37,16 @@ const formatRemaining = (minutes: number): string => {
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     const result = await next(e)
-    const { rateLimits } = await $.session.usage()
+    const { rateLimits, context } = await $.session.usage()
     await update($, windows, () => rateLimits)
+    await update($, contextPercent, () => context.percent ?? null)
     $.clock.every(REDRAW_MS, () => $.ui.invalidate('ui.render'))
     return result
   })
 
   on('session.measure', async ($, e, next) => {
     await update($, windows, () => e.rateLimits)
+    await update($, contextPercent, () => e.context.percent ?? null)
     return next(e)
   })
 
@@ -49,7 +55,7 @@ export const register: Register = on => {
 
     const now = await $.clock.now()
     const current = await read($, windows)
-    const rows = ROWS.flatMap(row => {
+    const rateRows = ROWS.flatMap(row => {
       const found = current.find(w => w.kind === row.kind)
       if (found === undefined) return []
       const resetsAt = found.resetsAt === undefined ? NaN : Date.parse(found.resetsAt)
@@ -58,6 +64,9 @@ export const register: Register = on => {
       const remaining = Number.isFinite(resetsAt) ? formatRemaining(Math.round((resetsAt - now) / 60000)) : undefined
       return [{ ...row, percent: Math.max(0, Math.floor(found.percentUsed)), remaining }]
     })
+    // The context fill is absent until the first response of a fresh or just compacted window.
+    const context = await read($, contextPercent)
+    const rows = context === null ? rateRows : [...rateRows, { ...CONTEXT_ROW, percent: context, remaining: undefined }]
     if (rows.length === 0) return next(e)
 
     const { Box, Text } = $.ui.resolve(e)
