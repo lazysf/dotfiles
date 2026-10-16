@@ -1,7 +1,7 @@
 # git-commit skill の設計
 
-- Date: 2026-09-30
-- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測
+- Date: 2026-10-16
+- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
 
@@ -74,6 +74,8 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 自動修正型が発火すると commit が失敗し、修正後の内容が unstaged で残る。差分を確認せずに再 stage すると、hook が何を変えたか分からないまま commit することになる。
 
+skill の Gotchas には一般則だけを置き、上の hook 名は置かない。skill は全 project へ配布されるので、この repo の hook 名は他の project では関係が無い。どの hook がファイルを書き換えたかは、commit が失敗した時の prek の出力に hook 名と `files were modified by this hook` として出るので、名前を事前に知らなくても見分けられる（2026-10-16 に使い捨て repo で `end-of-file-fixer` を発火させて確認）。
+
 ## ファイル分担
 
 | ファイル | 担当 |
@@ -88,7 +90,7 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 ファイル名に `commit-` prefix を付けないのは、パスが `skills/git-commit/references/` で skill 名が既に文脈を決めているため。`scribe` の reference（`adr-format.md` など）も prefix なし。
 
-Gotchas に入れるのは、この環境で実際に踏んだか踏みかけたもの。**列挙は `SKILL.md` を正本とし、ここでは繰り返さない。** 実体を写すと片方だけ古くなる。
+Gotchas に入れるのは、この環境で実際に踏んだか踏みかけたもの。ここでいう環境は skill の配布先に共通する実行環境で、この repo だけの事実は入れない（「pre-commit hook の実態」）。**列挙は `SKILL.md` を正本とし、ここでは繰り返さない。** 実体を写すと片方だけ古くなる。
 
 `diff <(...)` が sandbox で失敗する件は skill に置いていない。git 固有ではなく sandbox 全般の制約で、commit の手順にも該当する操作が無いため。sandbox 全般の制約を置く surface が無いので、記録をここに残す。**`diff <(...)` は sandbox で失敗するので、比較は一時ファイルへ出力してから行う。**
 
