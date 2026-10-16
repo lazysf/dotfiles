@@ -16,6 +16,7 @@
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
   - [reviewer-agents-design.md](./notes/reviewer-agents-design.md): reviewer agent を 2 つだけ置いている理由と、起動実績の実測
   - [scribe-skill-design.md](./notes/scribe-skill-design.md): `scribe` skill が今の形になっている理由
+  - [usage-band-mod-rendering.md](./notes/usage-band-mod-rendering.md): `usage-band` mod が文字のバーで描く理由と、desktop app で列を揃える時の制約の実測
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
   - [0002-project-specific-knowledge-lives-in-project-docs.md](./adr/0002-project-specific-knowledge-lives-in-project-docs.md)
