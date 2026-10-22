@@ -7,9 +7,9 @@
 
 ## allowed_signers を chezmoi template から作る理由
 
-`config.tmpl` の `user.signingkey` と同じ `op://Personal/GitHub Signing Key/public key` を正本にする。手で置くと、鍵を差し替えた時に片方だけ古くなる。生成にすれば `chezmoi apply` が両方を同時に更新する。
+`config.tmpl` の `user.signingkey` と同じ `op://Personal/GitHub Sign Key/public key` を正本にする。手で置くと、鍵を差し替えた時に片方だけ古くなる。生成にすれば `chezmoi apply` が両方を同時に更新する。
 
-principal（email）は `config.tmpl` と `allowed_signers.tmpl` の 2 箇所に literal で重複する。1 箇所へ寄せるには `.chezmoidata` を足すことになり、値 1 つのために置き場が増える。両方のテンプレートのコメントで結び付けている。
+principal（email）は `config.tmpl` の `user.email` と同じ `op://Personal/GitHub/noreply` から読む。以前は 2 箇所に literal で持っていたが、GitHub アカウントを作り直した時に repo 内の ID を差し替えずに済むよう、1Password を正本にした。
 
 ## 実測: 形式のどこが検証を左右するか
 

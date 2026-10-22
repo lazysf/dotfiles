@@ -6,10 +6,11 @@
      ここで展開を失敗させるための呼び出し。 */ -}}
 {{ $opWhoami := output "op" "whoami" -}}
 [user]
-  # name / email は commit に載る公開値なので 1Password ではなくリテラルで持つ
-  name  = "lazysf"
-  email = "346131960+lazysf@users.noreply.github.com"
-  signingkey = {{ onepasswordRead "op://Personal/GitHub Signing Key/public key"| quote }}
+  # name / email は commit に載る公開値だが、アカウントを作り直した時に repo の差し替えを
+  # 要らなくするため 1Password を正本にする。email は allowed_signers.tmpl の principal と同じ参照
+  name  = {{ onepasswordRead "op://Personal/GitHub/username" | quote }}
+  email = {{ onepasswordRead "op://Personal/GitHub/noreply" | quote }}
+  signingkey = {{ onepasswordRead "op://Personal/GitHub Sign Key/public key"| quote }}
 [gpg "ssh"]
   program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
   allowedSignersFile = ~/.config/git/allowed_signers
