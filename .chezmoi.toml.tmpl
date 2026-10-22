@@ -12,5 +12,11 @@
 [git]
   autoCommit = false
   autoPush = false
+{{- if eq .chezmoi.os "windows" }}
+{{- /* 指定しないと chezmoi cd が推測したシェルを開く。setup と同じ Windows PowerShell に揃える。 */}}
+[cd]
+  command = "powershell"
+  args = ["-NoLogo"]
+{{- end }}
 [data]
   profile = {{ $profile | quote }}
