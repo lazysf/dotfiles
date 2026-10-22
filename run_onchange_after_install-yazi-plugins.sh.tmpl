@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# package.toml hash: {{ include "dot_config/yazi/package.toml" | sha256sum }}
+#
+# package.toml が変わったら yazi の plugin を入れ直す。init.lua が plugin を require するため、無いと yazi が起動しない。
+# 名前を install-packages より後に並べ、yazi と git が入ってから実行させる。
+
+set -eu
+
+ya pkg install
+{{ end -}}
