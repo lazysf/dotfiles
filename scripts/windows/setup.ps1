@@ -47,8 +47,13 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
 }
 
 # Windows PowerShell 5.1 は既定の Restricted ではプロファイルを読まない。現在のユーザーだけ RemoteSigned にする。
-# 利用者や管理者が既に決めた値（CurrentUser の設定、AllSigned など）は変えない。
-if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Undefined' -and (Get-ExecutionPolicy) -in @('Restricted', 'Undefined')) {
+# 利用者や管理者が既に決めた値（CurrentUser の設定、グループポリシー、AllSigned など）は変えない。
+# このスクリプトは -ExecutionPolicy Bypass で起動されるので、Process スコープを含む Get-ExecutionPolicy では判定できない。
+$policyUnset = (Get-ExecutionPolicy -Scope MachinePolicy) -eq 'Undefined' -and
+    (Get-ExecutionPolicy -Scope UserPolicy) -eq 'Undefined' -and
+    (Get-ExecutionPolicy -Scope CurrentUser) -eq 'Undefined' -and
+    (Get-ExecutionPolicy -Scope LocalMachine) -in @('Restricted', 'Undefined')
+if ($policyUnset) {
     Write-Host '==> 現在のユーザーの実行ポリシーを RemoteSigned にします'
     try {
         Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
