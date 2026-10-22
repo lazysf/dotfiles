@@ -39,6 +39,7 @@ uv.lock
 
 # Windows only
 {{- if ne .chezmoi.os "windows" }}
+AppData
 Documents
 {{- end }}
 
