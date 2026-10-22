@@ -2,7 +2,16 @@
 # macOS 環境セットアップ (chezmoi 配布対象外、手動実行)。
 # 用途別 install_*_stack ブロックで「何のためか」「他に何が依存か」を表す。
 # 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
+# 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
+# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。
+# 既定値を持たせないのは、指定漏れで仕事のマシンに 1Password が入るのを防ぐため。
 set -euo pipefail
+
+if [[ $# -ne 1 || ( "$1" != "personal" && "$1" != "work" ) ]]; then
+  echo "Usage: $0 personal|work" >&2
+  exit 1
+fi
+machine_profile="$1"
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "Error: このスクリプトは macOS 専用です" >&2
@@ -69,7 +78,7 @@ install_modern_cli_stack() {
   echo "==> modern CLI utilities (汎用)"
   formula bat       # cat 代替
   formula eza       # ls 代替
-  formula fzf       # 汎用ファジー検索 (zsh shell integration / g() / telescope)
+  formula fzf       # 汎用ファジー検索 (zsh shell integration / g() / fzf-lua)
   formula ripgrep   # 高速 grep
   formula fd        # 高速 find
   formula jq        # JSON parser
@@ -90,7 +99,7 @@ install_git_stack() {
 install_neovim_stack() {
   echo "==> neovim (純粋テキストエディタ運用)"
   formula neovim
-  formula tree-sitter   # nvim-treesitter main branch の parser ビルダ
+  formula tree-sitter-cli   # nvim-treesitter main branch の parser ビルダ (tree-sitter は library のみ)
 }
 
 install_yazi_stack() {
@@ -130,8 +139,6 @@ install_ai_stack() {
   cask claude
   cask claude-code
   cask chatgpt
-  cask codex
-  cask codex-app
 }
 
 install_font_stack() {
@@ -146,15 +153,10 @@ install_gui_utility_stack() {
   cask raycast          # ランチャー
 }
 
-install_browser_stack() {
-  echo "==> ブラウザ"
-  cask microsoft-edge
-}
-
 install_maintenance_stack() {
   echo "==> Mac メンテナンス"
   formula mole                      # クリーンアップ / 最適化
-  tap vjeantet/homebrew-tap         # alerter 用の個人 tap
+  tap vjeantet/tap                  # alerter 用の個人 tap。skip 判定のため brew tap の表示名で書く
   formula vjeantet/tap/alerter      # mole 週次チェックの通知
 }
 
@@ -175,13 +177,16 @@ install_neovim_stack
 install_yazi_stack
 install_language_runtimes_stack
 install_dotfiles_stack
-install_password_stack
+if [[ "$machine_profile" == "personal" ]]; then
+  install_password_stack
+fi
 install_ai_stack
 install_font_stack
 install_gui_utility_stack
-install_browser_stack
 install_maintenance_stack
 install_editor_gui_stack
-install_research_stack
+if [[ "$machine_profile" == "personal" ]]; then
+  install_research_stack
+fi
 
 echo "==> 完了しました"
