@@ -38,7 +38,11 @@ function Install-WingetPackage {
     # $ErrorActionPreference='Stop' は native command (winget.exe) の非ゼロ exit を例外化しないため、明示確認する。
     if ($LASTEXITCODE -ne 0) {
         Write-Warning "    winget install '$Id' が exit code $LASTEXITCODE で終了しました"
+        return
     }
+    # 同じ ID が後の stack にも出るので、照会結果へ足して 2 回目を skip させる。
+    # 足さないと winget が既導入として非ゼロ exit を返し、上の警告が出る。
+    $script:installedList += "`n$Id"
 }
 
 function Install-ShellStack {
