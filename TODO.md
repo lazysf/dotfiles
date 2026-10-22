@@ -28,6 +28,7 @@ mac では確かめたが、Windows では確かめていない。この mac に
 - `dot_config/git/config.tmpl` の `lstat` が `%LOCALAPPDATA%\Microsoft\WindowsApps\op-ssh-sign.exe` を見つけ、展開が止まらない。
 - `git log --show-signature -1` で、新しい commit に `Good "git" signature` が出る。
 - setup の後、`Get-ExecutionPolicy -List` で CurrentUser が RemoteSigned になっている（未設定だった場合）。
+- 新しいマシンの `chezmoi init --apply` で、`run_onchange_after_install-yazi-plugins.cmd` が plugin を `%USERPROFILE%\.config\yazi\plugins` に入れ、`yazi` が起動する。
 - `chezmoi cd` で `cmd.exe` ではなく `powershell` が開く（`.chezmoi.toml.tmpl` の `[cd]`）。
 - `powershell`（5.1）を開くと、`Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1` が読み込まれ、starship と zoxide が効く。`$PROFILE` が同じ path を指す。
 

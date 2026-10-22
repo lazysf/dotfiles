@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "windows" -}}
+{{/* package.toml が変わったら yazi の plugin を入れ直す。init.lua が plugin を require するため、無いと yazi が起動しない。
+     初回の chezmoi init --apply では PowerShell のプロファイルがまだ読まれておらず YAZI_CONFIG_HOME が無いので、
+     ここで設定する。無いと ya は %AppData% の既定の場所へ入れてしまう。
+     chezmoi が一時ファイルへ書き出して cmd で実行するので、出力は ASCII だけにする。 */ -}}
+@echo off
+rem package.toml hash: {{ include "dot_config/yazi/package.toml" | sha256sum }}
+set "YAZI_CONFIG_HOME=%USERPROFILE%\.config\yazi"
+ya pkg install
+exit /b %ERRORLEVEL%
+{{ end -}}
