@@ -138,9 +138,8 @@ install_password_stack() {
 }
 
 install_ai_stack() {
-  echo "==> AI ツール (CLI + デスクトップ)"
+  echo "==> AI ツール (デスクトップ)"
   cask claude
-  cask claude-code
   cask chatgpt
 }
 
