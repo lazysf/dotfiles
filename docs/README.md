@@ -8,7 +8,7 @@
   - [claude-md-design.md](./notes/claude-md-design.md): `CLAUDE.md` が今の形になっている理由
   - [coding-skill-design.md](./notes/coding-skill-design.md): `coding` skill が今の形になっている理由
   - [git-commit-skill-design.md](./notes/git-commit-skill-design.md): `git-commit` skill が今の形になっている理由と commit 履歴の実測
-  - [git-signature-verification-design.md](./notes/git-signature-verification-design.md): 手元で commit の署名を検証する構成の理由と、allowed_signers の形式の実測
+  - [git-signature-verification-design.md](./notes/git-signature-verification-design.md): 手元で commit の署名を検証する構成の理由と、allowed_signers の形式の実測、GitHub 側で署名を必須にする ruleset の管理方法
   - [harness-design-principles.md](./notes/harness-design-principles.md): この harness に何を置き、どう書くかの判断基準
   - [lapidary-skill-design.md](./notes/lapidary-skill-design.md): `lapidary` skill が今の形になっている理由と、reviewer agent との使い分け
   - [markdownlint-and-pre-commit-execution.md](./notes/markdownlint-and-pre-commit-execution.md): markdownlint / pre-commit の 2 経路と、prek による実行の実測
