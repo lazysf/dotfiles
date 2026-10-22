@@ -21,8 +21,25 @@ mac では確かめたが、Windows では確かめていない。この mac に
 個人の Windows で確かめること。
 
 - `scripts/windows/setup.ps1 personal` が `powershell`（5.1）で構文エラーなく動き、日本語の出力が化けない。先頭に UTF-8 の BOM を付けてある。
-- `chezmoi init` で `personal` を選び、`chezmoi apply` が `run_onchange_after_install-packages.cmd` から setup.ps1 を実行する。2 回目の `apply` では実行されない。
+- 引数なしで実行すると、`PromptForChoice` で profile の選択肢が出る。
+- 1Password が未設定の時は、Developer の設定画面が開いて待つ。設定すると Enter で先へ進む。`Update-SessionPath` で、winget で入れた `op` が見つかる。設定済みなら待たずに進む。
+- 選んだ profile が `~/.config/chezmoi/chezmoi.toml` に書かれ、`chezmoi init --apply lazysf` で profile を聞かれない。
+- `chezmoi apply` が `run_onchange_after_install-packages.cmd` から setup.ps1 を実行する。2 回目の `apply` では実行されない。
 - `dot_config/git/config.tmpl` の `lstat` が `%LOCALAPPDATA%\Microsoft\WindowsApps\op-ssh-sign.exe` を見つけ、展開が止まらない。
 - `git log --show-signature -1` で、新しい commit に `Good "git" signature` が出る。
 
 仕事の Windows では、`work` を選んだ時に 1Password と Zotero が入らず、git の identity と署名の設定が出ないことを確かめる。
+
+---
+
+## 2. mac で 1Password が未設定の時の待機
+
+- 記載: 2026-10-22（setup で 1Password の設定を待つようにした時）
+
+この mac は 1Password を設定済みなので、`scripts/macos/setup.sh` の `wait_for_onepassword` は「設定済み」の経路しか通していない。未設定の経路は、関数だけを取り出し、`op` を偽物にして試した範囲に留まる。
+
+新しい mac、または 1Password の CLI 連携と SSH agent を切った状態で確かめること。
+
+- Developer の設定画面（`onepassword://settings/developers`）が開き、やることの一覧と、未設定の項目が出る。
+- 設定する前に Enter を押すと、まだ未設定の項目を出して待ち続ける。
+- 両方を設定して Enter を押すと、「1Password は設定済みです」と出て先へ進む。
