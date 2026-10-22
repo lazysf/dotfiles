@@ -27,6 +27,8 @@ mac では確かめたが、Windows では確かめていない。この mac に
 - `chezmoi apply` が `run_onchange_after_install-packages.cmd` から setup.ps1 を実行する。2 回目の `apply` では実行されない。
 - `dot_config/git/config.tmpl` の `lstat` が `%LOCALAPPDATA%\Microsoft\WindowsApps\op-ssh-sign.exe` を見つけ、展開が止まらない。
 - `git log --show-signature -1` で、新しい commit に `Good "git" signature` が出る。
+- setup の後、`Get-ExecutionPolicy -List` で CurrentUser が RemoteSigned になっている（未設定だった場合）。
+- `powershell`（5.1）を開くと、`Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1` が読み込まれ、starship と zoxide が効く。`$PROFILE` が同じ path を指す。
 
 仕事の Windows では、`work` を選んだ時に 1Password と Zotero が入らず、git の identity と署名の設定が出ないことを確かめる。
 
