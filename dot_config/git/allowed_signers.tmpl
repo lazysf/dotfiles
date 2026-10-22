@@ -1,10 +1,9 @@
-{{ if eq .chezmoi.os "darwin" -}}
-{{ if ne (lookPath "op") "" -}}
+{{/* 署名を設定する条件は config.tmpl と揃える。 */ -}}
+{{ if and (eq .profile "personal") (has .chezmoi.os (list "darwin" "windows")) -}}
 {{/* op が 1Password へ届かない時は onepasswordRead が展開を止める。鍵が落ちた行を
      静かに書き出さないための意図した停止なので、gate に変えない。 */ -}}
 {{/* principal は鍵の識別名。git 2.55.0 は検証時に照合しないが、%GS へそのまま出るので
      config.tmpl の user.email と同じ参照を使う。namespaces は信頼を git の署名だけに絞る指定で、
      別の値を書くと検証が B になる。 */ -}}
 {{ onepasswordRead "op://Personal/GitHub/noreply" }} namespaces="git" {{ onepasswordRead "op://Personal/GitHub Sign Key/public key" }}
-{{ end -}}
 {{ end -}}

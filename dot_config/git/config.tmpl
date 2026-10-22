@@ -1,7 +1,19 @@
 [include]
   path = ~/.config/git/config.local
+{{ $signProgram := "" -}}
 {{ if eq .chezmoi.os "darwin" -}}
-{{ if ne (lookPath "op") "" -}}
+{{ $signProgram = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" -}}
+{{ else if eq .chezmoi.os "windows" -}}
+{{/* winget の AgileBits.1Password が置く app execution alias。公式 docs に Windows の path が無いため、
+     個人の Windows 実機で場所を確かめた。install 方法が変わって消えた時に壊れた署名設定を書き出さないよう、
+     下で存在を確かめる。alias は reparse point なので、辿らない lstat で見る。 */ -}}
+{{ $signProgram = joinPath (env "LOCALAPPDATA") "Microsoft" "WindowsApps" "op-ssh-sign.exe" -}}
+{{ end -}}
+{{/* 個人の identity と署名鍵は個人のマシンでだけ読む。仕事のマシンの identity は config.local に書く。 */ -}}
+{{ if and (eq .profile "personal") $signProgram -}}
+{{ if not (lstat $signProgram) -}}
+{{ fail (printf "1Password の署名 program が見つからない: %s" $signProgram) -}}
+{{ end -}}
 {{/* op が 1Password へ届かない時は onepasswordRead が展開を止める。署名設定が落ちた config を
      静かに書き出さないための意図した停止なので、gate に変えない。 */ -}}
 [user]
@@ -11,13 +23,12 @@
   email = {{ onepasswordRead "op://Personal/GitHub/noreply" | quote }}
   signingkey = {{ onepasswordRead "op://Personal/GitHub Sign Key/public key"| quote }}
 [gpg "ssh"]
-  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+  program = {{ $signProgram | quote }}
   allowedSignersFile = ~/.config/git/allowed_signers
 [gpg]
   format = ssh
 [commit]
   gpgsign = true
-{{ end -}}
 {{ end -}}
 [ghq]
   root = ~/projects
