@@ -10,6 +10,14 @@
 chezmoi init --apply https://github.com/lazysf/dotfiles.git
 ```
 
+初回の `chezmoi init` で `Machine profile` として `personal` か `work` を選びます。選んだ値は `~/.config/chezmoi/chezmoi.toml` に保存され、次回からは聞かれません。git の identity と署名鍵を 1Password から読むのは、macOS と Windows の `personal` のマシンだけです。`work` のマシンでは identity を `~/.config/git/config.local` に書いてください。
+
+対話なしで選ぶ場合は `--promptChoice` に prompt の文言と値を渡します。
+
+```sh
+chezmoi init --apply --promptChoice "Machine profile=work" https://github.com/lazysf/dotfiles.git
+```
+
 OS / 用途別のセットアップスクリプトを `scripts/` 配下に置いています（chezmoi の配布対象外）。
 
 ```text
