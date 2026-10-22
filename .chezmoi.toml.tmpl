@@ -1,3 +1,4 @@
+{{- $profile := promptChoiceOnce . "profile" "Machine profile" (list "personal" "work") -}}
 [edit]
   command = "nvim"
 [merge]
@@ -11,3 +12,5 @@
 [git]
   autoCommit = false
   autoPush = false
+[data]
+  profile = {{ $profile | quote }}

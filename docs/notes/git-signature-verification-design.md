@@ -11,6 +11,12 @@
 
 principal（email）は `config.tmpl` の `user.email` と同じ `op://Personal/GitHub/noreply` から読む。以前は 2 箇所に literal で持っていたが、GitHub アカウントを作り直した時に repo 内の ID を差し替えずに済むよう、1Password を正本にした。
 
+## 署名を設定するマシン
+
+identity と署名は、`.profile` が `personal` で、OS が macOS か Windows のマシンにだけ設定する。仕事のマシンには 1Password が無いので、`op` の有無ではなく `.profile` で決める。`personal` のマシンで `op` が 1Password へ届かない時は、`onepasswordRead` が展開を止める。
+
+Windows の `gpg.ssh.program` は、1Password の [Git commit signing](https://www.1password.dev/ssh/git-commit-signing/) に載っていない（2026-10-22 確認）。個人の Windows に winget の `AgileBits.1Password` で入れると、`op-ssh-sign.exe` は `%LOCALAPPDATA%\Microsoft\WindowsApps\` に app execution alias として置かれる（2026-10-22、実機で確認）。install 方法が変わって alias が消えた時に、署名できない config を書き出さないよう、見つからなければ展開を止める。alias は reparse point なので、存在の確認は辿らない `lstat` で行う。Windows 実機での展開と署名は未確認。
+
 ## 実測: 形式のどこが検証を左右するか
 
 git 2.55.0 で allowed_signers の 1 行を変え、直近 commit の `%G?` を取った（2026-09-04）。
