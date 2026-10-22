@@ -110,9 +110,8 @@ function Install-PasswordStack {
 }
 
 function Install-AiStack {
-    Write-Host '==> AI ツール (CLI + デスクトップ)'
+    Write-Host '==> AI ツール (デスクトップ)'
     Install-WingetPackage Anthropic.Claude
-    Install-WingetPackage Anthropic.ClaudeCode
     # ChatGPT デスクトップは Microsoft Store 経由で入手可能だが現状未採用。
 }
 
