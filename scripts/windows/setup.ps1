@@ -46,6 +46,18 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# Windows PowerShell 5.1 は既定の Restricted ではプロファイルを読まない。現在のユーザーだけ RemoteSigned にする。
+# 利用者や管理者が既に決めた値（CurrentUser の設定、AllSigned など）は変えない。
+if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Undefined' -and (Get-ExecutionPolicy) -in @('Restricted', 'Undefined')) {
+    Write-Host '==> 現在のユーザーの実行ポリシーを RemoteSigned にします'
+    try {
+        Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
+    } catch {
+        # グループポリシーが上書きしている時は、設定は保存されても効かず、エラーになる。
+        Write-Warning "実行ポリシーを変更できませんでした: $($_.Exception.Message)"
+    }
+}
+
 # winget list は ID も列に出るので部分文字列マッチで skip 判定する。
 # 表形式が改行で折れる可能性に備え Out-String で 1 文字列に潰す。
 Write-Host '==> 既導入パッケージを照会します'
