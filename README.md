@@ -37,6 +37,8 @@ scripts/
 
 clone 前の初回は、スクリプトを GitHub から取得して実行します。clone 後は repo 内のスクリプトを同じ引数で実行できます。
 
+`chezmoi apply` も、スクリプトの内容が変わった時に、そのマシンの machine profile でスクリプトを実行し直します（`run_onchange_after_install-packages.*`）。パッケージを足した時は、各マシンで次に `chezmoi apply` か `chezmoi update` を実行すると入ります。初回の `chezmoi init --apply` でも 1 回実行されますが、導入済みのパッケージは skip されます。
+
 ### macOS
 
 ```sh

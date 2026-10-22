@@ -1,0 +1,10 @@
+{{ if eq .chezmoi.os "windows" -}}
+{{/* setup.ps1 が変わったら、このマシンの profile で実行し直す。
+     .ps1 の run_ スクリプトにしないのは、chezmoi が pwsh の無い環境で powershell を使い、
+     既定の実行ポリシー Restricted で止まるため。Bypass はこの 1 回の呼び出しにだけ効かせる。
+     chezmoi が一時ファイルへ書き出して cmd で実行するので、出力は ASCII だけにする。 */ -}}
+@echo off
+rem setup.ps1 hash: {{ include "scripts/windows/setup.ps1" | sha256sum }}
+powershell -NoProfile -ExecutionPolicy Bypass -File "{{ joinPath .chezmoi.sourceDir "scripts/windows/setup.ps1" }}" {{ .profile }}
+exit /b %ERRORLEVEL%
+{{ end -}}
