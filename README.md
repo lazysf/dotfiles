@@ -36,7 +36,7 @@ chezmoi init --apply lazysf
 
 ### Windows
 
-winget が無い場合は、先に <https://aka.ms/getwinget> から App Installer を入れます。
+winget が無い場合は、先に <https://aka.ms/getwinget> から App Installer を入れます。シェルは Windows PowerShell（`powershell`）を使います。プロファイルを読めるよう、スクリプトは現在のユーザーの実行ポリシーが未設定なら RemoteSigned にします。
 
 セットアップスクリプトを取得する:
 
