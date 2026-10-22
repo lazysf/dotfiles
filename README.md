@@ -4,7 +4,11 @@
 
 ## セットアップ
 
-初回セットアップ:
+初回は次の順に進めます。chezmoi と 1Password はセットアップスクリプトが入れ、`personal` のマシンでは `chezmoi init --apply` が 1Password から値を読むためです。
+
+1. OS のセットアップスクリプトを取得し、machine profile（`personal` か `work`）を渡して実行する（下の「macOS」「Windows」）。
+2. `personal` のマシンでは、1Password にサインインし、設定の Developer で CLI 連携を有効にする。
+3. chezmoi で dotfiles を展開する。
 
 ```sh
 chezmoi init --apply https://github.com/lazysf/dotfiles.git
@@ -18,42 +22,42 @@ chezmoi init --apply https://github.com/lazysf/dotfiles.git
 chezmoi init --apply --promptChoice "Machine profile=work" https://github.com/lazysf/dotfiles.git
 ```
 
-OS / 用途別のセットアップスクリプトを `scripts/` 配下に置いています（chezmoi の配布対象外）。
+OS 別のセットアップスクリプトを `scripts/` 配下に置いています（chezmoi の配布対象外）。
 
 ```text
 scripts/
 ├─ macos/setup.sh
-├─ windows_personal/setup.ps1
-└─ windows_work/setup.ps1
+└─ windows/setup.ps1
 ```
 
-各スクリプトは Homebrew / winget を未導入なら入れたうえで、用途別の `install_*_stack` (macOS) / `Install-*Stack` (Windows) ブロックを順に実行します。ブロック構成・除外したパッケージの理由はスクリプト内コメントを参照してください。
+各スクリプトは Homebrew / winget を未導入なら入れたうえで、用途別の `install_*_stack` (macOS) / `Install-*Stack` (Windows) ブロックを順に実行します。machine profile は必須の引数で、`work` では次のブロックを実行しません。ブロック構成・除外したパッケージの理由はスクリプト内コメントを参照してください。
+
+- パスワード管理 (1Password): 会社管理ツール想定
+- 研究 (Zotero): 不要
+
+clone 前の初回は、スクリプトを GitHub から取得して実行します。clone 後は repo 内のスクリプトを同じ引数で実行できます。
 
 ### macOS
 
 ```sh
-scripts/macos/setup.sh
+curl -fsSLo setup.sh https://raw.githubusercontent.com/lazysf/dotfiles/main/scripts/macos/setup.sh
+bash setup.sh personal   # 仕事用は work
 ```
 
 ### Windows
 
 ```powershell
-scripts/windows_personal/setup.ps1   # 個人用
-scripts/windows_work/setup.ps1       # 仕事用
+irm https://raw.githubusercontent.com/lazysf/dotfiles/main/scripts/windows/setup.ps1 -OutFile setup.ps1
+.\setup.ps1 personal   # 仕事用は work
 ```
-
-仕事用は個人用と構造を共有し、次のブロックを落としています:
-
-- パスワード管理 (`AgileBits.1Password` 系): 会社管理ツール想定
-- 研究 (`DigitalScholar.Zotero`): 不要
 
 winget が無ければ <https://aka.ms/getwinget> で App Installer を導入。新規 Windows の既定実行ポリシー (`Restricted`) で `.ps1` が弾かれる場合は以下:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
-scripts/windows_personal/setup.ps1
+.\setup.ps1 personal
 # または
-pwsh -ExecutionPolicy Bypass -File scripts/windows_personal/setup.ps1
+pwsh -ExecutionPolicy Bypass -File setup.ps1 personal
 ```
 
 ## 更新
