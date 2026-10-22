@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Weekly mole dry-run -> alerter 通知。「クリーンアップ」ボタンで mo clean 実行 + 結果再通知。
-# launchd (~/Library/LaunchAgents/local.mole.weekly-check.plist) から月曜 9:00 に起動。
+# launchd (~/Library/LaunchAgents/local.mole.weekly-check.plist) から月曜 12:00 に起動。
 # mole の summary 行 ("Potential space: 4.06GB | Items: 2219 | Categories: 43") を期待。
 
 set -u
