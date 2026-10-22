@@ -15,6 +15,12 @@ usage() {
   exit 1
 }
 
+# Intel の mac は対象外。Homebrew の置き場も Apple Silicon の /opt/homebrew だけを見る。
+if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
+  echo "Error: このスクリプトは Apple Silicon の macOS 専用です" >&2
+  exit 1
+fi
+
 if [[ $# -gt 1 ]]; then
   usage
 fi
@@ -43,25 +49,16 @@ if [[ ! -f "$chezmoi_config" ]]; then
   printf '[data]\n  profile = "%s"\n' "$machine_profile" >"$chezmoi_config"
 fi
 
-if [[ "$(uname -s)" != "Darwin" ]]; then
-  echo "Error: このスクリプトは macOS 専用です" >&2
-  exit 1
-fi
-
-if ! command -v brew >/dev/null 2>&1; then
+# PATH ではなく置き場で見る。新しいマシンでは、Homebrew があっても shell の PATH に入っていないことがある。
+if [[ ! -x /opt/homebrew/bin/brew ]]; then
   echo "==> Homebrew をインストールします"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
-
-# Apple Silicon / Intel で brew の置き場が違うため両対応。
-if [[ -x /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -x /usr/local/bin/brew ]]; then
-  eval "$(/usr/local/bin/brew shellenv)"
-else
+if [[ ! -x /opt/homebrew/bin/brew ]]; then
   echo "Error: Homebrew のインストールに失敗しました" >&2
   exit 1
 fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # brew install は冪等だが、無駄な network / 出力を抑え差分を可視化するため
 # 事前に installed list を取って skip 判定する。
