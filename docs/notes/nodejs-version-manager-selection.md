@@ -7,7 +7,7 @@ macOS / Windows で共通して使う Node.js version manager を選ぶ際の、
 
 ## 変遷
 
-`fnm` → `nvm` → `volta` → `nvm`（現行）。`dot_config/zsh/dot_zshrc` と setup スクリプト 3 種（`scripts/macos/setup.sh`、`scripts/windows_personal/setup.ps1`、`scripts/windows_work/setup.ps1`）で管理する。
+`fnm` → `nvm` → `volta` → `nvm`（現行）。`dot_config/zsh/dot_zshrc` と setup スクリプト 2 種（`scripts/macos/setup.sh`、`scripts/windows/setup.ps1`）で管理する。
 
 ## 各候補の評価
 

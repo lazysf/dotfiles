@@ -1,33 +1,40 @@
-# Windows 環境セットアップ (仕事用、chezmoi 配布対象外、手動実行)。
-# 構造は scripts/windows_personal/setup.ps1 と揃え、仕事環境で不要なブロックを落としている。
+# Windows 環境セットアップ (chezmoi 配布対象外、手動実行)。
+# 用途別 Install-*Stack ブロックで「何のためか」「他に何が依存か」を表す。
+# 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
+# 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
+# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。
+# 既定値を持たせないのは、指定漏れで仕事のマシンに 1Password が入るのを防ぐため。
+# 変数名を $Profile にしないのは、PowerShell の自動変数 $PROFILE と衝突するため。
 #Requires -Version 5.1
+param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [ValidateSet('personal', 'work')]
+    [string]$MachineProfile
+)
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# winget (App Installer) は Windows 10/11 に標準同梱だが、無い環境では自動導入が脆いため手動導入を促す。
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     Write-Error 'winget が見つかりません。Microsoft Store の "App Installer" を導入してください: https://aka.ms/getwinget'
     exit 1
 }
 
+# winget list は ID も列に出るので部分文字列マッチで skip 判定する。
+# 表形式が改行で折れる可能性に備え Out-String で 1 文字列に潰す。
 Write-Host '==> 既導入パッケージを照会します'
 $installedList = (winget list --accept-source-agreements 2>$null | Out-String)
 
 function Install-WingetPackage {
     param(
-        [Parameter(Mandatory = $true)][string]$Id,
-        [ValidateSet('winget', 'msstore')][string]$Source = 'winget'
+        [Parameter(Mandatory = $true)][string]$Id
     )
     if ($installedList -match [regex]::Escape($Id)) {
         Write-Host "  - $Id (skip)"
         return
     }
-    Write-Host "  + $Id ($Source)"
-    if ($Source -eq 'msstore') {
-        # msstore source は PackageIdentifier ではなく query 指定が公式慣習 (`winget install Codex -s msstore`)。
-        winget install $Id --source msstore --exact --accept-package-agreements --accept-source-agreements --silent
-    } else {
-        winget install --id $Id --source winget --exact --accept-package-agreements --accept-source-agreements --silent
-    }
+    Write-Host "  + $Id"
+    winget install --id $Id --source winget --exact --accept-package-agreements --accept-source-agreements --silent
     # $ErrorActionPreference='Stop' は native command (winget.exe) の非ゼロ exit を例外化しないため、明示確認する。
     if ($LASTEXITCODE -ne 0) {
         Write-Warning "    winget install '$Id' が exit code $LASTEXITCODE で終了しました"
@@ -43,7 +50,7 @@ function Install-ModernCliStack {
     Write-Host '==> modern CLI utilities (汎用)'
     Install-WingetPackage sharkdp.bat              # cat 代替
     Install-WingetPackage eza-community.eza        # ls 代替
-    Install-WingetPackage junegunn.fzf             # 汎用ファジー検索 (PowerShell g() / telescope)
+    Install-WingetPackage junegunn.fzf             # 汎用ファジー検索 (PowerShell g() / fzf-lua)
     Install-WingetPackage BurntSushi.ripgrep.MSVC  # 高速 grep
     Install-WingetPackage sharkdp.fd               # 高速 find
     Install-WingetPackage jqlang.jq                # JSON parser
@@ -92,13 +99,17 @@ function Install-DotfilesStack {
     Install-WingetPackage twpayne.chezmoi
 }
 
+function Install-PasswordStack {
+    Write-Host '==> パスワード管理'
+    Install-WingetPackage AgileBits.1Password
+    Install-WingetPackage AgileBits.1Password.CLI
+}
+
 function Install-AiStack {
     Write-Host '==> AI ツール (CLI + デスクトップ)'
     Install-WingetPackage Anthropic.Claude
     Install-WingetPackage Anthropic.ClaudeCode
-    Install-WingetPackage OpenAI.Codex
-    Install-WingetPackage -Id Codex -Source msstore   # winget 公式 ID 無し、Microsoft Store 経由
-    # ChatGPT デスクトップも msstore 経由 (`-Id ChatGPT -Source msstore`) で入手可能だが現状未採用。
+    # ChatGPT デスクトップは Microsoft Store 経由で入手可能だが現状未採用。
 }
 
 function Install-FontStack {
@@ -113,19 +124,15 @@ function Install-GuiUtilityStack {
     # mos (macOS 専用) は Windows 非対応。
 }
 
-function Install-BrowserStack {
-    Write-Host '==> ブラウザ'
-    # Microsoft Edge は Windows 10/11 標準同梱のため明示インストール不要。
-}
-
 function Install-EditorGuiStack {
     Write-Host '==> エディタ (GUI)'
     Install-WingetPackage Microsoft.VisualStudioCode
 }
 
-# 仕事用には含めないブロック (個人用 setup.ps1 にある):
-#   - Install-PasswordStack (1Password): 会社管理のパスワード管理ツール想定
-#   - Install-ResearchStack (Zotero): 仕事環境では不要
+function Install-ResearchStack {
+    Write-Host '==> 研究 / 文献管理'
+    Install-WingetPackage DigitalScholar.Zotero
+}
 
 Install-ShellStack
 Install-ModernCliStack
@@ -134,10 +141,15 @@ Install-NeovimStack
 Install-YaziStack
 Install-LanguageRuntimesStack
 Install-DotfilesStack
+if ($MachineProfile -eq 'personal') {
+    Install-PasswordStack
+}
 Install-AiStack
 Install-FontStack
 Install-GuiUtilityStack
-Install-BrowserStack
 Install-EditorGuiStack
+if ($MachineProfile -eq 'personal') {
+    Install-ResearchStack
+}
 
 Write-Host '==> 完了しました'
