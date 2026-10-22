@@ -4,14 +4,44 @@
 # 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
 # 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
 # パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。
-# 既定値を持たせないのは、指定漏れで仕事のマシンに 1Password が入るのを防ぐため。
+# profile は 引数 → chezmoi の設定ファイル → 選択 の順で決める。既定値を持たせないのは、指定漏れで
+# 仕事のマシンに 1Password が入るのを防ぐため。
+# 設定ファイルが無ければ選んだ profile を書いておく。chezmoi init の promptChoiceOnce がこれを見つけ、
+# 同じ profile をもう一度聞かない。init は .chezmoi.toml.tmpl から設定ファイルを作り直す。
 set -euo pipefail
 
-if [[ $# -ne 1 || ( "$1" != "personal" && "$1" != "work" ) ]]; then
-  echo "Usage: $0 personal|work" >&2
+usage() {
+  echo "Usage: $0 [personal|work]" >&2
   exit 1
+}
+
+if [[ $# -gt 1 ]]; then
+  usage
 fi
-machine_profile="$1"
+chezmoi_config="$HOME/.config/chezmoi/chezmoi.toml"
+machine_profile="${1:-}"
+if [[ -z "$machine_profile" && -f "$chezmoi_config" ]]; then
+  # .chezmoi.toml.tmpl が書く形の行だけを読む。TOML を解釈するわけではない。
+  machine_profile="$(sed -nE 's/^[[:space:]]*profile = "(personal|work)"[[:space:]]*$/\1/p' "$chezmoi_config" | head -n 1)"
+fi
+if [[ -z "$machine_profile" ]]; then
+  if [[ ! -t 0 ]]; then
+    usage
+  fi
+  echo "Machine profile を選んでください"
+  select machine_profile in personal work; do
+    if [[ -n "$machine_profile" ]]; then
+      break
+    fi
+  done
+fi
+if [[ "$machine_profile" != "personal" && "$machine_profile" != "work" ]]; then
+  usage
+fi
+if [[ ! -f "$chezmoi_config" ]]; then
+  mkdir -p "$(dirname "$chezmoi_config")"
+  printf '[data]\n  profile = "%s"\n' "$machine_profile" >"$chezmoi_config"
+fi
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "Error: このスクリプトは macOS 専用です" >&2
@@ -137,6 +167,53 @@ install_password_stack() {
   cask 1password-cli
 }
 
+# CLI 連携と SSH agent は 1Password のアプリの設定画面でしか有効にできないため、画面を開いて待つ。
+# chezmoi apply から実行された時 (CHEZMOI=1) は、利用者が画面の前にいるとは限らないので待たない。
+onepassword_agent_sock="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+onepassword_cli_ready() {
+  # CLI 連携が有効なら、op はアプリでサインインしているアカウントを返す。
+  local count
+  count="$(op account list --format=json 2>/dev/null | jq length 2>/dev/null)" || true
+  [[ "${count:-0}" -gt 0 ]]
+}
+
+onepassword_agent_ready() {
+  # 0 は鍵が見えている、1 は agent はあるが鍵が無い、2 は agent に届かない。
+  SSH_AUTH_SOCK="$onepassword_agent_sock" ssh-add -l >/dev/null 2>&1
+}
+
+wait_for_onepassword() {
+  if [[ "${CHEZMOI:-}" == "1" ]]; then
+    return
+  fi
+  local opened=false missing
+  while true; do
+    missing=""
+    onepassword_cli_ready || missing+=" CLI 連携"
+    onepassword_agent_ready || missing+=" SSH agent"
+    if [[ -z "$missing" ]]; then
+      echo "  1Password は設定済みです"
+      return
+    fi
+    if [[ ! -t 0 ]]; then
+      echo "Warning: 1Password の設定が済んでいません:$missing" >&2
+      return
+    fi
+    if [[ "$opened" == false ]]; then
+      open "onepassword://settings/developers" || true
+      opened=true
+      echo "  1Password で次を設定してください"
+      echo "    - アカウントにサインインする"
+      echo "    - Developer: Integrate with 1Password CLI"
+      echo "    - Developer: Use the SSH Agent"
+      echo "    - General: Keep 1Password in the menu bar と Start at login"
+    fi
+    echo "  未設定:$missing"
+    read -r -p "  設定したら Enter を押してください (中断は Ctrl+C) " _
+  done
+}
+
 install_ai_stack() {
   echo "==> AI ツール (デスクトップ)"
   cask claude
@@ -181,6 +258,7 @@ install_language_runtimes_stack
 install_dotfiles_stack
 if [[ "$machine_profile" == "personal" ]]; then
   install_password_stack
+  wait_for_onepassword
 fi
 install_ai_stack
 install_font_stack
