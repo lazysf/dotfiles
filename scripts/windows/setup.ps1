@@ -1,4 +1,4 @@
-# Windows 環境セットアップ (chezmoi 配布対象外、手動実行)。
+﻿# Windows 環境セットアップ (chezmoi 配布対象外。手動、または chezmoi apply の run_onchange_after_install-packages から実行)。
 # 用途別 Install-*Stack ブロックで「何のためか」「他に何が依存か」を表す。
 # 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
 # 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の

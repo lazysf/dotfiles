@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# setup.sh hash: {{ include "scripts/macos/setup.sh" | sha256sum }}
+#
+# setup.sh が変わったら、このマシンの profile で実行し直す。
+# 名前を register-mole-agent より前に並べ、mole と alerter を入れてから launchd へ登録させる。
+
+set -eu
+
+bash {{ joinPath .chezmoi.sourceDir "scripts/macos/setup.sh" | quote }} {{ .profile | quote }}
+{{ end -}}
