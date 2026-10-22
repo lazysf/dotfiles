@@ -1,7 +1,7 @@
 # Git 署名検証の設計
 
-- Date: 2026-09-04
-- 出典: `man git-config` の `gpg.ssh.allowedSignersFile` / 実機 git 2.55.0 で allowed_signers の 1 行を変えて `%G?` を取った比較（2026-09-04） / 実機 `chezmoi apply`（v2.72.1）後の `git log --show-signature`（2026-09-04）
+- Date: 2026-10-22
+- 出典: `man git-config` の `gpg.ssh.allowedSignersFile` / 実機 git 2.55.0 で allowed_signers の 1 行を変えて `%G?` を取った比較（2026-09-04） / 実機 `chezmoi apply`（v2.72.1）後の `git log --show-signature`（2026-09-04） / 実機 git 2.56.0 の `git log --format=%G?`（2026-10-22）
 
 手元で自分の commit の署名を検証できるようにした構成の理由を残す。**GitHub 上の Verified 判定はこの設定と関係しない。** そちらは GitHub に登録した signing key で検証される。
 
@@ -26,6 +26,6 @@ git 2.55.0 で allowed_signers の 1 行を変え、直近 commit の `%G?` を�
 
 `allowedSignersFile` に書いた `~` は展開される（`HOME` を差し替えて確認）。
 
-## 実測: 署名の無い commit が残る
+## 実測: 全 commit に署名がある
 
-`main` の 508 commit のうち 467 件が `G`、41 件が `N`（2026-09-04）。`N` は 2026-08-31 から 09-02 の commit で、署名そのものが付いていない。allowed_signers を置いても変わらない。`archive/pre-reset-20260827` は 370 件すべて `G`。
+`main` の 551 commit はすべて `G`（2026-10-22、git 2.56.0）。GitHub アカウントの作り直しに合わせて履歴を書き換えた時に、全 commit へ署名し直した。
