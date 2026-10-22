@@ -1,7 +1,7 @@
 # Git 署名検証の設計
 
 - Date: 2026-10-22
-- 出典: `man git-config` の `gpg.ssh.allowedSignersFile` / 実機 git 2.55.0 で allowed_signers の 1 行を変えて `%G?` を取った比較（2026-09-04） / 実機 `chezmoi apply`（v2.72.1）後の `git log --show-signature`（2026-09-04） / 実機 git 2.56.0 の `git log --format=%G?`（2026-10-22） / `chezmoi managed` に `.github/` が出ないことの確認（2026-10-22） / ruleset 作成時の `gh api` の応答と `GET repos/lazysf/dotfiles/rules/branches/main`（2026-10-22）
+- 出典: `man git-config` の `gpg.ssh.allowedSignersFile` / 実機 git 2.55.0 で allowed_signers の 1 行を変えて `%G?` を取った比較（2026-09-04） / 実機 `chezmoi apply`（v2.72.1）後の `git log --show-signature`（2026-09-04） / 実機 git 2.56.0 の `git log --format=%G?`（2026-10-22） / 個人の Windows での `git config --show-origin` と `git log --show-signature`（2026-10-22） / `chezmoi managed` に `.github/` が出ないことの確認（2026-10-22） / ruleset 作成時の `gh api` の応答と `GET repos/lazysf/dotfiles/rules/branches/main`（2026-10-22）
 
 手元で自分の commit の署名を検証できるようにした構成の理由を残す。**GitHub 上の Verified 判定はこの設定と関係しない。** そちらは GitHub に登録した signing key で検証される。
 
@@ -15,7 +15,7 @@ principal（email）は `config.tmpl` の `user.email` と同じ `op://Personal/
 
 identity と署名は、`.profile` が `personal` で、OS が macOS か Windows のマシンにだけ設定する。仕事のマシンには 1Password が無いので、`op` の有無ではなく `.profile` で決める。`personal` のマシンで `op` が 1Password へ届かない時は、`onepasswordRead` が展開を止める。
 
-Windows の `gpg.ssh.program` は、1Password の [Git commit signing](https://www.1password.dev/ssh/git-commit-signing/) に載っていない（2026-10-22 確認）。個人の Windows に winget の `AgileBits.1Password` で入れると、`op-ssh-sign.exe` は `%LOCALAPPDATA%\Microsoft\WindowsApps\` に app execution alias として置かれる（2026-10-22、実機で確認）。install 方法が変わって alias が消えた時に、署名できない config を書き出さないよう、見つからなければ展開を止める。alias は reparse point なので、存在の確認は辿らない `lstat` で行う。Windows 実機での展開と署名は未確認。
+Windows の `gpg.ssh.program` は、1Password の [Git commit signing](https://www.1password.dev/ssh/git-commit-signing/) に載っていない（2026-10-22 確認）。個人の Windows に winget の `AgileBits.1Password` で入れると、`op-ssh-sign.exe` は `%LOCALAPPDATA%\Microsoft\WindowsApps\` に app execution alias として置かれる（2026-10-22、実機で確認）。install 方法が変わって alias が消えた時に、署名できない config を書き出さないよう、見つからなければ展開を止める。alias は reparse point なので、存在の確認は辿らない `lstat` で行う。個人の Windows では、`chezmoi apply` が止まらずにこの path を `gpg.ssh.program` へ書き、`git log --show-signature` が `Good "git" signature` を出す（2026-10-22、chezmoi v2.73.3、git 2.55.0.windows.5）。
 
 ## 実測: 形式のどこが検証を左右するか
 
