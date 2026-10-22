@@ -70,14 +70,16 @@ $installedList = (winget list --accept-source-agreements 2>$null | Out-String)
 
 function Install-WingetPackage {
     param(
-        [Parameter(Mandatory = $true)][string]$Id
+        [Parameter(Mandatory = $true)][string]$Id,
+        [ValidateSet('winget', 'msstore')]
+        [string]$Source = 'winget'
     )
     if ($installedList -match [regex]::Escape($Id)) {
         Write-Host "  - $Id (skip)"
         return
     }
     Write-Host "  + $Id"
-    winget install --id $Id --source winget --exact --accept-package-agreements --accept-source-agreements --silent
+    winget install --id $Id --source $Source --exact --accept-package-agreements --accept-source-agreements --silent
     # $ErrorActionPreference='Stop' は native command (winget.exe) の非ゼロ exit を例外化しないため、明示確認する。
     if ($LASTEXITCODE -ne 0) {
         Write-Warning "    winget install '$Id' が exit code $LASTEXITCODE で終了しました"
@@ -239,7 +241,7 @@ function Install-FontStack {
 
 function Install-GuiUtilityStack {
     Write-Host '==> GUI ユーティリティ'
-    Install-WingetPackage Raycast.Raycast   # ランチャー
+    Install-WingetPackage 9PFXXSHC64H3 -Source msstore   # Raycast (ランチャー)。winget source に manifest 無し。
     # mos (macOS 専用) は Windows 非対応。
 }
 
