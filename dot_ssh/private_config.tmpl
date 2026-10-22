@@ -1,5 +1,7 @@
 {{- if eq .chezmoi.os "darwin" }}
-{{- if and (ne (lookPath "op") "") (exec "op" "whoami") }}
+{{- /* agent は desktop app が提供し、op CLI とは独立している。op whoami で判定すると、
+       apply 時に op が app へ届かないだけで行が落ちるため、agent の socket を見る。 */}}
+{{- if stat (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock") }}
 Host *
 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 	ForwardAgent yes
