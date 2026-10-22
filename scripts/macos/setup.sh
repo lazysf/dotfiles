@@ -48,10 +48,13 @@ install_if_missing() {
     return
   fi
   echo "  + $name"
+  # 同じパッケージが後のブロックにも出るので、installed list へ足して 2 回目を skip させる。
   if [[ "$kind" == "formula" ]]; then
     brew install "$name"
+    installed_formulas+=$'\n'"$check"
   else
     brew install --cask "$name"
+    installed_casks+=$'\n'"$check"
   fi
 }
 formula() { install_if_missing formula "$1" "$installed_formulas"; }
