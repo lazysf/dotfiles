@@ -4,16 +4,41 @@
 # 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
 # パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。Windows の work では
 # GUI ユーティリティ（Raycast）も入れない。
-# 既定値を持たせないのは、指定漏れで仕事のマシンに 1Password が入るのを防ぐため。
+# profile は 引数 → chezmoi の設定ファイル → 選択 の順で決める。既定値を持たせないのは、指定漏れで
+# 仕事のマシンに 1Password が入るのを防ぐため。
+# 設定ファイルが無ければ選んだ profile を書いておく。chezmoi init の promptChoiceOnce がこれを見つけ、
+# 同じ profile をもう一度聞かない。init は .chezmoi.toml.tmpl から設定ファイルを作り直す。
 # 変数名を $Profile にしないのは、PowerShell の自動変数 $PROFILE と衝突するため。
 #Requires -Version 5.1
 param(
-    [Parameter(Mandatory = $true, Position = 0)]
+    [Parameter(Position = 0)]
     [ValidateSet('personal', 'work')]
     [string]$MachineProfile
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+$chezmoiConfig = Join-Path $HOME '.config/chezmoi/chezmoi.toml'
+if (-not $MachineProfile -and (Test-Path $chezmoiConfig)) {
+    # .chezmoi.toml.tmpl が書く形の行だけを読む。TOML を解釈するわけではない。
+    $match = Select-String -Path $chezmoiConfig -Pattern '^\s*profile = "(personal|work)"\s*$' | Select-Object -First 1
+    if ($match) {
+        $MachineProfile = $match.Matches[0].Groups[1].Value
+    }
+}
+if (-not $MachineProfile) {
+    if ([Console]::IsInputRedirected) {
+        Write-Error 'Usage: setup.ps1 [personal|work]'
+        exit 1
+    }
+    $choices = [System.Management.Automation.Host.ChoiceDescription[]]@('&personal', '&work')
+    $index = $Host.UI.PromptForChoice('Machine profile', 'Machine profile を選んでください', $choices, -1)
+    $MachineProfile = @('personal', 'work')[$index]
+}
+if (-not (Test-Path $chezmoiConfig)) {
+    New-Item -ItemType Directory -Force -Path (Split-Path $chezmoiConfig) | Out-Null
+    Set-Content -Path $chezmoiConfig -Encoding ascii -Value @('[data]', "  profile = `"$MachineProfile`"")
+}
 
 # winget (App Installer) は Windows 10/11 に標準同梱だが、無い環境では自動導入が脆いため手動導入を促す。
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
@@ -110,6 +135,79 @@ function Install-PasswordStack {
     Install-WingetPackage AgileBits.1Password.CLI
 }
 
+# winget で入れたコマンドは、この session の PATH に入らない。レジストリから読み直して op を見つける。
+function Update-SessionPath {
+    $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+    $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+    $env:Path = "$machinePath;$userPath"
+}
+
+# CLI 連携が有効なら、op はアプリでサインインしているアカウントを返す。
+function Test-OnePasswordCli {
+    # PowerShell 5.1 は native command の stderr を ErrorRecord にし、Stop の下では例外にするため緩める。
+    $ErrorActionPreference = 'Continue'
+    if (-not (Get-Command op -ErrorAction SilentlyContinue)) {
+        return $false
+    }
+    $json = (op account list --format=json 2>$null | Out-String)
+    if ($LASTEXITCODE -ne 0 -or -not $json.Trim()) {
+        return $false
+    }
+    # パイプで渡すと 5.1 は配列を 1 つのまとまりとして返し、空でも 1 件に数えるため -InputObject で渡す。
+    $accounts = ConvertFrom-Json -InputObject $json
+    return (@($accounts).Count -gt 0)
+}
+
+# 0 だけを設定済みとみなす。Windows の OpenSSH Authentication Agent が鍵の無い状態で答えると 1 になる。
+function Test-OnePasswordAgent {
+    $ErrorActionPreference = 'Continue'
+    if (-not (Get-Command ssh-add -ErrorAction SilentlyContinue)) {
+        return $false
+    }
+    ssh-add -l *> $null
+    return ($LASTEXITCODE -eq 0)
+}
+
+# CLI 連携と SSH agent は 1Password のアプリの設定画面でしか有効にできないため、画面を開いて待つ。
+# chezmoi apply から実行された時 (CHEZMOI=1) は、利用者が画面の前にいるとは限らないので待たない。
+function Wait-OnePassword {
+    if ($env:CHEZMOI -eq '1') {
+        return
+    }
+    $opened = $false
+    while ($true) {
+        Update-SessionPath
+        $missing = @()
+        if (-not (Test-OnePasswordCli)) { $missing += 'CLI 連携' }
+        if (-not (Test-OnePasswordAgent)) { $missing += 'SSH agent' }
+        if ($missing.Count -eq 0) {
+            Write-Host '  1Password は設定済みです'
+            return
+        }
+        if ([Console]::IsInputRedirected) {
+            Write-Warning "1Password の設定が済んでいません: $($missing -join ', ')"
+            return
+        }
+        if (-not $opened) {
+            try {
+                Start-Process 'onepassword://settings/developers'
+            } catch {
+                Write-Warning '1Password の設定画面を開けませんでした。アプリから Settings > Developer を開いてください'
+            }
+            $opened = $true
+            Write-Host '  1Password で次を設定してください'
+            Write-Host '    - アカウントにサインインする'
+            Write-Host '    - Security: Windows Hello を有効にする'
+            Write-Host '    - Windows のサービス OpenSSH Authentication Agent が動いていれば止める'
+            Write-Host '    - Developer: Integrate with 1Password CLI'
+            Write-Host '    - Developer: Use the SSH Agent'
+            Write-Host '    - General: Keep 1Password in the notification area'
+        }
+        Write-Host "  未設定: $($missing -join ', ')"
+        Read-Host '  設定したら Enter を押してください (中断は Ctrl+C)' | Out-Null
+    }
+}
+
 function Install-AiStack {
     Write-Host '==> AI ツール (デスクトップ)'
     Install-WingetPackage Anthropic.Claude
@@ -147,6 +245,7 @@ Install-LanguageRuntimesStack
 Install-DotfilesStack
 if ($MachineProfile -eq 'personal') {
     Install-PasswordStack
+    Wait-OnePassword
 }
 Install-AiStack
 Install-FontStack
