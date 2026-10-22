@@ -2,8 +2,7 @@
 # 用途別 Install-*Stack ブロックで「何のためか」「他に何が依存か」を表す。
 # 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
 # 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
-# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。Windows の work では
-# GUI ユーティリティ（Raycast）も入れない。
+# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。
 # profile は 引数 → chezmoi の設定ファイル → 選択 の順で決める。既定値を持たせないのは、指定漏れで
 # 仕事のマシンに 1Password が入るのを防ぐため。
 # 設定ファイルが無ければ選んだ profile を書いておく。chezmoi init の promptChoiceOnce がこれを見つけ、
@@ -268,9 +267,7 @@ if ($MachineProfile -eq 'personal') {
 }
 Install-AiStack
 Install-FontStack
-if ($MachineProfile -eq 'personal') {
-    Install-GuiUtilityStack
-}
+Install-GuiUtilityStack
 Install-EditorGuiStack
 if ($MachineProfile -eq 'personal') {
     Install-ResearchStack

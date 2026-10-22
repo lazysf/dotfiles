@@ -58,7 +58,7 @@ chezmoi init --apply lazysf
 
 ### work のマシン
 
-git の identity は `~/.config/git/config.local` に書きます。1Password、Zotero、Raycast（Windows）は入りません。
+git の identity は `~/.config/git/config.local` に書きます。1Password と Zotero は入りません。
 
 ### セットアップスクリプト
 
