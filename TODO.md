@@ -16,21 +16,15 @@
 
 - 記載: 2026-10-22（machine profile の導入、セットアップスクリプトの統合、`chezmoi apply` からのセットアップ実行）
 
-mac では確かめたが、Windows では確かめていない。この mac に `pwsh` が無く、Windows の分岐は `.chezmoi.os` を差し替えた展開でしか試せていない。
+2026-10-22 に、セットアップ済みの個人の Windows で、状態の読み取りと画面の目視で確かめられる項目は確認した。次の項目は、setup の対話実行か新しいマシンが要るので残っている。
 
 個人の Windows で確かめること。
 
-- `scripts/windows/setup.ps1 personal` が `powershell`（5.1）で構文エラーなく動き、日本語の出力が化けない。先頭に UTF-8 の BOM を付けてある。
+- `scripts/windows/setup.ps1 personal` の日本語の出力が化けない。先頭に UTF-8 の BOM を付けてある。
 - 引数なしで実行すると、`PromptForChoice` で profile の選択肢が出る。
 - 1Password が未設定の時は、Developer の設定画面が開いて待つ。設定すると Enter で先へ進む。`Update-SessionPath` で、winget で入れた `op` が見つかる。設定済みなら待たずに進む。
-- 選んだ profile が `~/.config/chezmoi/chezmoi.toml` に書かれ、`chezmoi init --apply lazysf` で profile を聞かれない。
-- `chezmoi apply` が `run_onchange_after_install-packages.cmd` から setup.ps1 を実行する。2 回目の `apply` では実行されない。
-- `dot_config/git/config.tmpl` の `lstat` が `%LOCALAPPDATA%\Microsoft\WindowsApps\op-ssh-sign.exe` を見つけ、展開が止まらない。
-- `git log --show-signature -1` で、新しい commit に `Good "git" signature` が出る。
-- setup の後、`Get-ExecutionPolicy -List` で CurrentUser が RemoteSigned になっている（未設定だった場合）。
-- 新しいマシンの `chezmoi init --apply` で、`run_onchange_after_install-yazi-plugins.cmd` が plugin を `%USERPROFILE%\.config\yazi\plugins` に入れ、`yazi` が起動する。
-- `chezmoi cd` で `cmd.exe` ではなく `powershell` が開く（`.chezmoi.toml.tmpl` の `[cd]`）。
-- `powershell`（5.1）を開くと、`Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1` が読み込まれ、starship と zoxide が効く。`$PROFILE` が同じ path を指す。
+- `chezmoi init --apply lazysf` で profile を聞かれない。
+- 新しいマシンの `chezmoi init --apply` で、`run_onchange_after_install-yazi-plugins.cmd` が plugin を `%USERPROFILE%\.config\yazi\plugins` に入れる。
 
 仕事の Windows では、`work` を選んだ時に 1Password と Zotero が入らず、git の identity と署名の設定が出ないことを確かめる。
 
