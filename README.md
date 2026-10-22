@@ -34,6 +34,7 @@ scripts/
 
 - パスワード管理 (1Password): 会社管理ツール想定
 - 研究 (Zotero): 不要
+- GUI ユーティリティ (Raycast): Windows だけ
 
 clone 前の初回は、スクリプトを GitHub から取得して実行します。clone 後は repo 内のスクリプトを同じ引数で実行できます。
 

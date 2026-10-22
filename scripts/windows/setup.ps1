@@ -2,7 +2,8 @@
 # 用途別 Install-*Stack ブロックで「何のためか」「他に何が依存か」を表す。
 # 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
 # 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
-# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。
+# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。Windows の work では
+# GUI ユーティリティ（Raycast）も入れない。
 # 既定値を持たせないのは、指定漏れで仕事のマシンに 1Password が入るのを防ぐため。
 # 変数名を $Profile にしないのは、PowerShell の自動変数 $PROFILE と衝突するため。
 #Requires -Version 5.1
@@ -149,7 +150,9 @@ if ($MachineProfile -eq 'personal') {
 }
 Install-AiStack
 Install-FontStack
-Install-GuiUtilityStack
+if ($MachineProfile -eq 'personal') {
+    Install-GuiUtilityStack
+}
 Install-EditorGuiStack
 if ($MachineProfile -eq 'personal') {
     Install-ResearchStack
