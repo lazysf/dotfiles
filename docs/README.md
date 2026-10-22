@@ -6,6 +6,8 @@
   - [claude-code-output-style-design.md](./notes/claude-code-output-style-design.md): Caveman output style が今の形になっている理由
   - [claude-code-settings-design.md](./notes/claude-code-settings-design.md): `settings.json` が default との差分だけで組まれている理由と、sandbox / permissions の実測記録
   - [claude-md-design.md](./notes/claude-md-design.md): `CLAUDE.md` が今の形になっている理由
+  - [claude-mods-testing.md](./notes/claude-mods-testing.md): mod の配布の仕組みと、`claude plugin validate` / `test` を展開先で実行する理由
+  - [codex-harness-operation.md](./notes/codex-harness-operation.md): Codex harness の構成と権限の注意、配布の検証範囲、適用前後の確認
   - [coding-skill-design.md](./notes/coding-skill-design.md): `coding` skill が今の形になっている理由
   - [git-commit-skill-design.md](./notes/git-commit-skill-design.md): `git-commit` skill が今の形になっている理由と commit 履歴の実測
   - [git-signature-verification-design.md](./notes/git-signature-verification-design.md): 手元で commit の署名を検証する構成の理由と、allowed_signers の形式の実測、GitHub 側で署名を必須にする ruleset の管理方法
