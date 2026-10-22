@@ -6,7 +6,7 @@
 set -u
 set -o pipefail
 
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+export PATH="/opt/homebrew/bin:/usr/bin:/bin"
 
 LOG_DIR="$HOME/Library/Logs/mole"
 mkdir -p "$LOG_DIR"
