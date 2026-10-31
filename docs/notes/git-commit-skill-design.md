@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-10-16
+- Date: 2026-10-31
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -124,6 +124,16 @@ skill は trailer を規定していない。付くかどうかは実行する h
 
 **履歴に残る不揃いは skill の不備ではない。**
 
+## 作業範囲と実行権限を分ける理由
+
+Codex の `workspace-write` は、書き込み可能な root 内でも `.git` を読取り専用として保護する。worktree の参照先も対象になる。コミットの作業指示だけでは、この境界を越える実行権限は得られない（[Protected paths in writable roots](https://learn.chatgpt.com/docs/agent-approvals-security#protected-paths-in-writable-roots)）。
+
+同じ権限での再実行と、正式な承認を得た実行経路への切替を区別する必要がある。Auto-review は必要な申請を審査するもので、sandbox の権限を広げる設定ではない（[Auto-review](https://learn.chatgpt.com/docs/sandboxing/auto-review)）。判断手順の正本は `dot_codex/skills/git-commit/references/failure-handling.md` に置く。
+
+Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公式仕様では sandbox 外への再試行を禁止する設定であり、Codex の承認経路を機械的に移植しない（[Claude Code sandboxing](https://code.claude.com/docs/en/sandboxing)）。作業指示と実行権限を分け、deny を迂回しない意図は共通にする。
+
 ## 未確認
+
+- 承認・拒否の実機検証と、Claude 側の上記設定の実効性確認は未実施。2026-10-31 の確認は、指示を辿るシナリオ評価と静的検証に限る。
 
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。

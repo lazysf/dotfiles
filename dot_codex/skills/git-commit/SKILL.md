@@ -19,7 +19,7 @@ description: Git の変更を stage・commit する依頼で使う。1 commit 1 
 6. `git log -1 --format='%h %s'` で結果を確認する。
 7. 「出力」に従って返す。
 
-停止条件に当たった時、pre-commit hook が失敗した時、commit 自体が失敗した時は [references/failure-handling.md](references/failure-handling.md) を読む。
+停止条件に当たった時、stage / commit / pre-commit hook が失敗した時、実行前に追加の権限が必要と分かった時は [references/failure-handling.md](references/failure-handling.md) を読む。必要な実行権限は正式な承認経路へ申請し、許可された場合に続行する。
 
 ## 停止条件
 
