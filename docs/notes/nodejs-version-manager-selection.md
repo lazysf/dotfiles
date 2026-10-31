@@ -1,6 +1,6 @@
 # Node.js version manager の選定経緯
 
-- Date: 2026-09-03
+- Date: 2026-10-31
 - 出典: [volta-cli/volta #2080](https://github.com/volta-cli/volta/issues/2080) / 変遷 commit `02ae800`（nvm→volta）・`c4c4865`（fnm→nvm）
 
 macOS / Windows で共通して使う Node.js version manager を選ぶ際の、各候補の評価と不採用理由を残す。再検討時に同じ調査・試行を繰り返さないため。ADR の 3 条件（特に「覆すコストが高い」）を満たさない選定なので notes に置く。
@@ -19,4 +19,4 @@ macOS / Windows で共通して使う Node.js version manager を選ぶ際の、
 ## 現行構成
 
 - macOS: Homebrew `formula nvm`。`dot_config/zsh/dot_zshrc` で `NVM_DIR="$HOME/.nvm"` を設定し `${HOMEBREW_PREFIX}/opt/nvm/nvm.sh` を source する。
-- Windows: winget `CoreyButler.NVMforWindows`（nvm-windows）。
+- Windows: winget `AuthorSoftware.NVMWindows`（nvm-windows）。
