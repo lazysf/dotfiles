@@ -41,3 +41,17 @@
 - Developer の設定画面（`onepassword://settings/developers`）が開き、やることの一覧と、未設定の項目が出る。
 - 設定する前に Enter を押すと、まだ未設定の項目を出して待ち続ける。
 - 両方を設定して Enter を押すと、「1Password は設定済みです」と出て先へ進む。
+
+---
+
+## 3. mac で Claude Desktop の 2 つ目のアカウント
+
+- 記載: 2026-11-01（Claude Desktop の 2 つ目のアカウント用ショートカットを setup に足した時）
+
+Windows では、`--user-data-dir` で別のインスタンスが開くことを確認した。mac の `create_claude_account_app` は実機で動かしていない。構成の理由は `docs/notes/claude-desktop-multi-account.md` にある。
+
+mac で確かめること。
+
+- `scripts/macos/setup.sh` を実行すると、`~/Applications/Claude-2nd.app` ができる。
+- Raycast と Spotlight から `Claude-2nd` を起動すると、起動中の Claude を前面に出すのではなく、ログイン画面の別ウィンドウが開く。
+- 2 つ目のウィンドウで、ファイルのドラッグ&ドロップと Code タブが動く。

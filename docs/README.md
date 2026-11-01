@@ -5,6 +5,7 @@
 - `docs/notes/`: repo-level の通常知見を置く
   - [claude-code-output-style-design.md](./notes/claude-code-output-style-design.md): Caveman output style が今の形になっている理由
   - [claude-code-settings-design.md](./notes/claude-code-settings-design.md): `settings.json` が default との差分だけで組まれている理由と、sandbox / permissions の実測記録
+  - [claude-desktop-multi-account.md](./notes/claude-desktop-multi-account.md): Claude Desktop の 2 つ目のアカウントを `--user-data-dir` で起動する構成と、`~/.claude/` を共有する時の注意
   - [claude-md-design.md](./notes/claude-md-design.md): `CLAUDE.md` が今の形になっている理由
   - [claude-mods-testing.md](./notes/claude-mods-testing.md): mod の配布の仕組みと、`claude plugin validate` / `test` を展開先で実行する理由
   - [codex-harness-operation.md](./notes/codex-harness-operation.md): Codex harness の構成と権限の注意、配布の検証範囲、適用前後の確認
