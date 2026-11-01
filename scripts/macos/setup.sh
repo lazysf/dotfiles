@@ -229,6 +229,19 @@ create_claude_account_app() {
   # このスクリプトだけが作る applet なので、前回の中身を残さないよう消して作り直す。
   rm -rf "$app"
   osacompile -o "$app" -e "do shell script \"open -n -a Claude --args --user-data-dir=\" & quoted form of \"${data_dir}\""
+  # applet の標準アイコンは台本の絵柄なので、通常の Claude のアイコンへ差し替える。
+  # どちらの bundle も CFBundleIconName で Assets.car の中を指すので、icns だけでなく両方を移す。
+  local claude_contents="/Applications/Claude.app/Contents"
+  local icon_file icon_name
+  icon_file="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' "$claude_contents/Info.plist")"
+  icon_name="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconName' "$claude_contents/Info.plist")"
+  cp "$claude_contents/Resources/Assets.car" "$claude_contents/Resources/$icon_file" "$app/Contents/Resources/"
+  rm "$app/Contents/Resources/applet.icns"
+  /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile $icon_file" -c "Set :CFBundleIconName $icon_name" "$app/Contents/Info.plist"
+  # osacompile の ad-hoc 署名は bundle の中身を封じている。変更で壊れるので署名し直す。
+  codesign --force --sign - "$app"
+  # 同じ path で作り直しても Launch Services は前回の登録を持ち続け、古いアイコンを返す。
+  /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$app"
   echo "  = $app"
 }
 
