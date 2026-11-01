@@ -12,7 +12,7 @@ Desktop にしか無い機能（ファイルのドラッグ&ドロップ、Code 
 setup スクリプトが、Claude を入れた直後に `Claude-2nd` という名前のショートカットを作る。
 
 - Windows: ユーザーのスタートメニューに `Claude-2nd.lnk` を作る。データフォルダは `%APPDATA%\Claude-2nd`。
-- macOS: `~/Applications/Claude-2nd.app` を `osacompile` の applet として作る。データフォルダは `~/Library/Application Support/Claude-2nd`。
+- macOS: `~/Applications/Claude-2nd.app` を `osacompile` の applet として作る。データフォルダは `~/Library/Application Support/Claude-2nd`。アイコンは作成時に `/Applications/Claude.app` からコピーするため、Claude の更新でアイコンが変わっても setup を再実行するまで追従しない。
 
 どちらの置き場も Raycast が拾う。setup スクリプトが変わると `run_onchange_after_install-packages.*.tmpl` が再実行するので、専用の run_ スクリプトは置かない。
 名前を変えたり外したりしても、setup は古いショートカットとデータフォルダを消さない。手で消す。
