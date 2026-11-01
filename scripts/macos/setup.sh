@@ -214,7 +214,22 @@ wait_for_onepassword() {
 install_ai_stack() {
   echo "==> AI ツール (デスクトップ)"
   cask claude
+  create_claude_account_app
   cask chatgpt
+}
+
+# Claude Desktop はアカウントを 1 つしか保持しないため、2 つ目のアカウントは別のデータフォルダで起動する。
+# 1 つ目は通常の Claude を使う。~/.claude/ は home 直下なので両方のインスタンスで共有される。
+# open -n で、起動中の Claude を前面に出すのではなく新しいインスタンスを開く。
+create_claude_account_app() {
+  local name="Claude-2nd"
+  local app="$HOME/Applications/${name}.app"
+  local data_dir="$HOME/Library/Application Support/${name}"
+  mkdir -p "$HOME/Applications"
+  # このスクリプトだけが作る applet なので、前回の中身を残さないよう消して作り直す。
+  rm -rf "$app"
+  osacompile -o "$app" -e "do shell script \"open -n -a Claude --args --user-data-dir=\" & quoted form of \"${data_dir}\""
+  echo "  = $app"
 }
 
 install_font_stack() {
