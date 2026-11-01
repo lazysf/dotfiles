@@ -229,7 +229,31 @@ function Wait-OnePassword {
 function Install-AiStack {
     Write-Host '==> AI ツール (デスクトップ)'
     Install-WingetPackage Anthropic.Claude
+    New-ClaudeAccountShortcut
     # ChatGPT デスクトップは Microsoft Store 経由で入手可能だが現状未採用。
+}
+
+# Claude Desktop はアカウントを 1 つしか保持しないため、2 つ目のアカウントは別のデータフォルダで起動する。
+# 1 つ目は通常の Claude を使う。~/.claude/ は home 直下なので両方のインスタンスで共有される。
+function New-ClaudeAccountShortcut {
+    $name = 'Claude-2nd'
+    $claudeDir = Join-Path $env:LOCALAPPDATA 'AnthropicClaude'
+    # 版ごとのフォルダの中ではなく、Squirrel のスタブを指す。スタブは最新版へ引数を渡して起動する。
+    $claudeExe = Join-Path $claudeDir 'claude.exe'
+    if (-not (Test-Path $claudeExe)) {
+        Write-Warning "  $claudeExe が無いため $name のショートカットを作りません"
+        return
+    }
+    $dataDir = Join-Path $env:APPDATA $name
+    $shortcutPath = Join-Path ([Environment]::GetFolderPath('Programs')) "$name.lnk"
+    $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($shortcutPath)
+    $shortcut.TargetPath = $claudeExe
+    $shortcut.Arguments = "--user-data-dir=`"$dataDir`""
+    # 通常の Claude のショートカットと同じく claude.exe のアイコンを使う。直下の app.ico は古い絵柄。
+    # CreateShortcut は既存の .lnk を読み込むので、省略せず毎回明示する。
+    $shortcut.IconLocation = "$claudeExe,0"
+    $shortcut.Save()
+    Write-Host "  = $shortcutPath"
 }
 
 function Install-FontStack {
