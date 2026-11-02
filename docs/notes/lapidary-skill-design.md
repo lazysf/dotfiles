@@ -1,6 +1,6 @@
 # lapidary skill の設計
 
-- Date: 2026-09-07
+- Date: 2026-11-02
 - 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
 
 `lapidary` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
@@ -127,7 +127,7 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 ただし**起動条件は別で、こちらが持つ**。独立 context を提案する条件に auth / 権限 / secret / 外部 I/O を入れた。いつ起動するかの条件をこの skill が持つため（上の「agent との使い分け」）。ここが持たないと、auth や secret に触る変更で security の目が入る自動経路が harness から消える。`/security-review` のユーザー明示だけが残る。
 
-この 4 つは `security-reviewer` の担当より狭い。あちらは command、CI / tooling 変更、data flow、injection、path traversal、情報漏洩も含む。残りは既存の「契約、設定、skill / agent 定義など、間違うと影響が広い surface を触った」が拾う。CI や tooling の設定はそちらに当たる。agent の担当と 1 対 1 にすると、既存条件と重なる項目が並ぶ。
+この 4 つは `security-reviewer` の担当より狭い。あちらは command、CI / tooling 変更、AI agent 設定、data flow、injection、path traversal、情報漏洩も含む。残りは既存の「契約、設定、skill / agent 定義など、間違うと影響が広い surface を触った」が拾う。CI や tooling、AI agent の設定はそちらに当たる。agent の担当と 1 対 1 にすると、既存条件と重なる項目が並ぶ。
 
 ## 過剰設計の review を別 skill にしていない理由
 
