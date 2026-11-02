@@ -292,6 +292,8 @@ function Install-RemoteDesktopStack {
     Install-WingetPackage Parsec.Parsec -Scope machine
     # 仮想ディスプレイ用のドライバ。manifest に scope の指定が無いので -Scope は付けない。
     Install-WingetPackage Parsec.ParsecVDD
+    # Virtual Mouse 設定が使う USB ドライバ。物理マウスが無いと Windows がカーソルを消すため。
+    Install-WingetPackage Parsec.ParsecVUD
     Show-VbCableGuide
 }
 
