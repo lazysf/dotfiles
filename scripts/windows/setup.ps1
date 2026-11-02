@@ -62,7 +62,8 @@ if ($policyUnset) {
     }
 }
 
-# winget list は ID も列に出るので部分文字列マッチで skip 判定する。
+# winget list は ID も列に出るので、空白で区切られた ID 単位の一致で skip 判定する。
+# 部分文字列だと Parsec.Parsec が Parsec.ParsecVDD の行に当たる。
 # 表形式が改行で折れる可能性に備え Out-String で 1 文字列に潰す。
 Write-Host '==> 既導入パッケージを照会します'
 $installedList = (winget list --accept-source-agreements 2>$null | Out-String)
@@ -76,7 +77,7 @@ function Install-WingetPackage {
         [ValidateSet('machine', 'user')]
         [string]$Scope
     )
-    if ($installedList -match [regex]::Escape($Id)) {
+    if ($installedList -match "(?<!\S)$([regex]::Escape($Id))(?!\S)") {
         Write-Host "  - $Id (skip)"
         return
     }
