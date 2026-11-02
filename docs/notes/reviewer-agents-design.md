@@ -1,7 +1,7 @@
 # reviewer agent の設計
 
-- Date: 2026-09-03
-- 出典: [Create custom subagents](https://code.claude.com/docs/en/sub-agents) / `~/.claude/projects/` の全 42 session transcript（2026-08-29 時点） / `dot_claude/agents/`
+- Date: 2026-11-02
+- 出典: [Create custom subagents](https://code.claude.com/docs/en/sub-agents) / [Model configuration](https://code.claude.com/docs/en/model-config) の「Choose an effort level」（2026-11-02 確認） / `~/.claude/projects/` の全 42 session transcript（2026-08-29 時点） / `dot_claude/agents/`
 
 reviewer agent 2 つが今の形になっている理由と、他の agent を置いていない理由を残す。agent 定義を読んでも分からない前提と判断に絞る。
 
@@ -63,7 +63,13 @@ reviewer をユーザー確認なしで起動してよいという規定は `CLA
 
 `model` を書かないと親の設定を継ぐ。sonnet で作業している最中に review を頼めば sonnet が review することになる。effort も同じで、session が `low` なら reviewer も `low` になる。
 
-reviewer は 1 度呼ばれて指摘を返すだけで、main のように往復して詰められない。session 側の設定に関係なく最高品質で走らせるため、`model` は full ID、`effort` は `xhigh` で固定する。`model` を alias でなく full ID にするのは、どの世代で review したかを確定させるため。
+reviewer は 1 度呼ばれて指摘を返すだけで、main のように往復して詰められない。session 側の設定に関係なく同じ深さで走らせるため、`model` と `effort` を frontmatter で固定する。`model` を alias でなく full ID にするのは、どの世代で review したかを確定させるため。
+
+`effort` は `quality-reviewer` が `high`、`security-reviewer` が `xhigh`。公式は `high` を検証が重要で edge case が出やすい作業に、`xhigh` をより深い推論に充てる。品質 review は前者に当たる。security review は見落とした時の損失が大きいので 1 段上げる。
+
+`max` は公式が security の脆弱性探しを例に挙げるが、頭打ちと考えすぎの傾向があり、広く使う前に試すよう書かれている。効果を測っていないので既定にしない。重い review では、呼び出し時の `effort` parameter で `max` を渡せる。
+
+model を上げた時は effort も見直す。公式は、Opus 5.5 が同じ level でも Opus 5 より 1 turn に多く考えるとして、前の model の level を引き継がないよう勧めている。
 
 ## permissionMode を書かない理由
 

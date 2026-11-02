@@ -1,13 +1,19 @@
 # Claude Code Settings の設計
 
-- Date: 2026-10-22
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-09-30 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認）
+- Date: 2026-11-02
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
 ## 方針: default が塞いでいない穴だけ書く
 
 Claude Code の default と auto mode の built-in classifier が既にかなりの範囲を守る。設定に書くのは、それらが塞いでいない穴だけにする。default と同じ値を書くと、default が変わった時に気づけず、設定を読む人が「これは意図的な選択だ」と誤解する。
+
+## model を full ID で固定し、effort を書かない理由
+
+`model` は alias でなく full ID（`claude-opus-5-5`）で書く。account の既定 model と `opus` alias は、Claude Code の更新で指す先が変わる。公式の version history では、v2.1.280 で `opus` が Opus 5.5 を指すようになった。full ID にすると、model は人が commit した時だけ上がり、検証なしで切り替わらない。
+
+main の effort は書かず、Opus 5.5 の既定の `medium` に任せる。重い作業では、`/effort` の `s` かアプリの選択で、その session だけ上げる。`/effort` で Enter を押すと、level が `modelSettings` として live の `~/.claude/settings.json` に保存される。このファイルは chezmoi の管理下なので、source とずれる。
 
 ## user settings が届かない実行経路
 
@@ -233,6 +239,8 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`sandbox.credentials` が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する |
 | PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。実効防御は WSL2 上での実行に寄せる |
+| `env.CLAUDE_CODE_EFFORT_LEVEL` | subagent の frontmatter の `effort` より優先される。設定すると reviewer の固定が効かなくなる |
+| `env.CLAUDE_CODE_SUBAGENT_MODEL` / `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`、同名の `Explore` 定義 | 振り分ける対象の subagent が呼ばれていない（`~/.claude/projects/` の transcript 10 本で 0 回、2026-11-02）。`FORCE` は frontmatter の `model` を無視するので、reviewer の固定も外れる。`Explore` を定義すると built-in の prompt と tool 制限を自前で持つことになる |
 | OS 分岐（`{{ if eq .chezmoi.os "windows" }}`） | `failIfUnavailable` が default の `false` なので、Windows でも警告して sandbox なしで続行する |
 
 ## 仕様の確認記録
