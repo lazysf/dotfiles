@@ -74,6 +74,6 @@ Claude 側では、`quality-reviewer` の effort を `high` にし、事実の�
   - Findings を「直してから進めるべき指摘」と定義し、「根拠がある指摘を優先する」の項を消した。
   - 停止線に当たった時に、何が足りないかを返す。
 - 両方の toml: 書き方だけの整理。description に観点を列挙しない、役割で write 系操作と外部 I/O を分けて書く、「-relevant」を言い換える、「findings を先頭に置く」を消す、security の CI の項を分けて「外部 I/O」に揃える。（2026-11-02 追加）
-- `dot_codex/skills/lapidary/SKILL.md` の「独立 context を提案する条件」: 「一次情報を取り直す」のままで、workspace 内に限っていない。
+- `dot_codex/skills/lapidary/SKILL.md` の「独立 context を提案する条件」: 「一次情報を取り直す」のままで、workspace 内に限っていない。条件ごとに提案する agent も書いていない。影響が広い surface の条件のうち security も提案する範囲と、信頼境界の外から来る入力の処理の条件も無い。toml の description から観点を外す時は、呼ぶ側が選ぶ手がかりが無くなるので、この条件ごとの agent を同時に入れる。
 
 Codex は web を使う手段が Claude と違うので、`WebFetch` を足さない理由はそのまま移せない。揃える前に、Codex の reviewer が外部を取得できるかを確かめる。

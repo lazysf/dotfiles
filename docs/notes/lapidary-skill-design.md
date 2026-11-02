@@ -27,6 +27,8 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 条件を skill に持たせたのは、ユーザーが毎回どちらかを指定しなくて済むようにするため。ユーザーが「じっくり」「独立で」と言った時と agent 名を出した時は、提案を挟まず起動する。
 
+条件ごとに提案する agent を書いているのは、reviewer の description が観点を持たず、呼ぶ側が description から選べないため（理由は `reviewer-agents-design.md` の「description に観点を列挙しない理由」）。
+
 `CLAUDE.md` の standing authorization はこの分担と二重にならない。あちらが持つのは起動の許可で、skill が持つのはいつ起動するかの条件。
 
 ## 目的を「仕上げる」に置いている理由
@@ -125,9 +127,11 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 `git-commit` の同種の規定と文言を揃えていないのは、露出する経路が違うため。あちらは `git` の command 出力に認証 URL や token が混ざる形で、こちらは読んだ file の中身を写す形になる。
 
-ただし**起動条件は別で、こちらが持つ**。独立 context を提案する条件に auth / 権限 / secret / 外部 I/O を入れた。いつ起動するかの条件をこの skill が持つため（上の「agent との使い分け」）。ここが持たないと、auth や secret に触る変更で security の目が入る自動経路が harness から消える。`/security-review` のユーザー明示だけが残る。
+ただし**起動条件は別で、こちらが持つ**。独立 context を提案する条件に auth / 権限 / secret / 外部 I/O と、信頼境界の外から来る入力を解釈・実行される先へ渡す処理（その検証や escape を含む）を入れた。いつ起動するかの条件をこの skill が持つため（上の「agent との使い分け」）。ここが持たないと、auth や secret に触る変更で security の目が入る自動経路が harness から消える。`/security-review` のユーザー明示だけが残る。
 
-この 4 つは `security-reviewer` の担当より狭い。あちらは command、CI / tooling 変更、AI agent 設定、data flow、injection、path traversal、情報漏洩も含む。残りは既存の「契約、設定、skill / agent 定義など、間違うと影響が広い surface を触った」が拾う。CI や tooling、AI agent の設定はそちらに当たる。agent の担当と 1 対 1 にすると、既存条件と重なる項目が並ぶ。
+外部入力の処理まで入れたのは、reviewer の description から観点を外した後、呼ぶ側が `security-reviewer` を選ぶ手がかりが lapidary の条件だけになったため。条件の語の範囲が、そのまま自動で security の目が入る範囲になる。入力の出所を信頼境界の外に、渡す先を解釈・実行される先に絞っているのは、個人用 script の引数や、log・JSON への普通の出力まで当てると、提案が常に出て読み流されるため。
+
+この条件は `security-reviewer` の担当より狭い。権限や secret を持つ設定、実行される script（CI、build / install / setup script、hook）、agent が読む指示は、影響が広い surface の条件が拾い、その時は `security-reviewer` も提案する。それ以外の設定（editor の keymap や formatter の設定など）では `quality-reviewer` だけを提案する。名指ししていないのは、manifest の dependency 欄と lockfile だけの変更、認証の無い入口の追加、内部の値を log や error に出す変更。install script や hook の設定で宣言する依存は、影響が広い surface の条件に当たる。条件を `security-reviewer` の担当項目と 1 対 1 に並べると、既存条件と重なる項目が並ぶ。
 
 ## 過剰設計の review を別 skill にしていない理由
 
