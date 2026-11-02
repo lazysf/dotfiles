@@ -67,8 +67,13 @@ mac で確かめること。
 
 Claude 側では、`quality-reviewer` の effort を `high` にし、事実の根拠、参照の整合、doc の追従の観点を足した。`lapidary` の「独立 context を提案する条件」も、根拠を workspace 内に限ることに合わせた。理由は `docs/notes/reviewer-agents-design.md` にある。`security-reviewer` には、対象として AI agent の設定と install / setup script を足した。Codex 側は保留にしたので、次の箇所が古いまま残っている。
 
-- `dot_codex/agents/quality-reviewer.toml`: 観点に事実の根拠、参照の整合、doc の追従が無い。description に、本文にある「重複」が無い。effort（quality が `high`、security が `xhigh`）は Claude 側と同じ形なので、直さなくてよい。
+- `dot_codex/agents/quality-reviewer.toml`: 観点に事実の根拠、参照の整合、doc の追従が無い。effort（quality が `high`、security が `xhigh`）は Claude 側と同じ形なので、直さなくてよい。
 - `dot_codex/agents/security-reviewer.toml`: 対象に AI agent の設定と install / setup script が無い。出力のひな形が「実害や保守負荷の根拠」のままで、本文の「実害の根拠」と合わない。（2026-11-02 追加）
+- 両方の toml: Claude 側で 2026-11-02 に整理した書き方が入っていない。振る舞いが変わるのは次の 3 つ。（2026-11-02 追加）
+  - 停止線にある「secret 値そのものが必要」と、security の「workspace 外の前提が無いと判断できない」を、review を止めずに「呼び出し元への推奨」へ回す形にした。代わりに進め方へ「secret 値は読まない」を足した。停止線は変更セットが無い時だけになった。quality の役割にも「secret 値を出力や log に書かない」を足した。
+  - Findings を「直してから進めるべき指摘」と定義し、「根拠がある指摘を優先する」の項を消した。
+  - 停止線に当たった時に、何が足りないかを返す。
+- 両方の toml: 書き方だけの整理。description に観点を列挙しない、役割で write 系操作と外部 I/O を分けて書く、「-relevant」を言い換える、「findings を先頭に置く」を消す、security の CI の項を分けて「外部 I/O」に揃える。（2026-11-02 追加）
 - `dot_codex/skills/lapidary/SKILL.md` の「独立 context を提案する条件」: 「一次情報を取り直す」のままで、workspace 内に限っていない。
 
 Codex は web を使う手段が Claude と違うので、`WebFetch` を足さない理由はそのまま移せない。揃える前に、Codex の reviewer が外部を取得できるかを確かめる。
