@@ -2,7 +2,7 @@
 # 用途別 Install-*Stack ブロックで「何のためか」「他に何が依存か」を表す。
 # 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
 # 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
-# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。
+# パスワード管理ツール想定）、Zotero（仕事環境では不要）、Parsec（会社のマシンを外から操作させない）を入れない。
 # profile は 引数 → chezmoi の設定ファイル → 選択 の順で決める。既定値を持たせないのは、指定漏れで
 # 仕事のマシンに 1Password が入るのを防ぐため。
 # 設定ファイルが無ければ選んだ profile を書いておく。chezmoi init の promptChoiceOnce がこれを見つけ、
@@ -71,14 +71,21 @@ function Install-WingetPackage {
     param(
         [Parameter(Mandatory = $true)][string]$Id,
         [ValidateSet('winget', 'msstore')]
-        [string]$Source = 'winget'
+        [string]$Source = 'winget',
+        # 省略時は winget の選択に任せる。
+        [ValidateSet('machine', 'user')]
+        [string]$Scope
     )
     if ($installedList -match [regex]::Escape($Id)) {
         Write-Host "  - $Id (skip)"
         return
     }
     Write-Host "  + $Id"
-    winget install --id $Id --source $Source --exact --accept-package-agreements --accept-source-agreements --silent
+    $scopeArgs = @()
+    if ($Scope) {
+        $scopeArgs = @('--scope', $Scope)
+    }
+    winget install --id $Id --source $Source --exact @scopeArgs --accept-package-agreements --accept-source-agreements --silent
     # $ErrorActionPreference='Stop' は native command (winget.exe) の非ゼロ exit を例外化しないため、明示確認する。
     if ($LASTEXITCODE -ne 0) {
         Write-Warning "    winget install '$Id' が exit code $LASTEXITCODE で終了しました"
@@ -278,6 +285,35 @@ function Install-ResearchStack {
     Install-WingetPackage DigitalScholar.Zotero
 }
 
+function Install-RemoteDesktopStack {
+    Write-Host '==> リモートデスクトップ (host)'
+    # host として使うので machine scope にする。user scope ではサインイン前の画面と UAC を操作できない。
+    Install-WingetPackage Parsec.Parsec -Scope machine
+    Show-VbCableGuide
+}
+
+# VB-CABLE (仮想オーディオデバイス) は winget manifest 無し。公式の silent 導入手段も無いので、
+# 入っていなければ手順を示すだけにする。導入には管理者権限と再起動が要る。
+function Show-VbCableGuide {
+    $url = 'https://vb-audio.com/Cable/'
+    if (Get-CimInstance Win32_SoundDevice -Filter "Name LIKE 'VB-Audio Virtual Cable%'") {
+        Write-Host '  - VB-CABLE (skip)'
+        return
+    }
+    Write-Host '  VB-CABLE は手動で導入してください'
+    Write-Host "    - $url から Driver Pack の zip を取得して展開する"
+    Write-Host '    - VBCABLE_Setup_x64.exe を管理者として実行し、Install Driver を押す'
+    Write-Host '    - 再起動する'
+    # chezmoi apply から実行された時 (CHEZMOI=1) は、利用者が画面の前にいるとは限らないので開かない。
+    if ($env:CHEZMOI -ne '1') {
+        try {
+            Start-Process $url
+        } catch {
+            Write-Warning "ブラウザを開けませんでした: $url"
+        }
+    }
+}
+
 Install-ShellStack
 Install-ModernCliStack
 Install-GitStack
@@ -295,6 +331,7 @@ Install-GuiUtilityStack
 Install-EditorGuiStack
 if ($MachineProfile -eq 'personal') {
     Install-ResearchStack
+    Install-RemoteDesktopStack
 }
 
 Write-Host '==> 完了しました'

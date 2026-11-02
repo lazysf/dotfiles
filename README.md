@@ -58,7 +58,7 @@ chezmoi init --apply lazysf
 
 ### work のマシン
 
-git の identity は `~/.config/git/config.local` に書きます。1Password と Zotero は入りません。
+git の identity は `~/.config/git/config.local` に書きます。1Password と Zotero と Parsec は入りません。
 
 ### セットアップスクリプト
 
@@ -87,6 +87,7 @@ chezmoi apply
 ## 手作業が要るもの
 
 - macOS の Terminal プロファイル: [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は配布されますが、Terminal への import は手で行います。
+- Windows の VB-CABLE（`personal`）: winget に無いため、<https://vb-audio.com/Cable/> から Driver Pack の zip を取得し、展開した `VBCABLE_Setup_x64.exe` を管理者として実行します。導入後に再起動します。未導入ならセットアップスクリプトが手順を表示し、このページを開きます。
 
 ## mole の週次チェック (macOS)
 

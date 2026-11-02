@@ -3,7 +3,7 @@
 # 用途別 install_*_stack ブロックで「何のためか」「他に何が依存か」を表す。
 # 同じパッケージが複数ブロックに出てよい（既導入 skip で 2 重実行コストはほぼ無い）。
 # 引数の machine profile は chezmoi の `.profile` と同じ値を取る。work では 1Password（会社管理の
-# パスワード管理ツール想定）と Zotero（仕事環境では不要）を入れない。
+# パスワード管理ツール想定）、Zotero（仕事環境では不要）、Parsec（会社のマシンを外から操作させない）を入れない。
 # profile は 引数 → chezmoi の設定ファイル → 選択 の順で決める。既定値を持たせないのは、指定漏れで
 # 仕事のマシンに 1Password が入るのを防ぐため。
 # 設定ファイルが無ければ選んだ profile を書いておく。chezmoi init の promptChoiceOnce がこれを見つけ、
@@ -274,6 +274,11 @@ install_research_stack() {
   cask zotero
 }
 
+install_remote_desktop_stack() {
+  echo "==> リモートデスクトップ"
+  cask parsec
+}
+
 install_shell_stack
 install_modern_cli_stack
 install_git_stack
@@ -292,6 +297,7 @@ install_maintenance_stack
 install_editor_gui_stack
 if [[ "$machine_profile" == "personal" ]]; then
   install_research_stack
+  install_remote_desktop_stack
 fi
 
 echo "==> 完了しました"
