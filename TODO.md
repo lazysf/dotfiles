@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-10-22
+- Date: 2026-11-02
 
 このファイルは、着手を保留している項目の一覧。
 
@@ -58,3 +58,16 @@ mac で確かめること。
 - `scripts/macos/setup.sh` を実行すると、`~/Applications/Claude-2nd.app` ができる。
 - Raycast と Spotlight から `Claude-2nd` を起動すると、起動中の Claude を前面に出すのではなく、ログイン画面の別ウィンドウが開く。
 - 2 つ目のウィンドウで、ファイルのドラッグ&ドロップと Code タブが動く。
+
+---
+
+## 4. Codex の reviewer を Claude 側に揃えるか
+
+- 記載: 2026-11-02（Claude の reviewer の effort と観点を見直した時）
+
+Claude 側では、`quality-reviewer` の effort を `high` にし、事実の根拠、参照の整合、doc の追従の観点を足した。`lapidary` の「独立 context を提案する条件」も、根拠を workspace 内に限ることに合わせた。理由は `docs/notes/reviewer-agents-design.md` にある。Codex 側は保留にしたので、次の箇所が古いまま残っている。
+
+- `dot_codex/agents/quality-reviewer.toml`: 観点に事実の根拠、参照の整合、doc の追従が無い。effort（quality が `high`、security が `xhigh`）は Claude 側と同じ形なので、直さなくてよい。
+- `dot_codex/skills/lapidary/SKILL.md` の「独立 context を提案する条件」: 「一次情報を取り直す」のままで、workspace 内に限っていない。
+
+Codex は web を使う手段が Claude と違うので、`WebFetch` を足さない理由はそのまま移せない。揃える前に、Codex の reviewer が外部を取得できるかを確かめる。
