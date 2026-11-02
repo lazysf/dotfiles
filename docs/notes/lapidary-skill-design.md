@@ -131,7 +131,7 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 外部入力の処理まで入れたのは、reviewer の description から観点を外した後、呼ぶ側が `security-reviewer` を選ぶ手がかりが lapidary の条件だけになったため。条件の語の範囲が、そのまま自動で security の目が入る範囲になる。入力の出所を信頼境界の外に、渡す先を解釈・実行される先に絞っているのは、個人用 script の引数や、log・JSON への普通の出力まで当てると、提案が常に出て読み流されるため。
 
-この条件は `security-reviewer` の担当より狭い。権限や secret を持つ設定、実行される script（CI、build / install / setup script、hook）、agent が読む指示は、影響が広い surface の条件が拾い、その時は `security-reviewer` も提案する。それ以外の設定（editor の keymap や formatter の設定など）では `quality-reviewer` だけを提案する。名指ししていないのは、manifest の dependency 欄と lockfile だけの変更、認証の無い入口の追加、内部の値を log や error に出す変更。install script や hook の設定で宣言する依存は、影響が広い surface の条件に当たる。条件を `security-reviewer` の担当項目と 1 対 1 に並べると、既存条件と重なる項目が並ぶ。
+この条件は `security-reviewer` の担当より狭い。権限や secret を持つ設定、実行される script（CI、build / install / setup script、hook）、agent が読む指示、追跡・配布・secret scanning の範囲を決める設定は、影響が広い surface の条件が拾い、その時は `security-reviewer` も提案する。追跡・配布・secret scanning の範囲を決める設定を入れたのは、書き換えると secret が commit に入る経路や、repo 専用の指示が配布先へ広がる経路になるため。この repo で `.gitignore` か `.chezmoiignore` を触った commit は 618 件中 30 件（2026-11-02 時点の `git log` で数えた）で、提案が常に出て読み流される懸念には当たらない。それ以外の設定（editor の keymap や formatter の設定など）では `quality-reviewer` だけを提案する。名指ししていないのは、manifest の dependency 欄と lockfile だけの変更、認証の無い入口の追加、内部の値を log や error に出す変更。install script や hook の設定で宣言する依存は、影響が広い surface の条件に当たる。条件を `security-reviewer` の担当項目と 1 対 1 に並べると、既存条件と重なる項目が並ぶ。
 
 ## 過剰設計の review を別 skill にしていない理由
 

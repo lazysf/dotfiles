@@ -89,7 +89,7 @@ doc・文章の変更:
 自己確認は自分が書いた文を見るのは得意だが、自分が調べた範囲の外は見えない。workspace 内の一次情報を取り直す目が要る場面では、下の条件ごとに書いた agent を提案する。複数の条件に当たれば、それぞれの agent を全部提案する。
 
 - 実測や調査結果を根拠にした記述が多い。裏取りをやり直す価値がある。`quality-reviewer` を提案する。この agent は workspace で当て直せない出典しか根拠が無い主張を、当て直さずに返す。返ってきた主張は自分で確かめる。
-- 契約、設定、skill / agent 定義など、間違うと影響が広い surface を触った。`quality-reviewer` を提案する。そのうち、権限や secret を持つ設定、実行される script（CI、build / install / setup script、hook）、agent が読む指示に触ったなら `security-reviewer` も提案する。
+- 契約、設定、skill / agent 定義など、間違うと影響が広い surface を触った。`quality-reviewer` を提案する。そのうち、権限や secret を持つ設定、実行される script（CI、build / install / setup script、hook）、agent が読む指示、追跡・配布・secret scanning の範囲を決める設定（`.gitignore`、配布対象の指定、secret scanner の除外設定）に触ったなら `security-reviewer` も提案する。
 - auth、権限、secret、外部 I/O に触った。または、信頼境界の外（network、他の利用者、取得した file や tool の出力）から来る入力を、解釈・実行される先（command、path、query、HTML、deserialize、prompt など）へ渡す処理か、その検証や escape に触った。この skill は削って壊さないところまでを見るので、脆弱性そのものは拾えない。`security-reviewer` を提案する。
 - 観点を通し切っても、直しが次の指摘を生む連鎖が止まらない。自分の盲点の可能性がある。`quality-reviewer` を提案する。
 
