@@ -33,7 +33,7 @@ reviewer 内部（sidechain）の tool 使用は Bash 196 / Read 50 / Grep 0 / G
 
 Write / Edit tool は持たないが、Bash があるので cwd 内なら書ける。subagent 内で `git add` を試すと prompt なしで通り、classifier は関与しなかった。cwd 外への write だけは sandbox が EPERM で落とす（`Operation not permitted` であって permission denial ではない）。
 
-つまり技術的な強制はなく、agent 定義の「write 系操作は責務外として実行しない」が担保している。規範は守られていて、上記の Bash のうち write 系は 0 件だった。reviewer が write を実行した時は hook による強制を検討する。
+つまり技術的な強制はなく、agent 定義の役割にある「write 系操作と、外部 I/O はしない」が担保している。規範は守られていて、上記の Bash のうち write 系は 0 件だった。reviewer が write を実行した時は hook による強制を検討する。
 
 強制する場合の機構は subagent の frontmatter にある。公式は `hooks` を "Lifecycle hooks scoped to subagent" と定義しており、その agent だけに掛かる PreToolUse を書ける。今は足さない。write 系 0 件で発動条件を満たしていない。`disallowedTools` は代わりにならない。`tools:` が allowlist なので `Write` / `Edit` は既に不可で、穴は Bash の中にあるため tool 単位の deny では塞げない。
 
@@ -41,15 +41,19 @@ Write / Edit tool は持たないが、Bash があるので cwd 内なら書け�
 
 `quality-reviewer` は事実の主張を workspace 内の根拠に当て、workspace で当て直せない出典しか根拠が無い主張は「呼び出し元への推奨」へ回す。外部の確認は `WebFetch` を持つ呼び出し元が行う。
 
-`WebFetch` を足さないのは、外部 I/O を正規の経路にしないため。Bash からは外へ届く（[claude-code-settings-design.md](claude-code-settings-design.md) の「sandbox で効いている層と効いていない層」）。今それを止めているのは、外部 I/O を責務外とする役割の規範で、write と同じ構造になっている。`WebFetch` を足すとその規範を外すことになり、読んだ page が prompt injection の入口になる。2026-08-29 時点の reviewer 内の tool 使用（「reviewer に Bash を持たせる理由」）に、外部を取得したものは無い。
+`WebFetch` を足さないのは、外部 I/O を正規の経路にしないため。Bash からは外へ届く（[claude-code-settings-design.md](claude-code-settings-design.md) の「sandbox で効いている層と効いていない層」）。今それを止めているのは、外部 I/O をしないとする役割の規範で、write と同じ構造になっている。`WebFetch` を足すとその規範を外すことになり、読んだ page が prompt injection の入口になる。2026-08-29 時点の reviewer 内の tool 使用（「reviewer に Bash を持たせる理由」）に、外部を取得したものは無い。
 
 回す主張を出典で分けるのは、workspace に根拠が見つからない時、別の場所に根拠があるのかを reviewer が見分けられないため。
+
+## description に観点を列挙しない理由
+
+description には起動条件と担当の境界（security 以外の品質 / security リスク）だけを書き、観点は本文にだけ置く。観点を description にも並べると、本文に足すたびに片方だけ古くなる。2026-11-02 の見直しでは、本文に足した「重複」と「AI agent 設定」が description から抜けた。どの reviewer を呼ぶかの条件は `lapidary` が持つので、description に観点が無くても呼び分けられる。
 
 ## 2 つに分けたままにする理由
 
 session 単位では常に両方が起動され、単独起動は 0 件だった。ただし同一メッセージからの並列起動が 5 回あり、統合すると並列性を失う。
 
-観点も構造的に違う。security は auth、secret、injection、path traversal と見る場所が別。1 つの agent に両方を負わせると、片方で早く「重大な指摘なし」に到達する。
+観点も構造的に違う。security は auth、secret、injection、path traversal と見る場所が別。1 つの agent に両方を負わせると、片方で早く「指摘なし」に到達する。
 
 ## built-in の review skill と併存させる理由
 
