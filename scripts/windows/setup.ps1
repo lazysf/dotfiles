@@ -290,6 +290,8 @@ function Install-RemoteDesktopStack {
     Write-Host '==> リモートデスクトップ (host)'
     # host として使うので machine scope にする。user scope ではサインイン前の画面と UAC を操作できない。
     Install-WingetPackage Parsec.Parsec -Scope machine
+    # 仮想ディスプレイ用のドライバ。manifest に scope の指定が無いので -Scope は付けない。
+    Install-WingetPackage Parsec.ParsecVDD
     Show-VbCableGuide
 }
 
