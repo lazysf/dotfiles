@@ -37,6 +37,14 @@ Write / Edit tool は持たないが、Bash があるので cwd 内なら書け�
 
 強制する場合の機構は subagent の frontmatter にある。公式は `hooks` を "Lifecycle hooks scoped to subagent" と定義しており、その agent だけに掛かる PreToolUse を書ける。今は足さない。write 系 0 件で発動条件を満たしていない。`disallowedTools` は代わりにならない。`tools:` が allowlist なので `Write` / `Edit` は既に不可で、穴は Bash の中にあるため tool 単位の deny では塞げない。
 
+## 事実の確認を workspace 内に限る理由
+
+`quality-reviewer` は事実の主張を workspace 内の根拠に当て、workspace で当て直せない出典しか根拠が無い主張は「呼び出し元への推奨」へ回す。外部の確認は `WebFetch` を持つ呼び出し元が行う。
+
+`WebFetch` を足さないのは、外部 I/O を正規の経路にしないため。Bash からは外へ届く（[claude-code-settings-design.md](claude-code-settings-design.md) の「sandbox で効いている層と効いていない層」）。今それを止めているのは、外部 I/O を責務外とする役割の規範で、write と同じ構造になっている。`WebFetch` を足すとその規範を外すことになり、読んだ page が prompt injection の入口になる。2026-08-29 時点の reviewer 内の tool 使用（「reviewer に Bash を持たせる理由」）に、外部を取得したものは無い。
+
+回す主張を出典で分けるのは、workspace に根拠が見つからない時、別の場所に根拠があるのかを reviewer が見分けられないため。
+
 ## 2 つに分けたままにする理由
 
 session 単位では常に両方が起動され、単独起動は 0 件だった。ただし同一メッセージからの並列起動が 5 回あり、統合すると並列性を失う。
