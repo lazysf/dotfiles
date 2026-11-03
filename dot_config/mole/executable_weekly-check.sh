@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Weekly mole dry-run -> alerter 通知。「クリーンアップ」ボタンで mo clean 実行 + 結果再通知。
 # launchd (~/Library/LaunchAgents/local.mole.weekly-check.plist) から月曜 12:00 に起動。
-# mole の summary 行 ("Potential space: 4.06GB | Items: 2219 | Categories: 43") を期待。
+# mole の summary 行 ("Potential space: 5.10GB · 203 items") を期待。件数が 0 だと " · N items" は出ない。
 
 set -u
 set -o pipefail
@@ -39,7 +39,7 @@ output=$(mo clean --dry-run 2>&1) || mo_status=$?
 # mo の color 出力 (ANSI escape) を剥がしてから summary 行を tab 区切りで抽出。
 parsed=$(printf '%s\n' "$output" \
   | sed -E $'s/\x1b\\[[0-9;]*m//g' \
-  | sed -nE 's/^Potential space: ([^ ]+) \| Items: ([0-9]+) \| Categories: ([0-9]+)$/\1\t\2\t\3/p' \
+  | sed -nE 's/^Potential space: ([^ ]+)( · ([0-9]+) items?)?$/\1\t\3/p' \
   | head -1)
 
 title="mole 週次チェック"
@@ -55,12 +55,12 @@ if [[ -z "$parsed" || "$mo_status" -ne 0 ]]; then
   exit 1
 fi
 
-IFS=$'\t' read -r size items categories <<<"$parsed"
+IFS=$'\t' read -r size items <<<"$parsed"
 
 result=$(alerter \
   --title "$title" \
   --subtitle "解放可能 ${size}" \
-  --message "${items} items / ${categories} categories" \
+  --message "${items:-0} items" \
   --actions "クリーンアップ" \
   --close-label "閉じる" \
   --timeout 300)
