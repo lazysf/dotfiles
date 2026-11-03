@@ -1,4 +1,7 @@
-﻿# -----------------------------
+﻿# The PowerShell 7 profile (Documents/PowerShell) includes this file.
+# Keep it working on both Windows PowerShell 5.1 and PowerShell 7.
+
+# -----------------------------
 # Editors
 # -----------------------------
 $env:EDITOR = "nvim"

@@ -36,7 +36,7 @@ chezmoi init --apply lazysf
 
 ### Windows
 
-winget が無い場合は、先に <https://aka.ms/getwinget> から App Installer を入れます。シェルは Windows PowerShell（`powershell`）を使います。プロファイルを読めるよう、スクリプトは現在のユーザーの実行ポリシーが未設定なら RemoteSigned にします。
+winget が無い場合は、先に <https://aka.ms/getwinget> から App Installer を入れます。シェルは Windows PowerShell（`powershell`）を使います。PowerShell 7（`pwsh`）も並べて入れ、同じプロファイルを配ります。`pwsh` から `winget upgrade` すると使用中の `pwsh` を更新できないため、更新は `powershell` から実行し、開いている `pwsh` は閉じておきます。プロファイルを読めるよう、スクリプトは現在のユーザーの実行ポリシーが未設定なら RemoteSigned にします。
 
 セットアップスクリプトを取得する:
 
