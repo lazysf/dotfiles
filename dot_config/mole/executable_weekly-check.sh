@@ -11,6 +11,28 @@ export PATH="/opt/homebrew/bin:/usr/bin:/bin"
 LOG_DIR="$HOME/Library/Logs/mole"
 mkdir -p "$LOG_DIR"
 
+# 離席中に通知が出て timeout で消えないよう、操作が戻るまで待ってから始める。
+# HIDIdleTime は最後のキーボード / マウス操作からの経過 ns。取れない時は待たずに進む。
+# 18 時で打ち切る。待ち続けると、実行中扱いのまま翌週の起動を launchd が飛ばすため。
+idle_seconds() {
+  /usr/sbin/ioreg -r -c IOHIDSystem -d 1 -k HIDIdleTime \
+    | awk '/HIDIdleTime/ { print int($NF / 1000000000); exit }'
+}
+
+while true; do
+  idle=$(idle_seconds)
+  if [[ -z "$idle" ]]; then
+    echo "$(date '+%F %T') HIDIdleTime を取得できないため待たずに進む" >&2
+    break
+  fi
+  (( idle < 60 )) && break
+  if (( $(date +%H) >= 18 )); then
+    echo "$(date '+%F %T') 18 時まで操作が無かったため今週の通知を見送った"
+    exit 0
+  fi
+  sleep 60
+done
+
 mo_status=0
 output=$(mo clean --dry-run 2>&1) || mo_status=$?
 
