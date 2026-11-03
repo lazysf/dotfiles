@@ -1,7 +1,7 @@
 # Claude Code Output Style の設計
 
-- Date: 2026-09-30
-- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/Caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Hooks reference](https://code.claude.com/docs/en/hooks)
+- Date: 2026-11-03
+- 出典: [Output styles](https://code.claude.com/docs/en/output-styles) / [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman/SKILL.md` / `dot_claude/output-styles/Caveman.md` / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Hooks reference](https://code.claude.com/docs/en/hooks) / [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5) / Claude Code 同梱の `claude-api` skill の `shared/prompt-audit.md`（v2.1.309）
 
 `Caveman` output style が今の形になっている理由を残す。ファイルを読んでも分からない前提と制約に絞る。
 
@@ -63,7 +63,7 @@ JuliusBrussee 版は自作の短縮と因果矢印を明示的に否定してい
 
 ## 応答の型と規則は別物
 
-`短い回答はこの型に寄せる: [対象] [動作] [理由]. [次の手]。` は、規則の「前置きと tool 実行の予告は書かない」と重複して見えるが役割が違う。規則は**何を削るか**、型は**何を含めどう並べるか**を規定していて、`[理由]` と `[次の手]` は他のどの規定にもない。
+`短い回答はこの型に寄せる: [対象] [動作] [理由]. [次の手]。` は、規則の「前置きは書かない」と重複して見えるが役割が違う。規則は**何を削るか**、型は**何を含めどう並べるか**を規定していて、`[理由]` と `[次の手]` は他のどの規定にもない。
 
 JuliusBrussee 版は Pattern の直後に Not / Yes の対比例を置いて意味を確定させている。自作版は規則が前置きの除去を明示しているため対比例を持たず、代わりに使用条件（短い回答に限る）を添えている。条件が無いと、比較表やレビュー結果まで 1 文に畳めと読める。
 
@@ -82,9 +82,15 @@ output style は system prompt を変えるため、chat 応答以外にも影�
 
 subagent には output style が適用されない（公式: "Output styles apply to the main conversation only"）。fork のみ例外。
 
-## 前置きと英語の混入は規則で直らない
+## 最初の tool 呼び出しの前に 1 文を求める理由
 
-規則の「前置きと tool 実行の予告は書かない」と、`settings.json` の `language: "japanese"`。この 2 つは、どちらも tool 呼び出しの合間に挟まる短い行で破られることがある。`language` は system prompt に `Always respond in japanese.` として入る。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。
+規則は前置きを禁じる一方で、最初の tool 呼び出しの前に何をするかを 1 文で伝えるよう求めている。Opus 5.5 は、報告を抑える指示があると黙りがちになる。`claude-api` skill の prompt-audit 手順は、この種の指示を「Update suppressors」として削除候補に挙げている。公式は、最初の tool 呼び出しの前に意図を 1 文で書くよう system prompt で指示すると、Opus 5.5 はそれに従うとしている。
+
+2026-11-03 の session では、tool 呼び出しが続く間に、harness が「しばらく何も伝えていない」という督促を繰り返し注入した。この notes を書き終えるまでに 5 回入った。当時の規則は「tool 実行の予告は書かない」だった。
+
+## 英語の混入は規則で直らない
+
+`settings.json` の `language: "japanese"` は、tool 呼び出しの合間に挟まる短い行で破られることがある。`language` は system prompt に `Always respond in japanese.` として入る。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。
 
 規則が無いのではなく守られていない状態なので、規則を足しても直らない。同じ内容を二度書くと、次に読む人がどちらを正とするか判断する手間だけ増える。
 
