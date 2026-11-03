@@ -100,6 +100,9 @@ function Install-WingetPackage {
 function Install-ShellStack {
     Write-Host '==> shell (プロンプト)'
     Install-WingetPackage Starship.Starship
+    # 既定のシェルは OS 標準の Windows PowerShell 5.1 のまま。PowerShell 7 (pwsh) は並べて入れる。
+    # pwsh から winget upgrade すると使用中の pwsh.exe を更新できないため、更新は 5.1 から行う。
+    Install-WingetPackage Microsoft.PowerShell
 }
 
 function Install-ModernCliStack {
