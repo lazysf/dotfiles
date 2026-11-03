@@ -45,6 +45,11 @@ parsed=$(printf '%s\n' "$output" \
 title="mole 週次チェック"
 
 if [[ -z "$parsed" || "$mo_status" -ne 0 ]]; then
+  # 通知が案内する launchd ログ (StandardErrorPath) に、原因を追える mo の出力を残す。
+  {
+    echo "$(date '+%F %T') mo clean --dry-run の結果を読めなかった (exit ${mo_status})"
+    printf '%s\n' "$output"
+  } >&2
   alerter \
     --title "$title" \
     --subtitle "実行失敗 (exit ${mo_status})" \
