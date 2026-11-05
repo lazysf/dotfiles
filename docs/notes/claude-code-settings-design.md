@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
-- Date: 2026-11-02
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認）
+- Date: 2026-11-05
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -213,15 +213,21 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 
 ## attribution を止める理由
 
-`attribution.commit` と `attribution.pr` を空文字にし、`attribution.sessionUrl` を `false` にする。
+`attribution` を `false` にする。公式はこの値を、attribution を全て隠す値と定義する。
 
 **trailer が付くかは実行する harness で違う。** CLI の `-p` session では `attribution` 未設定でも付かない。desktop app の session では、system prompt に model 名を含む標準の attribution 文言を付ける指示が入る。`37ed169` から `f66fa17` まで（両端を含む 18 commit、2026-08-31 時点）の 15 件はこれによる。指示なので遵守は保証されない。残る 3 件には付いていない。うち 2 件は履歴書き換えを通っているので、指示に従わなかったと確実に言えるのは `f66fa17` の 1 件。**非決定的に付くより、付けないことを設定で決める。**
 
 `attribution.commit` に文字列を設定すると CLI の commit message にその文言が現れるので、キーは挙動へ届く。空文字は付けない側の明示で、CLI では未設定と同じ結果になる。desktop app では apply 後に開いた session で空 commit を作らせ、trailer が付かないことを確認した（2026-08-31）。設定前に開いた session の system prompt には指示が入っていたので、前後で挙動は変わっている。ただし同じ session 内の A/B ではなく、apply を挟んだ比較になる。
 
-`sessionUrl` は `commit` と独立していて、`Claude-Session` trailer を付ける。`commit` を空文字にしてもこれは消えないので両方を書く。`claude --settings <file> --remote-control` で振ると、`true` では `Claude-Session: https://claude.ai/code/session_...` が付き、`false` では消えた（2026-08-31）。**操作が terminal からでも、session が Remote Control なら付く。** schema は web session も対象と書くが、そちらは user settings が届かないので確かめていない。
+`false` も desktop app で同じ形で確認した。apply した後に開いた session で、subject だけの空 commit と本文ありの空 commit を作らせた。どちらにも trailer は付かなかった（2026-11-05）。その session には `outputStyle` も効いていたので、ファイルは読み飛ばされていない。
 
-`pr` は PR description の attribution line を指す。公式は 3 キーを空文字 / `false` にすると attribution を全て隠せると書くので、`commit` だけでは PR 側が残る。この repo で PR を作っていないので実測はしていない。
+`sessionUrl` は `commit` と独立していて、`Claude-Session` trailer を付ける。`commit` を空文字にしても、これは消えない。`claude --settings <file> --remote-control` で振ると、`true` では `Claude-Session: https://claude.ai/code/session_...` が付き、`false` では消えた（2026-08-31）。**操作が terminal からでも、session が Remote Control なら付く。** schema は web session も対象と書くが、そちらは user settings が届かないので確かめていない。
+
+**sub-key ごとに止める書き方では、後から増えたキーが漏れる。** `sessionUrl` がその例で、`commit` と `pr` を空文字にしても残る、default が `true` のキーだった。sub-key ごとに書いていると、こうしたキーを書き足すまで、そのキーの attribution が付く。`false` は対象を全ての attribution と定義するので、キーが増えても書き足さずに済む。
+
+`false` を受け付けない版がこのファイルを読むと、ファイル全体が読み飛ばされる。公式は v2.1.281 未満がそうなると書く。その時は permissions と sandbox の設定も効かなくなる。今このファイルを読むのは desktop app 同梱の版だけで、どちらも v2.1.281 以上（2026-11-05 時点で v2.1.309 と v2.1.317）。古い CLI を入れる時は、この条件を確かめる。schemastore の schema は `attribution` に object しか許していないので、editor は `false` を警告する。動作には影響しない。
+
+`pr` は PR description の attribution line を指す。`false` は PR 側も対象に含む。この repo で PR を作っていないので実測はしていない。
 
 trailer を止めると、以後の commit では AI の関与が履歴に残らない。既存の trailer はそのまま残る。個人 dotfiles では変更の責任が author に一元化されるので、許容する。
 
@@ -261,6 +267,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `autoMemoryEnabled` | default は `true`。`~/.claude/projects/<project>/memory/` へ自動保存する |
 | `cleanupPeriodDays` | default は `30` |
 | `includeCoAuthoredBy` | schema の default は `true`。公式 docs 表の「N/A」は deprecated の表記であって default 値ではない |
+| `attribution` | object か `false`。`false` は attribution を全て隠す。v2.1.281 未満は `false` を拒否し、そのファイル全体を読み飛ばす |
 | `attribution.commit` | 設定した文言が commit message に現れる（CLI で確認）。未設定の CLI session には trailer が付かない |
 | `attribution.pr` | 公式は PR description の attribution line を変える / 隠すキーと説明する。実測していない |
 | `attribution.sessionUrl` | default は `true`。Remote Control session の commit に `Claude-Session` trailer を付ける（実測）。`attribution.commit` とは独立で、空文字にしても消えない |
@@ -272,6 +279,6 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 
 - `chezmoi apply` が、`op` 不達で失敗した template より後のファイルの適用まで中断するか。sandbox 内では `~/.config/gh` の lstat 拒否が先に出るため、切り分けられていない。
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
-- `attribution.pr` に空文字を設定した効果。この repo で PR を作っていないので実測していない。
+- `attribution: false` の PR description への効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
