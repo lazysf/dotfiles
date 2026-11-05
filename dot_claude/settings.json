@@ -8,11 +8,7 @@
   "env": {
     "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/usage-band"
   },
-  "attribution": {
-    "commit": "",
-    "pr": "",
-    "sessionUrl": false
-  },
+  "attribution": false,
   "permissions": {
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable",
