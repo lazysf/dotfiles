@@ -1,7 +1,7 @@
 # Git 署名検証の設計
 
 - Date: 2026-10-22
-- 出典: `man git-config` の `gpg.ssh.allowedSignersFile` / 実機 git 2.55.0 で allowed_signers の 1 行を変えて `%G?` を取った比較（2026-09-04） / 実機 `chezmoi apply`（v2.72.1）後の `git log --show-signature`（2026-09-04） / 実機 git 2.56.0 の `git log --format=%G?`（2026-10-22） / 個人の Windows での `git config --show-origin` と `git log --show-signature`（2026-10-22） / `chezmoi managed` に `.github/` が出ないことの確認（2026-10-22） / ruleset 作成時の `gh api` の応答と `GET repos/lazysf/dotfiles/rules/branches/main`（2026-10-22）
+- 出典: `man git-config` の `gpg.ssh.allowedSignersFile` / 実機 git 2.55.0 で allowed_signers の 1 行を変えて `%G?` を取った比較（2026-09-04） / 実機 `chezmoi apply`（v2.72.1）後の `git log --show-signature`（2026-09-04） / 実機 git 2.56.0 の `git log --format=%G?`（2026-10-22） / 個人の Windows での `git config --show-origin` と `git log --show-signature`（2026-10-22） / `chezmoi managed` に `.github/` が出ないことの確認（2026-10-22） / ruleset 作成時の `gh api` の応答と `GET repos/lazysf/dotfiles/rules/branches/main`（2026-10-22） / エージェント用の鍵で署名した commit の push と、GitHub 上の署名表示（2026-11-06）
 
 手元で自分の commit の署名を検証できるようにした構成の理由を残す。**GitHub 上の Verified 判定はこの設定と関係しない。** そちらは GitHub に登録した signing key で検証される。
 
@@ -15,7 +15,7 @@ principal（email）は `config.tmpl` の `user.email` と同じ `op://Personal/
 
 Claude Code の commit は、作業機ごとに作る専用の鍵で署名する（構成は [Claude Code Settings の設計](claude-code-settings-design.md) の「エージェントの commit は専用の鍵で署名する」）。この鍵は 1Password に無いので、`allowed_signers.tmpl` は作業機の `~/.ssh/agent_signing_ed25519.pub` を `include` で読み、同じ principal でもう 1 行出す。ファイルが無い作業機ではこの行を出さない。鍵を作った後の `chezmoi apply` で行が増える。chezmoi の `include` が絶対パスを読めることは v2.74.0 で確かめた（2026-11-06）。
 
-GitHub 上で Verified にするには、この鍵も GitHub に Signing Key として登録する。`main` の ruleset は署名を必須にしているので、登録していない鍵で署名した commit は push で拒否されるはずだが、まだ実測していない。
+GitHub 上で Verified にするには、この鍵も GitHub に Signing Key として登録する。登録した後、この鍵で署名した 4 commit を `main` へ push すると、ruleset に拒否されずに通り、GitHub 上で署名済みと表示された（2026-11-06）。登録していない鍵で署名した commit が push で拒否されるかは、まだ実測していない。
 
 ## 署名を設定するマシン
 
