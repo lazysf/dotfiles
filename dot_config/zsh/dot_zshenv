@@ -20,7 +20,8 @@ export GIT_EDITOR="${EDITOR}"
 # 1Password SSH Agent (optional)
 # -----------------------------------------
 _1P_AGENT_SOCK="${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-if [[ -S "${_1P_AGENT_SOCK}" ]]; then
+# エージェントの署名用 socket が指定されている時は、その指定を維持する。
+if [[ "${SSH_AUTH_SOCK:-}" != "${HOME}/.local/state/agent-signing/agent.sock" && -S "${_1P_AGENT_SOCK}" ]]; then
 	export SSH_AUTH_SOCK="${_1P_AGENT_SOCK}"
 fi
 unset _1P_AGENT_SOCK

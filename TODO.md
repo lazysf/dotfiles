@@ -61,23 +61,7 @@ mac で確かめること。
 
 ---
 
-## 4. Codex のエージェント用署名鍵
-
-- 記載: 2026-11-06（Claude Code にエージェント専用の署名鍵を入れた時）
-
-Claude Code は、`SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）で専用の ssh-agent を起動し、git の署名設定をその session の Bash にだけ渡すようにした。Codex は今も 1Password で署名している。鍵（`~/.ssh/agent_signing_ed25519`）と socket（`~/.local/state/agent-signing/agent.sock`）は、Codex からも使えるよう Claude 専用の名前にしていない。
-
-Codex に入れる時に要ること。
-
-- `~/.codex/hooks.json` の `SessionStart` で、同じ agent を起動する。非 managed の hook は `/hooks` で trust するまで実行されない。
-- Codex には `CLAUDE_ENV_FILE` に当たる仕組みが無い。git の設定と `SSH_AUTH_SOCK` は、作業機の `config.toml` の `shell_environment_policy.set` に書く。
-- socket は `permissions.<name>.network.unix_sockets` に絶対パスで許可する。
-- 上の 2 つは `config.toml` の設定なので、ADR 0044 により repo からは配らない。
-- Codex の hook が sandbox の外で動くかは、公式 docs に記載が無い（2026-11-06 確認）。実機で確かめる。
-
----
-
-## 5. エージェント用署名鍵の GitHub 登録の自動化
+## 4. エージェント用署名鍵の GitHub 登録の自動化
 
 - 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
 
@@ -87,7 +71,7 @@ Codex に入れる時に要ること。
 
 ---
 
-## 6. Claude Code からの署名鍵の書き込みを制限する
+## 5. Claude Code からの署名鍵の書き込みを制限する
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -95,7 +79,7 @@ Codex に入れる時に要ること。
 
 ---
 
-## 7. SSH agent forwarding の対象を絞る
+## 6. SSH agent forwarding の対象を絞る
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -103,7 +87,7 @@ Codex に入れる時に要ること。
 
 ---
 
-## 8. chezmoi が管理する `~/.ssh` の権限を見直す
+## 7. chezmoi が管理する `~/.ssh` の権限を見直す
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
