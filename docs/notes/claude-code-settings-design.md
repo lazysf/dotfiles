@@ -229,6 +229,8 @@ sandbox の外で、使い捨ての HOME と鍵を使って次を確かめた（
 - 使い捨ての repo で `commit.gpgsign=true` の commit は 1Password の承認を待たずに終わり、`%G?` は `G` になる。
 - `~/.local/state/agent-signing/` の下への `touch` は `Operation not permitted` で失敗する。
 
+GitHub に Signing Key として登録した後、README の「手作業が要るもの」にある SSH 接続コマンドで、署名専用の鍵を指定して認証を試した。GitHub は `Permission denied (publickey)` を返し、この鍵での SSH 認証を拒否した（2026-11-06）。
+
 ### 代償と失効
 
 sandbox 内のコマンドは、専用 agent に任意のデータへの署名を依頼できる。GitHub に Signing Key として登録すれば、この鍵の署名も Verified になる。エージェントの commit と人の commit は、署名に使った鍵で見分けられる。
