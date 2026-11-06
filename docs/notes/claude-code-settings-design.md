@@ -191,7 +191,7 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 1Password の署名は commit ごとに承認を求めるので、エージェントの作業がそこで止まる。エージェントの commit には署名専用の鍵を使わせ、人の commit は 1Password のままにする。構成は [hamakou108.com の記事](https://hamakou108.com/posts/coding-agent-credentials-for-claude-code) のうち署名の部分だけを取った。gh の PAT と HTTPS での push は入れていない（push は人が行う運用のまま）。
 
-- 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。sandbox 内のコマンドは `credentials` の deny で `~/.ssh` を読めない。
+- 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。macOS の `personal` では `scripts/macos/setup.sh` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。sandbox 内のコマンドは `credentials` の deny で `~/.ssh` を読めない。
 - `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）が、専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。公式は command hook を sandbox の外で、ユーザーの全権限で動くものとしている。
 - hook は `CLAUDE_ENV_FILE` に、`SSH_AUTH_SOCK` と `GIT_CONFIG_COUNT` 系（`gpg.ssh.program=ssh-keygen`、`user.signingkey=key::<公開鍵>`）を書く。公式によると、この値はその session の Bash コマンドにだけ効く。人の terminal の git には届かない。Claude Code 自身も sandbox のコマンドに `GIT_CONFIG_COUNT` 系（`safe.directory` の 2 件）を入れているので（2026-11-06 に env で確認）、番号は固定せず、env file が読まれた時点の `GIT_CONFIG_COUNT` の後ろへ足す。
 - `settings.json` の `env` に書かないのは、記事によると `env` では `~` も `$HOME` も展開されず（この repo では実測していない）、home の絶対パスを repo に置くことになるため。hook は実行時に `$HOME` と公開鍵を読むので、repo には絶対パスも鍵も残らない。`settings.json` を `.tmpl` にしなくて済み、`check json` も残る。
@@ -234,6 +234,8 @@ sandbox の外で、使い捨ての HOME と鍵を使って次を確かめた（
 sandbox 内のコマンドは、専用 agent に任意のデータへの署名を依頼できる。GitHub に Signing Key として登録すれば、この鍵の署名も Verified になる。エージェントの commit と人の commit は、署名に使った鍵で見分けられる。
 
 パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。消した後に、過去の署名済み commit がどう表示されるかは確かめていない。
+
+鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` は鍵が無いと作り直し、setup.sh が変わるたびに `chezmoi apply` から実行し直されるので、hook は次の session から新しい鍵を使う。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
 
 ## `op` CLI は sandbox 内から使えない
 

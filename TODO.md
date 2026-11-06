@@ -74,3 +74,13 @@ Codex に入れる時に要ること。
 - socket は `permissions.<name>.network.unix_sockets` に絶対パスで許可する。
 - 上の 2 つは `config.toml` の設定なので、ADR 0044 により repo からは配らない。
 - Codex の hook が sandbox の外で動くかは、公式 docs に記載が無い（2026-11-06 確認）。実機で確かめる。
+
+---
+
+## 5. エージェント用署名鍵の GitHub 登録の自動化
+
+- 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
+
+鍵の生成は setup.sh で自動化したが、GitHub への Signing Key の登録は README の手作業のまま。setup.sh は `chezmoi init` より前に走り、その時点では `gh` が認証されていないので、setup.sh の中では登録できない。
+
+自動化するなら、`gh` が認証された後に走る入口（chezmoi の run script など）で、`gh ssh-key add --type signing` を使う形を検討する。`gh` の token に Signing Key を書く scope が要るかは確かめていない。
