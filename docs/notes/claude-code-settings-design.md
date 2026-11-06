@@ -192,7 +192,7 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 1Password の署名は commit ごとに承認を求めるので、エージェントの作業がそこで止まる。エージェントの commit には署名専用の鍵を使わせ、人の commit は 1Password のままにする。構成は [hamakou108.com の記事](https://hamakou108.com/posts/coding-agent-credentials-for-claude-code) のうち署名の部分だけを取った。gh の PAT と HTTPS での push は入れていない（push は人が行う運用のまま）。
 
 - 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。macOS の `personal` では `scripts/macos/setup.sh` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。sandbox 内のコマンドは `credentials` の deny で `~/.ssh` を読めない。
-- `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）が、専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。公式は command hook を sandbox の外で、ユーザーの全権限で動くものとしている。
+- `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）は、Claude Code と Codex で共用する `~/.config/git/start-signing-agent` を呼ぶ。このスクリプトが専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。Claude Code の公式 docs によると、command hook は sandbox の外で動く。
 - hook は `CLAUDE_ENV_FILE` に、`SSH_AUTH_SOCK` と `GIT_CONFIG_COUNT` 系（`gpg.ssh.program=ssh-keygen`、`user.signingkey=key::<公開鍵>`）を書く。公式によると、この値はその session の Bash コマンドにだけ効く。人の terminal の git には届かない。Claude Code 自身も sandbox のコマンドに `GIT_CONFIG_COUNT` 系（`safe.directory` の 2 件）を入れているので（2026-11-06 に env で確認）、番号は固定せず、env file が読まれた時点の `GIT_CONFIG_COUNT` の後ろへ足す。
 - `settings.json` の `env` に書かないのは、記事によると `env` では `~` も `$HOME` も展開されず（この repo では実測していない）、home の絶対パスを repo に置くことになるため。hook は実行時に `$HOME` と公開鍵を読むので、repo には絶対パスも鍵も残らない。`settings.json` を `.tmpl` にしなくて済み、`check json` も残る。
 - env を書く前に失敗した時は、stderr に理由を出して exit 0 で抜け、env を書かない。この場合は `~/.config/git/config` の 1Password 署名に戻る。鍵を作っていない作業機でも同じ経路になる。env を書いた後で agent が止まったり鍵が消えたりした時は 1Password に戻らず、その session の commit が署名に失敗する。`commit.gpgsign` が `true` なので、署名の無い commit にはならない。
@@ -205,6 +205,8 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 - hook は、自分が今起動した agent にだけ鍵を渡す。接続できる agent に鍵が無い時は、何も渡さずに抜ける。偽の agent が鍵を持っているふりをしても、署名ができず commit が失敗するだけになる。
 - `sandbox.filesystem.denyWrite` に `~/.local/state/agent-signing` を足し、cwd がどこでも sandbox からこのディレクトリを書き換えられないようにする。
+
+共有スクリプトは sandbox の外で実行される。Claude Code の Bash と編集ツールからの書き換えを防ぐため、`~/.config/git/start-signing-agent` を `sandbox.filesystem.denyWrite` と `permissions.deny` の `Edit` ルールに入れる。
 
 agent は `-P '!*'` で起動し、PKCS#11 / FIDO の middleware をどれも読み込ませない。既定の `/usr/lib*/*` のままだと、sandbox 内から `ssh-add -s` で、sandbox の外にいる agent に system の library を dlopen させられる（同じ review の指摘）。
 

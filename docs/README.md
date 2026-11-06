@@ -66,3 +66,4 @@
   - [0043-reintroduce-codex-from-current-claude.md](./adr/0043-reintroduce-codex-from-current-claude.md)
   - [0044-manage-codex-runtime-config-per-device.md](./adr/0044-manage-codex-runtime-config-per-device.md)
   - [0045-distribute-claude-mods-via-plugin-dirs.md](./adr/0045-distribute-claude-mods-via-plugin-dirs.md)
+  - [0046-distribute-codex-signing-settings.md](./adr/0046-distribute-codex-signing-settings.md)

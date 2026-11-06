@@ -30,6 +30,7 @@
       "Read(//**/.env.*)",
       "Read(//**/secrets/**)",
       "Read(~/.ssh/**)",
+      "Edit(~/.config/git/start-signing-agent)",
       "Read(~/.aws/**)",
       "Read(~/.config/gh/**)",
       "Read(~/.gnupg/**)",
@@ -58,7 +59,8 @@
         "~/.cache/prek/"
       ],
       "denyWrite": [
-        "~/.local/state/agent-signing"
+        "~/.local/state/agent-signing",
+        "~/.config/git/start-signing-agent"
       ]
     },
     "network": {
