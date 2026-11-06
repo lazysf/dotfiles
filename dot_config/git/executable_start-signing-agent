@@ -1,0 +1,84 @@
+#!/bin/sh
+# Claude Code と Codex の SessionStart から、署名専用の ssh-agent を起動する。
+# 成功時だけ、呼び出し元が署名設定に使える公開鍵を stdout に返す。
+
+set -u
+
+# sandbox の外で実行するので、作業ディレクトリやユーザーの PATH にあるコマンドを使わない。
+PATH=/usr/bin:/bin
+export PATH
+
+key="$HOME/.ssh/agent_signing_ed25519"
+state_dir="$HOME/.local/state/agent-signing"
+sock="$state_dir/agent.sock"
+lock="$state_dir/lock"
+
+warn() {
+  echo "signing-agent: $*" >&2
+}
+
+# 鍵を作っていないマシン（work、Windows、未セットアップ）では何もしない。
+[ -f "$key" ] && [ -f "$key.pub" ] || exit 1
+
+if ! mkdir -p "$state_dir" || ! chmod 700 "$state_dir"; then
+  warn "state ディレクトリを作れない: $state_dir"
+  exit 1
+fi
+
+# 同時に始まった session が agent を二重に起動しないよう、mkdir で排他する。
+# timeout で kill された hook のロックが残っても次の session を詰まらせないよう、
+# 待っても取れない時は古いロックとみなして 1 回だけ取り直す。
+tries=0
+until mkdir "$lock" 2>/dev/null; do
+  tries=$((tries + 1))
+  if [ "$tries" -ge 50 ]; then
+    warn "ロックが外れないので古いものとみなす: $lock"
+    rmdir "$lock" 2>/dev/null
+    if ! mkdir "$lock" 2>/dev/null; then
+      warn "ロックを取れない: $lock"
+      exit 1
+    fi
+    break
+  fi
+  sleep 0.1
+done
+trap 'rmdir "$lock" 2>/dev/null' EXIT
+
+# 公開鍵は 1 行目の type と本体だけを使い、形式が完全に一致する時だけ進む。
+# この値は env file に書かれ、Bash コマンドのたびに shell code として読まれるので、
+# 引用符や改行が入る余地を残さない。
+pub=$(head -n 1 "$key.pub" | cut -d ' ' -f 1,2)
+if ! printf '%s\n' "$pub" | grep -Eqx 'ssh-ed25519 [A-Za-z0-9+/]+=*'; then
+  warn "公開鍵の形式が想定と違う: $key.pub"
+  exit 1
+fi
+
+# ssh-add -l は agent に接続できない時だけ 2 を返す。再起動後の残った socket もここで拾う。
+SSH_AUTH_SOCK="$sock" ssh-add -l >/dev/null 2>&1
+if [ "$?" -eq 2 ]; then
+  rm -f "$sock"
+  # agent は daemon として残る。hook の stdout を握ったままだと Claude Code が
+  # hook の終了を待ち続けるので、標準入出力を外す。
+  # -P '!*' は、PKCS#11 / FIDO の middleware をどれも読み込ませない指定。socket は
+  # sandbox 内から使えるので、既定の /usr/lib*/* を許すと sandbox 外の agent に
+  # system の library を dlopen させられる。
+  if ! ssh-agent -a "$sock" -P '!*' </dev/null >/dev/null 2>&1; then
+    warn "ssh-agent を起動できない: $sock"
+    exit 1
+  fi
+  # 秘密鍵を渡すのは、この hook が今起動した agent だけにする。
+  if ! SSH_AUTH_SOCK="$sock" ssh-add "$key" </dev/null >/dev/null 2>&1; then
+    warn "鍵を agent に載せられない: $key"
+    exit 1
+  fi
+fi
+
+# 接続できる agent に鍵が無い時は、鍵を渡さない。socket の path に別のプロセスが
+# 居座っている可能性があり、渡すとパスフレーズの無い秘密鍵がそこへ出る。
+# 自分の agent で鍵が消えただけなら、agent を止めれば次の session で起動し直す。
+if ! SSH_AUTH_SOCK="$sock" ssh-add -L 2>/dev/null | cut -d ' ' -f 1,2 | grep -qxF "$pub"; then
+  warn "agent に鍵が無いので使わない。agent を止めてから session を開き直す: $sock"
+  exit 1
+fi
+
+printf '%s\n' "$pub"

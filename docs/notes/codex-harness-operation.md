@@ -3,7 +3,7 @@
 - Date: 2026-11-06
 - 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認
 
-`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` はこの repo で管理・配布しない。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md) にある。
+`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。macOS の `personal` では [ADR 0046](../adr/0046-distribute-codex-signing-settings.md) に従い、署名に必要な設定だけを追加する。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md) にある。
 
 ## 構成と権限
 
@@ -25,13 +25,27 @@ reviewer の実効 sandbox と承認設定は親のセッションから継承�
 
 ## 適用前後の確認
 
-配布前に `chezmoi diff ~/.codex` で内容を確認する。`config.toml` は `.chezmoiignore` で除外しているため、chezmoi は作成・更新・削除しない。過去に配布した config も自動では消えない。
+配布前に `chezmoi diff ~/.codex` でファイルの差分を確認する。`config.toml` はファイル単位の配布から除外している。macOS の署名設定は、適用後に動くスクリプトが追加するため、この差分には出ない。
 
 MCP、plugin、通知、モデル、権限などは、アプリまたは実機の `~/.codex/config.toml` で管理する。既存 config を手動で削除・変更する場合は、必要な追加設定を事前に退避する。個人や作業機を特定する値、秘密情報を repo の source へ取り込まない。
 
 適用後は `chezmoi managed` と target の実体を突き合わせる。source から削除したファイルが target に残る場合がある。
 
 実機の権限設定を変更したら、設定を読み直した新しいセッションで必要な作業とアクセス境界を検証する。既存セッションでの承認付き実行だけを根拠に、変更後の権限が有効だと判断しない。
+
+## macOS のエージェント用署名
+
+Codex は Claude Code と同じ署名鍵と ssh-agent を使う。macOS の `personal` では `chezmoi apply` が、鍵と共有スクリプトの準備後に `~/.codex/hooks.json` の `SessionStart` と `~/.codex/config.toml` の署名に必要な設定を追加する。公開鍵がまだ無い場合は次回の適用まで見送る。設定が競合した場合は適用時のエラーに対象の設定キーが出る。
+
+初回は Codex CLI の `/hooks` で `"$HOME/.config/git/start-signing-agent" >/dev/null` を確認して信頼する。適用を繰り返しても同じ hook の定義は書き直さない。GitHub への鍵の登録は [README](../../README.md#手作業が要るもの) を参照。[Codex Hooks](https://learn.chatgpt.com/docs/hooks)
+
+新しいセッションで、使い捨ての repo に署名付きコミットを作り、`git log -1 --format='%G?'` が `G` になることを確かめる。秘密鍵の読み取りと socket の置き換えが拒否されることも確かめる。プロキシが動いていないと `network.enabled = true` は直接通信を許すため、許可外の Unix socket とローカルのテスト用 TCP ポートへの直接接続が拒否されることを確かめる。[Codex Permissions](https://learn.chatgpt.com/docs/permissions#unix-sockets)
+
+Codex の Git 署名設定はコマンドの環境変数に入る。zsh の初期化は、専用 socket が明示されている時だけ `SSH_AUTH_SOCK` を維持する。通常の terminal の Git は 1Password で署名する。
+
+Codex の command hook はログインシェルから起動する。署名用プロファイルは、この repo が使う zsh の初期化ファイルを読み取り専用にする。別のシェルや独自の `ZDOTDIR` を使う端末では、その初期化ファイルも確認する。
+
+2026-11-06 に macOS の Codex CLI 0.166.0-alpha.6 で確認した。信頼済みの `SessionStart` は、一時ホームの使い捨て鍵を専用 agent に載せた。1Password が起動した実機で、新しく起動した app-server の `command/exec` から zsh のログインシェルを使うと、一時 repo の署名が `%G? = G` になった。一時ホームでの sandbox 検証では、秘密鍵の読み取り、起動スクリプトへの書き込み、socket の削除、許可外の Unix socket とローカル TCP への接続が拒否された。
 
 ## 未確認
 

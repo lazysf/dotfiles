@@ -86,6 +86,8 @@ chezmoi apply
 
 ## 手作業が要るもの
 
+macOS の `personal` では、`chezmoi apply` が Codex の署名設定を追加します。初回は Codex CLI の `/hooks` で署名用の hook を確認して信頼します。[Codex の署名設定と動作確認](docs/notes/codex-harness-operation.md#macos-のエージェント用署名)を参照してください。
+
 - macOS の Terminal プロファイル: [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は配布されますが、Terminal への import は手で行います。
 - macOS のエージェント用の署名鍵の GitHub への登録（`personal`）: GitHub の Settings > SSH and GPG keys > New SSH key で、Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` の中身を登録します。Authentication Key には登録しません。登録しないと、エージェントが署名した commit は GitHub 上で Verified になりません。登録した後、次のコマンドが `Permission denied (publickey)` で失敗することを確かめます。成功した時は Authentication Key として登録されているので、消して登録し直します: `ssh -T -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/agent_signing_ed25519 git@github.com`
 - macOS の Parsec のクライアント設定（`personal`）: Parsec が設定と同じファイルに状態値を書き込むため、`~/.parsec/config.json` は配布しません。Parsec の Settings で Window Mode を Windowed、Immersive Mode を Keyboard、Swap Command and Ctrl for MacOS を Off にします。
