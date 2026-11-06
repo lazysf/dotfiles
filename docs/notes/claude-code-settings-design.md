@@ -336,3 +336,4 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - `attribution: false` の PR description への効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
+- `sandbox.filesystem.denyWrite` に入れた `~/.local/state/agent-signing` と `~/.config/git/start-signing-agent` について、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` の session で問題になる。

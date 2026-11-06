@@ -52,3 +52,5 @@ Codex の command hook はログインシェルから起動する。署名用プ
 - reviewer の書き込みを sandbox が拒否するか。
 - reviewer 自身が web search や MCP で外部の内容を取得できるか。
 - Windows 実機での動作。
+- 署名用プロファイルで、許可していない外部ドメインへの通信を proxy が拒否するか。2026-11-06 の確認は、許可外の Unix socket とローカル TCP への接続に限る。公式によると、proxy が動いていない時の `network.enabled = true` はドメインを制限しない。
+- 署名用プロファイルの `read` が、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` のセッションで問題になる。
