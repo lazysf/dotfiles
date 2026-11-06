@@ -9,6 +9,19 @@
     "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/usage-band"
   },
   "attribution": false,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/signing-agent.sh\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable",
@@ -43,11 +56,15 @@
     "filesystem": {
       "allowWrite": [
         "~/.cache/prek/"
+      ],
+      "denyWrite": [
+        "~/.local/state/agent-signing"
       ]
     },
     "network": {
       "allowUnixSockets": [
-        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock",
+        "~/.local/state/agent-signing/agent.sock"
       ]
     },
     "credentials": {

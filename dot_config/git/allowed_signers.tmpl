@@ -6,4 +6,16 @@
      config.tmpl の user.email と同じ参照を使う。namespaces は信頼を git の署名だけに絞る指定で、
      別の値を書くと検証が B になる。 */ -}}
 {{ onepasswordRead "op://Personal/GitHub/noreply" }} namespaces="git" {{ onepasswordRead "op://Personal/GitHub Sign Key/public key" }}
+{{/* エージェント用の署名鍵は作業機ごとに作るので、1Password ではなく作業機の公開鍵ファイルを読む。
+     作っていない作業機ではこの行を出さない。鍵を作った後の apply で行が増える。 */ -}}
+{{ $agentSigningPub := joinPath .chezmoi.homeDir ".ssh" "agent_signing_ed25519.pub" -}}
+{{ if stat $agentSigningPub -}}
+{{/* ファイルの中身をそのまま入れると、2 行目以降に書かれた別の鍵も信頼してしまう。
+     1 本の ed25519 公開鍵の形に完全一致する時だけ使い、合わなければ展開を止める。 */ -}}
+{{ $agentSigningKey := include $agentSigningPub | trim -}}
+{{ if not (regexMatch "^ssh-ed25519 [A-Za-z0-9+/]+=*( [!-~]+)?$" $agentSigningKey) -}}
+{{ fail (printf "エージェント用の公開鍵の形式が想定と違う: %s" $agentSigningPub) -}}
+{{ end -}}
+{{ onepasswordRead "op://Personal/GitHub/noreply" }} namespaces="git" {{ $agentSigningKey }}
+{{ end -}}
 {{ end -}}

@@ -11,6 +11,12 @@
 
 principal（email）は `config.tmpl` の `user.email` と同じ `op://Personal/GitHub/noreply` から読む。以前は 2 箇所に literal で持っていたが、GitHub アカウントを作り直した時に repo 内の ID を差し替えずに済むよう、1Password を正本にした。
 
+## エージェント用の鍵の行
+
+Claude Code の commit は、作業機ごとに作る専用の鍵で署名する（構成は [Claude Code Settings の設計](claude-code-settings-design.md) の「エージェントの commit は専用の鍵で署名する」）。この鍵は 1Password に無いので、`allowed_signers.tmpl` は作業機の `~/.ssh/agent_signing_ed25519.pub` を `include` で読み、同じ principal でもう 1 行出す。ファイルが無い作業機ではこの行を出さない。鍵を作った後の `chezmoi apply` で行が増える。chezmoi の `include` が絶対パスを読めることは v2.74.0 で確かめた（2026-11-06）。
+
+GitHub 上で Verified にするには、この鍵も GitHub に Signing Key として登録する。`main` の ruleset は署名を必須にしているので、登録していない鍵で署名した commit は push で拒否されるはずだが、まだ実測していない。
+
 ## 署名を設定するマシン
 
 identity と署名は、`.profile` が `personal` で、OS が macOS か Windows のマシンにだけ設定する。仕事のマシンには 1Password が無いので、`op` の有無ではなく `.profile` で決める。`personal` のマシンで `op` が 1Password へ届かない時は、`onepasswordRead` が展開を止める。
