@@ -211,6 +211,28 @@ wait_for_onepassword() {
   done
 }
 
+# Claude Code のエージェントの commit は、1Password ではなくこの鍵で署名する（構成は
+# docs/notes/claude-code-settings-design.md）。鍵は作業機ごとに作り、パスフレーズを付けない。
+# chezmoi apply より前に作っておくと、最初の apply で allowed_signers にこの鍵の行が出る。
+# GitHub への Signing Key の登録は手作業（README の「手作業が要るもの」）。
+agent_signing_key="$HOME/.ssh/agent_signing_ed25519"
+
+create_agent_signing_key() {
+  echo "==> エージェント用の署名鍵"
+  if [[ -f "$agent_signing_key" && -f "$agent_signing_key.pub" ]]; then
+    echo "  - $agent_signing_key (skip)"
+    return
+  fi
+  # 片方だけある時は、作り直すと残っている方を失う。ssh-keygen の上書き確認で止まらないよう、ここで抜ける。
+  if [[ -e "$agent_signing_key" || -e "$agent_signing_key.pub" ]]; then
+    echo "Warning: 鍵のペアが揃っていないので作りません: $agent_signing_key" >&2
+    return
+  fi
+  mkdir -p "$HOME/.ssh"
+  ssh-keygen -q -t ed25519 -N '' -C agent-signing -f "$agent_signing_key"
+  echo "  + $agent_signing_key"
+}
+
 install_ai_stack() {
   echo "==> AI ツール (デスクトップ)"
   cask claude
@@ -289,6 +311,7 @@ install_dotfiles_stack
 if [[ "$machine_profile" == "personal" ]]; then
   install_password_stack
   wait_for_onepassword
+  create_agent_signing_key
 fi
 install_ai_stack
 install_font_stack
