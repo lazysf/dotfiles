@@ -84,3 +84,27 @@ Codex に入れる時に要ること。
 鍵の生成は setup.sh で自動化したが、GitHub への Signing Key の登録は README の手作業のまま。setup.sh は `chezmoi init` より前に走り、その時点では `gh` が認証されていないので、setup.sh の中では登録できない。
 
 自動化するなら、`gh` が認証された後に走る入口（chezmoi の run script など）で、`gh ssh-key add --type signing` を使う形を検討する。`gh` の token に Signing Key を書く scope が要るかは確かめていない。
+
+---
+
+## 6. Claude Code からの署名鍵の書き込みを制限する
+
+- 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
+
+`dot_claude/settings.json` の `permissions.deny` は `~/.ssh` 配下の `Read` を拒否する。`Edit` を拒否するルールはない。承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。鍵の配置先への書き込みを制限する方法を検討する。
+
+---
+
+## 7. SSH agent forwarding の対象を絞る
+
+- 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
+
+`dot_ssh/private_config.tmpl` の `Host *` に `ForwardAgent yes` がある。agent forwarding が必要な接続先を確認し、許可する範囲を検討する。
+
+---
+
+## 8. chezmoi が管理する `~/.ssh` の権限を見直す
+
+- 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
+
+chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `755` になる。source を `private_dot_ssh` に改名する案を検討する。
