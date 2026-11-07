@@ -1,6 +1,6 @@
 # Claude Desktop で 2 つ目のアカウントを使う構成
 
-- Date: 2026-11-01
+- Date: 2026-11-07
 - 出典: [anthropics/claude-code #30565](https://github.com/anthropics/claude-code/issues/30565) / `scripts/windows/setup.ps1` の `New-ClaudeAccountShortcut` / `scripts/macos/setup.sh` の `create_claude_account_app`
 
 ## 現在の構成
@@ -27,6 +27,14 @@ setup スクリプトが、Claude を入れた直後に `Claude-2nd` という�
 - そのセッションの実行中も、`~/.claude.json` の `oauthAccount` は 1 つ目のアカウントのままだった。2 つ目のインスタンスを起動した後にも `~/.claude.json` は書き込まれていたが、`oauthAccount` は上書きされていない。2 つ目のセッションは、このずれがあっても問題なく動いた。
 - `modelAccessCache` は空、`orgModelDefaultCache` は `null` だった。中身が無いため、アカウント間でずれる値も無い。
 
+## macOS で確認した事実
+
+2026-11-07 に、個人の Mac での確認結果をユーザーから受け取った。
+
+- `scripts/macos/setup.sh` の実行で `~/Applications/Claude-2nd.app` が生成された。
+- 通常の Claude を開いた状態で、Raycast と Spotlight のどちらから `Claude-2nd` を起動しても、別ウィンドウにログイン画面が開いた。
+- 別ウィンドウで 2 つ目のアカウントにログインできた。ファイルのドラッグ&ドロップと Code タブも動作した。
+
 ## 共有されるもの
 
 `--user-data-dir` で分かれるのは Desktop のデータフォルダだけ。home 直下の `~/.claude/` と `~/.claude.json` は、両方のインスタンスが同じものを読む。
@@ -42,4 +50,3 @@ dotfiles で配る `CLAUDE.md`、`settings.json`、skills、agents、output-styl
 ## 未確認
 
 - 2 つ目のアカウントの org がモデルの既定値を持つ場合に、`orgModelDefaultCache` を通じて 1 つ目に影響するか。今回は値が `null` だったため確かめられていない。
-- macOS で `open -n -a Claude --args --user-data-dir=...` が別インスタンスとして開くか。
