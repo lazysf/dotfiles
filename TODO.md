@@ -21,7 +21,7 @@
 - 現状を把握し、見直す候補を挙げてから、候補ごとに相談して変える。
 - 判断の前に、公式 docs（settings、permissions、sandboxing、hooks）を今の版で確かめる。
 - notes の mac の記述が、今の Claude Code の版と mac の実機で成り立つかを確かめる。classifier のルールの件数のように、版で動く値は数え直す。
-- mac で確かめる TODO（2、5、6、11、12 など）を、この見直しの中で扱うかを決める。
+- mac で確かめる TODO（2、5、6、11 など）を、この見直しの中で扱うかを決める。
 
 ---
 
@@ -135,21 +135,7 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 
 ---
 
-## 11. mac の disk 系 deny rule の大文字
-
-- 記載: 2026-11-07（Windows の disk 系 command を `permissions.deny` に足した時の security review）
-
-Windows では、`Bash(...)` rule の照合が大文字と小文字を区別する一方、command の解決は区別しないので、大文字の `WBADMIN` が rule に当たらずに実行された。絶対パスの `/c/Windows/System32/wbadmin.exe` は拒否された。経緯は `docs/notes/claude-code-settings-design.md` の「auto mode の built-in ルール」にある。
-
-mac の絶対パスの形（`/usr/sbin/diskutil list`）は、permission rule の層で拒否された（2026-11-07 実測、notes の「sandbox で効いている層と効いていない層」）。
-
-mac で確かめること。
-
-- APFS が大文字と小文字を区別しない既定の volume で、`DISKUTIL list` のような大文字の形が `Bash(diskutil *)` に当たらずに実行されるか。auto mode では classifier が `Auto-Mode Bypass` として先に止めるので、Manual mode の session で確かめる。実行されるなら、大文字の形を rule に足すかを決める。
-
----
-
-## 12. 鍵を作り直した後の署名 agent の扱い
+## 11. 鍵を作り直した後の署名 agent の扱い
 
 - 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
 
