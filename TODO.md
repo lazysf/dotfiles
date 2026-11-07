@@ -52,4 +52,4 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。
 
-2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を足し、編集ツール、Bash のリダイレクト、`cp` は止まるようになった。mac では `sandbox.filesystem.denyWrite` の `~/.ssh` が `mv` と `ssh-keygen -f` も止め、cwd が home の session でも両方が失敗した（2026-11-07 実測）。Windows では sandbox が効かないので、`mv` と `ssh-keygen -f` は止まらない（2026-11-07 実測）。範囲は `docs/notes/claude-code-settings-design.md` の「代償と失効」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
+2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を、`sandbox.filesystem.denyWrite` へ `~/.ssh` を足した。Windows では sandbox が効かないので、`mv`、`ssh-keygen -f`、`rm` は止まらない（2026-11-07 実測）。mac で止まる範囲と、その実測は `docs/notes/claude-code-settings-design.md` の「代償と失効」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
