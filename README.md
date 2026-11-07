@@ -113,6 +113,12 @@ macOS の `personal` では、`chezmoi apply` が Codex の署名設定を追加
   GH_HOST=github.com gh ssh-key add ~/.ssh/agent_signing_ed25519.pub --type signing
   ```
 
+  `gh auth refresh` で `write:ssh_signing_key` scope を足した場合は、登録が済んだら次のコマンドで外します。残すと、同じユーザーとして動くプロセスが、その token で署名鍵を追加できます。
+
+  ```sh
+  gh auth refresh --hostname github.com --remove-scopes write:ssh_signing_key
+  ```
+
   登録後は、次の SSH 接続が `Permission denied (publickey)` で失敗することを確認します。認証に成功した場合は、GitHub からこの鍵の Authentication Key 登録を削除します。
 
   ```sh
