@@ -268,6 +268,11 @@ function New-AgentSigningKey {
         throw "ssh-keygen が exit code $LASTEXITCODE で終了しました: $key"
     }
     Write-Host "  + $key"
+    & $sshKeygen -E sha256 -lf "$key.pub"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "公開鍵の fingerprint を表示できません。"
+    }
+    Write-Host "  GitHub への Signing Key の登録は README の「手作業が要るもの」を参照してください。"
 }
 
 function Install-AiStack {

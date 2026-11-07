@@ -231,6 +231,10 @@ create_agent_signing_key() {
   mkdir -p "$HOME/.ssh"
   ssh-keygen -q -t ed25519 -N '' -C agent-signing -f "$agent_signing_key"
   echo "  + $agent_signing_key"
+  if ! ssh-keygen -E sha256 -lf "$agent_signing_key.pub"; then
+    echo "Warning: 公開鍵の fingerprint を表示できません。" >&2
+  fi
+  echo "  GitHub への Signing Key の登録は README の「手作業が要るもの」を参照してください。"
 }
 
 install_ai_stack() {
