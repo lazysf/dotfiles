@@ -99,7 +99,7 @@ macOS の `personal` では、`chezmoi apply` が Codex の署名設定を追加
 
   ブラウザでは、意図したアカウントの Settings > SSH and GPG keys > New SSH key を開きます。Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` を登録します。
 
-  CLI で登録する場合、未ログインなら `gh auth login --hostname github.com --skip-ssh-key` を実行します。`--skip-ssh-key` はログイン時の認証鍵のアップロードをスキップする指定です。次の出力が意図した登録先アカウントであることを確認します。[GitHub CLI のログイン手順](https://cli.github.com/manual/gh_auth_login)
+  CLI で登録する場合、未ログインなら `gh auth login --hostname github.com --skip-ssh-key` を実行します。`--skip-ssh-key` はログイン時の認証鍵のアップロードをスキップする指定です。mac では `--insecure-storage` も付けます。token が Keychain ではなく `~/.config/gh/hosts.yml` に置かれ、Claude Code の sandbox から届かなくなります（[理由](docs/notes/claude-code-settings-design.md#push-は-sandbox-内で-ssh-を通らない)）。次の出力が意図した登録先アカウントであることを確認します。[GitHub CLI のログイン手順](https://cli.github.com/manual/gh_auth_login)
 
   ```sh
   gh api --hostname github.com user --jq .login
