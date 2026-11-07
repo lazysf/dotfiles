@@ -156,5 +156,5 @@ mac で確かめること。
 
 検討すること。
 
-- 失効の手順に、agent を止める手順を足すか。Windows の Git Bash と mac で、agent を止めるコマンドを確かめる。
+- 失効の手順に、agent を止める手順を足すか。Windows の Git Bash での止め方は確かめた（`docs/notes/claude-code-settings-design.md` の「代償と失効」）。mac での止め方は確かめていない。
 - スクリプトが、古い鍵を持つ自分の agent を見分けて起動し直す形にするか。socket に別のプロセスが居座っている場合に、鍵を渡さないという今の防御を崩さないこと。
