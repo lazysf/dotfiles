@@ -1,3 +1,8 @@
 [mgr]
 show_hidden = true
 show_symlink = true
+
+[opener]
+edit = [
+	{ run = "nvim %s", desc = "nvim", block = true },
+]
