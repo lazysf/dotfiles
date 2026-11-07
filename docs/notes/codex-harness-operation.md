@@ -1,7 +1,7 @@
 # Codex harness の運用
 
-- Date: 2026-11-06
-- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認
+- Date: 2026-11-07
+- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / 実際の作業機での Codex の署名設定と署名の確認、GitHub の commits API の `verification`（2026-11-07）
 
 `dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。macOS の `personal` では [ADR 0046](../adr/0046-distribute-codex-signing-settings.md) に従い、署名に必要な設定だけを追加する。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md) にある。
 
@@ -46,6 +46,8 @@ Codex の Git 署名設定はコマンドの環境変数に入る。zsh の初�
 Codex の command hook はログインシェルから起動する。署名用プロファイルは、この repo が使う zsh の初期化ファイルを読み取り専用にする。別のシェルや独自の `ZDOTDIR` を使う端末では、その初期化ファイルも確認する。
 
 2026-11-06 に macOS の Codex CLI 0.166.0-alpha.6 で確認した。信頼済みの `SessionStart` は、一時ホームの使い捨て鍵を専用 agent に載せた。1Password が起動した実機で、新しく起動した app-server の `command/exec` から zsh のログインシェルを使うと、一時 repo の署名が `%G? = G` になった。一時ホームでの sandbox 検証では、秘密鍵の読み取り、起動スクリプトへの書き込み、socket の削除、許可外の Unix socket とローカル TCP への接続が拒否された。
+
+2026-11-07 に、実際の作業機（macOS の `personal`）で、apply 後の `~/.codex` を確かめた。`hooks.json` には `SessionStart` の hook が入っていた。`config.toml` には `default_permissions`、`features.network_proxy`、`permissions.agent-signing`、`shell_environment_policy.set` が入っていた。`user.signingkey` の公開鍵は、専用 agent が載せた鍵と fingerprint が一致した。新しい Codex の session で、使い捨ての repo に署名付きコミットを作ると、`%G? = G` になった。`%GK` はエージェント用の鍵の fingerprint だった（ユーザーが実行した。この時の ChatGPT app 同梱の Codex CLI は 0.167.0-alpha.3.2）。この時、専用 agent は Claude Code の session の hook がすでに起動していた。Codex の hook が agent を起動して鍵を載せることは、この確認には含まれない。同じ鍵で署名して push した Claude Code のコミットは、GitHub の commits API で `verification.verified` が `true`、`reason` が `valid` になった（`04622bf` など）。
 
 ## 未確認
 
