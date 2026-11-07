@@ -138,7 +138,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 **mac でも rule の照合は大文字と小文字を区別するが、command の解決は区別しない。** Manual mode の session（v2.1.317）で、`diskutil list` は確認なしで拒否された。同じ session で、`DISKUTIL list` は rule に当たらずに確認なしで実行され、`Unable to run because unable to use the DiskManagement framework` で落ちた（2026-11-07 実測）。確認が出なかったのは、sandbox 内のコマンドを確認なしで実行する `autoAllowBashIfSandboxed` の既定値のため。mac では大文字の形を rule に足さない。Windows で足したのは help と docs が大文字で書くためで、`man diskutil` は小文字で書くので、model が大文字を写す理由が無い。
 
-効いているのは次の 4 つで、deny rule はその後ろに置く speed bump として持つ。上の層が無い環境（sandbox 無効、root 実行、Linux / WSL2）でだけ前に出る。
+効いているのは次の 4 つで、deny rule はその後ろに置く speed bump として持つ。上の層が無い環境（sandbox 無効、root 実行、native Windows）でだけ前に出る。
 
 - sandbox が `sudo` を止める（上記）
 - `/dev/disk0` は `brw-r----- root:operator` で、session の uid 501 は `operator` の member でない（2026-09-02 実測）
