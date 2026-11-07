@@ -48,7 +48,19 @@
       "Bash(gpt *)",
       "Bash(pdisk *)",
       "Bash(apfs_hfs_convert *)",
-      "Bash(asr *)"
+      "Bash(asr *)",
+      "Bash(diskpart *)",
+      "Bash(diskpart.exe *)",
+      "Bash(format.com *)",
+      "Bash(convert.exe *)",
+      "Bash(wbadmin *)",
+      "Bash(wbadmin.exe *)",
+      "Bash(DISKPART *)",
+      "Bash(DISKPART.EXE *)",
+      "Bash(FORMAT.COM *)",
+      "Bash(CONVERT.EXE *)",
+      "Bash(WBADMIN *)",
+      "Bash(WBADMIN.EXE *)"
     ]
   },
   "sandbox": {
