@@ -115,7 +115,7 @@ mac で確かめること。
 
 承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。
 
-2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を足し、編集ツール、Bash のリダイレクト、`cp` は止まるようになった。`mv` と `ssh-keygen -f` は、Windows では止まらない（2026-11-07 実測）。cwd が home にある mac の session で sandbox が止めるかは確かめていない。範囲は `docs/notes/claude-code-settings-design.md` の「代償と失効」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
+2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を足し、編集ツール、Bash のリダイレクト、`cp` は止まるようになった。`mv` と `ssh-keygen -f` は、Windows では止まらない（2026-11-07 実測）。cwd が home の外にある mac の session では、sandbox が両方を止めた（2026-11-07 実測）。cwd が home にある mac の session で sandbox が止めるかは確かめていない。範囲は `docs/notes/claude-code-settings-design.md` の「代償と失効」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
 
 ---
 
