@@ -393,7 +393,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `attribution.sessionUrl` | default は `true`。Remote Control session の commit に `Claude-Session` trailer を付ける（実測）。`attribution.commit` とは独立で、空文字にしても消えない |
 | auto mode の fallback | classifier が 3 回連続または累計 20 回 block すると auto mode が pause し prompt が再開する。閾値は設定不可 |
 | auto mode の allow rule drop | auto mode に入ると、任意コード実行を与える広い allow rule（blanket `Bash(*)` / `PowerShell(*)`、wildcard interpreter、package manager の run、`Agent`、`Monitor`）が drop される。narrow rule は残る |
-| `env.CLAUDE_CODE_PLUGIN_DIRS` | `~/.claude/settings.json` の `env` から読まれ、各 path を `--plugin-dir` と同じように読み込む。path は絶対 path か `~` 始まりで、相対 path は無視される。v2.1.280 以上。desktop app（v2.1.299）と terminal（v2.1.292）の session で mod が読み込まれ、帯が描かれることを実機で確認した（2026-10-16）。mod を配る理由は ADR 0045 |
+| `env.CLAUDE_CODE_PLUGIN_DIRS` | `~/.claude/settings.json` の `env` から読まれ、各 path を `--plugin-dir` と同じように読み込む。path は絶対 path か `~` 始まりで、相対 path は無視される。v2.1.280 以上。desktop app（v2.1.299）と terminal（v2.1.292）の session で mod が読み込まれ、帯が描かれることを実機で確認した（2026-10-16）。Windows の desktop app（v2.1.317）の session でも帯が描かれることを、ユーザーが画面で確認した（2026-11-07）。mod を配る理由は ADR 0045 |
 
 ## 未確認
 
