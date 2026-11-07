@@ -98,15 +98,3 @@ mac で確かめること。
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
 `private_dot_ssh/private_config.tmpl` の `Host *` に `ForwardAgent yes` がある。agent forwarding が必要な接続先を確認し、許可する範囲を検討する。
-
----
-
-## 8. 鍵を作り直した後の署名 agent の扱い
-
-- 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
-
-エージェント用の鍵を作り直しても、署名専用の ssh-agent が動いたままだと、新しい鍵では署名されない。`dot_config/git/executable_start-signing-agent` は、接続できる agent に今の公開鍵が無いと、鍵を渡さずに失敗する。hook は env を書かないので、その session は 1Password の署名に戻る。agent は古い鍵を持ったまま残る。mac と Windows で共通。
-
-検討すること。
-
-- スクリプトが、古い鍵を持つ自分の agent を見分けて起動し直す形にするか。socket に別のプロセスが居座っている場合に、鍵を渡さないという今の防御を崩さないこと。

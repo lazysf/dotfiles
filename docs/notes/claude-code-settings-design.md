@@ -273,9 +273,13 @@ sandbox 内のコマンドは、専用 agent に任意のデータへの署名�
 
 パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。消した後に、過去の署名済み commit がどう表示されるかは確かめていない。
 
-鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直される。署名専用の agent が止まっていれば、hook は次の session から新しい鍵を使う。agent が古い鍵を持ったまま動いていると、`start-signing-agent` は鍵を渡さずに失敗し、その session は 1Password の署名に戻る（TODO.md の 8）。Windows の Git Bash では、専用の agent の PID は `/proc/<pid>/cmdline` の起動引数（`-a ~/.local/state/agent-signing/agent.sock`）で見分けられ、`kill <pid>` で止まった。止めると socket のファイルも消えた。その後に `~/.config/git/start-signing-agent` を実行すると agent が起動し直して鍵を載せ、使い捨ての repo の commit は `%G? = G` になった（2026-11-07 実測）。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
+鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直される。鍵を作り直した後は、下記の手順で署名専用の agent を手動で止めてから、新しい session を開く。`dot_config/git/executable_start-signing-agent` は、接続できる agent に現在の公開鍵が無ければ、鍵を渡さずに終了する。socket への応答だけでは、起動スクリプトが管理する agent かどうかを確認できないためである。この場合、Claude Code の hook は署名用の環境変数を書かず、既定の 1Password の署名設定を使う。
+
+Windows の Git Bash では、専用の agent の PID は `/proc/<pid>/cmdline` の起動引数（`-a ~/.local/state/agent-signing/agent.sock`）で見分けられ、`kill <pid>` で止まった。止めると socket のファイルも消えた。その後に `~/.config/git/start-signing-agent` を実行すると agent が起動し直して鍵を載せ、使い捨ての repo の commit は `%G? = G` になった（2026-11-07 実測）。
 
 macOS では、Terminal で `ps -axww -o pid=,uid=,comm=,args=` を実行する。同じユーザーの `ssh-agent` のうち、起動引数の `-a` が `~/.local/state/agent-signing/agent.sock` を指すものが 1 件だけなら、その PID に `kill -TERM <pid>` を実行する。ユーザーがこの手順を実行すると、プロセスと socket のファイルが両方消えた（2026-11-07 実測）。
+
+Claude Code の新しい session で agent を自動起動させない場合は、`dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
 
 `~/.ssh` へのエージェントの書き込みは、`permissions.deny` の `Edit(~/.ssh/**)` で止める。setup スクリプトは鍵ペアが既にあると生成をスキップするので、エージェントが鍵ペアを置くと、人がその公開鍵を GitHub に登録するおそれがある。公式の permissions docs によると、`Edit` rule が止めるのは、組み込みの編集ツールと、Claude Code が認識する Bash の書き込み（`tee` やリダイレクト）。Windows の session（Claude Code 2.1.317、auto mode）では、Write ツール、`echo ... > ~/.ssh/<probe>`、`cp /dev/null ~/.ssh/<probe>` が実行前に拒否され、ファイルはできなかった。`cp` の拒否は、deny に無い場所への `cp` が通ったので、rule が `cp` の書き込み先を見ていると読める。一方、`mv <一時ファイル> ~/.ssh/<probe>`、`ssh-keygen -f ~/.ssh/<probe>`、`rm ~/.ssh/<probe>` は通った（2026-11-07 実測）。エージェントは Windows で、鍵ペアを置くことも消すこともできる。mac では、cwd が home の外にあれば sandbox の write 制限がこれらも止める。cwd がこの repo の session（Claude Code 2.1.317、auto mode）で、`mv <一時ファイル> ~/.ssh/<probe>` と `ssh-keygen -f ~/.ssh/<probe>` は permission rule では止まらずに実行され、sandbox が `Operation not permitted` で失敗させた（2026-11-07 実測）。
 
