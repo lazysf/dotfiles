@@ -12,7 +12,20 @@
 
 ---
 
-## 1. Windows 実機での動作確認
+## 1. 個人用 mac での Claude Code の設定の見直し
+
+- 記載: 2026-11-07（個人用 Windows で Claude Code の設定を見直した時）
+
+個人用 Windows では、`dot_claude/settings.json` の各設定が実際に効いているかを、公式 docs と実機の session で確かめた。結果は `docs/notes/claude-code-settings-design.md` にある。個人用 mac でも同じ見直しをする。
+
+- 現状を把握し、見直す候補を挙げてから、候補ごとに相談して変える。
+- 判断の前に、公式 docs（settings、permissions、sandboxing、hooks）を今の版で確かめる。
+- notes の mac の記述が、今の Claude Code の版と mac の実機で成り立つかを確かめる。classifier のルールの件数のように、版で動く値は数え直す。
+- mac で確かめる TODO（3、4、10、11 など）を、この見直しの中で扱うかを決める。
+
+---
+
+## 2. Windows 実機での動作確認
 
 - 記載: 2026-10-22（machine profile の導入、セットアップスクリプトの統合、`chezmoi apply` からのセットアップ実行）
 
@@ -34,7 +47,7 @@
 
 ---
 
-## 2. mac で 1Password が未設定の時の待機
+## 3. mac で 1Password が未設定の時の待機
 
 - 記載: 2026-10-22（setup で 1Password の設定を待つようにした時）
 
@@ -48,7 +61,7 @@
 
 ---
 
-## 3. mac で Claude Desktop の 2 つ目のアカウント
+## 4. mac で Claude Desktop の 2 つ目のアカウント
 
 - 記載: 2026-11-01（Claude Desktop の 2 つ目のアカウント用ショートカットを setup に足した時）
 
@@ -62,7 +75,7 @@ mac で確かめること。
 
 ---
 
-## 4. エージェント用署名鍵の GitHub 登録の自動化
+## 5. エージェント用署名鍵の GitHub 登録の自動化
 
 - 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
 
@@ -72,7 +85,7 @@ mac で確かめること。
 
 ---
 
-## 5. Claude Code からの署名鍵の書き込みを制限する
+## 6. Claude Code からの署名鍵の書き込みを制限する
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -82,7 +95,7 @@ mac で確かめること。
 
 ---
 
-## 6. SSH agent forwarding の対象を絞る
+## 7. SSH agent forwarding の対象を絞る
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -90,7 +103,7 @@ mac で確かめること。
 
 ---
 
-## 7. chezmoi が管理する `~/.ssh` の権限を見直す
+## 8. chezmoi が管理する `~/.ssh` の権限を見直す
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -98,7 +111,7 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 
 ---
 
-## 8. Windows の Codex のエージェント用署名
+## 9. Windows の Codex のエージェント用署名
 
 - 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
 
@@ -108,7 +121,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 9. mac の disk 系 deny rule の大文字と絶対パス
+## 10. mac の disk 系 deny rule の大文字と絶対パス
 
 - 記載: 2026-11-07（Windows の disk 系 command を `permissions.deny` に足した時の security review）
 
@@ -121,7 +134,7 @@ mac で確かめること。
 
 ---
 
-## 10. 鍵を作り直した後の署名 agent の扱い
+## 11. 鍵を作り直した後の署名 agent の扱い
 
 - 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
 
