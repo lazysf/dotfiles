@@ -118,4 +118,5 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 検討すること。
 
 - 失効の手順に、agent を止める手順を足すか。Windows の Git Bash での止め方は確かめた（`docs/notes/claude-code-settings-design.md` の「代償と失効」）。mac での止め方は確かめていない。
+- mac で agent を止めた時に、Codex の `SessionStart` hook が自分で agent を起動して鍵を載せるか。2026-11-07 に Codex の commit が `%G? = G` になった時は、Claude Code の hook が起動した agent がすでに動いていた（`docs/notes/codex-harness-operation.md` の「macOS のエージェント用署名」）。mac の止め方を確かめる時に、続けて確かめる。
 - スクリプトが、古い鍵を持つ自分の agent を見分けて起動し直す形にするか。socket に別のプロセスが居座っている場合に、鍵を渡さないという今の防御を崩さないこと。
