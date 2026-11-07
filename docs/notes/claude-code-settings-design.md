@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
-- Date: 2026-11-06
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06）
+- Date: 2026-11-07
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / sandboxing docs の native Windows の記述、hooks docs の Windows の shell、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -191,7 +191,7 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 1Password の署名は commit ごとに承認を求めるので、エージェントの作業がそこで止まる。エージェントの commit には署名専用の鍵を使わせ、人の commit は 1Password のままにする。構成は [hamakou108.com の記事](https://hamakou108.com/posts/coding-agent-credentials-for-claude-code) のうち署名の部分だけを取った。gh の PAT と HTTPS での push は入れていない（push は人が行う運用のまま）。
 
-- 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。macOS の `personal` では `scripts/macos/setup.sh` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。sandbox 内のコマンドは `credentials` の deny で `~/.ssh` を読めない。
+- 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。`personal` では、macOS は `scripts/macos/setup.sh`、Windows は `scripts/windows/setup.ps1` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。macOS の sandbox 内のコマンドは `credentials` の deny で `~/.ssh` を読めない。Windows については「Windows では sandbox の防御が効かない」にある。
 - `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）は、Claude Code と Codex で共用する `~/.config/git/start-signing-agent` を呼ぶ。このスクリプトが専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。Claude Code の公式 docs によると、command hook は sandbox の外で動く。
 - hook は `CLAUDE_ENV_FILE` に、`SSH_AUTH_SOCK` と `GIT_CONFIG_COUNT` 系（`gpg.ssh.program=ssh-keygen`、`user.signingkey=key::<公開鍵>`）を書く。公式によると、この値はその session の Bash コマンドにだけ効く。人の terminal の git には届かない。Claude Code 自身も sandbox のコマンドに `GIT_CONFIG_COUNT` 系（`safe.directory` の 2 件）を入れているので（2026-11-06 に env で確認）、番号は固定せず、env file が読まれた時点の `GIT_CONFIG_COUNT` の後ろへ足す。
 - `settings.json` の `env` に書かないのは、記事によると `env` では `~` も `$HOME` も展開されず（この repo では実測していない）、home の絶対パスを repo に置くことになるため。hook は実行時に `$HOME` と公開鍵を読むので、repo には絶対パスも鍵も残らない。`settings.json` を `.tmpl` にしなくて済み、`check json` も残る。
@@ -239,7 +239,31 @@ sandbox 内のコマンドは、専用 agent に任意のデータへの署名�
 
 パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。消した後に、過去の署名済み commit がどう表示されるかは確かめていない。
 
-鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` は鍵が無いと作り直し、setup.sh が変わるたびに `chezmoi apply` から実行し直されるので、hook は次の session から新しい鍵を使う。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
+鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直されるので、hook は次の session から新しい鍵を使う。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
+
+### Windows では sandbox の防御が効かない
+
+公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。上の防御のうち、`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell のコマンドにこの rule がどこまで効くかは確かめていない。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
+
+その結果、Windows のエージェントの Bash と PowerShell のコマンドは、パスフレーズの無い秘密鍵を読んで外へ送れる。mac の sandbox 内のコマンドは agent に署名を頼めるだけで、鍵そのものは持ち出せない。Windows では鍵を持ち出せるので、session が終わった後も別の場所で署名できる。漏れた後の影響と失効の手順は上の「代償と失効」と同じ。それでも、エージェントの作業が 1Password の承認で止まらないことを優先し、Windows の `personal` にも入れる。sandbox を使える WSL2 で Claude Code を動かす案は、環境を作り直す範囲が大きいので採らない。
+
+hook は Windows でも同じスクリプトを使う。hooks docs によると、Windows の command hook は Git Bash で動く。2026-11-07 に Git for Windows 2.56.0.windows.4（MSYS 3.6.10）の Git Bash で、使い捨ての HOME と鍵を使って次を確かめた。
+
+- hook は env file に mac と同じ内容を書き、env file を読み込んだ shell の `git commit` は署名され、`%G?` が `G` になる。
+- 2 回目の起動は agent を起動し直さずに使い、env file の内容は 1 回目と同じになる。
+- agent を `kill -9` して socket だけが残った状態でも、次の起動で agent が立ち直り、鍵が載る。
+- `gpg.ssh.program=ssh-keygen` は、Git Bash の `PATH` で `/usr/bin/ssh-keygen`（Git for Windows の同梱）に解決される。`C:\Windows\System32\OpenSSH` の `ssh-keygen` は `PATH` の後ろにある。
+- socket の path が長いと `ssh-agent -a` が `too long for Unix domain socket` で失敗する。127 文字で失敗した。`~/.local/state/agent-signing/agent.sock` は短いので当たらないが、テストで長い一時ディレクトリを HOME にすると当たる。
+
+`setup.ps1` は鍵を、hook の `ssh-add` と同じ Git for Windows の `ssh-keygen` で作る。上の実測で agent に載せたのも、この `ssh-keygen` で作った鍵になる。
+
+`chezmoi apply` で `setup.ps1` が鍵を作った後に開いた実際の Windows の session で、次を確かめた（2026-11-07）。
+
+- `SSH_AUTH_SOCK` は `~/.local/state/agent-signing/agent.sock` を指す。`GIT_CONFIG_COUNT` は `2` で、0 番が `gpg.ssh.program=ssh-keygen`、1 番が `user.signingkey=key::ssh-ed25519 ...` になる。mac と違い、Claude Code は `safe.directory` の 2 件を入れていない。
+- `ssh-add -l` は comment が `agent-signing` の ED25519 鍵 1 本だけを返す。
+- 使い捨ての repo で `commit.gpgsign=true` の commit は 1Password の承認を待たずに終わり、`%G?` は `G` になる。`%GK` の fingerprint は `~/.ssh/agent_signing_ed25519.pub` と一致する。
+
+Codex には Windows の署名設定を入れていない。mac の Codex の署名用プロファイルにある `~/.ssh` の deny も Windows には入らないので、Windows の Codex の session がこの鍵を読めるかは確かめていない。
 
 ## `op` CLI は sandbox 内から使えない
 
@@ -298,7 +322,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `includeCoAuthoredBy` | 公式で deprecated。同じ制御は後継の `attribution` で書く（「attribution を止める理由」） |
 | `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`sandbox.credentials` が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する |
-| PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。実効防御は WSL2 上での実行に寄せる |
+| PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。実効防御は WSL2 上での実行に寄せる。ただしエージェント用の署名鍵は native Windows にも置き、鍵を持ち出せることを受け入れている（「Windows では sandbox の防御が効かない」） |
 | `env.CLAUDE_CODE_EFFORT_LEVEL` | subagent の frontmatter の `effort` より優先される。設定すると reviewer の固定が効かなくなる |
 | `env.CLAUDE_CODE_SUBAGENT_MODEL` / `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`、同名の `Explore` 定義 | 振り分ける対象の subagent が呼ばれていない（`~/.claude/projects/` の transcript 10 本で 0 回、2026-11-02）。`FORCE` は frontmatter の `model` を無視するので、reviewer の固定も外れる。`Explore` を定義すると built-in の prompt と tool 制限を自前で持つことになる |
 | OS 分岐（`{{ if eq .chezmoi.os "windows" }}`） | `failIfUnavailable` が default の `false` なので、Windows でも警告して sandbox なしで続行する |
@@ -337,3 +361,4 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
 - `sandbox.filesystem.denyWrite` に入れた `~/.local/state/agent-signing` と `~/.config/git/start-signing-agent` について、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` の session で問題になる。
+- Windows でエージェントが署名して push した commit が、GitHub 上で Verified になるか。TODO.md に載せている。
