@@ -12,7 +12,7 @@
 
 ---
 
-## 2. mac の Codex のエージェント用署名の自動設定
+## 1. mac の Codex のエージェント用署名の自動設定
 
 - 記載: 2026-11-07（個人用 Windows で Claude Code の設定を見直した時）
 
@@ -25,7 +25,7 @@ mac の `personal` では、`run_after_zz-configure-codex-signing.sh.tmpl` が `
 
 ---
 
-## 3. Windows の Codex のエージェント用署名
+## 2. Windows の Codex のエージェント用署名
 
 - 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
 
@@ -36,7 +36,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 4. Windows 実機での動作確認
+## 3. Windows 実機での動作確認
 
 - 記載: 2026-10-22（machine profile の導入、セットアップスクリプトの統合、`chezmoi apply` からのセットアップ実行）
 
@@ -58,7 +58,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 5. mac で 1Password が未設定の時の待機
+## 4. mac で 1Password が未設定の時の待機
 
 - 記載: 2026-10-22（setup で 1Password の設定を待つようにした時）
 
@@ -72,7 +72,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 6. mac で Claude Desktop の 2 つ目のアカウント
+## 5. mac で Claude Desktop の 2 つ目のアカウント
 
 - 記載: 2026-11-01（Claude Desktop の 2 つ目のアカウント用ショートカットを setup に足した時）
 
@@ -86,7 +86,7 @@ mac で確かめること。
 
 ---
 
-## 7. エージェント用署名鍵の GitHub 登録の自動化
+## 6. エージェント用署名鍵の GitHub 登録の自動化
 
 - 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
 
@@ -96,7 +96,7 @@ mac で確かめること。
 
 ---
 
-## 8. Claude Code からの署名鍵の書き込みを制限する
+## 7. Claude Code からの署名鍵の書き込みを制限する
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -106,7 +106,7 @@ mac で確かめること。
 
 ---
 
-## 9. SSH agent forwarding の対象を絞る
+## 8. SSH agent forwarding の対象を絞る
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -114,7 +114,7 @@ mac で確かめること。
 
 ---
 
-## 10. chezmoi が管理する `~/.ssh` の権限を見直す
+## 9. chezmoi が管理する `~/.ssh` の権限を見直す
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -122,7 +122,7 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 
 ---
 
-## 11. 鍵を作り直した後の署名 agent の扱い
+## 10. 鍵を作り直した後の署名 agent の扱い
 
 - 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
 
