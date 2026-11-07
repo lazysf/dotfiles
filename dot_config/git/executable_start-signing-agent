@@ -17,7 +17,7 @@ warn() {
   echo "signing-agent: $*" >&2
 }
 
-# 鍵を作っていないマシン（work、Windows、未セットアップ）では何もしない。
+# 鍵を作っていないマシン（work、未セットアップ）では何もしない。
 [ -f "$key" ] && [ -f "$key.pub" ] || exit 1
 
 if ! mkdir -p "$state_dir" || ! chmod 700 "$state_dir"; then

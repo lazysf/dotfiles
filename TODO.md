@@ -29,6 +29,7 @@
 - Parsec の host settings で Fallback To Virtual Display をオンにでき、物理ディスプレイが無い状態で接続すると仮想ディスプレイが出る。`Parsec.ParsecVDD` が `-Scope` 無しの winget で入り、Parsec Virtual Display Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
 - Parsec の host settings で Virtual Mouse をオンにでき、物理マウスが無い状態で接続してもカーソルが出る。`Parsec.ParsecVUD` が `-Scope` 無しの winget で入り、Parsec Virtual USB Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
 - `powershell` から `winget upgrade Microsoft.PowerShell` で PowerShell 7 を更新できる。次の版が出るまで確かめられない。`chezmoi apply` で 7.6.9 の MSIX 版が入り、`pwsh` で profile が読まれて starship と `ls`（eza）が効くことは 2026-11-03 に確認した。（2026-11-03 追加）
+- エージェント用の鍵で署名して push した commit が、GitHub 上で Verified になる。鍵の生成、allowed_signers の 2 行目、新しい Claude Code の session での `%G? = G` は 2026-11-07 に確認した。（2026-11-07 追加）
 
 仕事の Windows では、`work` を選んだ時に 1Password と Zotero と Parsec が入らず、git の identity と署名の設定が出ないことを確かめる。
 
@@ -66,7 +67,7 @@ mac で確かめること。
 
 - 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
 
-鍵の生成は setup.sh で自動化したが、GitHub への Signing Key の登録は README の手作業のまま。setup.sh は `chezmoi init` より前に走り、その時点では `gh` が認証されていないので、setup.sh の中では登録できない。
+鍵の生成は setup.sh と `scripts/windows/setup.ps1` で自動化したが、GitHub への Signing Key の登録は README の手作業のまま。どちらも `chezmoi init` より前に走り、その時点では `gh` が認証されていないので、スクリプトの中では登録できない。
 
 自動化するなら、`gh` が認証された後に走る入口（chezmoi の run script など）で、`gh ssh-key add --type signing` を使う形を検討する。`gh` の token に Signing Key を書く scope が要るかは確かめていない。
 
@@ -76,7 +77,7 @@ mac で確かめること。
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
-`dot_claude/settings.json` の `permissions.deny` は `~/.ssh` 配下の `Read` を拒否する。`Edit` を拒否するルールはない。承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。鍵の配置先への書き込みを制限する方法を検討する。
+`dot_claude/settings.json` の `permissions.deny` は `~/.ssh` 配下の `Read` を拒否する。`Edit` を拒否するルールはない。承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。鍵の配置先への書き込みを制限する方法を検討する。
 
 ---
 
@@ -93,3 +94,11 @@ mac で確かめること。
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
 chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `755` になる。source を `private_dot_ssh` に改名する案を検討する。
+
+---
+
+## 8. Windows の Codex のエージェント用署名
+
+- 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
+
+Windows では Claude Code だけがエージェント用の鍵で署名する。Codex の署名設定を入れる `scripts/macos/configure-codex-signing.py` と `run_after_zz-configure-codex-signing.sh.tmpl` は macOS 専用で、zsh のログインシェルを前提にしている。Windows の Codex で同じ鍵を使うなら、Codex の Windows の sandbox と hook の shell を公式情報で確かめてから設計する。
