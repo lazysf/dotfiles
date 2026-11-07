@@ -15,7 +15,7 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 ## `git-commit` に組み込まない理由
 
-発火の起点が違う。この skill は変更が一段落した時点で自動で走り、出力は commit できる状態かの判定になる。`git-commit` は変更を Git 履歴へ残す流れで load され、commit 自体もユーザーが指示した時だけ実行する。組み込むと review が commit 指示に依存し、commit しない区切りでは走らない。review が人の呼び出しに依存する状態は、下の「自動で発火させる理由」で退けてある。
+発火の起点が違う。この skill は直接の依頼と commit の前に走り、出力は commit できる状態かの判定になる。`git-commit` は変更を Git 履歴へ残す流れで load され、commit 自体もユーザーが指示した時だけ実行する。組み込むと、commit を伴わない「見直して」で review を通せない。
 
 `git-commit` の責務も膨らむ。あちらは停止条件、staging 規律、staged diff の検証を持つ。review の観点と混ざると、commit したいだけの時に観点表まで読むことになる。
 
@@ -57,7 +57,9 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 実装（`coding`）と doc（`scribe`）は自動で発火する。review だけが人の呼び出しに依存すると、`scribe` が書いた doc の仕上げが走らないまま commit へ進む。
 
-**空振りのコストは承知の上。** commit を視野に入れていない場面で発火すると、観点 6 つを空振りさせる。それでも自動発火を選ぶのは、通らずに commit へ進むコストの方が大きいため。`disable-model-invocation: true` も同じ理由で採らない。`/lapidary` と打った時しか走らないので、明示指定と変わらない。
+`disable-model-invocation: true` は採らない。`/lapidary` と打った時しか走らず、明示指定と変わらないため。
+
+**自動発火は commit の前に限る。** commit しない区切りで review しても、その後の変更で結果が古くなる。区切りごとの確認は工程表の「実装 ⇄ 検証」の役目で、review は工程表でも commit の直前にある。上の失敗は明示指定だけにしたことで起きたので、同じ場面は commit 前の自動発火の条件に入る。失うのは、ユーザーが自分の terminal で commit する時の review で、その時は「見直して」で呼べる。
 
 入口の実行条件は置いていない。この skill は作業ツリー内で閉じ、履歴も外部も触らない。代わりに手順 3 が直す対象を自分の変更へ限っている。`git-commit` が「ユーザー自身が編集した変更は unstaged のまま残す」を持つのと対になる。一般則は `harness-design-principles.md` の「発火面と実行条件を分ける」にある。
 
@@ -66,6 +68,8 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 `CLAUDE.md` の工程表で検証は review の前の別工程にある。skill 側で実行すると二重になる。未実行なら review を止めて検証へ戻す。
 
 この方針をスコープ観点の `確認` ではなく独立した段落に置いてあるのは、`確認` が複数の指示を持つと他の観点（1〜3 文）より突出するため。
+
+手順 3 の直しが lint / test / build の結果を変えうるなら、検証へ戻す。review の前の検証は直す前の状態のもので、直した分は未検証のまま commit へ進みうる。発火が commit の前に限られ、review の後に区切りが無いので、この穴は表に出やすい。戻すのは関係する検証だけで、実行するのは検証の工程。
 
 ## 観点の数と項目を絞っている理由
 
@@ -155,4 +159,4 @@ repo 全体を対象にした bloat の洗い出し（ponytail の `ponytail-aud
 
 転記が実際に起きたかは確認していない。出力の規定は、経路が在ることに対して置いた。
 
-自動発火が実際に効くかは未測定。description を書き換えた後、commit を視野に入れた流れでこの skill が発火するかを観測していない。公式が model behavior を nondeterministic と明記しているため、1 回の発火では判定できない（[scribe-skill-design.md](./scribe-skill-design.md) と同じ理由）。
+自動発火が実際に効くかは未測定。commit の前に発火するかも、commit しない区切りで発火しないかも、観測していない。公式が model behavior を nondeterministic と明記しているため、1 回の発火では判定できない（[scribe-skill-design.md](./scribe-skill-design.md) と同じ理由）。
