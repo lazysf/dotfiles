@@ -21,7 +21,7 @@
 - 現状を把握し、見直す候補を挙げてから、候補ごとに相談して変える。
 - 判断の前に、公式 docs（settings、permissions、sandboxing、hooks）を今の版で確かめる。
 - notes の mac の記述が、今の Claude Code の版と mac の実機で成り立つかを確かめる。classifier のルールの件数のように、版で動く値は数え直す。
-- mac で確かめる TODO（2、5、6、12 など）を、この見直しの中で扱うかを決める。
+- mac で確かめる TODO（2、5、6、11 など）を、この見直しの中で扱うかを決める。
 
 ---
 
@@ -135,7 +135,7 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 
 ---
 
-## 12. 鍵を作り直した後の署名 agent の扱い
+## 11. 鍵を作り直した後の署名 agent の扱い
 
 - 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
 
