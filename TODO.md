@@ -105,6 +105,8 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 
 Windows では Claude Code だけがエージェント用の鍵で署名する。Codex の署名設定を入れる `scripts/macos/configure-codex-signing.py` と `run_after_zz-configure-codex-signing.sh.tmpl` は macOS 専用で、zsh のログインシェルを前提にしている。Windows の Codex で同じ鍵を使うなら、Codex の Windows の sandbox と hook の shell を公式情報で確かめてから設計する。
 
+`dot_codex/rules/destructive.rules` の disk 系の command も macOS のものだけで、2026-11-07 に Claude Code の `permissions.deny` へ足した Windows の command（`diskpart`、`format.com`、`convert.exe`、`wbadmin`）は入っていない。Codex の Windows の sandbox を確かめる時に、揃えるかも判断する。（2026-11-07 追加）
+
 ---
 
 ## 9. mac の disk 系 deny rule の大文字と絶対パス
@@ -125,8 +127,6 @@ mac で確かめること。
 - 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
 
 エージェント用の鍵を作り直しても、署名専用の ssh-agent が動いたままだと、新しい鍵では署名されない。`dot_config/git/executable_start-signing-agent` は、接続できる agent に今の公開鍵が無いと、鍵を渡さずに失敗する。hook は env を書かないので、その session は 1Password の署名に戻る。agent は古い鍵を持ったまま残る。mac と Windows で共通。
-
-`docs/notes/claude-code-settings-design.md` の「代償と失効」は、鍵を作り直すと「hook は次の session から新しい鍵を使う」と書いている。agent が止まっていない時は、これと合わない。
 
 検討すること。
 
