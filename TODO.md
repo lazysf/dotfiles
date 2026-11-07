@@ -46,21 +46,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 3. mac で 1Password が未設定の時の待機
-
-- 記載: 2026-10-22（setup で 1Password の設定を待つようにした時）
-
-この mac は 1Password を設定済みなので、`scripts/macos/setup.sh` の `wait_for_onepassword` は「設定済み」の経路しか通していない。未設定の経路は、関数だけを取り出し、`op` を偽物にして試した範囲に留まる。
-
-新しい mac、または 1Password の CLI 連携と SSH agent を切った状態で確かめること。
-
-- Developer の設定画面（`onepassword://settings/developers`）が開き、やることの一覧と、未設定の項目が出る。
-- 設定する前に Enter を押すと、まだ未設定の項目を出して待ち続ける。
-- 両方を設定して Enter を押すと、「1Password は設定済みです」と出て先へ進む。
-
----
-
-## 4. Claude Code からの署名鍵の書き込みを制限する
+## 3. Claude Code からの署名鍵の書き込みを制限する
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
