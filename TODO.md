@@ -97,19 +97,11 @@ mac で確かめること。
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
-`dot_ssh/private_config.tmpl` の `Host *` に `ForwardAgent yes` がある。agent forwarding が必要な接続先を確認し、許可する範囲を検討する。
+`private_dot_ssh/private_config.tmpl` の `Host *` に `ForwardAgent yes` がある。agent forwarding が必要な接続先を確認し、許可する範囲を検討する。
 
 ---
 
-## 8. chezmoi が管理する `~/.ssh` の権限を見直す
-
-- 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
-
-chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `755` になる。source を `private_dot_ssh` に改名する案を検討する。
-
----
-
-## 9. 鍵を作り直した後の署名 agent の扱い
+## 8. 鍵を作り直した後の署名 agent の扱い
 
 - 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
 
