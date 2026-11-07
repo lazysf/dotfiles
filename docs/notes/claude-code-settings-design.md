@@ -317,7 +317,7 @@ Codex には Windows の署名設定を入れていない。mac の Codex の署
 
 1Password の socket のうち `allowUnixSockets` で通しているのは署名 agent の `agent.sock` 1 本だけで、`op` CLI が desktop app との通信に使う socket は通していない。2026-09-04 に sandbox 内で測ると、`op --version` は成功し、`op whoami` は desktop app へ接続できずに失敗する。binary はあり、app との通信だけが通らない。1Password の socket ディレクトリには `agent.sock` と `s.sock` を含む 37 個があり、許可しているのは `agent.sock` だけ。`op` がどれを使うかは特定していない。sandbox が塞いでいるためと読めるが、socket を足した A/B は取っていないので確定していない。
 
-影響は chezmoi に出る。`dot_config/git/config.tmpl` と `dot_config/git/allowed_signers.tmpl` は `onepasswordRead` で 1Password の値を読むため、sandbox 内では template 展開がそこで失敗する。`chezmoi cat` に複数の target を渡すと、1 つでも失敗すれば他の target も出力しない。`dot_ssh/private_config.tmpl` は止まらない。あちらは `op` を呼ばず、agent の socket があるかを `stat` で見る（2026-10-22 実測）。
+影響は chezmoi に出る。`dot_config/git/config.tmpl` と `dot_config/git/allowed_signers.tmpl` は `onepasswordRead` で 1Password の値を読むため、sandbox 内では template 展開がそこで失敗する。`chezmoi cat` に複数の target を渡すと、1 つでも失敗すれば他の target も出力しない。`private_dot_ssh/private_config.tmpl` は止まらない。あちらは `op` を呼ばず、agent の socket があるかを `stat` で見る（2026-10-22 実測）。
 
 **この socket は足さない。** `op` が通ると、sandbox 内の command が vault の項目を平文で読める。署名 agent の socket が与えるのは鍵で署名させるところまでで、権限の強さが違う。足して得られるのは sandbox 内で chezmoi の read 系が通る利便だけなので、釣り合わない。
 

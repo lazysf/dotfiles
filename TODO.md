@@ -97,7 +97,7 @@ mac で確かめること。
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
-`dot_ssh/private_config.tmpl` の `Host *` に `ForwardAgent yes` がある。agent forwarding が必要な接続先を確認し、許可する範囲を検討する。
+`private_dot_ssh/private_config.tmpl` の `Host *` に `ForwardAgent yes` がある。agent forwarding が必要な接続先を確認し、許可する範囲を検討する。
 
 ---
 
