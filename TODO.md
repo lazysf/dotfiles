@@ -12,19 +12,6 @@
 
 ---
 
-## 1. mac の Codex のエージェント用署名の自動設定
-
-- 記載: 2026-11-07（個人用 Windows で Claude Code の設定を見直した時）
-
-mac の `personal` では、`run_after_zz-configure-codex-signing.sh.tmpl` が `chezmoi apply` で `~/.codex/hooks.json` の `SessionStart` と `~/.codex/config.toml` の署名の設定を足す。2026-11-06 に確かめたのは、一時ホームと、app-server の `command/exec` での署名まで。手順と結果は `docs/notes/codex-harness-operation.md` の「macOS のエージェント用署名」にある。
-
-個人用 mac で確かめること。
-
-- 実際の作業機で apply した後に、`hooks.json` と `config.toml` に署名の設定が入るか。
-- Codex CLI の `/hooks` で hook を信頼した後の、新しい Codex の session で、commit の `%G?` が `G` になるか。push した commit が GitHub で Verified になるか。
-
----
-
 ## 2. Windows の Codex のエージェント用署名
 
 - 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
