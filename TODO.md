@@ -59,21 +59,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 4. mac で Claude Desktop の 2 つ目のアカウント
-
-- 記載: 2026-11-01（Claude Desktop の 2 つ目のアカウント用ショートカットを setup に足した時）
-
-Windows では、`--user-data-dir` で別のインスタンスが開くことを確認した。mac の `create_claude_account_app` は実機で動かしていない。構成の理由は `docs/notes/claude-desktop-multi-account.md` にある。
-
-mac で確かめること。
-
-- `scripts/macos/setup.sh` を実行すると、`~/Applications/Claude-2nd.app` ができる。
-- Raycast と Spotlight から `Claude-2nd` を起動すると、起動中の Claude を前面に出すのではなく、ログイン画面の別ウィンドウが開く。
-- 2 つ目のウィンドウで、ファイルのドラッグ&ドロップと Code タブが動く。
-
----
-
-## 5. エージェント用署名鍵の GitHub 登録の自動化
+## 4. エージェント用署名鍵の GitHub 登録の自動化
 
 - 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
 
@@ -83,7 +69,7 @@ mac で確かめること。
 
 ---
 
-## 6. Claude Code からの署名鍵の書き込みを制限する
+## 5. Claude Code からの署名鍵の書き込みを制限する
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
