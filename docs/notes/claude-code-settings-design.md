@@ -292,6 +292,7 @@ hook は Windows でも同じスクリプトを使う。hooks docs によると�
 - `SSH_AUTH_SOCK` は `~/.local/state/agent-signing/agent.sock` を指す。`GIT_CONFIG_COUNT` は `2` で、0 番が `gpg.ssh.program=ssh-keygen`、1 番が `user.signingkey=key::ssh-ed25519 ...` になる。mac と違い、Claude Code は `safe.directory` の 2 件を入れていない。
 - `ssh-add -l` は comment が `agent-signing` の ED25519 鍵 1 本だけを返す。
 - 使い捨ての repo で `commit.gpgsign=true` の commit は 1Password の承認を待たずに終わり、`%G?` は `G` になる。`%GK` の fingerprint は `~/.ssh/agent_signing_ed25519.pub` と一致する。
+- この鍵で署名して push した commit は、GitHub の commits API で `verification.verified` が `true`、`reason` が `valid` になった（`1246874` など、2026-11-07 確認）。1Password で署名した commit とは、`%GK` の fingerprint で見分けられる。
 
 #### Windows の PowerShell tool は無効のまま使う
 
@@ -402,5 +403,4 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
 - `sandbox.filesystem.denyWrite` に入れた `~/.local/state/agent-signing` と `~/.config/git/start-signing-agent` について、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` の session で問題になる。
-- Windows でエージェントが署名して push した commit が、GitHub 上で Verified になるか。TODO.md に載せている。
 - Windows の `diskpart` の deny rule が実行前に拒否するか。読み取りだけの呼び出し方が無く、deny が効かなかった時に UAC の確認が出る可能性があるので、試していない。
