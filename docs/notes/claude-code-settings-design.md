@@ -267,13 +267,13 @@ sandbox 内のコマンドは、専用 agent に任意のデータへの署名�
 
 パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。消した後に、過去の署名済み commit がどう表示されるかは確かめていない。
 
-鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直されるので、hook は次の session から新しい鍵を使う。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
+鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直される。署名専用の agent が止まっていれば、hook は次の session から新しい鍵を使う。agent が古い鍵を持ったまま動いていると、`start-signing-agent` は鍵を渡さずに失敗し、その session は 1Password の署名に戻る（TODO.md の 10）。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
 
 `~/.ssh` へのエージェントの書き込みは、`permissions.deny` の `Edit(~/.ssh/**)` で止める。setup スクリプトは鍵ペアが既にあると生成をスキップするので、エージェントが鍵ペアを置くと、人がその公開鍵を GitHub に登録するおそれがある。公式の permissions docs によると、`Edit` rule が止めるのは、組み込みの編集ツールと、Claude Code が認識する Bash の書き込み（`tee` やリダイレクト）。`cp`、`mv`、`ssh-keygen -f` のように自分でファイルを書く command は止めない。mac では、cwd が home の外にあれば sandbox の write 制限がこれらも止める。Windows には止める層が無い。Windows の session（Claude Code 2.1.317、auto mode）では、Write ツールと `echo ... > ~/.ssh/<probe>` が実行前に拒否され、ファイルはできなかった（2026-11-07 実測）。
 
 ### Windows では sandbox の防御が効かない
 
-公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。上の防御のうち、`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。Windows の session でも、Read ツール、Glob、Grep は `~/.ssh` で拒否された。Read ツールは、`\` 区切りの path と `/` 区切りの path のどちらでも拒否された（2026-11-07 実測、Claude Code 2.1.317、auto mode。存在しないファイルと、何にも一致しない pattern で試した）。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
+公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。上の防御のうち、`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。Windows の session でも、Read ツール、Glob、Grep と、Bash の `ls ~/.ssh` は `~/.ssh` で拒否された。Read ツールは、`\` 区切りの path と `/` 区切りの path のどちらでも拒否された（2026-11-07 実測、Claude Code 2.1.317、auto mode。存在しないファイルと、何にも一致しない pattern で試した）。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
 
 その結果、Windows のエージェントの Bash と PowerShell のコマンドは、パスフレーズの無い秘密鍵を読んで外へ送れる。mac の sandbox 内のコマンドは agent に署名を頼めるだけで、鍵そのものは持ち出せない。Windows では鍵を持ち出せるので、session が終わった後も別の場所で署名できる。漏れた後の影響と失効の手順は上の「代償と失効」と同じ。それでも、エージェントの作業が 1Password の承認で止まらないことを優先し、Windows の `personal` にも入れる。sandbox を使える WSL2 で Claude Code を動かす案は、環境を作り直す範囲が大きいので採らない。
 
@@ -300,7 +300,7 @@ Windows の session では PowerShell tool が無効になっている。公式�
 無効のままにするのは、エージェントのコマンドを Bash に寄せた方が、ここまでの仕組みが効くため。
 
 - 署名の設定は PowerShell のコマンドに渡らない。hooks docs によると、PowerShell のコマンドが `CLAUDE_ENV_FILE` の値を受け取るのは、全ての行が単純な代入の時だけ。hook が書く行には `$((...))` の計算があるので、この条件を満たさない。加えて Windows では、`/` か `\` を含む値が PowerShell に渡らない。`SSH_AUTH_SOCK` がこれに当たる。PowerShell で commit すると 1Password の署名に戻り、承認を待って止まる。PowerShell tool が無効なので、ここは実測していない。
-- `Read(~/.ssh/**)` の deny は、Windows の Bash で `ls ~/.ssh` を実行前に止めた（2026-11-07 実測）。PowerShell の `Get-Content` などに `Read` deny rule が効くとは、公式の permissions docs に書かれていない。
+- `Read(~/.ssh/**)` の deny は、Windows の Bash の `ls` にも効く（「Windows では sandbox の防御が効かない」の冒頭の段落）。PowerShell の `Get-Content` などに `Read` deny rule が効くとは、公式の permissions docs に書かれていない。
 
 PowerShell tool を有効にする方法は 2 つある。`CLAUDE_CODE_USE_POWERSHELL_TOOL=1` を設定するか、`PowerShell(...)` の deny rule を足す。どちらでも上の 2 点を失う。
 
