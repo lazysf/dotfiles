@@ -237,6 +237,39 @@ function Wait-OnePassword {
     }
 }
 
+# エージェントの commit を署名する専用の鍵。Claude Code の SessionStart hook が Git Bash の ssh-agent に載せるので、
+# その ssh-add と同じ Git for Windows の ssh-keygen で作る。
+function New-AgentSigningKey {
+    Write-Host '==> エージェント用の署名鍵'
+    $key = Join-Path $env:USERPROFILE '.ssh\agent_signing_ed25519'
+    $hasKey = Test-Path $key
+    $hasPub = Test-Path "$key.pub"
+    if ($hasKey -and $hasPub) {
+        Write-Host "  - $key (skip)"
+        return
+    }
+    # 片方だけある時は、作り直すと残っている方を失う。ssh-keygen の上書き確認で止まらないよう、ここで抜ける。
+    if ($hasKey -or $hasPub) {
+        Write-Warning "鍵のペアが揃っていないので作りません: $key"
+        return
+    }
+    $sshKeygen = Join-Path $env:ProgramFiles 'Git\usr\bin\ssh-keygen.exe'
+    if (-not (Test-Path $sshKeygen)) {
+        Write-Warning "  $sshKeygen が無いため $key を作りません"
+        return
+    }
+    New-Item -ItemType Directory -Force -Path (Split-Path $key) | Out-Null
+    # Windows PowerShell 5.1 は空文字の引数を落とし、-N が次の引数をパスフレーズとして取る。
+    # --% で以降を PowerShell に解釈させずに渡す。--% の後ろは PowerShell の変数を展開しないので、
+    # path は %USERPROFILE% で書く。
+    & $sshKeygen --% -q -t ed25519 -N "" -C agent-signing -f "%USERPROFILE%\.ssh\agent_signing_ed25519"
+    # $ErrorActionPreference='Stop' は native command の非ゼロ exit を例外化しないため、明示確認する。
+    if ($LASTEXITCODE -ne 0) {
+        throw "ssh-keygen が exit code $LASTEXITCODE で終了しました: $key"
+    }
+    Write-Host "  + $key"
+}
+
 function Install-AiStack {
     Write-Host '==> AI ツール (デスクトップ)'
     Install-WingetPackage Anthropic.Claude
@@ -332,6 +365,7 @@ Install-DotfilesStack
 if ($MachineProfile -eq 'personal') {
     Install-PasswordStack
     Wait-OnePassword
+    New-AgentSigningKey
 }
 Install-AiStack
 Install-FontStack

@@ -4,7 +4,7 @@
 
 ## セットアップ
 
-セットアップスクリプトでパッケージを入れてから、chezmoi で dotfiles を展開します。スクリプトは machine profile（`personal` か `work`）を聞きます。`personal` では 1Password を入れ、サインインと CLI 連携、SSH agent の設定が済むまで待ちます。macOS の `personal` では、Claude Code のエージェントが commit の署名に使う鍵（`~/.ssh/agent_signing_ed25519`）も作ります。
+セットアップスクリプトでパッケージを入れてから、chezmoi で dotfiles を展開します。スクリプトは machine profile（`personal` か `work`）を聞きます。`personal` では 1Password を入れ、サインインと CLI 連携、SSH agent の設定が済むまで待ちます。Claude Code のエージェントが commit の署名に使う鍵（`~/.ssh/agent_signing_ed25519`）も作ります。
 
 ### macOS（Apple Silicon）
 
@@ -89,7 +89,7 @@ chezmoi apply
 macOS の `personal` では、`chezmoi apply` が Codex の署名設定を追加します。初回は Codex CLI の `/hooks` で署名用の hook を確認して信頼します。[Codex の署名設定と動作確認](docs/notes/codex-harness-operation.md#macos-のエージェント用署名)を参照してください。
 
 - macOS の Terminal プロファイル: [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は配布されますが、Terminal への import は手で行います。
-- macOS のエージェント用の署名鍵の GitHub への登録（`personal`）: GitHub の Settings > SSH and GPG keys > New SSH key で、Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` の中身を登録します。Authentication Key には登録しません。登録しないと、エージェントが署名した commit は GitHub 上で Verified になりません。登録した後、次のコマンドが `Permission denied (publickey)` で失敗することを確かめます。成功した時は Authentication Key として登録されているので、消して登録し直します: `ssh -T -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/agent_signing_ed25519 git@github.com`
+- エージェント用の署名鍵の GitHub への登録（`personal`）: 鍵は作業機ごとにあるので、作業機ごとに登録します。GitHub の Settings > SSH and GPG keys > New SSH key で、Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` の中身を登録します。Authentication Key には登録しません。登録しないと、エージェントが署名した commit は GitHub 上で Verified になりません。登録した後、次のコマンドが `Permission denied (publickey)` で失敗することを確かめます。Windows では Git Bash で実行します。成功した時は Authentication Key として登録されているので、消して登録し直します: `ssh -T -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/agent_signing_ed25519 git@github.com`
 - macOS の Parsec のクライアント設定（`personal`）: Parsec が設定と同じファイルに状態値を書き込むため、`~/.parsec/config.json` は配布しません。Parsec の Settings で Window Mode を Windowed、Immersive Mode を Keyboard、Swap Command and Ctrl for MacOS を Off にします。
 - Windows の VB-CABLE（`personal`）: winget に無いため、<https://vb-audio.com/Cable/> から Driver Pack の zip を取得し、展開した `VBCABLE_Setup_x64.exe` を管理者として実行します。導入後に再起動します。未導入ならセットアップスクリプトが手順を表示し、このページを開きます。
 - Windows の Parsec の仮想ディスプレイ（`personal`）: ドライバ（`Parsec.ParsecVDD`）はセットアップスクリプトが入れます。物理ディスプレイが無い時に仮想ディスプレイを使うには、Parsec の Settings > Host で Fallback To Virtual Display をオンにします。無料プランで使えるのはこの 1 枚だけです。
