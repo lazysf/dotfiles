@@ -135,16 +135,17 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 
 ---
 
-## 11. mac の disk 系 deny rule の大文字と絶対パス
+## 11. mac の disk 系 deny rule の大文字
 
 - 記載: 2026-11-07（Windows の disk 系 command を `permissions.deny` に足した時の security review）
 
 Windows では、`Bash(...)` rule の照合が大文字と小文字を区別する一方、command の解決は区別しないので、大文字の `WBADMIN` が rule に当たらずに実行された。絶対パスの `/c/Windows/System32/wbadmin.exe` は拒否された。経緯は `docs/notes/claude-code-settings-design.md` の「auto mode の built-in ルール」にある。
 
+mac の絶対パスの形（`/usr/sbin/diskutil list`）は、permission rule の層で拒否された（2026-11-07 実測、notes の「sandbox で効いている層と効いていない層」）。
+
 mac で確かめること。
 
-- APFS が大文字と小文字を区別しない既定の volume で、`DISKUTIL list` のような大文字の形が `Bash(diskutil *)` に当たらずに実行されるか。実行されるなら、大文字の形を rule に足すかを決める。
-- `/usr/sbin/diskutil list` のような絶対パスの形が拒否されるか。notes の mac の節は、公式仕様から「絶対パスは覆わない」と書いている。拒否されるなら、止めたのが rule か classifier かを Manual mode の session で切り分け、notes を直す。
+- APFS が大文字と小文字を区別しない既定の volume で、`DISKUTIL list` のような大文字の形が `Bash(diskutil *)` に当たらずに実行されるか。auto mode では classifier が `Auto-Mode Bypass` として先に止めるので、Manual mode の session で確かめる。実行されるなら、大文字の形を rule に足すかを決める。
 
 ---
 
