@@ -271,7 +271,9 @@ GitHub に Signing Key として登録した後、README の「手作業が要�
 
 sandbox 内のコマンドは、専用 agent に任意のデータへの署名を依頼できる。GitHub に Signing Key として登録すれば、この鍵の署名も Verified になる。エージェントの commit と人の commit は、署名に使った鍵で見分けられる。
 
-パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。消した後に、過去の署名済み commit がどう表示されるかは確かめていない。
+パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。
+
+GitHub の仕様では、検証記録がある commit は署名鍵を更新・失効した後も、同じ repo とその fork で Verified のままになる。手元の `allowed_signers` に入るエージェント用の公開鍵は、その作業機で使っている現在の鍵だけである。鍵更新後に旧鍵の署名を見返す時は GitHub の Verified を確認する。[GitHub の署名検証記録](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#persistent-commit-signature-verification)
 
 鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直される。鍵を作り直した後は、下記の手順で署名専用の agent を手動で止めてから、新しい session を開く。`dot_config/git/executable_start-signing-agent` は、接続できる agent に現在の公開鍵が無ければ、鍵を渡さずに終了する。socket への応答だけでは、起動スクリプトが管理する agent かどうかを確認できないためである。この場合、Claude Code の hook は署名用の環境変数を書かず、既定の 1Password の署名設定を使う。
 

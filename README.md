@@ -89,7 +89,36 @@ chezmoi apply
 macOS の `personal` では、`chezmoi apply` が Codex の署名設定を追加します。初回は Codex CLI の `/hooks` で署名用の hook を確認して信頼します。[Codex の署名設定と動作確認](docs/notes/codex-harness-operation.md#macos-のエージェント用署名)を参照してください。
 
 - macOS の Terminal プロファイル: [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は配布されますが、Terminal への import は手で行います。
-- エージェント用の署名鍵の GitHub への登録（`personal`）: 鍵は作業機ごとにあるので、作業機ごとに登録します。GitHub の Settings > SSH and GPG keys > New SSH key で、Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` の中身を登録します。Authentication Key には登録しません。登録しないと、エージェントが署名した commit は GitHub 上で Verified になりません。登録した後、次のコマンドが `Permission denied (publickey)` で失敗することを確かめます。Windows では Git Bash で実行します。成功した時は Authentication Key として登録されているので、消して登録し直します: `ssh -T -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/agent_signing_ed25519 git@github.com`
+- エージェント用の署名鍵の GitHub への登録（`personal`）は、作業機で新しい鍵を使い始めるときに行います。GitHub 上でエージェントの commit を Verified にするために必要です。
+
+  新しい鍵の fingerprint は生成時の表示を控え、登録前に次のコマンドの結果と照合します。Windows ではコマンドを Git Bash で実行します。
+
+  ```sh
+  ssh-keygen -E sha256 -lf ~/.ssh/agent_signing_ed25519.pub
+  ```
+
+  ブラウザでは、意図したアカウントの Settings > SSH and GPG keys > New SSH key を開きます。Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` を登録します。
+
+  CLI で登録する場合、未ログインなら `gh auth login --hostname github.com --skip-ssh-key` を実行します。`--skip-ssh-key` はログイン時の認証鍵のアップロードをスキップする指定です。次の出力が意図した登録先アカウントであることを確認します。[GitHub CLI のログイン手順](https://cli.github.com/manual/gh_auth_login)
+
+  ```sh
+  gh api --hostname github.com user --jq .login
+  ```
+
+  GitHub CLI の OAuth 認証には `write:ssh_signing_key` scope が必要です。権限が足りない場合はブラウザで登録できます。CLI で続ける場合は、意図したアカウントで `gh auth refresh --hostname github.com --scopes write:ssh_signing_key` を実行し、登録先アカウントを再確認します。[GitHub の署名鍵 API](https://docs.github.com/en/rest/users/ssh-signing-keys#create-a-ssh-signing-key-for-the-authenticated-user) / [GitHub CLI の権限更新](https://cli.github.com/manual/gh_auth_refresh)
+
+  fingerprint と登録先を照合できたら、次のコマンドで登録します。
+
+  ```sh
+  GH_HOST=github.com gh ssh-key add ~/.ssh/agent_signing_ed25519.pub --type signing
+  ```
+
+  登録後は、次の SSH 接続が `Permission denied (publickey)` で失敗することを確認します。認証に成功した場合は、GitHub からこの鍵の Authentication Key 登録を削除します。
+
+  ```sh
+  ssh -T -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/agent_signing_ed25519 git@github.com
+  ```
+
 - macOS の Parsec のクライアント設定（`personal`）: Parsec が設定と同じファイルに状態値を書き込むため、`~/.parsec/config.json` は配布しません。Parsec の Settings で Window Mode を Windowed、Immersive Mode を Keyboard、Swap Command and Ctrl for MacOS を Off にします。
 - Windows の VB-CABLE（`personal`）: winget に無いため、<https://vb-audio.com/Cable/> から Driver Pack の zip を取得し、展開した `VBCABLE_Setup_x64.exe` を管理者として実行します。導入後に再起動します。未導入ならセットアップスクリプトが手順を表示し、このページを開きます。
 - Windows の Parsec の仮想ディスプレイ（`personal`）: ドライバ（`Parsec.ParsecVDD`）はセットアップスクリプトが入れます。物理ディスプレイが無い時に仮想ディスプレイを使うには、Parsec の Settings > Host で Fallback To Virtual Display をオンにします。無料プランで使えるのはこの 1 枚だけです。

@@ -32,6 +32,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 個人の Windows で確かめること。
 
 - `scripts/windows/setup.ps1 personal` の日本語の出力が化けない。先頭に UTF-8 の BOM を付けてある。
+- 次に署名鍵を新規生成した時、setup が表示する SHA-256 fingerprint が公開鍵と一致する。CLI で登録した場合は、その鍵で署名した commit が GitHub で Verified になることも確かめる。（2026-11-07 追加）
 - 引数なしで実行すると、`PromptForChoice` で profile の選択肢が出る。
 - 1Password が未設定の時は、Developer の設定画面が開いて待つ。設定すると Enter で先へ進む。`Update-SessionPath` で、winget で入れた `op` が見つかる。設定済みなら待たずに進む。
 - `chezmoi init --apply lazysf` で profile を聞かれない。
@@ -59,17 +60,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 4. エージェント用署名鍵の GitHub 登録の自動化
-
-- 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
-
-鍵の生成は setup.sh と `scripts/windows/setup.ps1` で自動化したが、GitHub への Signing Key の登録は README の手作業のまま。どちらも `chezmoi init` より前に走り、その時点では `gh` が認証されていないので、スクリプトの中では登録できない。
-
-自動化するなら、`gh` が認証された後に走る入口（chezmoi の run script など）で、`gh ssh-key add --type signing` を使う形を検討する。`gh` の token に Signing Key を書く scope が要るかは確かめていない。
-
----
-
-## 5. Claude Code からの署名鍵の書き込みを制限する
+## 4. Claude Code からの署名鍵の書き込みを制限する
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
