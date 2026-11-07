@@ -30,6 +30,7 @@
       "Read(//**/.env.*)",
       "Read(//**/secrets/**)",
       "Read(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
       "Edit(~/.config/git/start-signing-agent)",
       "Read(~/.aws/**)",
       "Read(~/.config/gh/**)",

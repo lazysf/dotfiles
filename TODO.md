@@ -77,7 +77,9 @@ mac で確かめること。
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
-`dot_claude/settings.json` の `permissions.deny` は `~/.ssh` 配下の `Read` を拒否する。`Edit` を拒否するルールはない。承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。鍵の配置先への書き込みを制限する方法を検討する。
+承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。
+
+2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を足し、編集ツールと Bash のリダイレクトは止まるようになった。`cp`、`mv`、`ssh-keygen -f` のように自分でファイルを書く command は、Windows では止まらない。cwd が home にある mac の session で sandbox が止めるかは確かめていない。範囲は `docs/notes/claude-code-settings-design.md` の「代償と失効」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
 
 ---
 

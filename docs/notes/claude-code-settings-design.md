@@ -263,6 +263,8 @@ sandbox 内のコマンドは、専用 agent に任意のデータへの署名�
 
 鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直されるので、hook は次の session から新しい鍵を使う。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
 
+`~/.ssh` へのエージェントの書き込みは、`permissions.deny` の `Edit(~/.ssh/**)` で止める。setup スクリプトは鍵ペアが既にあると生成をスキップするので、エージェントが鍵ペアを置くと、人がその公開鍵を GitHub に登録するおそれがある。公式の permissions docs によると、`Edit` rule が止めるのは、組み込みの編集ツールと、Claude Code が認識する Bash の書き込み（`tee` やリダイレクト）。`cp`、`mv`、`ssh-keygen -f` のように自分でファイルを書く command は止めない。mac では、cwd が home の外にあれば sandbox の write 制限がこれらも止める。Windows には止める層が無い。Windows の session（Claude Code 2.1.317、auto mode）では、Write ツールと `echo ... > ~/.ssh/<probe>` が実行前に拒否され、ファイルはできなかった（2026-11-07 実測）。
+
 ### Windows では sandbox の防御が効かない
 
 公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。上の防御のうち、`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
