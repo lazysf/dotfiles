@@ -213,6 +213,8 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 取り出した credential を GitHub へ送る通信には、上の表の `network.allowedDomains` の行にある proxy の制限が掛かる。同じ日に auto mode の session で、host を申告しない `curl https://api.github.com/zen` は 403 で止まった。host を申告した時に審査を通るかは確かめていない。
 
+mac では、gh の token を Keychain ではなく `~/.config/gh/hosts.yml` に置く（`gh auth login` に `--insecure-storage` を付ける）。Claude Code の sandbox は `~/.config/gh` の読み取りを拒否するので、ファイルに置けば sandbox 内から届かない。2026-11-07 にこの形でログインし直し、Keychain に gh のエントリが無いことと、sandbox 内から `hosts.yml` を開くと `PermissionError`（errno 1）になることを確かめた。代わりに token は平文でディスクに残り、sandbox の外で動く同じユーザーのプロセスは読める。Codex の sandbox から読めるかは確かめていない。
+
 ## 署名 agent の socket を通す理由
 
 人の commit の署名は 1Password の `op-ssh-sign` が担当し、agent socket 経由で app と通信する。`allowUnsandboxedCommands: false` の strict sandbox mode では commit も sandbox 内で走るため、この socket が通らないと署名できない。
