@@ -53,3 +53,15 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。
 
 2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を、`sandbox.filesystem.denyWrite` へ `~/.ssh` を足した。Windows では sandbox が効かないので、`mv`、`ssh-keygen -f`、`rm` は止まらない（2026-11-07 実測）。mac で止まる範囲と、その実測は `docs/notes/claude-code-settings-design.md` の「代償と失効」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
+
+---
+
+## 4. Windows の Claude Code で sandbox が担う防御の代わりを確かめる
+
+- 記載: 2026-11-07（今日の commit の security review で範囲外とした項目）
+
+native Windows では、Claude Code の Bash が sandbox の外で動く。mac で sandbox が担っている次の 3 つが、Windows で何に止められるかは確かめていない。前提は `docs/notes/claude-code-settings-design.md` の「Windows では sandbox の防御が効かない」にある。
+
+- エージェントの session からの push がどこで止まるか。mac では、sandbox の proxy が SSH を運ばないので止まる。Windows で見るのは、`core.sshCommand`、1Password の承認がどの範囲まで記憶されるか、gh の credential helper の 3 つ。
+- エージェントの Bash が、`mv` や python で `~/.claude/settings.json` や hook を書き換えられるか。mac では protected paths が止める（`~/.claude/settings.json` は 2026-11-07 に実測）。Windows の `~/.ssh` では、同じ形の `mv` と `ssh-keygen -f` が通った（2026-11-07 実測）。
+- 大文字で書いた `~/.SSH/...` が、`Edit(~/.ssh/**)` と `Read(~/.ssh/**)` の rule を外れるか。Windows の file system は既定で大文字と小文字を区別しないので、rule を外れると同じファイルに届く。
