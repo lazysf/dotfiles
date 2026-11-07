@@ -12,19 +12,6 @@
 
 ---
 
-## 1. 個人用 mac での Claude Code の設定の見直し
-
-- 記載: 2026-11-07（個人用 Windows で Claude Code の設定を見直した時）
-
-個人用 Windows では、`dot_claude/settings.json` の各設定が実際に効いているかを、公式 docs と実機の session で確かめた。結果は `docs/notes/claude-code-settings-design.md` にある。個人用 mac でも同じ見直しをする。
-
-- 現状を把握し、見直す候補を挙げてから、候補ごとに相談して変える。
-- 判断の前に、公式 docs（settings、permissions、sandboxing、hooks）を今の版で確かめる。
-- notes の mac の記述が、今の Claude Code の版と mac の実機で成り立つかを確かめる。classifier のルールの件数のように、版で動く値は数え直す。
-- mac で確かめる TODO（2、5、6、11 など）を、この見直しの中で扱うかを決める。
-
----
-
 ## 2. mac の Codex のエージェント用署名の自動設定
 
 - 記載: 2026-11-07（個人用 Windows で Claude Code の設定を見直した時）
