@@ -50,8 +50,12 @@
 - Codex の設定や運用を判断する場合は `openai-docs` を使い、対象の公式情報を確認する。
 - [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic)、[Permissions](https://learn.chatgpt.com/docs/permissions)、[Skills](https://learn.chatgpt.com/docs/build-skills)、[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[Rules](https://learn.chatgpt.com/docs/agent-configuration/rules) を判断対象に応じて参照する。
 - `dot_claude/` と `dot_codex/` を変えたら、共通の意図と runtime 固有の差を確認する。tool 名、配置、権限を機械的に揃えない。
-- 変更した path、skill / agent 名、設定キーの参照を `rg` で確認する。ADR 本文は採用時点の履歴として保持する。
-- `.gitignore` の追跡対象と `.chezmoiignore` の配布対象は独立に確認する。適用後は `chezmoi managed` と target の実体を突き合わせる。
+
+## 変更後の確認
+
+- 追加、rename、削除した path、名前（skill / rule / agent）、設定キーは、`rg --hidden -g '!.git'` で参照を探す。`--hidden` は `.github/` などの dot path を含めるため、`-g '!.git'` は `.git/` の log を除くため。ADR 本文は採用時点の記録なので直さない。
+- `.gitignore` の追跡対象と `.chezmoiignore` の配布対象は独立に確認する。source から消したファイルは target に残るので、適用後は `chezmoi managed` と target の実体を突き合わせる。
+- surface（`dot_claude/`、`dot_codex/`、`.claude/`、root の `AGENTS.md` / `CLAUDE.md`）の変更と、その理由を書いた `docs/notes/` は別 commit にする（根拠は `docs/notes/git-commit-skill-design.md`）。後から見つけた追従漏れも別 commit にする。
 
 ## 置き場の原則
 
