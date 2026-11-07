@@ -21,11 +21,35 @@
 - 現状を把握し、見直す候補を挙げてから、候補ごとに相談して変える。
 - 判断の前に、公式 docs（settings、permissions、sandboxing、hooks）を今の版で確かめる。
 - notes の mac の記述が、今の Claude Code の版と mac の実機で成り立つかを確かめる。classifier のルールの件数のように、版で動く値は数え直す。
-- mac で確かめる TODO（3、4、10、11 など）を、この見直しの中で扱うかを決める。
+- mac で確かめる TODO（2、5、6、11、12 など）を、この見直しの中で扱うかを決める。
 
 ---
 
-## 2. Windows 実機での動作確認
+## 2. mac の Codex のエージェント用署名の自動設定
+
+- 記載: 2026-11-07（個人用 Windows で Claude Code の設定を見直した時）
+
+mac の `personal` では、`run_after_zz-configure-codex-signing.sh.tmpl` が `chezmoi apply` で `~/.codex/hooks.json` の `SessionStart` と `~/.codex/config.toml` の署名の設定を足す。2026-11-06 に確かめたのは、一時ホームと、app-server の `command/exec` での署名まで。手順と結果は `docs/notes/codex-harness-operation.md` の「macOS のエージェント用署名」にある。
+
+個人用 mac で確かめること。
+
+- 実際の作業機で apply した後に、`hooks.json` と `config.toml` に署名の設定が入るか。
+- Codex CLI の `/hooks` で hook を信頼した後の、新しい Codex の session で、commit の `%G?` が `G` になるか。push した commit が GitHub で Verified になるか。
+
+---
+
+## 3. Windows の Codex のエージェント用署名
+
+- 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
+
+Windows では Claude Code だけがエージェント用の鍵で署名する。
+
+- Codex の署名設定を入れる `scripts/macos/configure-codex-signing.py` と `run_after_zz-configure-codex-signing.sh.tmpl` は macOS 専用で、zsh のログインシェルを前提にしている。Windows の Codex で同じ鍵を使うなら、Codex の Windows の sandbox と hook の shell を公式情報で確かめてから設計する。
+- `dot_codex/rules/destructive.rules` の disk 系の command は macOS のものだけで、2026-11-07 に Claude Code の `permissions.deny` へ足した Windows の command（`diskpart`、`format.com`、`convert.exe`、`wbadmin`）は入っていない。Codex の Windows の sandbox を確かめる時に、揃えるかも判断する。
+
+---
+
+## 4. Windows 実機での動作確認
 
 - 記載: 2026-10-22（machine profile の導入、セットアップスクリプトの統合、`chezmoi apply` からのセットアップ実行）
 
@@ -47,7 +71,7 @@
 
 ---
 
-## 3. mac で 1Password が未設定の時の待機
+## 5. mac で 1Password が未設定の時の待機
 
 - 記載: 2026-10-22（setup で 1Password の設定を待つようにした時）
 
@@ -61,7 +85,7 @@
 
 ---
 
-## 4. mac で Claude Desktop の 2 つ目のアカウント
+## 6. mac で Claude Desktop の 2 つ目のアカウント
 
 - 記載: 2026-11-01（Claude Desktop の 2 つ目のアカウント用ショートカットを setup に足した時）
 
@@ -75,7 +99,7 @@ mac で確かめること。
 
 ---
 
-## 5. エージェント用署名鍵の GitHub 登録の自動化
+## 7. エージェント用署名鍵の GitHub 登録の自動化
 
 - 記載: 2026-11-06（エージェント用署名鍵の生成を `scripts/macos/setup.sh` に入れた時）
 
@@ -85,7 +109,7 @@ mac で確かめること。
 
 ---
 
-## 6. Claude Code からの署名鍵の書き込みを制限する
+## 8. Claude Code からの署名鍵の書き込みを制限する
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -95,7 +119,7 @@ mac で確かめること。
 
 ---
 
-## 7. SSH agent forwarding の対象を絞る
+## 9. SSH agent forwarding の対象を絞る
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -103,7 +127,7 @@ mac で確かめること。
 
 ---
 
-## 8. chezmoi が管理する `~/.ssh` の権限を見直す
+## 10. chezmoi が管理する `~/.ssh` の権限を見直す
 
 - 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
@@ -111,17 +135,7 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 
 ---
 
-## 9. Windows の Codex のエージェント用署名
-
-- 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
-
-Windows では Claude Code だけがエージェント用の鍵で署名する。Codex の署名設定を入れる `scripts/macos/configure-codex-signing.py` と `run_after_zz-configure-codex-signing.sh.tmpl` は macOS 専用で、zsh のログインシェルを前提にしている。Windows の Codex で同じ鍵を使うなら、Codex の Windows の sandbox と hook の shell を公式情報で確かめてから設計する。
-
-`dot_codex/rules/destructive.rules` の disk 系の command も macOS のものだけで、2026-11-07 に Claude Code の `permissions.deny` へ足した Windows の command（`diskpart`、`format.com`、`convert.exe`、`wbadmin`）は入っていない。Codex の Windows の sandbox を確かめる時に、揃えるかも判断する。（2026-11-07 追加）
-
----
-
-## 10. mac の disk 系 deny rule の大文字と絶対パス
+## 11. mac の disk 系 deny rule の大文字と絶対パス
 
 - 記載: 2026-11-07（Windows の disk 系 command を `permissions.deny` に足した時の security review）
 
@@ -134,7 +148,7 @@ mac で確かめること。
 
 ---
 
-## 11. 鍵を作り直した後の署名 agent の扱い
+## 12. 鍵を作り直した後の署名 agent の扱い
 
 - 記載: 2026-11-07（Claude Code の設定の見直しで、前の session から引き継いだ項目）
 
