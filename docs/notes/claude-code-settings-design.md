@@ -136,6 +136,8 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 絶対パスの形は、公式の permissions docs の表では rule から外れる側にある（`/usr/bin/curl` の例）。ただし mac の v2.1.317 では、`/usr/sbin/diskutil list` が `Permission to use Bash with command /usr/sbin/diskutil list has been denied.` で拒否された（2026-11-07 実測、auto mode）。classifier の拒否は `denied by the Claude Code auto mode classifier` という別の文言になるので、止めたのは permission rule の層と読める。対照として、deny に無い `/usr/bin/true` は実行された。
 
+**mac でも rule の照合は大文字と小文字を区別するが、command の解決は区別しない。** Manual mode の session（v2.1.317）で、`diskutil list` は確認なしで拒否された。同じ session で、`DISKUTIL list` は rule に当たらずに確認なしで実行され、`Unable to run because unable to use the DiskManagement framework` で落ちた（2026-11-07 実測）。確認が出なかったのは、sandbox 内のコマンドを確認なしで実行する `autoAllowBashIfSandboxed` の既定値のため。mac では大文字の形を rule に足さない。Windows で足したのは help と docs が大文字で書くためで、`man diskutil` は小文字で書くので、model が大文字を写す理由が無い。
+
 効いているのは次の 4 つで、deny rule はその後ろに置く speed bump として持つ。上の層が無い環境（sandbox 無効、root 実行、Linux / WSL2）でだけ前に出る。
 
 - sandbox が `sudo` を止める（上記）
@@ -271,9 +273,9 @@ sandbox 内のコマンドは、専用 agent に任意のデータへの署名�
 
 パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。消した後に、過去の署名済み commit がどう表示されるかは確かめていない。
 
-鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直される。署名専用の agent が止まっていれば、hook は次の session から新しい鍵を使う。agent が古い鍵を持ったまま動いていると、`start-signing-agent` は鍵を渡さずに失敗し、その session は 1Password の署名に戻る（TODO.md の 12）。Windows の Git Bash では、専用の agent の PID は `/proc/<pid>/cmdline` の起動引数（`-a ~/.local/state/agent-signing/agent.sock`）で見分けられ、`kill <pid>` で止まった。止めると socket のファイルも消えた。その後に `~/.config/git/start-signing-agent` を実行すると agent が起動し直して鍵を載せ、使い捨ての repo の commit は `%G? = G` になった（2026-11-07 実測）。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
+鍵ファイルを消しても、エージェントの署名は止まらない。`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は鍵が無いと作り直し、それぞれが変わるたびに `chezmoi apply` から実行し直される。署名専用の agent が止まっていれば、hook は次の session から新しい鍵を使う。agent が古い鍵を持ったまま動いていると、`start-signing-agent` は鍵を渡さずに失敗し、その session は 1Password の署名に戻る（TODO.md の 11）。Windows の Git Bash では、専用の agent の PID は `/proc/<pid>/cmdline` の起動引数（`-a ~/.local/state/agent-signing/agent.sock`）で見分けられ、`kill <pid>` で止まった。止めると socket のファイルも消えた。その後に `~/.config/git/start-signing-agent` を実行すると agent が起動し直して鍵を載せ、使い捨ての repo の commit は `%G? = G` になった（2026-11-07 実測）。止める時は `dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
 
-`~/.ssh` へのエージェントの書き込みは、`permissions.deny` の `Edit(~/.ssh/**)` で止める。setup スクリプトは鍵ペアが既にあると生成をスキップするので、エージェントが鍵ペアを置くと、人がその公開鍵を GitHub に登録するおそれがある。公式の permissions docs によると、`Edit` rule が止めるのは、組み込みの編集ツールと、Claude Code が認識する Bash の書き込み（`tee` やリダイレクト）。Windows の session（Claude Code 2.1.317、auto mode）では、Write ツール、`echo ... > ~/.ssh/<probe>`、`cp /dev/null ~/.ssh/<probe>` が実行前に拒否され、ファイルはできなかった。`cp` の拒否は、deny に無い場所への `cp` が通ったので、rule が `cp` の書き込み先を見ていると読める。一方、`mv <一時ファイル> ~/.ssh/<probe>`、`ssh-keygen -f ~/.ssh/<probe>`、`rm ~/.ssh/<probe>` は通った（2026-11-07 実測）。エージェントは Windows で、鍵ペアを置くことも消すこともできる。mac では、cwd が home の外にあれば sandbox の write 制限がこれらも止める。
+`~/.ssh` へのエージェントの書き込みは、`permissions.deny` の `Edit(~/.ssh/**)` で止める。setup スクリプトは鍵ペアが既にあると生成をスキップするので、エージェントが鍵ペアを置くと、人がその公開鍵を GitHub に登録するおそれがある。公式の permissions docs によると、`Edit` rule が止めるのは、組み込みの編集ツールと、Claude Code が認識する Bash の書き込み（`tee` やリダイレクト）。Windows の session（Claude Code 2.1.317、auto mode）では、Write ツール、`echo ... > ~/.ssh/<probe>`、`cp /dev/null ~/.ssh/<probe>` が実行前に拒否され、ファイルはできなかった。`cp` の拒否は、deny に無い場所への `cp` が通ったので、rule が `cp` の書き込み先を見ていると読める。一方、`mv <一時ファイル> ~/.ssh/<probe>`、`ssh-keygen -f ~/.ssh/<probe>`、`rm ~/.ssh/<probe>` は通った（2026-11-07 実測）。エージェントは Windows で、鍵ペアを置くことも消すこともできる。mac では、cwd が home の外にあれば sandbox の write 制限がこれらも止める。cwd がこの repo の session（Claude Code 2.1.317、auto mode）で、`mv <一時ファイル> ~/.ssh/<probe>` と `ssh-keygen -f ~/.ssh/<probe>` は permission rule では止まらずに実行され、sandbox が `Operation not permitted` で失敗させた（2026-11-07 実測）。
 
 ### Windows では sandbox の防御が効かない
 
@@ -361,7 +363,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 
 | 設定 | 理由 |
 | --- | --- |
-| `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | **permission mode を `default` に強制し、auto mode を黙って無効化する**（v2.1.221 で対照実験）。`--permission-mode auto` を明示すると Claude Code 自身が警告を出す。公式の environment variables docs は値の `1` と、subprocess の env から credential を除く効果を載せているが、permission mode への影響には触れていない（2026-11-07 確認） |
+| `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | **permission mode を `default` に強制し、auto mode を黙って無効化する**（v2.1.221 で対照実験）。mac の terminal で `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` を付けて v2.1.317 を起動しても、Manual mode で始まった（2026-11-07、ユーザーが画面で確認した）。`--permission-mode auto` を明示すると Claude Code 自身が警告を出す。公式の environment variables docs は値の `1` と、subprocess の env から credential を除く効果を載せているが、permission mode への影響には触れていない（2026-11-07 確認） |
 | `sandbox.autoAllowBashIfSandboxed` | default の `true` に任せる。`false` にすると sandbox 済み Bash も 1 本ごとに classifier 往復が入って遅く、block が fallback カウンタに積まれる |
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
 | `sandbox.filesystem.denyWrite`（`dot_claude/` への適用） | 署名 agent の state ディレクトリには入れている（「socket の path を sandbox から守る」）。default で cwd 外は書けない。cwd 内の `dot_claude/` は protected paths に入らないが、そこはこの repo の編集対象そのもの。塞ぐと Bash からの編集と、そのファイルを置き換える `git checkout` / `merge` が落ちる。live 側は protected paths に入っており、source の変更は人の `chezmoi apply` を経ないと効かないので、そこを gate として持つ |
@@ -369,6 +371,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 | `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`sandbox.credentials` が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する |
 | PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。Claude Code は native Windows で動かし、sandbox の層が無いことと、エージェント用の署名鍵を持ち出せることを受け入れている（「Windows では sandbox の防御が効かない」）。足すと、Windows で無効になっている PowerShell tool が有効になる（「Windows の PowerShell tool は無効のまま使う」） |
+| `permissions.blockReadsOutsideWorkingDirectories` | sandbox が有効な時は、sandbox 内のコマンドからも home 全体を読めなくする（settings-reference、v2.1.257+）。それでも上の deny の列挙は外せない。Windows には sandbox が無く、cwd が home の session では home 全体が作業ディレクトリになり、cwd の中の `.env` は対象外になるため。mac の v2.1.317 で `claude -p --settings` に入れて試すと、`chezmoi` は `~/.config/chezmoi` を開けず、pre-commit は `~/.cache/prek` を読めずに落ちた。`~/.claude` と `~/.codex` の配布先は、Read ツールでも Bash でも読めなかった。署名付きの commit はできたが、`%G?` は `U` になった（2026-11-07 実測）。`~/.nvm` の node と署名 agent の socket は動いた。戻すには、壊れた path を全 project に配る設定で読めるようにすることになる |
 | `env.CLAUDE_CODE_EFFORT_LEVEL` | subagent の frontmatter の `effort` より優先される。設定すると reviewer の固定が効かなくなる |
 | `env.CLAUDE_CODE_SUBAGENT_MODEL` / `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`、同名の `Explore` 定義 | 振り分ける対象の subagent が呼ばれていない（`~/.claude/projects/` の transcript 10 本で 0 回、2026-11-02）。`FORCE` は frontmatter の `model` を無視するので、reviewer の固定も外れる。`Explore` を定義すると built-in の prompt と tool 制限を自前で持つことになる |
 | OS 分岐（`{{ if eq .chezmoi.os "windows" }}`） | `failIfUnavailable` が default の `false` なので、Windows でも警告して sandbox なしで続行する |
@@ -405,6 +408,6 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution: false` の PR description への効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
-- disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` と `/usr/sbin/diskutil list` の形は block する（2026-09-02 と 2026-11-07 実測）。`sudo` / `sh -c` が外れることは公式仕様から言えるが、tab 区切りと大文字の `DISKUTIL` の形は実測していない。`DISKUTIL list` は auto mode の classifier が `Auto-Mode Bypass` として先に止めた（2026-11-07）。危険 command を実行せずに確かめられる範囲がここまで。
+- disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` と `/usr/sbin/diskutil list` の形は block する（2026-09-02 と 2026-11-07 実測）。`sudo` / `sh -c` が外れることは公式仕様から言える。大文字の `DISKUTIL list` は外れる（2026-11-07 実測）。tab 区切りの形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
 - `sandbox.filesystem.denyWrite` に入れた `~/.local/state/agent-signing` と `~/.config/git/start-signing-agent` について、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` の session で問題になる。
 - Windows の `diskpart` の deny rule が実行前に拒否するか。読み取りだけの呼び出し方が無く、deny が効かなかった時に UAC の確認が出る可能性があるので、試していない。
