@@ -72,6 +72,7 @@
         "~/.cache/prek/"
       ],
       "denyWrite": [
+        "~/.ssh",
         "~/.local/state/agent-signing",
         "~/.config/git/start-signing-agent"
       ]
