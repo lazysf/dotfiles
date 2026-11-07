@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
 - Date: 2026-11-07
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.246 と v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / sandboxing docs の native Windows の記述、hooks docs の Windows の shell、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07） / [Tools reference](https://code.claude.com/docs/en/tools-reference) の PowerShell tool 節、hooks docs の「Persisted variables in PowerShell commands」、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Windows の session での shell のツールと `Read` deny の実測（2026-11-07、Claude Code 2.1.317） / Windows の実機 `claude auto-mode defaults`（v2.1.317）と、disk 系 command の解決と権限の実測（2026-11-07） / [Windows Security Servicing Criteria](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria) と [User Account Control settings and configuration](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration)（2026-11-07 確認）
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / sandboxing docs の native Windows の記述、hooks docs の Windows の shell、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07） / [Tools reference](https://code.claude.com/docs/en/tools-reference) の PowerShell tool 節、hooks docs の「Persisted variables in PowerShell commands」、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Windows の session での shell のツールと `Read` deny の実測（2026-11-07、Claude Code 2.1.317） / Windows と mac の実機 `claude auto-mode defaults`（v2.1.317）と、disk 系 command の解決と権限の実測（2026-11-07） / mac の session での絶対パスの `diskutil` の拒否の実測（2026-11-07、v2.1.317） / [Environment variables](https://code.claude.com/docs/en/env-vars) の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`（2026-11-07 確認） / [Windows Security Servicing Criteria](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria) と [User Account Control settings and configuration](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration)（2026-11-07 確認）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -33,13 +33,13 @@ Remote Control と terminal CLI は自分のマシンで走るので、ここに
 
 ## auto mode の built-in ルール
 
-`defaultMode: "auto"` の時だけ classifier が働き、実機（v2.1.259）で `allow` 17 / `soft_deny` 69 / `hard_deny` 1 / `environment` 21 のルールを持つ。**件数は version で動く。** v2.1.246 では `soft_deny` 67 / `environment` 20 だった。ルールを根拠に判断する時は、その version で数え直す。件数と内容は次で確認できる。
+`defaultMode: "auto"` の時だけ classifier が働き、実機（mac と Windows の v2.1.317）で `allow` 16 / `soft_deny` 72 / `hard_deny` 1 / `environment` 21 のルールを持つ。**件数は version で動く。** v2.1.259 では `allow` 17 / `soft_deny` 69 だった。ルールを根拠に判断する時は、その version で数え直す。件数と内容は次で確認できる（2026-11-07、v2.1.317 で実行）。
 
 ```sh
-"$(ls -d ~/Library/Application\ Support/Claude/claude-code/*/claude.app/Contents/MacOS/claude | tail -1)" auto-mode defaults
+"$(ls -d ~/Library/Application\ Support/Claude/claude-code/*/*/claude.app/Contents/MacOS/claude | tail -1)" auto-mode defaults
 ```
 
-desktop app 経由の install では `claude` が PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`。
+desktop app 経由の install では `claude` が PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/<hash>/claude.app/Contents/MacOS/claude`。
 
 Windows でも desktop app 経由の install では `claude` が PATH に無く、実体は `~/AppData/Roaming/Claude/claude-code/<version>/<hash>/claude.exe`。Git Bash からは次で確認できる（2026-11-07、v2.1.317 で実行）。
 
@@ -87,7 +87,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 `gh auth logout` も built-in に無いが、実害が小さいので置いていない。
 
-**Windows の command も同じ基準で足す。** 2026-11-07 に Windows の Claude Code 2.1.317 で数えると、classifier のルールは `allow` 16 / `soft_deny` 72 / `hard_deny` 1 / `environment` 21 だった。Windows の disk 系 command を名指しするルールは無い。Irreversible Local Destruction が名指しする Windows の command は、`Remove-Item -Recurse -Force` のようなファイル単位のものに限る。
+**Windows の command も同じ基準で足す。** Windows の Claude Code 2.1.317 の classifier にも、Windows の disk 系 command を名指しするルールは無い。Irreversible Local Destruction が名指しする Windows の command は、`Remove-Item -Recurse -Force` のようなファイル単位のものに限る。
 
 足したのは `diskpart`、`format.com`、`convert.exe`、`wbadmin` の 4 種。Git Bash は `diskpart` と `wbadmin` を拡張子なしでも拡張子付きでも解決するので、両方の形を書く。`format` は拡張子なしでは解決されない。`convert` を拡張子なしで書かないのは、mac の ImageMagick の `convert` も止まるため。`dot_claude/settings.json` は全作業機に同じものが配られる。代償として、Windows で拡張子を付けずに `convert` と打つと rule から外れる。
 
@@ -122,7 +122,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 | `network.allowedDomains` | **単体では domain gate にならない**。allowlist にも `WebFetch(domain:)` にも無い host へ prompt なしで到達する（2026-08-27 と 2026-08-29 に実測、後者は `curl https://example.com` が 200）。この環境固有ではなく、公式が「pre-allow なし、新しい host は prompt か classifier」と定める既定の挙動 |
 | `permissions.deny` の `Read(...)` | **効いている。sandbox の read 制限にも合流する**。`credentials` に無い `$TMPDIR/probe/secrets/x.txt` を python から開くと `PermissionError`（2026-08-31 実測）。公式も、`Read` deny rule は Bash の `cat` / `head` / `tail` / `sed` に適用され、sandbox 設定の構築にも使われると書く |
 | `Bash(curl *)` / `wget` / `nc` の deny | permission rule としては有効だが**名前ベース**。`python3 -c "import urllib.request; ..."` で素通りする（実測） |
-| disk 系 command の `Bash(...)` deny | **効いている**。`diskutil list` が実行前に拒否される（2026-09-02 実測）。後から足した 5 本も同じく拒否される（2026-09-04 実測）。ただし**名前ベース**で、`sudo` / 絶対パス / `sh -c` は覆わない（下記） |
+| disk 系 command の `Bash(...)` deny | **効いている**。`diskutil list` が実行前に拒否される（2026-09-02 実測）。後から足した 5 本も同じく拒否される（2026-09-04 実測）。ただし**名前ベース**で、`sudo` / `sh -c` は覆わない（下記） |
 | `sudo` | **sandbox が止める**。`sudo -n true` が `operation not permitted` で落ちる（2026-09-02 実測） |
 | `WebFetch` | 公式仕様上 sandbox の対象外 |
 
@@ -132,7 +132,11 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 境界を作るには `strictAllowlist` が要る。入れていない理由は「入れていない設定と理由」にある。
 
-**disk 破壊を実際に止めているのは deny rule ではない。** 公式が strip する wrapper に `sudo` は含まれない。対象は `timeout` / `time` / `nice` / `nohup` / `stdbuf` / `command` / `builtin` / `noglob` と、flag 無しの `xargs` だけ。最初の `*` より前は literal に match するので、`sudo diskutil eraseDisk ...` も `/usr/sbin/diskutil ...` も `sh -c '...'` も rule から外れる。効いているのは次の 4 つで、deny rule はその後ろに置く speed bump として持つ。上の層が無い環境（sandbox 無効、root 実行、Linux / WSL2）でだけ前に出る。
+**disk 破壊を実際に止めているのは deny rule ではない。** 公式が strip する wrapper に `sudo` は含まれない。対象は `timeout` / `time` / `nice` / `nohup` / `stdbuf` / `command` / `builtin` / `noglob` と、flag 無しの `xargs` だけ。最初の `*` より前は literal に match するので、`sudo diskutil eraseDisk ...` も `sh -c '...'` も rule から外れる。
+
+絶対パスの形は、公式の permissions docs の表では rule から外れる側にある（`/usr/bin/curl` の例）。ただし mac の v2.1.317 では、`/usr/sbin/diskutil list` が `Permission to use Bash with command /usr/sbin/diskutil list has been denied.` で拒否された（2026-11-07 実測、auto mode）。classifier の拒否は `denied by the Claude Code auto mode classifier` という別の文言になるので、止めたのは permission rule の層と読める。対照として、deny に無い `/usr/bin/true` は実行された。
+
+効いているのは次の 4 つで、deny rule はその後ろに置く speed bump として持つ。上の層が無い環境（sandbox 無効、root 実行、Linux / WSL2）でだけ前に出る。
 
 - sandbox が `sudo` を止める（上記）
 - `/dev/disk0` は `brw-r----- root:operator` で、session の uid 501 は `operator` の member でない（2026-09-02 実測）
@@ -357,7 +361,7 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 
 | 設定 | 理由 |
 | --- | --- |
-| `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | **permission mode を `default` に強制し、auto mode を黙って無効化する**（v2.1.221 で対照実験）。`--permission-mode auto` を明示すると Claude Code 自身が警告を出す。公式 docs に値の記載が無い |
+| `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | **permission mode を `default` に強制し、auto mode を黙って無効化する**（v2.1.221 で対照実験）。`--permission-mode auto` を明示すると Claude Code 自身が警告を出す。公式の environment variables docs は値の `1` と、subprocess の env から credential を除く効果を載せているが、permission mode への影響には触れていない（2026-11-07 確認） |
 | `sandbox.autoAllowBashIfSandboxed` | default の `true` に任せる。`false` にすると sandbox 済み Bash も 1 本ごとに classifier 往復が入って遅く、block が fallback カウンタに積まれる |
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
 | `sandbox.filesystem.denyWrite`（`dot_claude/` への適用） | 署名 agent の state ディレクトリには入れている（「socket の path を sandbox から守る」）。default で cwd 外は書けない。cwd 内の `dot_claude/` は protected paths に入らないが、そこはこの repo の編集対象そのもの。塞ぐと Bash からの編集と、そのファイルを置き換える `git checkout` / `merge` が落ちる。live 側は protected paths に入っており、source の変更は人の `chezmoi apply` を経ないと効かないので、そこを gate として持つ |
@@ -401,6 +405,6 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution: false` の PR description への効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
-- disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` の形は block する（2026-09-02 実測）。`sudo` / 絶対パス / `sh -c` が外れることは公式仕様から言えるが、tab 区切りのような形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
+- disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` と `/usr/sbin/diskutil list` の形は block する（2026-09-02 と 2026-11-07 実測）。`sudo` / `sh -c` が外れることは公式仕様から言えるが、tab 区切りと大文字の `DISKUTIL` の形は実測していない。`DISKUTIL list` は auto mode の classifier が `Auto-Mode Bypass` として先に止めた（2026-11-07）。危険 command を実行せずに確かめられる範囲がここまで。
 - `sandbox.filesystem.denyWrite` に入れた `~/.local/state/agent-signing` と `~/.config/git/start-signing-agent` について、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` の session で問題になる。
 - Windows の `diskpart` の deny rule が実行前に拒否するか。読み取りだけの呼び出し方が無く、deny が効かなかった時に UAC の確認が出る可能性があるので、試していない。
