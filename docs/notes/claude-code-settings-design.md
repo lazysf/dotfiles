@@ -365,7 +365,7 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 
 **sub-key ごとに止める書き方では、後から増えたキーが漏れる。** `sessionUrl` がその例で、`commit` と `pr` を空文字にしても残る、default が `true` のキーだった。sub-key ごとに書いていると、こうしたキーを書き足すまで、そのキーの attribution が付く。`false` は対象を全ての attribution と定義するので、キーが増えても書き足さずに済む。
 
-`false` を受け付けない版がこのファイルを読むと、ファイル全体が読み飛ばされる。公式は v2.1.281 未満がそうなると書く。その時は permissions と sandbox の設定も効かなくなる。今このファイルを読むのは desktop app 同梱の版と `~/.local/bin/claude` の CLI で、どれも v2.1.281 以上（2026-11-07 時点で、desktop app 同梱が v2.1.309 と v2.1.317、CLI が v2.1.311）。古い CLI を入れる時は、この条件を確かめる。schemastore の schema は `attribution` に object しか許していないので、editor は `false` を警告する。動作には影響しない。
+`false` を受け付けない版がこのファイルを読むと、ファイル全体が読み飛ばされる。公式は v2.1.281 未満がそうなると書く。その時は permissions と sandbox の設定も効かなくなる。今このファイルを読むのは desktop app 同梱の版だけで、どちらも v2.1.281 以上（2026-11-07 時点で v2.1.309 と v2.1.317）。同梱の `claude` を Terminal から直接起動すると、CLI が `~/.local/bin/claude` に入ることがある。2026-11-07 には、この起動の直後に stable の v2.1.311 が入っていた。入れた記録は見つけておらず、時刻と配置からの推測である。古い CLI を入れる時は、この条件を確かめる。schemastore の schema は `attribution` に object しか許していないので、editor は `false` を警告する。動作には影響しない。
 
 `pr` は PR description の attribution line を指す。`false` は PR 側も対象に含む。この repo で PR を作っていないので実測はしていない。
 
