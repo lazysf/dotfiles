@@ -102,3 +102,16 @@ chezmoi の source が `dot_ssh` のため、apply で `~/.ssh` の権限が `75
 - 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
 
 Windows では Claude Code だけがエージェント用の鍵で署名する。Codex の署名設定を入れる `scripts/macos/configure-codex-signing.py` と `run_after_zz-configure-codex-signing.sh.tmpl` は macOS 専用で、zsh のログインシェルを前提にしている。Windows の Codex で同じ鍵を使うなら、Codex の Windows の sandbox と hook の shell を公式情報で確かめてから設計する。
+
+---
+
+## 9. mac の disk 系 deny rule の大文字と絶対パス
+
+- 記載: 2026-11-07（Windows の disk 系 command を `permissions.deny` に足した時の security review）
+
+Windows では、`Bash(...)` rule の照合が大文字と小文字を区別する一方、command の解決は区別しないので、大文字の `WBADMIN` が rule に当たらずに実行された。絶対パスの `/c/Windows/System32/wbadmin.exe` は拒否された。経緯は `docs/notes/claude-code-settings-design.md` の「auto mode の built-in ルール」にある。
+
+mac で確かめること。
+
+- APFS が大文字と小文字を区別しない既定の volume で、`DISKUTIL list` のような大文字の形が `Bash(diskutil *)` に当たらずに実行されるか。実行されるなら、大文字の形を rule に足すかを決める。
+- `/usr/sbin/diskutil list` のような絶対パスの形が拒否されるか。notes の mac の節は、公式仕様から「絶対パスは覆わない」と書いている。拒否されるなら、止めたのが rule か classifier かを Manual mode の session で切り分け、notes を直す。
