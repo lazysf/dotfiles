@@ -65,3 +65,16 @@ native Windows では、Claude Code の Bash が sandbox の外で動く。mac �
 - エージェントの session からの push がどこで止まるか。mac では、sandbox の proxy が SSH を運ばないので止まる。Windows で見るのは、`core.sshCommand`、1Password の承認がどの範囲まで記憶されるか、gh の credential helper の 3 つ。
 - エージェントの Bash が、`mv` や python で `~/.claude/settings.json` や hook を書き換えられるか。mac では protected paths が止める（`~/.claude/settings.json` は 2026-11-07 に実測）。Windows の `~/.ssh` では、同じ形の `mv` と `ssh-keygen -f` が通った（2026-11-07 実測）。
 - 大文字で書いた `~/.SSH/...` が、`Edit(~/.ssh/**)` と `Read(~/.ssh/**)` の rule を外れるか。Windows の file system は既定で大文字と小文字を区別しないので、rule を外れると同じファイルに届く。
+
+---
+
+## 5. `CLAUDE.md` の常時発火する義務を条件付きにする
+
+- 記載: 2026-11-07（対応が過剰になるという相談で、原則に「必要なことを、必要な分だけ、必要な時に」を足した時）
+
+`dot_claude/CLAUDE.md` には、依頼の大小に関係なく毎回発火する義務が 2 つ残っている。doc 節と review は同じ時に条件付きにした。新しい原則だけで過剰さが残るかを運用で見て、過剰さが残った義務から順に、判定できる条件へ書き換える。
+
+- 原則の「変更前に関連ファイル、設定、既存パターン、検証入口を確認する」
+- 原則の「引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける」
+
+条件に「大きな変更の時」のような主観語は使わない。どの義務も過去の失敗への対策なので、`docs/notes/claude-md-design.md` の対応する節を読み、その失敗の場面を条件の内側に残す。「変更前の確認」では、停止線（認証認可、権限、秘密情報など）に当たるかの確認も内側に残す。
