@@ -62,15 +62,15 @@ priority list に載せると「上位を損なわない範囲で巧妙さを追
 
 ## doc / artifact の規定を契約に持たない
 
-doc の書き方は `skills/scribe` が正本で、「doc 追従の要否を黙って飛ばさない」は `CLAUDE.md` の `## doc` が常時側を担う。書き方まで契約へ足すと同じ規定が二重になり、scribe を直すたびに契約も直すことになる。
+doc の書き方は `skills/scribe` が正本で、doc 追従の要否の明示は `CLAUDE.md` の `## doc` が常時側を担う。書き方まで契約へ足すと同じ規定が二重になり、scribe を直すたびに契約も直すことになる。
 
 ## repo 固有の rule を配らない
 
-`~/.claude/` は全 project へ配布される。`dot_claude/**` のような、この repo の path を対象にする rule は他の project では一度も使われず、死んだ設定として残る。repo に閉じる rule は、その repo の `.claude/rules/` に置く。chezmoi は source 内の `.` 始まりを配布しないので `dot_claude/` と衝突しない。この repo では `harness-surface-consistency` がそれに当たる。
+`~/.claude/` は全 project へ配布される。`dot_claude/**` のような、この repo の path を対象にする rule は他の project では一度も使われず、死んだ設定として残る。repo に閉じる rule は、その repo の `.claude/rules/` に置く。chezmoi は source 内の `.` 始まりを配布しないので `dot_claude/` と衝突しない。この repo では、変更後の確認を root `AGENTS.md` の同名の節に置く。`AGENTS.md` は root `CLAUDE.md` の import で Claude も常時読み、Codex も読むので、`.claude/rules/` にも置くと Claude には 2 回入る。
 
 ## ADR 本文を追従対象から外している
 
-`harness-surface-consistency` は変更した path を `rg` で検索して追従漏れを見ることを求めるが、ADR 本文はその対象から外している。ADR は採用時点の記録で、その後の rename や削除を反映しないため。
+`AGENTS.md` の「変更後の確認」は変更した path を `rg` で検索して追従漏れを見ることを求めるが、ADR 本文はその対象から外している。ADR は採用時点の記録で、その後の rename や削除を反映しないため。
 
 2026-08-31 に `docs/` 全体を検査した。Markdown のリンク形式で書かれた参照は、切れが 0 件。code span で書かれた path のうち、存在しない `docs/notes/` を指すものが 7 件あった。参照元は全て ADR 本文で、notes 側には 1 件も無い。参照している ADR は 11 件、うち 8 件が Superseded。参照先は退役したか、統合先はあってもそこが前提を書き換えており、当時の記述を指し直せない。
 

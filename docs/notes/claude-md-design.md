@@ -1,7 +1,7 @@
 # CLAUDE.md の設計
 
 - Date: 2026-11-03
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Hooks reference](https://code.claude.com/docs/en/hooks) / `dot_claude/CLAUDE.md` / この環境での実測 / Codex での作業記録の要約（ユーザー提供）
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) / [Hooks reference](https://code.claude.com/docs/en/hooks) / `dot_claude/CLAUDE.md` / この環境での実測 / Codex での作業記録の要約（ユーザー提供）
 
 `dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
 
@@ -19,7 +19,9 @@ push は sandbox の proxy が SSH を運ばないため agent が実行して�
 
 ## doc 要否の規律をここが持つ理由
 
-「実装が一段落した時と commit 前に doc 追従の要否を明示する」という規律は、その 2 つの瞬間に `scribe` が起動していない。commit 前に起動しているのは `git-commit` で、実装の区切りでは何も起動していない。skill 側に書いても実効しないため、常時 load されるここが置き場になる。
+doc 追従の要否を明示する規律が効くのは実装の区切りで、そこでは `scribe` を含めて何も起動していない。skill 側に書いても実効しないため、常時 load されるここが置き場になる。
+
+条件を仕様 doc の対象（使い方、設定、公開挙動）に絞るのは、内部だけの変更でも「doc は不要」と毎回言わないため。commit 前は `skills/lapidary` の doc の観点が同じことを見るので、ここでは持たない。
 
 要否を判断した後の書き方（3 条件、書式、既存 ADR の扱い）は `skills/scribe` が正本で、ここには持ち込まない。
 
@@ -55,13 +57,29 @@ push は sandbox の proxy が SSH を運ばないため agent が実行して�
 
 同じ読み方の危険は、[coding-skill-design.md](./coding-skill-design.md) の bug fix の節が先に記録している。そちらの手当ては `skills/coding` の中で閉じている。上の事故で agent がこの読み方をしたかは確認できていない。この定義は原因への対策ではなく、読み方の余地を塞ぐ手当て。
 
+## 「必要なことを、必要な分だけ、必要な時に」を原則に置く理由
+
+発端は 2026-11-07 のユーザーの相談。後で振り返ると、対応がその時点の必要に対して細かすぎたり過剰だったりする。対応や作業ごとに、そもそも要るか、要るなら必要十分か、を考えてほしい、という内容だった。
+
+契約には、過剰を止める基準が部分ごとにしか無かった。YAGNI は将来の要件、最小差分は変更範囲（前節）、output style の「求められた範囲だけ答える」は返答が対象。対応全般が増えるのを止める基準は無かった。公式の [Best practices](https://code.claude.com/docs/en/best-practices) は、Claude は既定で依頼を控えめに読み、満たす最小のものを作る、としている。そのため、過剰さは指示の側から来ていると判断した。
+
+3 つの問い（要るか、どこまで要るか、今要るか）は、「必要なこと」「必要な分だけ」「必要な時に」に対応する。YAGNI と最小差分はこれを個別に当てはめたもので、判定基準が具体的なので残す。原則の 2 番目（責任の所在の直後）に置くのは、やるかを決めてから品質や手段の話になるため。
+
+基準を「ユーザーが必要としていること」でなく「依頼」にしたのは、依頼の外の需要を推測して対応を広げないため。「問う」でなく「で決める」にしたのは、自問を返答へ書き出さないため。
+
+下限は同じ行の最後の文が持つ。基本原則の末尾の歯止めは KISS / YAGNI / DRY を手段へ当てる時の文で、この原則には掛からない。この原則は品質の優先順位より前にあるので、下限が無いと、狭い依頼を理由に停止線の確認や検証を省く読み方が通る。同じ文は、契約や skill が個別に求めること（代替案の提示、別の問題の報告など）も要るものに含める。
+
+本文の規則には太字の強調を使わない。同じ公式ページが、強調を重ねると Claude は規則を過剰に適用する、としている。`**KISS**` や `**掘り下げ**` の太字は見出しなので残す。
+
+doc と review が時点だけで毎回発火すると、工程表の「各工程は発火条件を満たす時だけ通す」と食い違う。doc は条件付き（「doc 要否の規律をここが持つ理由」）、review は `skills/lapidary` の自動発火を commit の前に限る（`lapidary-skill-design.md` の「自動で発火させる理由」）。「変更前の確認」と「完了報告の 4 区分」は無条件のまま残る。この原則だけで足りるかを運用で見てから扱う（`TODO.md`）。
+
 ## review を doc の後に置く理由
 
 工程表の review は commit 前の自己確認を含む。もともと `quality-reviewer` などの起動条件しか書いていなかったが、実際には commit 前に毎回自分で変更を確認していて、その運用が機能していた。契約に無い行為が実務を支えている状態だったので、契約側へ移した。
 
 観点はここに書かない。手順と観点は `skills/lapidary` が持ち、工程表は「いつ通すか」だけを示す。CLAUDE.md は全 session で常時 load される。review の時にしか要らない詳細を置くと、review しない session でも context を占める。
 
-図を `doc → review` の順にしてあるのは、実装と doc をまとめて review するため。失敗は両者を跨ぐ形で出る。設定を消したのに notes が古い参照を持ったまま。skill の `description` を変えたのに notes の記述が対応していない。分けて review すると、実装だけを見る時点では doc がまだ無く、doc だけを見る時点では実装の差分を見ない。追従漏れを見つける場が消える。`.claude/rules/harness-surface-consistency.md` も両方を並べて見ることを前提にしている。
+図を `doc → review` の順にしてあるのは、実装と doc をまとめて review するため。失敗は両者を跨ぐ形で出る。設定を消したのに notes が古い参照を持ったまま。skill の `description` を変えたのに notes の記述が対応していない。分けて review すると、実装だけを見る時点では doc がまだ無く、doc だけを見る時点では実装の差分を見ない。追従漏れを見つける場が消える。
 
 commit は実装と doc で分けたままにする。review は変更セット全体を見る行為、commit は記録の粒度で、層が違う。
 

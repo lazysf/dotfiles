@@ -187,7 +187,7 @@ credential の read を止める方法は `filesystem.denyRead` と `sandbox.cre
 
 2 つの列挙は完全には一致していないが、片方にしか無い path は他方がカバーしている。`//**/secrets/**` は `permissions.deny` にだけあり、その範囲は「sandbox で効いている層と効いていない層」の実測が示す。`~/.env` は `credentials` にだけあり、`Read(//**/.env)` が filesystem-wide に match する。**揃えていないのは、揃えても塞がる穴が無いため。**
 
-`~/.codex` は `auth.json` だけを両方に書く。Codex はログイン情報をこのファイルか OS の credential store に置く（[Codex authentication](https://learn.chatgpt.com/docs/auth)）。ディレクトリ全体を deny しないのは、`chezmoi apply` の後に配布先の `~/.codex/AGENTS.md` などを読んで source と突き合わせるため（`.claude/rules/harness-surface-consistency.md`）。
+`~/.codex` は `auth.json` だけを両方に書く。Codex はログイン情報をこのファイルか OS の credential store に置く（[Codex authentication](https://learn.chatgpt.com/docs/auth)）。ディレクトリ全体を deny しないのは、`chezmoi apply` の後に配布先の `~/.codex/AGENTS.md` などを読んで source と突き合わせるため（`AGENTS.md` の「変更後の確認」）。
 
 `credentials` 側は外していない。外しても read が止まると確かめるには、設定を変えた A/B が要る。それは sandbox 外の terminal でしか取れない（「実測: credential への Bash アクセスは通らない」）。現状で実害が出ていないので、確認のコストに見合わない。環境変数の保護を書く時はこのブロックが置き場になる。
 

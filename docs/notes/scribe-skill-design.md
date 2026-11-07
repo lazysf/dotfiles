@@ -39,7 +39,7 @@ SKILL.md が持つのはどの層を選ぶかの判断で、書式は選択後�
 
 ## doc 要否の判断を持たない理由
 
-この規律が効くべき 2 つの瞬間（実装の区切りと commit 前）に `scribe` は起動していない。skill に書いても実効しないため、常時 load される `CLAUDE.md` が持つ。理由は [claude-md-design.md](./claude-md-design.md)。
+この規律が効くべき実装の区切りに `scribe` は起動していない。skill に書いても実効しないため、常時 load される `CLAUDE.md` が持つ。理由は [claude-md-design.md](./claude-md-design.md)。
 
 skill 側に残したのは起動後の責務だけ。doc が不要と判断した場合もその旨と理由を返す、という部分は「出力」が持つ。
 
