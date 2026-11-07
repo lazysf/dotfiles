@@ -267,7 +267,7 @@ sandbox 内のコマンドは、専用 agent に任意のデータへの署名�
 
 ### Windows では sandbox の防御が効かない
 
-公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。上の防御のうち、`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
+公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。上の防御のうち、`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。Windows の session でも、Read ツール、Glob、Grep は `~/.ssh` で拒否された。Read ツールは、`\` 区切りの path と `/` 区切りの path のどちらでも拒否された（2026-11-07 実測、Claude Code 2.1.317、auto mode。存在しないファイルと、何にも一致しない pattern で試した）。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
 
 その結果、Windows のエージェントの Bash と PowerShell のコマンドは、パスフレーズの無い秘密鍵を読んで外へ送れる。mac の sandbox 内のコマンドは agent に署名を頼めるだけで、鍵そのものは持ち出せない。Windows では鍵を持ち出せるので、session が終わった後も別の場所で署名できる。漏れた後の影響と失効の手順は上の「代償と失効」と同じ。それでも、エージェントの作業が 1Password の承認で止まらないことを優先し、Windows の `personal` にも入れる。sandbox を使える WSL2 で Claude Code を動かす案は、環境を作り直す範囲が大きいので採らない。
 
