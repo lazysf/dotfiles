@@ -271,7 +271,7 @@ GitHub に Signing Key として登録した後、README の「手作業が要�
 
 sandbox 内のコマンドは、専用 agent に任意のデータへの署名を依頼できる。GitHub に Signing Key として登録すれば、この鍵の署名も Verified になる。エージェントの commit と人の commit は、署名に使った鍵で見分けられる。
 
-パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。
+パスフレーズが無いので、sandbox の外で動く同じユーザーのプロセスなら、承認なしで鍵を読める。漏れると、他人が自分の credential で push する commit にも、本人の Verified 署名を付けられる。漏れた疑いがある時は、GitHub の Signing Key からその作業機の鍵を消し、`~/.ssh/agent_signing_ed25519*` を作り直す。あわせて Signing Key の一覧を全部見て、登録した覚えの無い鍵を消す。gh の token に `write:ssh_signing_key` scope があると、同じユーザーのプロセスは別の鍵を Signing Key に追加でき、その鍵は作業機の鍵を消しても残るためである。README の CLI での登録手順は、登録後にこの scope を外す。
 
 GitHub の仕様では、検証記録がある commit は署名鍵を更新・失効した後も、同じ repo とその fork で Verified のままになる。手元の `allowed_signers` に入るエージェント用の公開鍵は、その作業機で使っている現在の鍵だけである。鍵更新後に旧鍵の署名を見返す時は GitHub の Verified を確認する。[GitHub の署名検証記録](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#persistent-commit-signature-verification)
 
