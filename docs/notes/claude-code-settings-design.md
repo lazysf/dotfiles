@@ -36,10 +36,10 @@ Remote Control と terminal CLI は自分のマシンで走るので、ここに
 `defaultMode: "auto"` の時だけ classifier が働き、実機（mac と Windows の v2.1.317）で `allow` 16 / `soft_deny` 72 / `hard_deny` 1 / `environment` 21 のルールを持つ。**件数は version で動く。** v2.1.259 では `allow` 17 / `soft_deny` 69 だった。ルールを根拠に判断する時は、その version で数え直す。件数と内容は次で確認できる（2026-11-07、v2.1.317 で実行）。
 
 ```sh
-"$(ls -d ~/Library/Application\ Support/Claude/claude-code/*/*/claude.app/Contents/MacOS/claude | tail -1)" auto-mode defaults
+"$(command ls -d ~/Library/Application\ Support/Claude/claude-code/*/*/claude.app/Contents/MacOS/claude | tail -1)" auto-mode defaults
 ```
 
-desktop app 経由の install では `claude` が PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/<hash>/claude.app/Contents/MacOS/claude`。
+desktop app 経由の install では `claude` が PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/<hash>/claude.app/Contents/MacOS/claude`。`ls` ではなく `command ls` と書くのは、対話 shell で `ls` が eza の alias になっていると、空白を含む path がクォート付きで出力され、そのままでは実行できないため（2026-11-07 に zsh で踏んだ）。
 
 Windows でも desktop app 経由の install では `claude` が PATH に無く、実体は `~/AppData/Roaming/Claude/claude-code/<version>/<hash>/claude.exe`。Git Bash からは次で確認できる（2026-11-07、v2.1.317 で実行）。
 
