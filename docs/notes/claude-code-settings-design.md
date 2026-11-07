@@ -41,6 +41,12 @@ Remote Control と terminal CLI は自分のマシンで走るので、ここに
 
 desktop app 経由の install では `claude` が PATH に無く、実体は `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`。
 
+Windows でも desktop app 経由の install では `claude` が PATH に無く、実体は `~/AppData/Roaming/Claude/claude-code/<version>/<hash>/claude.exe`。Git Bash からは次で確認できる（2026-11-07、v2.1.317 で実行）。
+
+```sh
+"$(ls -d ~/AppData/Roaming/Claude/claude-code/*/*/claude.exe | tail -1)" auto-mode defaults
+```
+
 自前の deny rule と重複する主なもの。
 
 | 自前で書きたくなる deny | built-in の該当 |
