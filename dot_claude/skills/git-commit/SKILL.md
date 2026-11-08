@@ -12,7 +12,7 @@ description: Git の変更を commit する時に使う。直接の依頼（「c
 指示に当たらないもの。「進めて」「直して」のような作業継続の語、この skill が load されたこと、`lapidary` など他の skill や agent が「commit できる状態」と判定したこと。skill が load されるのは、commit する流れで staging 規律と機密情報の検索を通すため。
 
 1. `git status -sb` で状態を確認する。必要なら `git diff --stat` / `git diff` / `git diff --staged` で差分を読む。
-2. 1 commit 1 変更になるよう範囲を決める。性質の違う変更が混ざっていれば分割し、1 つずつ commit する。
+2. 「1 変更の単位」に従い、commit の範囲を決める。
 3. 合意した範囲だけを明示 path で stage する。
 4. `git diff --staged --stat` と `git diff --staged` で内容を確認する。
 5. commit message を書き、通常 commit を実行する。
@@ -29,7 +29,15 @@ description: Git の変更を commit する時に使う。直接の依頼（「c
 - merge / rebase / cherry-pick / revert が進行中
 - worktree または index に未解決 conflict がある
 - 変更が混在していて、分割の単位が判断できない
-- 1 つのファイル内で無関係な変更が混ざり、ファイル単位では分けられない
+- 1 つのファイル内に、範囲に入れる変更と入れない変更が混ざり、ファイル単位では分けられない。範囲に入るか確かめられない変更（ユーザー自身の編集、前の作業の残り）も、入れない変更に数える
+
+## 1 変更の単位
+
+1 変更は、目的が 1 つに定まり、type が 1 つに決まる変更のまとまり。
+
+- 目的か type が違う変更が混ざっていれば分割し、1 つずつ commit する。
+- 同じ目的から出た変更は分けない。変更から機械的に決まる追従（番号の振り直し、参照の更新）と、1 つの作業で同じ doc へ記録した複数の事実は、同じ commit に入れる。既存の記述の訂正と新しい記録が混ざっていても、同じ作業の記録なら目的は 1 つ。分けると、単独では不完全な commit ができ、1 つの作業が title だけ違う commit に散らばる。
+- 分けない条件は、範囲を広げる根拠にならない。「staging」で unstaged に残す変更と、含める意図の確認が要る種類は、同じ目的に見えても「staging」の規定に従う。
 
 ## staging
 
@@ -64,7 +72,7 @@ body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっ
 ## Gotchas
 
 - **pre-commit hook はファイルを書き換えることがある。** 自動修正型の hook が発火すると commit が失敗し、修正後の内容が unstaged で残る。修正差分を確認してから再 stage して commit し直す。確認せずに再 stage しない。
-- **`git add -i` と `git add -p` は使わない。** agent は hunk を見ながら答えられず、答えを stdin から流し込む形になる。答えの順番が hunk の並びとずれると、別の hunk が黙って stage される。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
+- **1 つのファイルの変更を、複数の commit に割らない。** `git add -i` と `git add -p` では、agent は hunk を見ながら答えられず、答えを stdin から流し込む形になる。答えの順番が hunk の並びとずれると、別の hunk が黙って stage される。控えを取って途中の版を作り、明示 path で順に stage する方法は、worktree のファイルを書き換える。書き戻しを誤ると、未 commit の編集を失う。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
 
 ## 扱わないもの
 
