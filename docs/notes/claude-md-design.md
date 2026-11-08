@@ -19,7 +19,7 @@ CLAUDE.md は全セッションの先頭で読まれる。残すのは、Claude 
 
 外す側の「設定や防御を外す前に、使っているものが無いことを確かめる」は残している。`sandbox.network.allowUnixSockets` を「push に使えないので用途が無い」と判断して落とし、commit の署名を壊したことがある（[claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」）。同じ socket を署名も使うことは、Claude の既定の確認では見えなかった。
 
-公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 68 行（2026-11-08、`wc -l`）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
+公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 66 行（2026-11-08、`wc -l`）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
 
 ## push を契約に書いている理由
 
@@ -34,6 +34,8 @@ doc 追従の要否を明示する規律が効くのは実装の区切りで、�
 条件を仕様 doc の対象（使い方、設定、公開挙動）に絞るのは、内部だけの変更でも「doc は不要」と毎回言わないため。commit 前は `skills/lapidary` の doc の観点が同じことを見るので、ここでは持たない。
 
 要否を判断した後の書き方（3 条件、書式、既存 ADR の扱い）は `skills/scribe` が正本で、ここには持ち込まない。
+
+3 層の置き場と書く時期も、ここでは持たない。置き場と、ADR と notes を確認した事実から書くことは `skills/scribe` が持ち、その description は常時 context にある。仕様（README / docs）を書く時期は決めていない。仕様を先に書いて開発する repo もあり、全層へ一律に時期を決めると、その repo の CLAUDE.md と矛盾する。CLAUDE.md は上書きでなく連結で読まれ、矛盾があると Claude はどちらかを任意に選ぶ（[How Claude remembers your project](https://code.claude.com/docs/en/memory)）。
 
 ## 停止線を判定可能な形にしてある理由
 
@@ -107,3 +109,4 @@ auto mode は、shell での読み書きを認める指示を session へ入れ�
 
 - 契約の tool の使い分けの行が、実際の session で python での書き換えを止めるか。
 - desktop app で、Grep / Glob を戻す起動 flag を渡せるか。
+- 契約から 3 層の行を外した後も、作業の途中で `skills/scribe` の description だけを手がかりに ADR や notes を書き始めるか。
