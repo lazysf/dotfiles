@@ -1,6 +1,6 @@
 # Claude Code Settings の設計
 
-- Date: 2026-11-07
+- Date: 2026-11-08
 - 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / sandboxing docs の native Windows の記述、hooks docs の Windows の shell、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07） / [Tools reference](https://code.claude.com/docs/en/tools-reference) の PowerShell tool 節、hooks docs の「Persisted variables in PowerShell commands」、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Windows の session での shell のツールと `Read` deny の実測（2026-11-07、Claude Code 2.1.317） / Windows と mac の実機 `claude auto-mode defaults`（v2.1.317）と、disk 系 command の解決と権限の実測（2026-11-07） / mac の session での絶対パスの `diskutil` の拒否の実測（2026-11-07、v2.1.317） / [Environment variables](https://code.claude.com/docs/en/env-vars) の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`（2026-11-07 確認） / [Windows Security Servicing Criteria](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria) と [User Account Control settings and configuration](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration)（2026-11-07 確認） / cwd が home の mac の session での `~/.ssh` への `mv` と `ssh-keygen -f` の実測（2026-11-07、v2.1.311） / mac の sandbox 内での Keychain の github.com の credential と gh の token の取り出しと、auto mode の session での host を申告しない HTTPS の接続の実測（2026-11-07） / cwd が home の mac の session での `denyWrite` の path と `~/.claude/settings.json` への書き込みの実測、mac の session での Read / Write ツールの `~/.ssh` の拒否の実測（2026-11-07） / CLI 2.1.311 で bypass mode を指定した起動の実測、desktop app の「バイパス権限モードを許可」の確認、Edit ツールでの `start-signing-agent` の拒否の実測（2026-11-07）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
@@ -25,7 +25,7 @@ Remote Control と terminal CLI は自分のマシンで走るので、ここに
 
 | 領域 | default | 設定が要るか |
 | --- | --- | --- |
-| sandbox の write | cwd とセッション temp のみ書ける | 要らない。ただし pre-commit が `~/.cache/prek/` に書くので `allowWrite` を 1 件足す |
+| sandbox の write | cwd とセッション temp のみ書ける | 要らない。ただし pre-commit が `~/.cache/prek/` に書くので `allowWrite` を 1 件足す（受け入れたリスクは「sandbox で効いている層と効いていない層」） |
 | sandbox の read | **computer 全体を読める。credential も読める** | **要る**。公式が「this default still allows reading credential files such as `~/.aws/credentials` and `~/.ssh/`」と明記 |
 | sandbox の network | pre-allow なし。新しい host は prompt、auto mode では classifier に回る | 要らない。`allowedDomains` だけでは遮断にならず、遮断には `strictAllowlist` が要る（「入れていない設定と理由」） |
 | Bash の危険操作 | auto mode の built-in が判断 | ほぼ要らない（下記） |
@@ -150,6 +150,14 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 **protected paths は名前で決まる。** sandbox は書き込みを許した範囲の中でも、Claude Code が設定と code を load する path への書き込みを止める。対象は `.claude` の設定ファイル、`.claude/skills`、`.claude/agents`、`.claude/commands`、`.claude/hooks`、`~/.claude` の大半といった**名前**で、`allowWrite` でも `Edit` allow rule でも解除できない。この repo の `dot_claude/` は同じ内容の配布元だが、名前が違うのでこの保護に入らない。sandbox 内の command は `dot_claude/settings.json` を書き換えられる（2026-09-02 に実際にこの経路で編集した）。cwd が home の session（auto mode）でも、sandbox 内の python から `~/.claude/settings.json` を追記モードで開くと `PermissionError: [Errno 1]` で失敗した。同じ session で、home の直下へのファイルの作成は通った（2026-11-07 実測）。
 
 **つまり `dot_claude/settings.json` に書いた rule は、事故と model の誤りへの guardrail であって、侵害されたプロセスに対する境界ではない。** 境界として残るのは、live 側が protected paths に入っていることと、source の変更が人の `chezmoi apply` を経ないと効かないこと。`denyWrite` で塞がない理由は「入れていない設定と理由」にある。
+
+**prek の cache は、agent が書いたものを人が sandbox の外で実行する経路になる。受け入れている（2026-11-08 のユーザー判断）。** `allowWrite` の `~/.cache/prek/` には hook の実体（clone した hook repo と、hook ごとの実行環境）が入る。sandbox の中の command がこれを差し替えると、人が terminal で commit した時に、人の権限で走る。cache は repo の外にあるので、diff にも review にも出ない。
+
+- 受け入れるのは、作業 directory の `node_modules/` と同じ種類のリスクだから。sandbox の中から `node_modules/.bin/` に書けることを確かめた（2026-11-08）。この経路を悪用できるのは agent が侵害された後で、その段階なら tracked なコードにも紛れ込ませられる。
+- `node_modules/` との違いは共有にある。cache は全 repo で共有され、配布した settings により、どの repo の session からも書ける。ある repo の agent が書いたものが、別の repo の人の commit で動く。2026-11-08 時点で共有しているのは 2 repo（prek の `config-tracking.json` のうち、今も存在する設定ファイルを数えた）。
+- repo ごとに分ける形は作れない。cache を作業 directory の中（`.git/prek-agent/`）に置くと、prek が hook repo を clone する時の `git init` が、入れ子の `.git/config` を書けずに失敗した（`Operation not permitted`、2026-11-08）。sandboxing docs は、作業 directory の中の `.git` の `config` を protected path に挙げている。入れ子の repo にもこの保護が掛かったと見ているが、docs に入れ子の記述は無い。作業 directory の外なら動く（`$TMPDIR` で実測）が、`allowWrite` は全 session に共通なので、repo ごとにはならない。
+- agent 専用の cache も検討して、採っていない。SessionStart hook が `CLAUDE_ENV_FILE` で `PREK_HOME` を `~/.cache/prek-agent/` に向け、`allowWrite` をそこへ移す形になる。人の commit へ届く経路は prek の分だけ閉じるが、`node_modules/` の同じ経路は残る。代償として、cache の二重化、hook のスクリプト、agent の最初の commit での network の取得が増える。
+- 見直す契機は 2 つ。prek を使う repo が増えた時と、信頼できない内容を扱う repo で prek を使い始めた時。その時は agent 専用の cache を入れる。
 
 ## 実測: credential への Bash アクセスは通らない
 
@@ -427,3 +435,4 @@ trailer を止めると、以後の commit では AI の関与が履歴に残ら
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` と `/usr/sbin/diskutil list` の形は block する（2026-09-02 と 2026-11-07 実測）。`sudo` / `sh -c` が外れることは公式仕様から言える。大文字の `DISKUTIL list` は外れる（2026-11-07 実測）。tab 区切りの形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
 - `sandbox.filesystem.denyWrite` に入れた `~/.local/state/agent-signing` と `~/.config/git/start-signing-agent` について、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` の session で問題になる。
 - Windows の `diskpart` の deny rule が実行前に拒否するか。読み取りだけの呼び出し方が無く、deny が効かなかった時に UAC の確認が出る可能性があるので、試していない。
+- prek の cache を作業 directory の中に置いた時、入れ子の `.git/config` が拒否された理由。protected paths の保護が入れ子の repo にも掛かったと見ているが、docs に記述が無く、別の理由は切り分けていない。
