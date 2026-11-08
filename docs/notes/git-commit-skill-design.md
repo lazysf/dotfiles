@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-10-31
+- Date: 2026-11-08
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -106,7 +106,9 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 ## description の重心と境界
 
-依頼語に絞らず、作業が一段落して変更を確定させる場面も拾う。明示依頼では通ったが、「進めて」「直して」の流れで commit する場面では通っていなかった（2026-08-31 に実測）。一般則は `harness-design-principles.md` の「skill description の書き方」にある。
+依頼語に絞らず、ユーザーが commit という語を出さなくても、変更を Git 履歴へ残す流れなら拾う。明示依頼では通ったが、「進めて」「直して」の流れで commit する場面では通っていなかった（2026-08-31 に実測）。一般則は `harness-design-principles.md` の「skill description の書き方」にある。
+
+「作業が一段落した時」のような、commit を伴わない区切りは発火の場面に書かない。そこで load されると `lapidary` の「commit する流れ」に当たると読め、`lapidary` の自動発火を commit の前に限った判断（[lapidary-skill-design.md](./lapidary-skill-design.md)）と食い違う。2026-08-31 の対策（`adc17ef`）は、先頭の文を「commit したい依頼で使う」から「commit する時に使う」へ広げ、区切りの句と「commit という語を出さなくても」の文を足した。対策後にその場面で通るかは測っておらず、どれが効くかも切り分けていない。2026-11-08 に外したのは区切りの句だけで、残りの 2 つは今の description にある。
 
 「push と履歴の書き換え（rebase / amend / squash）は扱わない」も description に書いている。body の「扱わないもの」と重なるが、description は skill を読む前に見える唯一の面なので、境界はここにも要る。commit の作業には履歴の組み直しが混ざりやすい。2026-08-31 の session では `amend` と `reset` を繰り返し使い、その都度この skill の範囲外だと明示する必要があった。
 
@@ -137,3 +139,5 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - 承認・拒否の実機検証と、Claude 側の上記設定の実効性確認は未実施。2026-10-31 の確認は、指示を辿るシナリオ評価と静的検証に限る。
 
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
+
+- 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。`adc17ef` の後も、区切りの句を外した後も測っていない。
