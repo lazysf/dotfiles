@@ -62,5 +62,5 @@
 - `dot_claude/`: 全 project へ配る運用契約、skills、agents、output-styles、mods、settings。内訳は `dot_claude/CLAUDE.md` の「置き場」を正本にする
 - `dot_codex/`: 全 project へ配る運用契約、skills、agents、config、rules。内訳は `dot_codex/AGENTS.md` の「置き場」を正本にする
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
-- `.claude/rules/`: この repo に閉じる運用ルール。chezmoi は `.` 始まりを配布しない
+- `.claude/rules/`: 使わない。この repo に閉じる運用ルールはこの `AGENTS.md` に置き、Claude と Codex の両方に読ませる（根拠は `docs/notes/memory-surface-design.md`）
 - `docs/notes/`: repo-level の通常知見や背景。`docs/adr/`: repo-level の判断記録
