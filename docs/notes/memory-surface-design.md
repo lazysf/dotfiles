@@ -15,11 +15,11 @@
 
 **突き合わせ対象が減る。** 公式は "if two rules contradict each other, Claude may pick one arbitrarily. Review your CLAUDE.md files ... and `.claude/rules/` periodically to remove outdated or conflicting instructions." として定期点検を求めている。ファイルが少ない方が点検が軽い。
 
-統合後の `CLAUDE.md` は 83 行（2026-09-03）で、公式目安の 200 行に収まっている。
+1 枚にまとめても、公式目安の 200 行に収まっている（行数は [claude-md-design.md](./claude-md-design.md) の「ここに置くものの基準」）。
 
 ## privacy を独立させない
 
-分離していた時の理由は「混ぜると、コードを書かない作業（doc、設定、commit message）でも品質規範を全部読ませることになる」だった。`paths` を使わない以上どちらも毎 session 全文が load されるので、分離の有無に関わらず成立しない。
+分けても、コードを書かない作業（doc、設定、commit message）で品質規範を読ませずに済むわけではない。`paths` を使わない以上、どちらのファイルも毎 session 全文が load される。
 
 `CLAUDE.md` の停止線とは重ならない。停止線が挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`## Privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。
 
@@ -27,7 +27,7 @@
 
 ## `paths` を使わない
 
-path 条件付き rule が発火するのは、match するファイルを Read tool で読んだ時と、Bash で読んだ時の一部。Bash の条件は、Tools reference によれば、1 ファイルを pipe も redirect も使わずに読むこと（下記）。この dotfiles は `paths` 付き rule を持たない。外したのは 2026-09-02 で、当時の実測では `cat` で読んでも発火しなかった。auto mode の指示に従うと、構造的に発火しない状態だった。共通契約が読み取りを Read に定めた後（2026-11-08）も、`paths` を戻すかは判断していない。
+path 条件付き rule が発火するのは、match するファイルを Read tool で読んだ時と、Bash で読んだ時の一部（Bash の条件は下記）。この dotfiles は `paths` 付き rule を持たない。外したのは 2026-09-02 で、当時の実測では `cat` で読んでも発火しなかった。auto mode の指示に従うと、構造的に発火しない状態だった。共通契約が読み取りを Read に定めた後（2026-11-08）も、`paths` を戻すかは判断していない。
 
 2026-11-08 に、repo 内へ probe の directory と rule を一時的に作って確かめた。読み方ごとに別の directory と rule を用意し、各 directory は 1 回だけ読んだので、directory ごとに 1 回しか load しない sticky な挙動は結果に混ざらない。実測したのは次の 3 つの読み方だけ。`cat file` では、`paths` 付き rule と subdirectory の `CLAUDE.md` の両方が注入された。`cat -n file | head` では rule が注入されなかった。Read tool では両方が注入された。session の途中で作った rule でも発火した。
 

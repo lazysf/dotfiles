@@ -61,7 +61,7 @@ doc 追従の要否を明示する規律が効くのは実装の区切りで、�
 
 発端は 2026-11-07 のユーザーの相談。後で振り返ると、対応がその時点の必要に対して細かすぎたり過剰だったりする。対応や作業ごとに、そもそも要るか、要るなら必要十分か、を考えてほしい、という内容だった。
 
-契約には、過剰を止める基準が部分ごとにしか無かった。YAGNI は将来の要件、最小差分は変更範囲（前節）、output style の「求められた範囲だけ答える」は返答が対象。対応全般が増えるのを止める基準は無かった。公式の [Best practices](https://code.claude.com/docs/en/best-practices) は、Claude は既定で依頼を控えめに読み、満たす最小のものを作る、としている。そのため、過剰さは指示の側から来ていると判断した。
+ほかの規定が止める過剰は、それぞれ一部に限られる。YAGNI は将来の要件、最小差分は変更範囲（前節）、output style の「求められた範囲だけ答える」は返答が対象。対応全般が増えるのを止める基準は、この原則が持つ。公式の [Best practices](https://code.claude.com/docs/en/best-practices) は、Claude は既定で依頼を控えめに読み、満たす最小のものを作る、としている。そのため、過剰さは指示の側から来ていると判断した。
 
 3 つの問い（要るか、どこまで要るか、今要るか）は、「必要なこと」「必要な分だけ」「必要な時に」に対応する。YAGNI と最小差分はこれを個別に当てはめたもので、判定基準が具体的なので残す。原則の 2 番目（責任の所在の直後）に置くのは、やるかを決めてから品質や手段の話になるため。
 
@@ -75,7 +75,7 @@ doc と review が時点だけで毎回発火すると、工程表の「各工�
 
 ## review を doc の後に置く理由
 
-工程表の review は commit 前の自己確認を含む。もともと `quality-reviewer` などの起動条件しか書いていなかったが、実際には commit 前に毎回自分で変更を確認していて、その運用が機能していた。契約に無い行為が実務を支えている状態だったので、契約側へ移した。
+工程表の review は、`quality-reviewer` などの起動条件だけでなく、commit 前の自己確認も含む。commit 前に毎回自分で変更を確認する運用が実際に機能していたので、契約に書いて実務と揃えてある。
 
 観点はここに書かない。手順と観点は `skills/lapidary` が持ち、工程表は「いつ通すか」だけを示す。CLAUDE.md は全 session で常時 load される。review の時にしか要らない詳細を置くと、review しない session でも context を占める。
 
@@ -107,7 +107,7 @@ hook で機械化していない。hook が出せる `systemMessage` は harness
 
 発端は 2026-11-08 のユーザーの相談。小さな編集でも python で書き換えるなど、作業が大げさになっていた。
 
-読み取りを Read にするのは、作業対象 repo の subdirectory `CLAUDE.md` と `paths` 付き rule を確実に load させるため。Bash で読んで load されるのは、[Tools reference](https://code.claude.com/docs/en/tools-reference) によれば、1 ファイルを pipe も redirect も使わずに読んだ時だけ。実測では、`cat file` で load され、`cat -n file | head` では rule が黙って落ちた（[memory-surface-design.md](./memory-surface-design.md)、2026-11-08）。Read tool には読み方の条件が無い。shell での読み方の条件を守らせるより、Read に揃える方が単純。契約は作業対象 repo の `.claude/rules/` を置き場に挙げているので、落ちると、その repo の規約が効かないまま作業が進む。出力の量と形式は変わらない。2026-11-08 に同じ範囲を Read と `sed -n` で読み比べ、Read の出力が `cat -n` と同じ形式で、余分な付加が無いことを確かめた。呼び出し回数や待ち時間は比べていない。
+読み取りを Read にするのは、作業対象 repo の subdirectory `CLAUDE.md` と `paths` 付き rule を確実に load させるため。Bash で読んだ時は、pipe や redirect を挟むと rule が黙って落ちる（条件と実測は [memory-surface-design.md](./memory-surface-design.md) の「`paths` を使わない」）。Read tool には読み方の条件が無い。shell での読み方の条件を守らせるより、Read に揃える方が単純。契約は作業対象 repo の `.claude/rules/` を置き場に挙げているので、落ちると、その repo の規約が効かないまま作業が進む。出力の量と形式は変わらない。2026-11-08 に同じ範囲を Read と `sed -n` で読み比べ、Read の出力が `cat -n` と同じ形式で、余分な付加が無いことを確かめた。呼び出し回数や待ち時間は比べていない。
 
 編集を Edit にするのは、置換の失敗が見えるため。Edit は一致しない時と一意でない時にエラーで止まる。python の `str.replace` は、一致しなくても何も変えずに成功する。python で置換しても Edit と同じ old / new 文字列を送るので、量は減らない。
 

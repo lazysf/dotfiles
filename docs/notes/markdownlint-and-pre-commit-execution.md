@@ -63,7 +63,7 @@ hook 自体が発火するのは staged に `.md` がある時だけ（hook 定�
 
 - **`MD013`（line-length、既定 80）**: `287cc7b`（2026-04-21）で無効化。markdownlint-cli2 導入より前で、当時から理由の記載はない。2026-08-31 時点の tree で有効に戻すと 460 件。この repo の Markdown は日本語の段落を 1 行で書き hard wrap しないので、rule 自体が書き方と噛み合わない。
 - **`MD024`（no-duplicate-heading）**: `be928f2` で markdownlint-cli2 導入と同時に無効化。その時点の tree で有効にすると 164 件 / 8 file 出て、全て `docs/requests/**/test.md` の繰り返し見出し（「対応」「種別」「手順」）だった。この artifact 群は [ADR 0039](../adr/0039-retire-docs-requests-artifacts.md) で削除済み。2026-08-31 時点の tree では有効にしても 0 件で、無効化の原因は消えている。
-  それでも無効のまま維持する。MD024 の目的は、同名見出しから同じ anchor が生成される事故を防ぐこと（`markdownlint` の `doc/md024.md`）。ただしこの repo の `.md` に anchor link（`](#...)`）は 0 件で、防ぐ対象が無い。MD024 は自動修正を持たない。既定の `siblings_only: false` のままだと、将来 changelog 型の繰り返し見出しを書いた時に commit が止まり、手で直すことになる。anchor link を使い始めたら、既定ではなく `"MD024": { "siblings_only": true }` で入れ直す。
+  MD024 の目的は、同名見出しから同じ anchor が生成される事故を防ぐこと（`markdownlint` の `doc/md024.md`）。無効のままにしていたのは、anchor link が無く、防ぐ対象が無かったため。2026-11-08 時点では、tracked の Markdown に、repo 内の別ファイルの見出しを指す anchor link が 5 件ある（`README.md` に 2、`docs/notes/` に 2、`docs/adr/` に 1）。この理由は成り立たない。入れ直すかは未判断（[TODO.md](../../TODO.md)）。入れ直す時は、既定ではなく `"MD024": { "siblings_only": true }` にする。MD024 は自動修正を持たず、既定の `siblings_only: false` のままだと、changelog 型の繰り返し見出しを書いた時に commit が止まり、手で直すことになる。
 
 ## 未確認
 
