@@ -1,7 +1,7 @@
 # git-commit skill の設計
 
 - Date: 2026-11-08
-- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測
+- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測 / Claude Code の session の記録 / 使い捨て repo での skill の版の比較
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
 
@@ -48,11 +48,34 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 停止条件は手順全体にかかる制約として書いている。後半 2 つ（分割の単位が判断できない / ファイル単位で分けられない）は範囲を決める段階まで分からず、手順 1 の `git status -sb` では判定できない。ステップにすると位置が固定され、後の段階で判明する条件と噛み合わない。
 
-混在差分そのものは停止理由にしない。分割して複数 commit にすれば済む場面が多い。停止するのは分割の単位が判断できない時と、1 ファイル内で無関係な変更が混ざりファイル単位で分けられない時。後者は hunk 単位の staging に `git add -p` が要る。`git add -p` は、答えを stdin から流し込めば agent でも動く（2026-11-08 に確認）。それでも使わないのは、答えの順番が hunk の並びとずれた時に、別の hunk が黙って stage されるため。止めてユーザーに委ねる方が安全。
+混在差分そのものは停止理由にしない。分割して複数 commit にすれば済む場面が多い。停止するのは分割の単位が判断できない時と、1 ファイル内に範囲に入れる変更と入れない変更が混ざりファイル単位で分けられない時。後者は hunk 単位の staging に `git add -p` が要る。`git add -p` は、答えを stdin から流し込めば agent でも動く（2026-11-08 に確認）。それでも使わないのは、答えの順番が hunk の並びとずれた時に、別の hunk が黙って stage されるため。止めてユーザーに委ねる方が安全。
+
+1 ファイルを割る手は `git add -p` だけではない。2026-11-07 の session では、agent が今の版を scratchpad に控え、途中の版を作って順に stage し、1 つの note を 3 つの commit に割った（20:55〜20:56）。同じ session の 21:03 にも、同じ手で 1 つの note を 2 つに割っている。この手は途中の版をファイルに書いてから明示 path で stage するので、staging の規定には形の上で沿い、`git add -p` の禁止だけでは止まらない。どちらの回も、scratchpad で途中の版を組み立てる段階で、段落を抜いた跡に空行が重なった。worktree へ書く前に直すか止めるかしており、最後に worktree の版が控えと一致することを確かめている。未 commit の編集を失った回は無い。Gotchas の理由「書き戻しを誤ると、未 commit の編集を失う」は、worktree を書き換える手であることから見込んだリスク。Gotchas でこの手を `git add -p` と同じ 1 項目にしているのは、規則と結論（停止条件に当たる）が同じで、違うのが手段ごとの理由だけのため。使い捨て repo での比較（「1 変更の単位」）では、どちらの版もこの手を使わなかった。
+
+## 1 変更の単位
+
+skill は分割する条件と並べて、分けない条件を持つ。2026-11-07 の履歴に、細かすぎる分割が 2 つの型で出ていた。
+
+- 変更から機械的に決まる追従を別 commit にした。TODO の項目を閉じる commit と、残りの番号を振り直す commit が同じ分に並ぶ組が 4 つある（16:48〜16:59）。閉じる commit だけでは番号が飛び、振り直す commit は 4 本とも、note 内の参照も直している（例: `TODO.md の 9` → `8`）。
+- 1 つの作業で同じ doc へ記録した事実を、別々の commit にした。20:55〜20:56 に、`claude-code-settings-design.md` への `docs:` commit が 3 本ある。既存の記述の訂正（WSL2）と、新しい記録が混ざっていた。session の記録では、agent が作業報告の turn で 3 分割の案を出し、「commit して」を受けて案どおりに分けていた。
+
+2026-11-08 に、この節の規定が無い版（旧版）と有る版（新版）を、使い捨て repo で各ケース 1 回ずつ比べた。変更が揃った状態で「commit して」とだけ頼む形では、追従の例も、同じ doc の事実の例も、どちらの版も 1 commit にまとめた。差が出たのは、20:55 の note と同じく訂正と新しい記録が混ざった 3 つの変更を 1 ファイルに入れ、直前に agent 自身が 3 分割の案を出していた文脈だけ。旧版は停止条件に当たって止まり、新版は単位の規定に従って 1 commit にまとめた。新版は案を変えたことを報告に書いたが、変える前にユーザーへ確かめてはいない。この比較で分けない条件が効いたのは、事前の分割案を commit の時点でまとめ直す場面だった。比較の後に、分割の軸と停止条件との関係を書き足した（下の 2 段落）。比較はその前の文面で行った。
+
+分割の軸は目的と type の 2 つ。type を入れているのは、1 commit に 2 つの type が入ると、title の type がどちらかで嘘になるため（「surface の変更と doc を同じ commit にしない理由」）。軸を「性質」のような広い語にすると、訂正と新しい記録が混ざった 20:55 の型が分割にも読め、分けない条件と食い違う。同じ作業の記録なら目的は 1 つ、と本文に書いて、判定を 1 つにしている。
+
+分けない条件は範囲を広げない。staging はファイル単位で、Gotchas は 1 ファイルを割る手も止める。そのため、変更が混ざったファイルの行き先は、ファイルごと 1 commit にするか、止まるかの 2 つしかない。分けない条件がこの 2 つを決めると、ユーザー自身の編集や前の作業の残りが「同じ doc の事実」として commit に入りうる。lockfile や generated も「機械的な追従」に見える。そのため、範囲に入るか確かめられない変更は入れない変更に数え、停止条件に当てている。
+
+事実をまとめる範囲は「同じ doc」に限る。「同じ話題」の方が広く取れるが、話題の切れ目を agent が判断することになる。notes は 1 ファイル 1 話題（`scribe` の notes 規定）なので、doc で区切ればほぼ話題で区切ることになる。`TODO.md` のように 1 ファイルに複数の話題がある doc では、「1 つの作業で」の条件が範囲を絞る。
+
+追従が揃っているかの確認は、手順 4 の staged diff の確認に足していない。番号や参照が古いまま残っていないかは、`lapidary` の「整合性」が commit の前に見る。この skill が持つのは、揃った追従を同じ commit に入れる判断だけ。
+
+`lapidary` の「性質の違う変更が 1 つに混ざっていないか。混ざっていれば commit を分ける」も分割の向きしか持たないが、変えていない。commit の範囲は、この skill の手順 2 で最終的に決まるため。再検討の条件は「この規定を入れた後も、分割しすぎが履歴に出た時」。
+
+description の「1 commit 1 変更に分け」も残している。description は発火に効く面なので、単位の定義は本体に置く。
 
 ## surface の変更と doc を同じ commit にしない理由
 
-`dot_claude/` などの surface を変えた時、その理由を書いた `docs/notes/` は別 commit にする。skill 側の「性質の違う変更が混ざっていれば分割」をこの組み合わせへ当てた結果で、skill 本文は判断の材料を持たない。
+`dot_claude/` などの surface を変えた時、その理由を書いた `docs/notes/` は別 commit にする。skill 側の「目的か type が違う変更が混ざっていれば分割」を、この組み合わせへ当てた結果。surface と doc の組み合わせそのものは、skill 本文に書いていない。
 
 同じ commit に入れる案も成立する。理由の記録は変更に従属するので、`git revert` した時に理由だけ残ると存在しない状態を説明する doc になる。それでも分けているのは、type を正確に保つ方を取ったため。1 commit にすると `feat` と `docs` のどちらを名乗っても片方が嘘になり、`git log --oneline` を type で追えなくなる。revert の齟齬は、戻す時に doc も直せば閉じる。
 
@@ -133,3 +156,5 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - 承認・拒否の実機検証と、Claude 側の上記設定の実効性確認は未実施。2026-10-31 の確認は、指示を辿るシナリオ評価と静的検証に限る。
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
 - 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。
+- 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
+- Gotchas の「1 つのファイルの変更を、複数の commit に割らない」が途中の版を作る手を止めるかは未測定。使い捨て repo の新しい context では、この手そのものが再現しなかった。
