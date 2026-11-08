@@ -1,7 +1,7 @@
 # markdownlint / pre-commit の実行経路
 
 - Date: 2026-11-08
-- 出典: `prek.toml` / [prek Configuration](https://prek.j178.dev/configuration/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / markdownlint 0.40.0 の API による rule 単体実測 / `node_modules/markdownlint/doc/md024.md` / commit `287cc7b` `be928f2`
+- 出典: `prek.toml` / `scripts/check-identifiers.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / markdownlint 0.40.0 の API による rule 単体実測 / `node_modules/markdownlint/doc/md024.md` / commit `287cc7b` `be928f2`
 
 Markdown（markdownlint）と TOML（tombi）の lint は、それぞれ「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
 
@@ -65,6 +65,26 @@ hook 自体が発火するのは staged に `.md` がある時だけ（hook 定�
 - **`MD024`（no-duplicate-heading）**: `be928f2` で markdownlint-cli2 導入と同時に無効化。その時点の tree で有効にすると 164 件 / 8 file 出て、全て `docs/requests/**/test.md` の繰り返し見出し（「対応」「種別」「手順」）だった。この artifact 群は [ADR 0039](../adr/0039-retire-docs-requests-artifacts.md) で削除済み。2026-08-31 時点の tree では有効にしても 0 件で、無効化の原因は消えている。
   MD024 の目的は、同名見出しから同じ anchor が生成される事故を防ぐこと（`markdownlint` の `doc/md024.md`）。無効のままにしていたのは、anchor link が無く、防ぐ対象が無かったため。2026-11-08 時点では、tracked の Markdown に、repo 内の別ファイルの見出しを指す anchor link が 5 件ある（`README.md` に 2、`docs/notes/` に 2、`docs/adr/` に 1）。この理由は成り立たない。入れ直すかは未判断（[TODO.md](../../TODO.md)）。入れ直す時は、既定ではなく `"MD024": { "siblings_only": true }` にする。MD024 は自動修正を持たず、既定の `siblings_only: false` のままだと、changelog 型の繰り返し見出しを書いた時に commit が止まり、手で直すことになる。
 
+## 作業機の識別子を検査する local hook
+
+`check-identifiers`（`scripts/check-identifiers.sh`）は、staged のファイルの path と追加行に、この作業機の識別子が無いかを調べる。`CLAUDE.md` の Privacy 節は識別子を成果物に残さないと定めるが、契約は Claude が読む指示であって、強制ではない。この repo は public で、push した値は後から消しても残る。
+
+調べる値は 3 つで、どれも実行時に読む。`$HOME`（末尾の `/` は外す）、`${USER:-$USERNAME}`、`hostname` の出力の最初のラベル。値を script に書くと、script 自体が値を配る。`$HOME` は固定文字列で探す。ユーザー名とホスト名は、語単位で、大文字と小文字を区別せずに探す。stderr には種類と path だけを出し、当たった行の内容は出さない。削除した path は見ない。値を含む path を消す commit を止めないため。
+
+staged の差分は 1 回だけ取り、追加行の path は diff の header から読む。ファイルごとに path を指定して diff を取り直すと、git がクォートした path（`"`、`\`、tab を含む名前）がどのファイルにも当たらず、中身を検査しないまま通る。`--text` を付けるのは、`.gitattributes` で `binary` や `-diff` を付けたファイルの中身も検査するため。差分を取れない時は、検査を飛ばさずに止める。`always_run` を付けるのは、prek が file type で対象を絞ると、symlink だけの commit で hook が起動しないため。script は staged の一覧を自分で集める。
+
+git の pre-commit として動かすのは、git が commit 先の repo の、stage した後の index で hook を動かすから。Claude の commit なら、hook は sandbox の中で動く。先に Claude Code の `PreToolUse` hook で同じ検査を作り、捨てた（2026-11-08）。`PreToolUse` の hook の入力で、commit 先の repo の手がかりになるのは、command の文字列と session の cwd だけ。`cd <dir> && git commit` や `git -C <dir> commit` で別の repo を指す形と、同じ command で stage する分は、文字列を解釈して追うしかなかった。hook は sandbox の外で動くので、repo の設定に書かれた program（fsmonitor、external diff など）を起動しない保護も要った。script は 140 行まで膨らみ、直すたびに別の穴が見つかった。代わりに、この local hook は入れた repo でしか効かず、clone ごとに `prek install` が要る。入れ忘れると黙って効かない。hook の起動に関わるもののうち、`.git/hooks` と `.git/config` は、Claude Code の sandbox の中から書き込めない（2026-11-08、mac の session で `touch` が拒否された）。sandbox の中から書けるのは `prek.toml` と `scripts/` で、どちらも書き換えれば diff に出る。
+
+拾わないものは、commit message、`--no-verify` を付けた commit、pattern にできない識別子（実名、メールアドレス、社内のホスト名）。`$HOME`、ユーザー名、ホスト名のうち取れなかった値は、その種類の検査を飛ばす。
+
+2026-11-08 に macOS で、使い捨ての repo に stage して script を直接呼んだ。
+
+- 止まった（exit 1）: home の追加行、ユーザー名の語、ユーザー名を含む非 ASCII の path、値を含むファイルの改名、cwd が subdirectory の時、`"`・`\`・tab を含む名前のファイルの中身、home を指す symlink、`binary` 属性を付けた text ファイル、差分を取れない時。
+- 通った（exit 0）: ユーザー名を一部に含む別の語、該当なし、値を含むファイルの削除、staged が空の時。
+
+同じ日に、使い捨ての repo に `prek install` して `git commit` した。home を指す symlink だけの commit と、`"` を含む名前のファイルの commit は、`check-identifiers` が Failed で止めた。値の無い commit は通った。
+
 ## 未確認
 
+- `check-identifiers` が Windows の prek で動くか。
 - `check-toml` / `check-yaml` は登録されていない。TOML は `tombi-lint` が構文も見る。YAML は `nvim.yml` などの対象があるが、意図的に外したのか未検討なのかは不明。

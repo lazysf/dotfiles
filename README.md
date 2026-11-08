@@ -152,12 +152,12 @@ launchctl bootout "gui/$(id -u)/local.mole.weekly-check"
 
 - [`dot_claude/`](dot_claude/): `~/.claude/` へ配布する Claude Code の設定、skills、agents、mod。
 - [`dot_codex/`](dot_codex/): `~/.codex/` へ配布する Codex の設定。`config.toml` は配布しません。
-- [`scripts/`](scripts/): セットアップスクリプト。chezmoi は配布しません。
+- [`scripts/`](scripts/): セットアップスクリプトと、commit 時の hook が呼ぶスクリプト。chezmoi は配布しません。
 - [`docs/`](docs/): 設計の理由（notes）と判断の記録（ADR）。一覧は [`docs/README.md`](docs/README.md)。
 
 ## 開発
 
-commit 時に lint などの hook を走らせる:
+commit 時に lint と、作業機の識別子（home の絶対パス、ユーザー名、ホスト名）の検査を走らせる:
 
 ```sh
 prek install
