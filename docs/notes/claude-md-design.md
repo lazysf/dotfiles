@@ -1,6 +1,6 @@
 # CLAUDE.md の設計
 
-- Date: 2026-11-03
+- Date: 2026-11-08
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) / [Hooks reference](https://code.claude.com/docs/en/hooks) / `dot_claude/CLAUDE.md` / この環境での実測 / Codex での作業記録の要約（ユーザー提供）
 
 `dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -9,7 +9,7 @@
 
 CLAUDE.md は全セッションの先頭で読まれる。入れるのは、どの依頼でも要る契約と判断基準、工程の発火条件。起動後の手順は `skills/` にあり、ここでは重複させない。
 
-公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 83 行（2026-09-03）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
+公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 88 行（2026-11-08）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
 
 ## push を工程表に書いている理由
 
