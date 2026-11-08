@@ -1,7 +1,7 @@
 # harness の設計原則
 
-- Date: 2026-09-03
-- 出典: `dot_claude/` / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この環境での実測
+- Date: 2026-11-08
+- 出典: `dot_claude/` / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / この環境での実測
 
 この harness に何を置き、どう書くかの判断基準を残す。個別の設定や skill が今の形である理由は、それぞれの設計 note にある。
 
@@ -54,6 +54,16 @@ session へ渡る skill 一覧も即反映される。`scribe` の description �
 文数の上限は置かない。公式も "a few sentences to a short paragraph" を目安としている。
 
 強めに書く方へ倒す。[Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) は "Err on the side of being pushy. Explicitly list contexts where the skill applies, including cases where the user doesn't name the domain directly" と書く。`skill-creator` も、Claude が skill を undertrigger しがち（役に立つ場面で呼ばない）だとして、同じ対策を挙げている。
+
+## 規則文に太字を使わない
+
+agent が読む surface では、規則の文や句を太字にしない。対象は `CLAUDE.md`、`skills/` とその `references/`、`agents/`、`output-styles/`。太字を使うのは、語の後に `:` が続くラベルだけにする（`**KISS**:`、`1. **作る必要があるか**:` など）。
+
+公式の [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) は、今の model は平易に書いた行に従うとしている。強調を重ねると、規則を過剰に適用するとも書いている。守られない規則に強調を足しても、たいてい直らない。例外の無い規則なら hook か deny rule に移す。長いファイルの中で埋もれているなら、ファイルを短くする。
+
+ラベルの太字は、どこから読むかを示すだけで、規則の強さを示さない。そのため残す。「規則の強調か、見出しか」を内容で判定すると、読み手ごとに結果が分かれる。そのため、判定は「語の後に `:` が続くか」の 1 つにしてある。
+
+notes と README は人が読む doc なので、この基準の対象にしない。
 
 ## 発火面と実行条件を分ける
 

@@ -11,7 +11,7 @@ color: orange
 
 ## 役割
 
-与えられた変更セットと依頼の意図を read-only で確認し、品質リスクの指摘だけを返す。secret 値を出力や log に書かない。**ファイルの変更、`git add` / `git commit` / `git push` などの write 系操作と、外部 I/O はしない。**
+与えられた変更セットと依頼の意図を read-only で確認し、品質リスクの指摘だけを返す。secret 値を出力や log に書かない。ファイルの変更、`git add` / `git commit` / `git push` などの write 系操作と、外部 I/O はしない。
 
 ## 進め方
 
