@@ -64,7 +64,7 @@ body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっ
 ## Gotchas
 
 - **pre-commit hook はファイルを書き換えることがある。** 自動修正型の hook が発火すると commit が失敗し、修正後の内容が unstaged で残る。修正差分を確認してから再 stage して commit し直す。確認せずに再 stage しない。
-- **`git add -i` と `git add -p` は使えない。** この環境では interactive flag が動かないため、hunk 単位の staging ができない。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
+- **`git add -i` と `git add -p` は使わない。** agent は hunk を見ながら答えられず、答えを stdin から流し込む形になる。答えの順番が hunk の並びとずれると、別の hunk が黙って stage される。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
 
 ## 扱わないもの
 
