@@ -23,7 +23,7 @@
 
 `CLAUDE.md` の停止線とは重ならない。停止線が挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`## Privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。
 
-**強制層は持たない。** 公式は CLAUDE.md を context であって enforced configuration ではないと明示している。Claude の判断に関わらず止めたいなら PreToolUse hook を使え、としている。ここでは機械的検査を採らず、契約だけを置いている。skill と agent も同じく強制力を持たないので、層の性質を揃えてある。
+**強制層は Claude の commit にだけ持つ。** 公式は CLAUDE.md を context であって enforced configuration ではないと明示している。Claude の判断に関わらず止めたいなら PreToolUse hook を使え、としている。Claude が打つ `git commit` は、hook が staged の追加行を home の path、ユーザー名、ホスト名で検査する（[claude-code-settings-design.md](./claude-code-settings-design.md) の「commit 前の privacy 検査 hook」）。それ以外の場面と、pattern にできない識別子は、契約だけが担う。
 
 ## `paths` を使わない
 

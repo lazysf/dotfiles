@@ -21,6 +21,7 @@ hook は失敗の種類で対応が変わる。
 | 検査だけ行い失敗（lint、型、secret 検出など） | 指摘された原因を直し、直した内容を stage して commit し直す |
 | ファイルを自動修正して失敗 | 修正差分を `git diff` で確認してから再 stage して commit し直す |
 | どの種類か判別できない | hook の出力を読み、判別できるまで再実行しない |
+| Claude Code の hook が commit の tool call を止めた | hook の出力に従って原因を直し、stage し直して commit する。command の形を変えて hook を避けない |
 
 自動修正型で差分を確認せずに再 stage すると、hook が何を変えたか分からないまま commit することになる。整形のつもりで内容が変わっていても気づけない。
 

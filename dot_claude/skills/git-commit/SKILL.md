@@ -45,6 +45,7 @@ description: Git の変更を commit する時に使う。直接の依頼（「c
 ## staging
 
 - 合意した単一の変更だけを `git add <path>` で stage する。`git add .` と `git add -A` は使わない。範囲を広く取ると、意図しない変更が混ざっても気づけない。
+- stage と commit は別の command で打つ。同じ command にすると、commit の前の確認（staged diff の確認と、Claude Code の commit 前の hook）が、stage する前の状態に当たる。
 - 無関係、曖昧、危険、またはユーザー自身が編集した変更は unstaged のまま残す。
 - directory を stage する時は、含まれる全 path が同じ変更に属することを確認する。
 - 未追跡ファイル、機密情報、env / local / editor / temp / debug / build / generated、lockfile、migration、config は、含める意図が確認できる時だけ stage する。

@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
 - Date: 2026-11-08
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / sandboxing docs の native Windows の記述、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / [Tools reference](https://code.claude.com/docs/en/tools-reference) の PowerShell tool 節、hooks docs の「Persisted variables in PowerShell commands」、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Windows の session での shell のツールと `Read` deny の実測（2026-11-07、Claude Code 2.1.317） / Windows と mac の実機 `claude auto-mode defaults`（v2.1.317）と、disk 系 command の解決と権限の実測（2026-11-07） / mac の session での絶対パスの `diskutil` の拒否の実測（2026-11-07、v2.1.317） / [Environment variables](https://code.claude.com/docs/en/env-vars) の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`（2026-11-07 確認） / [Windows Security Servicing Criteria](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria) と [User Account Control settings and configuration](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration)（2026-11-07 確認） / mac の sandbox 内での Keychain の github.com の credential と gh の token の取り出しと、auto mode の session での host を申告しない HTTPS の接続の実測（2026-11-07） / cwd が home の mac の session での `~/.claude/settings.json` への書き込みの実測、mac の session での Read ツールの `~/.ssh` の拒否の実測（2026-11-07） / CLI 2.1.311 で bypass mode を指定した起動の実測、desktop app の「バイパス権限モードを許可」の確認（2026-11-07） / [Configure auto mode](https://code.claude.com/docs/en/auto-mode-config)（2026-11-08 確認） / desktop app で実行した `/auto-mode-setup` の書き込みと、v2.1.317 の `claude auto-mode defaults` の比較（2026-11-08）
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / sandboxing docs の native Windows の記述、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / [Tools reference](https://code.claude.com/docs/en/tools-reference) の PowerShell tool 節、hooks docs の「Persisted variables in PowerShell commands」、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Windows の session での shell のツールと `Read` deny の実測（2026-11-07、Claude Code 2.1.317） / Windows と mac の実機 `claude auto-mode defaults`（v2.1.317）と、disk 系 command の解決と権限の実測（2026-11-07） / mac の session での絶対パスの `diskutil` の拒否の実測（2026-11-07、v2.1.317） / [Environment variables](https://code.claude.com/docs/en/env-vars) の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`（2026-11-07 確認） / [Windows Security Servicing Criteria](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria) と [User Account Control settings and configuration](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration)（2026-11-07 確認） / mac の sandbox 内での Keychain の github.com の credential と gh の token の取り出しと、auto mode の session での host を申告しない HTTPS の接続の実測（2026-11-07） / cwd が home の mac の session での `~/.claude/settings.json` への書き込みの実測、mac の session での Read ツールの `~/.ssh` の拒否の実測（2026-11-07） / CLI 2.1.311 で bypass mode を指定した起動の実測、desktop app の「バイパス権限モードを許可」の確認（2026-11-07） / [Configure auto mode](https://code.claude.com/docs/en/auto-mode-config)（2026-11-08 確認） / desktop app で実行した `/auto-mode-setup` の書き込みと、v2.1.317 の `claude auto-mode defaults` の比較（2026-11-08） / [Hooks reference](https://code.claude.com/docs/en/hooks) の `if` と `onFailure`、permissions docs の wildcard と compound command の節、[Extend Claude Code](https://code.claude.com/docs/en/features-overview)、[Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / 使い捨ての repo での commit-privacy hook の実測と、transcript の commit の形の集計（2026-11-08）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -239,6 +239,51 @@ mac では、gh の token を Keychain ではなく `~/.config/gh/hosts.yml` に
 
 エージェントの commit を専用の鍵で署名する構成と、その理由と実測は [agent-commit-signing-design.md](./agent-commit-signing-design.md) にある。
 
+## commit 前の privacy 検査 hook
+
+Claude が打つ `git commit` の前に、`PreToolUse` hook の `dot_claude/hooks/executable_commit-privacy.sh` が staged の追加行を調べる。当たれば exit 2 で tool call を止め、stderr が Claude に返る。`CLAUDE.md` の Privacy 節は、書き手と作業機の識別子を成果物に残さないと定めている。ただし契約は context であって、強制ではない。公式の [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) は、例外の無い規則を hook に置くとし、commit の secret scan を例に挙げている。この repo は public で、push した値は後から消しても残る。
+
+調べる値は 3 つで、どれも実行時に読む。`$HOME`（末尾の `/` は外す）、`${USER:-$USERNAME}`、`hostname` の出力の最初のラベル。値を script に書くと、script 自体が値を全作業機へ配る（Privacy 節の「直書きしない」）。`$HOME` は固定文字列で探す。ユーザー名とホスト名は、語単位で、大文字と小文字を区別せずに探す。引数なしの `hostname` はどの OS でも名前を出すので、`-s` には頼らない。Git Bash の `$HOME` は `/c/Users/...` の形なので、`C:\Users\...` と書いた path は home の検査では拾えず、user の検査が拾う。stderr には種類（home / user / host）と path だけを出し、当たった内容は出さない。
+
+`if` は `Bash(git *)` にしている。`Bash(git commit *)` は `git -c k=v commit` に一致しない。permissions docs の例で、`Bash(git push *)` が `git -c push.default=current push origin main` に一致しないのと同じ形になる。Claude は `git -c commit.gpgsign=false commit` のように、`-c` を付けて commit することがある（この repo の session の transcript に複数ある）。commit かどうかは、stdin の JSON の `command` の値のうち、区切り（先頭、`&&`、`||`、`;`、`|`、改行）の直後にある `git` の subcommand で見る。先頭の環境変数の代入と、`-c <値>`、`-C <値>`、`-` で始まる option は飛ばす。path、message、description、cwd に `commit` という語があっても、検査しない。commit 以外の git command は、ここで抜ける。代償として、script を起動できない時と時間切れの時は、`onFailure: "block"`（v2.1.295 以降）によって git の command がすべて止まる。止まったことはその場で見えるので、許容している。
+
+stage と commit が 1 つの command に並んだら、検査せずに止める。PreToolUse は command 全体の前に 1 回だけ動くので、同じ command で stage する分は、検査の時点の index に無い。この repo の session の transcript には、`git add <path> && … && git commit` の形が複数ある。判定は commit と同じく、区切りの直後にある `git` の subcommand が `add` か `stage` か。こちらは当たると止まるので、改行と `(` の後ろは区切りに数えない。commit message の本文や括弧の中に `git add` が出ても、止めないため。代わりに、message に `; git add` や `&& git add` と書くと、誤検知で止まる。git-commit skill の staging の規定にも、stage と commit を別の command で打つと書いてある。
+
+hook は sandbox の外で動く。agent は sandbox の中から repo の `.git/config` を書ける。そのため git は次の形で呼び、repo の設定に書かれた program を sandbox の外から起動しない。
+
+- `-c core.fsmonitor=false`: fsmonitor の program。
+- `--no-ext-diff`、`--no-textconv`: diff の外部 program と textconv。
+- `--no-lazy-fetch` と `GIT_NO_LAZY_FETCH=1`: partial clone で blob が欠けた時に起動する fetch。fetch は、repo の設定にある upload-pack などの program を起動する。
+- `--submodule=short`: `diff.submodule=diff` の時に、submodule の中で起動する diff。その diff は、submodule の設定の external diff を起動した（下の実測）。
+- `--no-pager`: pager。
+
+script の置き場の `~/.claude/hooks/` は、session の sandbox の設定では書き込みが止められている。実測はしていない。Windows では sandbox が効かないので、この保護も無い。
+
+git は repo の top-level で、`git diff --cached` を 1 回だけ呼ぶ。`--no-relative` と `-c core.quotePath=false` を付けるので、cwd が subdirectory でも、`diff.relative` が有効でも、名前に非 ASCII や tab を含んでも、全ファイルを見る。追加行は path と一緒に検査するので、path に値を含むファイルも、追加行があれば当たる。cwd は stdin の JSON から sed で取り出す。Windows の Git Bash には jq が無いため。cwd が repo でなければ、commit も失敗するので通す。repo なのに差分を取れない時は、検査を飛ばさずに止める。`--no-lazy-fetch` が無い古い git では、ここで止まる。
+
+次の形は拾わない。
+
+- `git commit -a`、`-i`、`-o`、`git commit <path>` のように、worktree の内容を commit する形の、まだ stage していない分。
+- `git -C <path> commit` と `cd <dir> && git commit` で、別の repo に commit する形。hook は JSON の `cwd` の repo を見る。
+- 改行で区切った複数行の command や、`( … )` の subshell の中で stage してから commit する形。
+- commit message。command には `cd` 先などの絶対 path が入るので、command 全体を検索すると誤検知する。message だけを取り出すには、`-m`、`-F`、heredoc と形が多い。
+- binary として扱われるファイルの中身。
+- `git` 以外から起動した commit と、人が terminal で打つ commit。
+- pattern にできない識別子。実名、メールアドレス、社内のホスト名。
+
+Claude の commit では、git-commit skill の機密情報の検索が残る。ユーザー名が一般的な語の作業機では、誤検知で commit が止まりうる。その時は人が terminal で commit する。
+
+2026-11-08 に macOS（git 2.56.0）で、使い捨ての repo を作り、stdin の JSON を script に渡して 35 通り試した。
+
+- 追加行に `$HOME` かユーザー名がある時は exit 2 で、stderr に当たった内容は出なかった。次の場合も検出した。cwd が subdirectory の時、`diff.relative` が有効な時、名前に非 ASCII（`core.quotePath` が既定の true）、tab、glob 文字を含む時、`$HOME` の末尾に `/` がある時、JSON に cwd が無い時。
+- ユーザー名を一部に含む別の語、該当なし、削除行だけ、staged が空、repo の外の cwd、submodule の gitlink の変更では、exit 0 だった。
+- 改行の後ろと、環境変数の代入の後ろにある commit も検査した。
+- JSON に `commit` が無い時は、git を呼ばなかった。次の command は検査せずに通した。description に `commit` を含む `git add` と `git diff`、path に `commit` を含む単独の `git add`、`git log --grep commit`、path に `commit` を含む `git show`、`git commit-tree`。
+- message に `git add` や `(git add` を含む commit と、heredoc の本文に `git add` で始まる行を含む commit は、止まらなかった。
+- stage と commit を `&&` や `;` で 1 つの command に並べると、exit 2 で止まった。`git -C . add` と `git -c k=v add` の形でも止まった。
+- repo の設定に program を書いた 3 つの場面で比べた。fsmonitor・external diff・textconv・pager をまとめて書いた repo、lazy fetch の upload-pack、submodule の external diff。保護を付けない `git diff --cached` はどの場面でも program を起動し、hook の中では起動しなかった。lazy fetch の場面は、blob を取れないので exit 2 で止まった。
+- repo なのに diff が失敗する時は、exit 2 で止まった。diff だけが失敗する偽の git で試した。
+
 ## Windows では sandbox の防御が効かない
 
 公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。Windows の session でも、Read ツール、Glob、Grep と、Bash の `ls ~/.ssh` は `~/.ssh` で拒否された。Read ツールは、`\` 区切りの path と `/` 区切りの path のどちらでも拒否された（2026-11-07 実測、Claude Code 2.1.317、auto mode。存在しないファイルと、何にも一致しない pattern で試した）。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
@@ -368,4 +413,6 @@ classifier が `autoMode` を読むのは、user settings、managed settings、`
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` と `/usr/sbin/diskutil list` の形は block する（2026-09-02 と 2026-11-07 実測）。`sudo` / `sh -c` が外れることは公式仕様から言える。大文字の `DISKUTIL list` は外れる（2026-11-07 実測）。tab 区切りの形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。
 - Windows の `diskpart` の deny rule が実行前に拒否するか。読み取りだけの呼び出し方が無く、deny が効かなかった時に UAC の確認が出る可能性があるので、試していない。
+- commit-privacy hook が、apply の後の session で Claude の commit を実際に止めるか。Windows の Git Bash で同じように動くか。
+- `onFailure: "block"` が、script を起動できない時に git の command を実際に止めるか。`~/.claude/hooks/` は sandbox の設定で書き込みが止められているので、script を壊して試していない。
 - prek の cache を作業 directory の中に置いた時、入れ子の `.git/config` が拒否された理由。protected paths の保護が入れ子の repo にも掛かったと見ているが、docs に記述が無く、別の理由は切り分けていない。
