@@ -7,7 +7,7 @@ description: Git の変更を commit する時に使う。直接の依頼（「c
 
 ## 手順
 
-**今の変更セットについて、指示された段までしか進まない。** stage する段（手順 3）は stage か commit を指示された時、commit を作る段（手順 5〜6）は commit を指示された時だけ実行する。指示が無ければ、そこまでの確認結果を報告して止まる。
+今の変更セットについて、指示された段までしか進まない。 stage する段（手順 3）は stage か commit を指示された時、commit を作る段（手順 5〜6）は commit を指示された時だけ実行する。指示が無ければ、そこまでの確認結果を報告して止まる。
 
 指示に当たらないもの。「進めて」「直して」のような作業継続の語、この skill が load されたこと、`lapidary` など他の skill や agent が「commit できる状態」と判定したこと。skill が load されるのは、commit する流れで staging 規律と機密情報の検索を通すため。
 
@@ -46,14 +46,14 @@ description: Git の変更を commit する時に使う。直接の依頼（「c
 - directory を stage する時は、含まれる全 path が同じ変更に属することを確認する。
 - 未追跡ファイル、機密情報、env / local / editor / temp / debug / build / generated、lockfile、migration、config は、含める意図が確認できる時だけ stage する。
 
-stage 後の確認では、意図しない削除、debug 出力、機密情報、無関係な整形を見る。**機密情報の混入は目視で済ませず、staged diff 全体に対する検索で確認する。** diff が長いと目視は必ず漏れる。
+stage 後の確認では、意図しない削除、debug 出力、機密情報、無関係な整形を見る。機密情報の混入は目視で済ませず、staged diff 全体に対する検索で確認する。 diff が長いと目視は必ず漏れる。
 
 ## commit message
 
 title は `<type>: <description>` の 1 行。
 
 - `<type>` は `feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert` から選ぶ。この集合を増やさない。どれにも当てはまらないと感じたら、その commit が複数の変更を含んでいないか疑う。
-- **scope は使わない。** `<type>(<scope>): <description>` の形にしない。repo 規約が scope を要求する場合は、scope 付き message を作らず停止して報告する。
+- scope は使わない。 `<type>(<scope>): <description>` の形にしない。repo 規約が scope を要求する場合は、scope 付き message を作らず停止して報告する。
 - 命令形で書く。`add` / `fix` / `remove` を使い、`added` / `adds` / `adding` は使わない。
 - 英語で書く。応答は日本語だが、`git log` を追う時に履歴の言語が混ざっていると読みにくい。
 - 50 文字以内を目安にし、72 文字を上限にする。
@@ -71,8 +71,8 @@ body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっ
 
 ## Gotchas
 
-- **pre-commit hook はファイルを書き換えることがある。** 自動修正型の hook が発火すると commit が失敗し、修正後の内容が unstaged で残る。修正差分を確認してから再 stage して commit し直す。確認せずに再 stage しない。
-- **1 つのファイルの変更を、複数の commit に割らない。** `git add -i` と `git add -p` では、agent は hunk を見ながら答えられず、答えを stdin から流し込む形になる。答えの順番が hunk の並びとずれると、別の hunk が黙って stage される。控えを取って途中の版を作り、明示 path で順に stage する方法は、worktree のファイルを書き換える。書き戻しを誤ると、未 commit の編集を失う。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
+- pre-commit hook はファイルを書き換えることがある。 自動修正型の hook が発火すると commit が失敗し、修正後の内容が unstaged で残る。修正差分を確認してから再 stage して commit し直す。確認せずに再 stage しない。
+- 1 つのファイルの変更を、複数の commit に割らない。 `git add -i` と `git add -p` では、agent は hunk を見ながら答えられず、答えを stdin から流し込む形になる。答えの順番が hunk の並びとずれると、別の hunk が黙って stage される。控えを取って途中の版を作り、明示 path で順に stage する方法は、worktree のファイルを書き換える。書き戻しを誤ると、未 commit の編集を失う。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
 
 ## 扱わないもの
 
