@@ -17,7 +17,9 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 発火の起点が違う。この skill は直接の依頼と commit の前に走り、出力は commit できる状態かの判定になる。`git-commit` は変更を Git 履歴へ残す流れで load され、commit 自体もユーザーが指示した時だけ実行する。組み込むと、commit を伴わない「見直して」で review を通せない。
 
-`git-commit` の責務も膨らむ。あちらは停止条件、staging 規律、staged diff の検証を持つ。review の観点と混ざると、commit したいだけの時に観点表まで読むことになる。
+`git-commit` の責務も膨らむ。あちらは停止条件、staging 規律、staged diff の検証を持つ。観点表を本文に混ぜると、load されるたびに観点表まで読むことになる。今の形では、commit の流れで観点表を読むのは、この skill を通していない時と、通した後に変更が増えた時だけ。
+
+`git-commit` の手順 2 は、commit の範囲にこの skill を通したかを確かめ、通していなければ通してから進む。発火の起点を足すだけで、観点は取り込んでいない。理由は [git-commit-skill-design.md](./git-commit-skill-design.md) の「lapidary を通したかを手順で確かめる理由」にある。
 
 ## agent との使い分け
 
@@ -160,4 +162,4 @@ repo 全体を対象にした bloat の洗い出し（ponytail の `ponytail-aud
 ## 未確認
 
 - 転記が実際に起きたかは確認していない。出力の規定は、経路が在ることに対して置いた。
-- 自動発火が実際に効くかは未測定。commit の前に発火するかも、commit しない区切りで発火しないかも、観測していない。公式が model behavior を nondeterministic と明記しているため、1 回の発火では判定できない（[scribe-skill-design.md](./scribe-skill-design.md) と同じ理由）。
+- commit しない区切りで発火しないかは、観測していない。commit の前の発火は、description だけでは毎回は起きなかった（数え方と結果は [git-commit-skill-design.md](./git-commit-skill-design.md) の「lapidary を通したかを手順で確かめる理由」）。`git-commit` の手順 2 から通す形が毎回効くかは未測定。公式が model behavior を nondeterministic と明記しているため、1 回の発火では判定できない（[scribe-skill-design.md](./scribe-skill-design.md) と同じ理由）。
