@@ -174,6 +174,6 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - 承認・拒否の実機検証と、Claude 側の上記設定の実効性確認は未実施。2026-10-31 の確認は、指示を辿るシナリオ評価と静的検証に限る。
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
 - 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。
-- 手順 2 の確認が毎回効くかは未測定。この skill も load 済みのまま commit することがあり、その時に手順 2 が読み直されるかは確かめていない。
+- 手順 2 の確認が毎回効くかは未測定。apply の後の新しい session で「commit して」と頼んだ 1 回では、手順 2 から `lapidary` が起動した（2026-11-08）。`lapidary` が reviewer を提案して止まる経路は、まだ試していない。この skill も load 済みのまま commit することがあり、その時に手順 2 が読み直されるかも確かめていない。
 - 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
 - Gotchas の「1 つのファイルの変更を、複数の commit に割らない」が途中の版を作る手を止めるかは未測定。使い捨て repo の新しい context では、この手そのものが再現しなかった。
