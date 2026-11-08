@@ -1,7 +1,7 @@
 # git-commit skill の設計
 
 - Date: 2026-11-08
-- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測 / Claude Code の session の記録 / 使い捨て repo での skill の版の比較
+- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Extend Claude with skills](https://code.claude.com/docs/en/skills)（2026-11-08 確認） / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測 / Claude Code の session の記録 / 使い捨て repo での skill の版の比較
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
 
@@ -137,6 +137,24 @@ description は「変更を Git 履歴へ残す流れなら skill を通す」�
 
 発火の側で止める形（description を絞る、`disable-model-invocation: true` を置く）は採らない。commit する流れで staging 規律と機密情報の検索ごと飛ぶ。一般則は `harness-design-principles.md` の「発火面と実行条件を分ける」にある。
 
+## lapidary を通したかを手順で確かめる理由
+
+手順 2 で、commit の範囲に `lapidary` を通したかを確かめる。`lapidary` は description で commit の前に発火する設計だが、それだけでは発火しない場面が多かった。`lapidary` の description を今の形にした `5b9b39d`（2026-11-07）の後の 4 session（2026-11-07〜08）で、commit を頼む発言を数えた。
+
+- 「見直して commit」のように見直しの語を含む発言は 2 回で、2 回とも `lapidary` が発火した。
+- 見直しの語を含まない発言は 6 回。直前に `lapidary` が発火したのは 1 回だった。1 回は、直前の発言で `lapidary` を通した後だった。残る 4 回は、commit する変更に `lapidary` を通さないまま commit した。
+- この skill は、commit を実行した発言のすべてで、起動していたか load 済みだった。
+
+確実に load されるこの skill の手順に置くと、`lapidary` の発火を description だけに頼らずに済む。上の 4 回は、どれも同じ session の前の段階で `lapidary` を通しており、その後に変更を足していた（1 回は、変更を加える前の案に通したもの）。公式の [Extend Claude with skills](https://code.claude.com/docs/en/skills) によると、skill の本文は一度 load されると会話に残り、後の turn で読み直されない。load 済みの skill は、変更が増えても通し直されにくいと見ている。手順 2 が「通した後に範囲内のファイルが変わった時」も対象にしているのは、そのため。
+
+条件は「commit を指示されている時」に絞っている。この skill は、指示の無い「変更を Git 履歴へ残す流れ」でも load され、手順 1〜2 を実行してから止まる。条件が無いと、commit しない区切りで `lapidary` が走る。それは `lapidary` の description の「直接の依頼が無ければ、commit しない区切りでは使わない」と食い違う。
+
+`lapidary` が reviewer を提案した時も止まる。reviewer を通すかを、ユーザーが commit の前に選べるようにするため。止まらずに進むと、提案は commit の後に届く。この repo では `dot_claude/` を触る変更のほとんどが提案の条件に当たるので、commit までの往復は増える。
+
+`lapidary` は作業ツリーのファイルを直す。`lapidary` が範囲の外を直した時に範囲を決め直すのは、整合性の観点が古い参照の更新のような追従を直しうるため。追従は「1 変更の単位」で同じ commit に入れると決めてある。何を直したかを報告に書くのは、「commit して」とだけ頼んだユーザーが、自分の見ていない直しが commit に入ったことに気づけるようにするため。
+
+`lapidary` の観点はここへ写さない。この skill が持つのは、通したかを確かめる 1 段だけ。観点を取り込まない理由は [lapidary-skill-design.md](./lapidary-skill-design.md) の「`git-commit` に組み込まない理由」にある。
+
 ## Co-authored-by trailer は skill の外で決まる
 
 skill は trailer を規定していない。付くかどうかは実行する harness の system prompt が決め、制御点は settings の `attribution` にある。この repo では `attribution` で止めている（理由と実測は [claude-code-settings-design.md](./claude-code-settings-design.md)）。
@@ -156,5 +174,6 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - 承認・拒否の実機検証と、Claude 側の上記設定の実効性確認は未実施。2026-10-31 の確認は、指示を辿るシナリオ評価と静的検証に限る。
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
 - 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。
+- 手順 2 の確認が毎回効くかは未測定。この skill も load 済みのまま commit することがあり、その時に手順 2 が読み直されるかは確かめていない。
 - 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
 - Gotchas の「1 つのファイルの変更を、複数の commit に割らない」が途中の版を作る手を止めるかは未測定。使い捨て repo の新しい context では、この手そのものが再現しなかった。
