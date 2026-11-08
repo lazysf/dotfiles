@@ -11,11 +11,9 @@
 
 ## 削る基準
 
-surface を圧縮する時の基準は「その記述が無いと判断が変わるか」。変わらないものは、正しくても消す。
+surface に残すのは、Claude が既定ではしないこと、または repo から読めないことを指示する記述だけ。公式の [Best practices](https://code.claude.com/docs/en/best-practices) は、Claude は書き留めたくなることの大半を既に知っているとし、skill にも同じ規則を当てる。既定でもすることの言い直しは、正しくても消す。
 
-**ただし、この harness の記述の多くは踏んだ失敗への対策として足されている。** 2026-09-03 の全面圧縮では、「理由の説明だから削れる」と分類した記述が実際には対策だった例が繰り返し出た。`skills/coding` の段 4「client 側の機能は検証に数えない」は、`<input type="date">` で日付検証を済ませたと判定する穴を塞ぐ。`skills/lapidary` の各観点の `確認` は、それが無かった間は収束しなかったという実測に基づく。
-
-そのため**削る前に、対応する設計 note を読む。** note が「なぜこの記述がここにあるか」を持つ項目は、文言を縮めても規範としては残す。この順序を守らずに 4 回削った（`AGENTS.md` の URL 表、`rules/` の統合判断、`CLAUDE.md` の常時 load 側に置く理由 6 項目、`skills/lapidary` の空振りコスト）。
+この harness の記述の多くは、踏んだ失敗への対策として足されている。そのため削る前に、対応する設計 note を読む。note が失敗の記録を持つ項目は、その失敗を Claude の既定の振る舞いが防ぐと言える時だけ消す。言えない部分は残す。例えば `CLAUDE.md` の「設定や防御を外す前に、使っているものが無いことを確かめる」は、`allowUnixSockets` を外して署名を壊した失敗（[claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」）への対策で、既定の振る舞いでは防げない。`skills/lapidary` の各観点の `確認` は、それが無かった間は収束しなかった記録に基づく。
 
 分量そのものは指標にならない。判断に効くなら長くてよい。
 
@@ -57,7 +55,7 @@ session へ渡る skill 一覧も即反映される。`scribe` の description �
 
 ## 規則文に太字を使わない
 
-agent が読む surface では、規則の文や句を太字にしない。対象は `CLAUDE.md`、`skills/` とその `references/`、`agents/`、`output-styles/`。太字を使うのは、語の後に `:` が続くラベルだけにする（`**KISS**:`、`1. **作る必要があるか**:` など）。
+agent が読む surface では、規則の文や句を太字にしない。対象は `CLAUDE.md`、`skills/` とその `references/`、`agents/`、`output-styles/`。太字を使うのは、語の後に `:` が続くラベルだけにする（`CLAUDE.md` の `**review**:`、`**commit**:` など）。
 
 公式の [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) は、今の model は平易に書いた行に従うとしている。強調を重ねると、規則を過剰に適用するとも書いている。守られない規則に強調を足しても、たいてい直らない。例外の無い規則なら hook か deny rule に移す。長いファイルの中で埋もれているなら、ファイルを短くする。
 
@@ -73,7 +71,7 @@ notes と README は人が読む doc なので、この基準の対象にしな�
 
 公式は逆を勧めている。Claude Code の skills doc は `disable-model-invocation: true` を "workflows with side effects or that you want to control timing, like `/commit`, `/deploy`" に使えと書く。`git-commit` で採らないのは、「commit して」という自然文では slash 起動にならず、staging 規律と機密情報の検索だけが落ちるため。
 
-入口の条件が要るのは、作業ツリーの外へ出す操作を持つ skill。`git-commit` は履歴を作り push の対象にするので持つ。**可逆性では分けられない。** push 前の commit は reflog と reset で戻せる一方、未 commit の編集を上書きすると git に控えが無い。`lapidary` は作業ツリー内で閉じるが、そのぶん手順 3 が直す対象を自分の変更へ限っている。
+入口の条件が要るのは、作業ツリーの外へ出す操作を持つ skill。`git-commit` は履歴を作り push の対象にするので持つ。**可逆性では分けられない。** push 前の commit は reflog と reset で戻せる一方、未 commit の編集を上書きすると git に控えが無い。`lapidary` は作業ツリー内で閉じるが、そのぶん手順 4 が直す対象を自分の変更へ限っている。
 
 各 skill での適用は [lapidary-skill-design.md](./lapidary-skill-design.md) と [git-commit-skill-design.md](./git-commit-skill-design.md) にある。
 

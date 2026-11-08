@@ -133,7 +133,7 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 description は「変更を Git 履歴へ残す流れなら skill を通す」と広く取り、自動で発火させる。発火した先で commit まで走らないよう、手順の入口に実行条件を置いている。
 
-`dot_claude/CLAUDE.md` の工程表も「commit: ユーザー指示時に `skills/git-commit`」を持つ。二重に見えるが、効く位置が違う。工程表は skill を呼ぶかどうかの判断に効き、入口の条件は skill が load された後に効く。**skill 本体が持たないと、load された時点で手順 5 の commit まで止まるものが無い。**
+`dot_claude/CLAUDE.md` の「進行」も「commit: ユーザー指示時に `skills/git-commit`」を持つ。二重に見えるが、効く位置が違う。「進行」は skill を呼ぶかどうかの判断に効き、入口の条件は skill が load された後に効く。**skill 本体が持たないと、load された時点で手順 5 の commit まで止まるものが無い。**
 
 発火の側で止める形（description を絞る、`disable-model-invocation: true` を置く）は採らない。commit する流れで staging 規律と機密情報の検索ごと飛ぶ。一般則は `harness-design-principles.md` の「発火面と実行条件を分ける」にある。
 
