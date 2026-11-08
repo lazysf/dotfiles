@@ -41,6 +41,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 - Parsec の host settings で Fallback To Virtual Display をオンにでき、物理ディスプレイが無い状態で接続すると仮想ディスプレイが出る。`Parsec.ParsecVDD` が `-Scope` 無しの winget で入り、Parsec Virtual Display Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
 - Parsec の host settings で Virtual Mouse をオンにでき、物理マウスが無い状態で接続してもカーソルが出る。`Parsec.ParsecVUD` が `-Scope` 無しの winget で入り、Parsec Virtual USB Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
 - `powershell` から `winget upgrade Microsoft.PowerShell` で PowerShell 7 を更新できる。次の版が出るまで確かめられない。`chezmoi apply` で 7.6.9 の MSIX 版が入り、`pwsh` で profile が読まれて starship と `ls`（eza）が効くことは 2026-11-03 に確認した。（2026-11-03 追加）
+- prek の `check-identifiers` hook が動き、値を仕込んだ staged の commit を止める。設計は `docs/notes/markdownlint-and-pre-commit-execution.md` の「作業機の識別子を検査する local hook」にある。（2026-11-08 追加）
 
 仕事の Windows では、`work` を選んだ時に 1Password と Zotero と Parsec が入らず、git の identity と署名の設定が出ないことを確かめる。
 
@@ -110,3 +111,15 @@ npm の `overrides` で強制はしない。markdownlint が想定しない組�
 - 記載: 2026-11-08（`docs/notes/` を整備した時）
 
 `.markdownlint-cli2.jsonc` は MD024 を無効にしているが、無効のままにする理由は anchor link が増えて成り立たなくなった。件数、入れ直す時の形、その理由は `docs/notes/markdownlint-and-pre-commit-execution.md` の「MD013 / MD024 を無効化している理由」にある。7 で lint を置き換える場合は、置き換えた先の同じ rule で判断する。
+
+---
+
+## 9. Codex 側の追従
+
+- 記載: 2026-11-08（Claude 側の開発フローを公式の Best practices と照らして直した時）
+
+Claude 側（`dot_claude/`）に入れた次の変更を、`dot_codex/` にも同じ意図で入れるかを判断する。tool 名、配置、権限、hook の仕組みのような runtime 固有の差は、機械的に揃えない（`AGENTS.md`）。
+
+- 規則文の太字を外す（`a4cfae2`）。基準は `docs/notes/harness-design-principles.md` の「規則文に太字を使わない」。根拠は Claude Code の公式ページなので、Codex の公式情報でも同じことが言えるかを確かめる。
+- lapidary の目的の文を「直す価値のある不足と過剰を直す」にする（`36efe8a`）。
+- git-commit の手順 2 で、commit の範囲に lapidary を通したかを確かめる（`0546bb2`）。
