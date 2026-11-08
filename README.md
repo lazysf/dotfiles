@@ -163,7 +163,7 @@ commit 時に lint などの hook を走らせる:
 prek install
 ```
 
-手で Markdown を lint する時は、先に入れてから `npm run lint` / `npm run lint:fix` を使う:
+手で lint する時は、先に入れてから使う。Markdown は `npm run lint` / `npm run lint:fix`、TOML は `npm run lint:toml` / `npm run lint:toml:fix`:
 
 ```sh
 npm install

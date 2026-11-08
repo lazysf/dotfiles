@@ -54,6 +54,7 @@
 ## 変更後の確認
 
 - 追加、rename、削除した path、名前（skill / rule / agent）、設定キーは、`rg --hidden -g '!.git'` で参照を探す。`--hidden` は `.github/` などの dot path を含めるため、`-g '!.git'` は `.git/` の log を除くため。ADR 本文は採用時点の記録なので直さない。
+- Markdown を変えたら `npm run lint`、TOML を変えたら `npm run lint:toml` で lint する。`markdownlint-cli2` と `tombi` は repo の devDependency なので、PATH 上の command を探さない。commit 時は prek の hook が同じ設定で走る（2 経路の違いは `docs/notes/markdownlint-and-pre-commit-execution.md`）。
 - `.gitignore` の追跡対象と `.chezmoiignore` の配布対象は独立に確認する。source から消したファイルは target に残るので、適用後は `chezmoi managed` と target の実体を突き合わせる。
 - surface（`dot_claude/`、`dot_codex/`、`.claude/`、root の `AGENTS.md` / `CLAUDE.md`）の変更と、その理由を書いた `docs/notes/` は別 commit にする（根拠は `docs/notes/git-commit-skill-design.md`）。後から見つけた追従漏れも別 commit にする。
 

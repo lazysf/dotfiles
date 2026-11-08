@@ -70,7 +70,7 @@ git trailer の仕様はコロンあり・なしの両方を許すが、この r
 
 ## pre-commit hook の実態
 
-この repo の hook のうち**ファイルを書き換える**のは `fix end of files`、`mixed line ending`、`markdownlint-cli2 --fix`。`trim trailing whitespace` も書き換えるが、`.md` を exclude しており、skill / rules / docs のような主要ファイルには発火しない。
+この repo の hook のうち**ファイルを書き換える**のは `fix end of files`、`mixed line ending`、`markdownlint-cli2 --fix`、`tombi-format`。`trim trailing whitespace` も書き換えるが、`.md` を exclude しており、skill / rules / docs のような主要ファイルには発火しない。
 
 自動修正型が発火すると commit が失敗し、修正後の内容が unstaged で残る。差分を確認せずに再 stage すると、hook が何を変えたか分からないまま commit することになる。
 
