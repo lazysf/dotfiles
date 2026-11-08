@@ -78,15 +78,11 @@ skill の Gotchas には一般則だけを置き、上の hook 名は置かな�
 
 ## ファイル分担
 
-| ファイル | 担当 |
-| --- | --- |
-| `SKILL.md` | 手順、停止条件、staging 規律、type 一覧、title 規定、body 要否、Gotchas、責務範囲、報告項目とその内容 |
-| `references/failure-handling.md` | 停止時の対応、pre-commit hook 対応、失敗時 |
-| `references/message-format.md` | body / footer / BREAKING CHANGE の書式、body 固有の禁止事項、Impact の要否条件 |
+各ファイルの中身は、それぞれを正本とする。ここには分け方の理由だけを置く。
 
 公式の best practices は 2 つを勧めている。reference は「いつ読むか」を条件で示す。環境固有で常識に反する事実（Gotchas）は `SKILL.md` 側へ置く。後者を reference に置くと、読むべき状況が来たことを認識できない。
 
-報告項目は `SKILL.md` にある。**報告は毎回書くもので、reference は必要な時だけ読むもの**という progressive disclosure の区分に従う。これで reference は異常系だけになり、`failure-handling` という名前が内容と一致する。
+報告項目も `SKILL.md` に置く。**報告は毎回書くもので、reference は必要な時だけ読むもの**という progressive disclosure の区分に従う。これで reference は、失敗時の対応（`failure-handling.md`）と message の書式の詳細（`message-format.md`）だけになる。`failure-handling` という名前も内容と一致する。
 
 ファイル名に `commit-` prefix を付けないのは、パスが `skills/git-commit/references/` で skill 名が既に文脈を決めているため。`scribe` の reference（`adr-format.md` など）も prefix なし。
 
@@ -96,9 +92,7 @@ Gotchas に入れるのは、この環境で実際に踏んだか踏みかけた
 
 ## push skill を持たない理由
 
-Git 操作の skill は `git-commit` だけで、push 用の skill は持たない。**sandbox 内から SSH push が通らない**ため、手順書を用意しても実行できない。
-
-`sandbox.network.allowedDomains` は HTTP(S) proxy 用の許可で SSH を運ばない。`git@github.com` への push は sandbox 内で `nc: authentication method negotiation failed` になる。`excludedCommands: ["git"]` を入れても解決しなかった（`53be6a5` → `9afdbb7` で revert）。`allowUnsandboxedCommands` を `true` へ戻す案は、失敗した全 command に sandbox 外再試行を開くので採らない。詳細は [claude-code-settings-design.md](./claude-code-settings-design.md)。
+Git 操作の skill は `git-commit` だけで、push 用の skill は持たない。**sandbox 内から SSH push が通らない**ため、手順書を用意しても実行できない。通らない仕組みと、試して効かなかった設定は [claude-code-settings-design.md](./claude-code-settings-design.md) の「push は sandbox 内で SSH を通らない」にある。
 
 そのため **push は人が手元の terminal で実行し、agent は commit までを担う**。`SKILL.md` の「扱わないもの」にこの分担を書いているのは、skill が無いと agent が自己流で `git push` を打って失敗するため。
 
@@ -108,7 +102,7 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 依頼語に絞らず、ユーザーが commit という語を出さなくても、変更を Git 履歴へ残す流れなら拾う。明示依頼では通ったが、「進めて」「直して」の流れで commit する場面では通っていなかった（2026-08-31 に実測）。一般則は `harness-design-principles.md` の「skill description の書き方」にある。
 
-「作業が一段落した時」のような、commit を伴わない区切りは発火の場面に書かない。そこで load されると `lapidary` の「commit する流れ」に当たると読め、`lapidary` の自動発火を commit の前に限った判断（[lapidary-skill-design.md](./lapidary-skill-design.md)）と食い違う。2026-08-31 の対策（`adc17ef`）は、先頭の文を「commit したい依頼で使う」から「commit する時に使う」へ広げ、区切りの句と「commit という語を出さなくても」の文を足した。対策後にその場面で通るかは測っておらず、どれが効くかも切り分けていない。2026-11-08 に外したのは区切りの句だけで、残りの 2 つは今の description にある。
+「作業が一段落した時」のような、commit を伴わない区切りは発火の場面に書かない。そこで load されると `lapidary` の「commit する流れ」に当たると読め、`lapidary` の自動発火を commit の前に限った判断（[lapidary-skill-design.md](./lapidary-skill-design.md)）と食い違う。「進めて」の流れを拾うために description が持つのは、先頭の「commit する時に使う」と、「commit という語を出さなくても」の文の 2 つ。
 
 「push と履歴の書き換え（rebase / amend / squash）は扱わない」も description に書いている。body の「扱わないもの」と重なるが、description は skill を読む前に見える唯一の面なので、境界はここにも要る。commit の作業には履歴の組み直しが混ざりやすい。2026-08-31 の session では `amend` と `reset` を繰り返し使い、その都度この skill の範囲外だと明示する必要があった。
 
@@ -137,7 +131,5 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 ## 未確認
 
 - 承認・拒否の実機検証と、Claude 側の上記設定の実効性確認は未実施。2026-10-31 の確認は、指示を辿るシナリオ評価と静的検証に限る。
-
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
-
-- 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。`adc17ef` の後も、区切りの句を外した後も測っていない。
+- 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。

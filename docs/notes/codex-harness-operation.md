@@ -47,11 +47,19 @@ Codex の command hook はログインシェルから起動する。署名用プ
 
 2026-11-06 に macOS の Codex CLI 0.166.0-alpha.6 で確認した。信頼済みの `SessionStart` は、一時ホームの使い捨て鍵を専用 agent に載せた。1Password が起動した実機で、新しく起動した app-server の `command/exec` から zsh のログインシェルを使うと、一時 repo の署名が `%G? = G` になった。一時ホームでの sandbox 検証では、秘密鍵の読み取り、起動スクリプトへの書き込み、socket の削除、許可外の Unix socket とローカル TCP への接続が拒否された。
 
-2026-11-07 に、実際の作業機（macOS の `personal`）で、apply 後の `~/.codex` を確かめた。`hooks.json` には `SessionStart` の hook が入っていた。`config.toml` には `default_permissions`、`features.network_proxy`、`permissions.agent-signing`、`shell_environment_policy.set` が入っていた。`user.signingkey` の公開鍵は、専用 agent が載せた鍵と fingerprint が一致した。新しい Codex の session で、使い捨ての repo に署名付きコミットを作ると、`%G? = G` になった。`%GK` はエージェント用の鍵の fingerprint だった（ユーザーが実行した。この時の ChatGPT app 同梱の Codex CLI は 0.167.0-alpha.3.2）。この時、専用 agent は Claude Code の session の hook がすでに起動していた。Codex の hook が agent を起動して鍵を載せることは、この確認には含まれない。同じ鍵で署名して push した Claude Code のコミットは、GitHub の commits API で `verification.verified` が `true`、`reason` が `valid` になった（`04622bf` など）。
+2026-11-07 に、実際の作業機（macOS の `personal`）で、apply 後の `~/.codex` を確かめた。確認はユーザーが実行し、ChatGPT app 同梱の Codex CLI は 0.167.0-alpha.3.2 だった。
+
+- `hooks.json` には `SessionStart` の hook が入っていた。
+- `config.toml` には `default_permissions`、`features.network_proxy`、`permissions.agent-signing`、`shell_environment_policy.set` が入っていた。
+- `user.signingkey` の公開鍵は、専用 agent が載せた鍵と fingerprint が一致した。
+- 新しい Codex の session で、使い捨ての repo に署名付きコミットを作ると、`%G? = G` になった。`%GK` はエージェント用の鍵の fingerprint だった。
+- 同じ鍵で署名して push した Claude Code のコミットは、GitHub の commits API で `verification.verified` が `true`、`reason` が `valid` になった（`04622bf` など）。
+
+この時、専用 agent は Claude Code の session の hook がすでに起動していた。Codex の hook が agent を起動して鍵を載せることは、この確認には含まれない。
 
 2026-11-07 に、ユーザーは実際の作業機で署名専用 agent を停止した。プロセスと socket の消失を確認してから新しい Codex の session を開くと、`SessionStart` hook が agent を起動して鍵を載せた。session 内の `SSH_AUTH_SOCK` は専用 socket を指していた。`ssh-add -l` は comment が `agent-signing` の ED25519 鍵を 1 本だけ返した。`$TMPDIR` の使い捨て repo で `git -c commit.gpgsign=true commit --allow-empty -m probe` を実行すると、`git log -1 --format='%G? %GK'` の `%G?` は `G` になった。`%GK` は `ssh-add -l` の fingerprint と一致した。
 
-停止後の起動を確かめる時は、Claude Code より先に Codex の session を開く。Claude Code の `SessionStart` も同じ agent を起動するためである。停止の手順は [代償と失効](claude-code-settings-design.md#代償と失効)を参照。
+停止後の起動を確かめる時は、Claude Code より先に Codex の session を開く。Claude Code の `SessionStart` も同じ agent を起動するためである。停止の手順は [代償と失効](agent-commit-signing-design.md#代償と失効)を参照。
 
 ## 未確認
 

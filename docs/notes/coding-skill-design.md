@@ -5,13 +5,11 @@
 
 `coding` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
-## rule から skill へ移した理由
+## skill に置く理由
 
-2026-09-02 まで、この内容は常時 load の rule に置いていた。移したのは、`paths` を使わない方針が決まった時に中身を数え直したため（[memory-surface-design.md](./memory-surface-design.md) の「rule でなく skill に置く基準」）。
+この内容の大半は、コードを書く時にしか要らない。常時 load の `CLAUDE.md` でなく skill に置く基準は、[memory-surface-design.md](./memory-surface-design.md) の「rule でなく skill に置く基準」にある。
 
-見出しと空行を除くと実質 31 行あり、そのうち 20 行はコードを書く時だけ要るものだった。打ち切り順が 13 行で最大、可読性の具体が 4 行、コメントが 3 行。残る 11 行は品質の優先順位、適用の参照順、基本原則、最小差分で、設定や doc の編集にも効く。こちらは `CLAUDE.md` に残した。
-
-旧 note は「コード限定は可読性の具体とコメントだけ」と書いていた。打ち切り順を数え落としている。最大の節が、コードを書く時にしか使われない。
+2026-09-02 に数えると、見出しと空行を除いて実質 31 行あり、そのうち 20 行はコードを書く時だけ要るものだった。打ち切り順が 13 行で最大、可読性の具体が 4 行、コメントが 3 行。残る 11 行は品質の優先順位、適用の参照順、基本原則、最小差分で、設定や doc の編集にも効く。こちらは `CLAUDE.md` にある。
 
 分担は `CLAUDE.md` が「何が良いか」、この skill が「どう書くか」。境界は description に書いてある。`CLAUDE.md` は常時 load されるので、SKILL.md の本文で宣言し直す必要はない。
 
@@ -71,6 +69,6 @@ security に関わる上限を marker の対象から外した。`CLAUDE.md` の
 
 charset、改行、BOM、必須の metadata、識別子の上限は言語ごとに違い、守らないとファイルが読み込めなくなる。可読性の判断より前に来る性質なので、SKILL.md 本体には言語共通の確認手順だけを置き、言語別は `references/` に分けている。公式が推奨する domain organization の形。
 
-現在 reference があるのは VBA だけ。`.bas` / `.cls` は VBA 専用の拡張子ではない。`.cls` は LaTeX のクラスファイルと Salesforce Apex のクラス、`.bas` は FreeBASIC など他の BASIC 系でも使う。reference の冒頭に「拡張子だけで判断せず、Excel や Office の VBA だと確かめてから適用する」を置いた。2026-09-02 まで `paths` の `src/` 限定が果たしていた衝突抑止の代わり。
+現在 reference があるのは VBA だけ。`.bas` / `.cls` は VBA 専用の拡張子ではない。`.cls` は LaTeX のクラスファイルと Salesforce Apex のクラス、`.bas` は FreeBASIC など他の BASIC 系でも使う。reference の冒頭に「拡張子だけで判断せず、Excel や Office の VBA だと確かめてから適用する」を置いた。`paths` で対象の path を絞らないので、拡張子が同じ別の言語への誤用はこの 1 文で防ぐ。
 
 reference が無い言語のために、SKILL.md 側に確認すべき 3 点を一般則として書いてある。既存ファイルの charset / 改行 / BOM、識別子の上限と使える文字、toolchain が要求する metadata。VBA はその 1 例という位置づけで、言語が増えても SKILL.md を書き換えずに reference を足せる。
