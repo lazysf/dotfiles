@@ -69,17 +69,7 @@ native Windows では、Claude Code の Bash が sandbox の外で動く。mac �
 
 ---
 
-## 5. `CLAUDE.md` の常時発火する義務を条件付きにする
-
-- 記載: 2026-11-07（対応が過剰になるという相談で、原則に「必要なことを、必要な分だけ、必要な時に」を足した時）
-
-`dot_claude/CLAUDE.md` には、依頼の大小に関係なく毎回発火する義務が 1 つ残っている。原則の「引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける」。運用で過剰さが残るかを見て、残るなら判定できる条件へ書き換える。
-
-条件に「大きな変更の時」のような主観語は使わない。この義務も過去の失敗への対策なので、`docs/notes/claude-md-design.md` の対応する節を読み、その失敗の場面を条件の内側に残す。
-
----
-
-## 6. markdownlint の依存に残る npm audit の警告
+## 5. markdownlint の依存に残る npm audit の警告
 
 - 記載: 2026-11-08（tombi の導入で npm audit を見た時）
 
@@ -88,30 +78,30 @@ markdownlint-cli2 を 0.22.1 から 0.24.0 に上げると、`npm audit` の警�
 - `re2js` 2.8.6: 0.24.0（markdownlint 0.42.0）で新しく依存に加わった。markdownlint が完全固定している。修正版は 2.9.1 以降。
 - `katex` 0.16.47: 上げる前から入っている。`micromark-extension-math` が `^0.16.0` を要求し、修正版は範囲の外にある。
 
-npm の `overrides` で強制はしない。markdownlint が想定しない組み合わせで動かすことになるため。markdownlint の新しい版が出たら、`npm update` と `npm audit` で解消したかを見る。prek の hook 環境にも同じ版が入るので、`rev` を上げた後の hook 環境も見る。7 の rumdl へ移れば、この項目は消える。
+npm の `overrides` で強制はしない。markdownlint が想定しない組み合わせで動かすことになるため。markdownlint の新しい版が出たら、`npm update` と `npm audit` で解消したかを見る。prek の hook 環境にも同じ版が入るので、`rev` を上げた後の hook 環境も見る。6 の rumdl へ移れば、この項目は消える。
 
 ---
 
-## 7. Markdown の lint の見直し
+## 6. Markdown の lint の見直し
 
-- 記載: 2026-11-08（6 の audit の警告を見て、markdownlint 以外の lint を相談した時）
+- 記載: 2026-11-08（5 の audit の警告を見て、markdownlint 以外の lint を相談した時）
 
 2 つの候補を試す。どちらも未検証。
 
-- [rumdl](https://github.com/rvben/rumdl) で markdownlint-cli2 を置き換える。Rust 製で、rule 名は markdownlint と同じ `MD001` 形式。公式の pre-commit hook がある。Node の依存が消えるので、6 の警告も消える。試す時は、今の `.markdownlint-cli2.jsonc` を読めるか、repo 全体で判定が markdownlint と揃うか、VS Code の拡張があるかを確かめる。
+- [rumdl](https://github.com/rvben/rumdl) で markdownlint-cli2 を置き換える。Rust 製で、rule 名は markdownlint と同じ `MD001` 形式。公式の pre-commit hook がある。Node の依存が消えるので、5 の警告も消える。試す時は、今の `.markdownlint-cli2.jsonc` を読めるか、repo 全体で判定が markdownlint と揃うか、VS Code の拡張があるかを確かめる。
 - [textlint](https://github.com/textlint/textlint) と [`textlint-rule-preset-ja-technical-writing`](https://github.com/textlint-ja/textlint-rule-preset-ja-technical-writing) を併用する。markdownlint が構造を見るのに対し、こちらは日本語の文章を見る。preset の既定は厳しめなので、まず repo 全体での違反の件数を数え、残す rule を選ぶ。
 
 ---
 
-## 8. MD024 を入れ直すか判断する
+## 7. MD024 を入れ直すか判断する
 
 - 記載: 2026-11-08（`docs/notes/` を整備した時）
 
-`.markdownlint-cli2.jsonc` は MD024 を無効にしているが、無効のままにする理由は anchor link が増えて成り立たなくなった。件数、入れ直す時の形、その理由は `docs/notes/markdownlint-and-pre-commit-execution.md` の「MD013 / MD024 を無効化している理由」にある。7 で lint を置き換える場合は、置き換えた先の同じ rule で判断する。
+`.markdownlint-cli2.jsonc` は MD024 を無効にしているが、無効のままにする理由は anchor link が増えて成り立たなくなった。件数、入れ直す時の形、その理由は `docs/notes/markdownlint-and-pre-commit-execution.md` の「MD013 / MD024 を無効化している理由」にある。6 で lint を置き換える場合は、置き換えた先の同じ rule で判断する。
 
 ---
 
-## 9. Codex 側の追従
+## 8. Codex 側の追従
 
 - 記載: 2026-11-08（Claude 側の開発フローを公式の Best practices と照らして直した時）
 
@@ -121,3 +111,4 @@ Claude 側（`dot_claude/`）に入れた次の変更を、`dot_codex/` にも�
 - lapidary の目的の文を「直す価値のある不足と過剰を直す」にする（`36efe8a`）。
 - git-commit の手順 2 で、commit の範囲に lapidary を通したかを確かめる（`0546bb2`）。
 - 契約と skill を、Claude が既定ではしないことと repo から読めないことだけに削る（2026-11-08）。`dot_codex/AGENTS.md`、`dot_codex/skills/coding`、`dot_codex/skills/lapidary`、`dot_codex/skills/git-commit` は、Claude 側で消した規則と同じ文を持っている。基準は `docs/notes/claude-md-design.md` にある。Codex の既定の振る舞いは Claude と違うので、行ごとに Codex の公式情報で判断する。
+- 報告を 4 つに分ける行を、ファイルを変えた作業の完了報告と引き継ぎに絞る（2026-11-08）。理由は `docs/notes/claude-md-design.md` の「報告を 4 つに分ける条件」。Codex の既定の報告が、検証結果と未確認事項を持つかを確かめる。
