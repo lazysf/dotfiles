@@ -33,6 +33,17 @@ id = "trailing-whitespace"
 exclude = '\.(md|markdown)$'
 
 [[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "check-identifiers"
+name = "check-identifiers"
+language = "script"
+entry = "scripts/check-identifiers.sh"
+pass_filenames = false
+always_run = true
+
+[[repos]]
 repo = "https://github.com/DavidAnson/markdownlint-cli2"
 rev = "v0.24.0"
 
