@@ -1,11 +1,11 @@
 ---
 name: lapidary
-description: 自分が加えた変更を commit できる状態まで仕上げる時に使う。直接の依頼（「見直して」「レビューして」「問題ない？」）があった時と、commit の前に使う。review という語が無くても、commit する流れなら対象。直接の依頼が無ければ、commit しない区切りでは使わない。スコープ（未達と余分の双方向）、事実、整合性、適用、過剰さ、doc の追従を観点に通し、不足と過剰を直し切る。独立 context が要る時は `quality-reviewer` / `security-reviewer` を提案する。bug の検出は `/code-review`、doc は `scribe`、commit は `git-commit`。
+description: 自分が加えた変更を commit できる状態まで仕上げる時に使う。直接の依頼（「見直して」「レビューして」「問題ない？」）があった時と、commit の前に使う。review という語が無くても、commit する流れなら対象。直接の依頼が無ければ、commit しない区切りでは使わない。スコープ（未達と余分の双方向）、事実、整合性、適用、過剰さ、doc の追従を観点に通し、直す価値のある不足と過剰を直す。独立 context が要る時は `quality-reviewer` / `security-reviewer` を提案する。bug の検出は `/code-review`、doc は `scribe`、commit は `git-commit`。
 ---
 
 # Lapidary
 
-変更を commit できる状態まで仕上げる。観点を通し、見つけた不足と過剰を直し切ってから次へ渡す。目的は指摘を挙げることではなく、仕上げ切ること。
+変更を commit できる状態まで仕上げる。観点を通し、直す価値のある不足と過剰を直してから次へ渡す。目的は指摘を挙げることでも、拾ったものを全部直すことでもなく、commit できる状態にすること。直す価値があるかは、下の「観点が拾ったものは、まだ指摘ではない」で決める。
 
 ## 手順
 

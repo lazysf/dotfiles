@@ -1,7 +1,7 @@
 # lapidary skill の設計
 
-- Date: 2026-11-02
-- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
+- Date: 2026-11-08
+- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この repo の review 運用の実測
 
 `lapidary` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -40,6 +40,8 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 - **未達の検出。** スコープ観点は「変更行が依頼にトレースできるか」（余分が無いか）に加えて、逆方向（依頼に手を付けていないもの）も見る。独立した観点を設けず、3 項目の 2 つ目を双方向にしてある。観点を増やすと 1 回が重くなるため（下記「観点の数と項目を絞っている理由」）。
 - **検証の扱い。** lint / test が通っているかを見る。
 - **終わり方。** 出力は次の工程を挙げるだけでなく、commit できるかの判定にする。
+
+目的の文には「直し切る」と書かない。公式の [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) は、「最後まで続けろ」と促す行は、止まるのを防ぐより over-work を招きやすいとしている。問題を探せと言われた reviewer は必ず何か見つけ、指摘を全部直すと余分な抽象や起こりえない場合の test が増える、とも書いている。この skill で何を直すかは、拾ったものを「誰のどの判断に効くか」へ当て直した結果で決まる（下記「指摘そのものを『過剰さ』の基準へ当て直す理由」）。いつ終えるかは「終了条件を回数でなく網羅で決めている理由」のとおりで、どちらも直した量では決まらない。そのため目的の文は「直す価値のある不足と過剰を直す」とし、拾ったものを全部直すことではないと書いてある。
 
 ## 名前を `lapidary` にしている理由
 
