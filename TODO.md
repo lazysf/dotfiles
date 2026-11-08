@@ -73,12 +73,9 @@ native Windows では、Claude Code の Bash が sandbox の外で動く。mac �
 
 - 記載: 2026-11-07（対応が過剰になるという相談で、原則に「必要なことを、必要な分だけ、必要な時に」を足した時）
 
-`dot_claude/CLAUDE.md` には、依頼の大小に関係なく毎回発火する義務が 2 つ残っている。doc 節と review は同じ時に条件付きにした。新しい原則だけで過剰さが残るかを運用で見て、過剰さが残った義務から順に、判定できる条件へ書き換える。
+`dot_claude/CLAUDE.md` には、依頼の大小に関係なく毎回発火する義務が 1 つ残っている。原則の「引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける」。運用で過剰さが残るかを見て、残るなら判定できる条件へ書き換える。
 
-- 原則の「変更前に関連ファイル、設定、既存パターン、検証入口を確認する」
-- 原則の「引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける」
-
-条件に「大きな変更の時」のような主観語は使わない。どの義務も過去の失敗への対策なので、`docs/notes/claude-md-design.md` の対応する節を読み、その失敗の場面を条件の内側に残す。「変更前の確認」では、停止線（認証認可、権限、秘密情報など）に当たるかの確認も内側に残す。
+条件に「大きな変更の時」のような主観語は使わない。この義務も過去の失敗への対策なので、`docs/notes/claude-md-design.md` の対応する節を読み、その失敗の場面を条件の内側に残す。
 
 ---
 
@@ -123,3 +120,4 @@ Claude 側（`dot_claude/`）に入れた次の変更を、`dot_codex/` にも�
 - 規則文の太字を外す（`a4cfae2`）。基準は `docs/notes/harness-design-principles.md` の「規則文に太字を使わない」。根拠は Claude Code の公式ページなので、Codex の公式情報でも同じことが言えるかを確かめる。
 - lapidary の目的の文を「直す価値のある不足と過剰を直す」にする（`36efe8a`）。
 - git-commit の手順 2 で、commit の範囲に lapidary を通したかを確かめる（`0546bb2`）。
+- 契約と skill を、Claude が既定ではしないことと repo から読めないことだけに削る（2026-11-08）。`dot_codex/AGENTS.md`、`dot_codex/skills/coding`、`dot_codex/skills/lapidary`、`dot_codex/skills/git-commit` は、Claude 側で消した規則と同じ文を持っている。基準は `docs/notes/claude-md-design.md` にある。Codex の既定の振る舞いは Claude と違うので、行ごとに Codex の公式情報で判断する。
