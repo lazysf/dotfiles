@@ -14,8 +14,8 @@
   - [git-signature-verification-design.md](./notes/git-signature-verification-design.md): 手元で commit の署名を検証する構成の理由と、allowed_signers の形式の実測、GitHub 側で署名を必須にする ruleset の管理方法
   - [harness-design-principles.md](./notes/harness-design-principles.md): この harness に何を置き、どう書くかの判断基準
   - [lapidary-skill-design.md](./notes/lapidary-skill-design.md): `lapidary` skill が今の形になっている理由と、reviewer agent との使い分け
-  - [markdownlint-and-pre-commit-execution.md](./notes/markdownlint-and-pre-commit-execution.md): markdownlint / pre-commit の 2 経路と、prek による実行の実測
-  - [memory-surface-design.md](./notes/memory-surface-design.md): 配布する memory を `CLAUDE.md` 1 枚にしている理由と、`paths` 付き rule が発火しない実測
+  - [markdownlint-and-pre-commit-execution.md](./notes/markdownlint-and-pre-commit-execution.md): markdownlint / tombi の手動と commit 時の 2 経路と、prek による実行の実測
+  - [memory-surface-design.md](./notes/memory-surface-design.md): 配布する memory を `CLAUDE.md` 1 枚にしている理由と、`paths` 付き rule が発火する条件の実測
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager の選定経緯と各候補の不採用理由
   - [reviewer-agents-design.md](./notes/reviewer-agents-design.md): reviewer agent を 2 つだけ置いている理由と、起動実績の実測
   - [scribe-skill-design.md](./notes/scribe-skill-design.md): `scribe` skill が今の形になっている理由

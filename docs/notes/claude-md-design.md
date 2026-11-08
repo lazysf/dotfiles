@@ -1,7 +1,7 @@
 # CLAUDE.md の設計
 
 - Date: 2026-11-08
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) / [Hooks reference](https://code.claude.com/docs/en/hooks) / `dot_claude/CLAUDE.md` / この環境での実測 / Codex での作業記録の要約（ユーザー提供）
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) / [Hooks reference](https://code.claude.com/docs/en/hooks) / [Tools reference](https://code.claude.com/docs/en/tools-reference) / `dot_claude/CLAUDE.md` / この環境での実測 / Codex での作業記録の要約（ユーザー提供）
 
 `dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
 
@@ -9,7 +9,7 @@
 
 CLAUDE.md は全セッションの先頭で読まれる。入れるのは、どの依頼でも要る契約と判断基準、工程の発火条件。起動後の手順は `skills/` にあり、ここでは重複させない。
 
-公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 88 行（2026-11-08）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
+公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 89 行（2026-11-08）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
 
 ## push を工程表に書いている理由
 
@@ -103,10 +103,25 @@ hook で機械化していない。hook が出せる `systemMessage` は harness
 
 「運用して過少／過剰なら見直す」は session 中に完結しない。見直すのは人が `CLAUDE.md` を触る時で、その時の置き場がこの notes になる。閾値が合っていないと agent が気づいた場合の経路は、スコープを 1 つに保つ規律が既に持っている。工程表へ置くと、全 session で読まれるのにどの依頼でも使われない行が残る。閾値を固定と扱っているわけではなく、置き場の話。
 
-## tool の使い分けを契約に書かない理由
+## tool の使い分けを契約に置く理由
 
-auto mode は「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」という指示を session へ入れる。これに従うと `paths` 付き rule が一度も発火しない（[memory-surface-design.md](./memory-surface-design.md)）。
+発端は 2026-11-08 のユーザーの相談。小さな編集でも python で書き換えるなど、作業が大げさになっていた。
 
-対抗して「読み書き編集は Read / Edit / Write tool で行う」を共通契約へ置く案を試し、外した。契約は harness の指示に勝つ（2026-09-02、apply 後の別 session で確認）。外したのは効かないからではなく、auto mode では Bash の方が効率と正確さで優るため（2026-09-02 のユーザー判断。二次情報に基づくもので、一次情報での裏付けは取っていない）。
+読み取りを Read にするのは、作業対象 repo の subdirectory `CLAUDE.md` と `paths` 付き rule を確実に load させるため。Bash で読んで load されるのは、[Tools reference](https://code.claude.com/docs/en/tools-reference) によれば、1 ファイルを pipe も redirect も使わずに読んだ時だけ。実測では、`cat file` で load され、`cat -n file | head` では rule が黙って落ちた（[memory-surface-design.md](./memory-surface-design.md)、2026-11-08）。Read tool には読み方の条件が無い。shell での読み方の条件を守らせるより、Read に揃える方が単純。契約は作業対象 repo の `.claude/rules/` を置き場に挙げているので、落ちると、その repo の規約が効かないまま作業が進む。出力の量と形式は変わらない。2026-11-08 に同じ範囲を Read と `sed -n` で読み比べ、Read の出力が `cat -n` と同じ形式で、余分な付加が無いことを確かめた。呼び出し回数や待ち時間は比べていない。
 
-`paths` 側を諦める形になった。置き場の基準は [memory-surface-design.md](./memory-surface-design.md) にある。
+編集を Edit にするのは、置換の失敗が見えるため。Edit は一致しない時と一意でない時にエラーで止まる。python の `str.replace` は、一致しなくても何も変えずに成功する。python で置換しても Edit と同じ old / new 文字列を送るので、量は減らない。
+
+検索は Grep / Glob tool の有無で書き分けている。Windows では既定で使え、macOS、Linux、WSL では既定で外れている（[Tools reference](https://code.claude.com/docs/en/tools-reference)。2026-11-08 に macOS の session で ToolSearch しても該当なし）。外れた環境では、Claude の shell の `grep` / `find` が組み込み版の `ugrep` / `bfs` で動く。こちらが公式の想定する経路になる。OS 名でなく tool の有無で書くのは、既定が変わっても文面が古くならないため。tool がある時に優先するのは、出力の形（files / content / count）を選べるため。`.gitignore` の扱いには差が無い。組み込みの `grep` も `ugrep --ignore-files` で動く（2026-11-08、macOS の session の `declare -f grep`）。
+
+macOS などで Grep / Glob を戻すことはしない。Tools reference によれば、戻すには、起動 flag の `--tools` / `--allowedTools` で名前を挙げるか、`Bash` を外すしかない。settings の allow rule では戻らず、env-vars の docs にも戻す変数は無い。`Bash` を外すと command を実行できなくなる。起動 flag は CLI の起動のたびに要る。CLI と desktop で使える tool が食い違う割に、得るものは出力の形を選べることだけ。
+
+shell での書き換えを残す 2 つの場面には、それぞれ理由がある。多数ファイルへの同じ置換は、Edit で 1 件ずつ扱うと漏れやすい。formatter と generator の出力は、そもそも Edit では作れない。
+
+auto mode は、shell での読み書きを認める指示を session へ入れる（文面は [memory-surface-design.md](./memory-surface-design.md)）。契約は harness の指示に勝つ（2026-09-02、apply 後の別 session で確認）。どちらを優先するかを契約の行に書いているのは、文面が変わっても判断を揺らさないため。
+
+2026-09-02 に同じ規則を一度外している。理由は「auto mode では Bash の方が効率と正確さで優る」というユーザー判断で、二次情報に基づいていた。効率のうち出力の量と形式は、上の実測で差が無かった。正確さの根拠は記録に無く、2026-11-08 時点でユーザーも覚えていない。同じ理由で外す前に、根拠を一次情報で確かめる。
+
+## 未確認
+
+- 契約の tool の使い分けの行が、実際の session で python での書き換えを止めるか。
+- desktop app で、Grep / Glob を戻す起動 flag を渡せるか。

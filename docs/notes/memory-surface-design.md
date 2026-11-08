@@ -1,7 +1,7 @@
 # memory surface の設計
 
-- Date: 2026-09-03
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [anthropics/claude-code#90450](https://github.com/anthropics/claude-code/issues/90450) / `dot_claude/CLAUDE.md` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / この環境での実測（`paths` の発火経路は 2026-09-02、Claude Code v2.1.255）
+- Date: 2026-11-08
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [anthropics/claude-code#90450](https://github.com/anthropics/claude-code/issues/90450) / `dot_claude/CLAUDE.md` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / [Tools reference](https://code.claude.com/docs/en/tools-reference) / この環境での実測（`paths` の発火経路は 2026-09-02 の Claude Code v2.1.255 と、2026-11-08 の desktop app）
 
 配布する memory surface を `dot_claude/CLAUDE.md` 1 枚にしている理由を残す。本体を読んでも分からない前提と判断に絞る。
 
@@ -27,15 +27,19 @@
 
 ## `paths` を使わない
 
-path 条件付き rule は Read tool でしか発火せず、この harness は auto mode で Bash を主経路に指示する。結果として `paths` は構造的に発火しないため、使わない。
+path 条件付き rule が発火するのは、match するファイルを Read tool で読んだ時と、Bash で読んだ時の一部。Bash の条件は、Tools reference によれば、1 ファイルを pipe も redirect も使わずに読むこと（下記）。この dotfiles は `paths` 付き rule を持たない。外したのは 2026-09-02 で、当時の実測では `cat` で読んでも発火しなかった。auto mode の指示に従うと、構造的に発火しない状態だった。共通契約が読み取りを Read に定めた後（2026-11-08）も、`paths` を戻すかは判断していない。
 
-`paths` 付きの rule が context へ注入されるのは、Claude が **Read tool** で match するファイルを開いた時だけ。Bash の `cat` では注入されない。2026-09-02 に `src/probe.bas` を作り、`cat` と Read tool の両方で読んで確認した。`cat` では何も起きず、Read tool の直後に当時の `rules/vba.md` の全文が注入された。現在 VBA の規約は `skills/coding/references/` にある。
+2026-11-08 に、repo 内へ probe の directory と rule を一時的に作って確かめた。読み方ごとに別の directory と rule を用意し、各 directory は 1 回だけ読んだので、directory ごとに 1 回しか load しない sticky な挙動は結果に混ざらない。実測したのは次の 3 つの読み方だけ。`cat file` では、`paths` 付き rule と subdirectory の `CLAUDE.md` の両方が注入された。`cat -n file | head` では rule が注入されなかった。Read tool では両方が注入された。session の途中で作った rule でも発火した。
+
+2026-09-02 には `src/probe.bas` を `cat` で読み、何も注入されなかった。Read tool の直後には当時の `rules/vba.md` の全文が注入された。現在 VBA の規約は `skills/coding/references/` にある。
+
+[Tools reference](https://code.claude.com/docs/en/tools-reference) は、Bash で読んで load される command として `cat`、`head`、`tail`、`sed -n 'X,Yp'`、`grep`、`rg` などを挙げる。1 ファイルを対象に、pipe も redirect も無いことを条件にしている。
 
 公式も「Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use」と書く。compaction の節では「a path-scoped rule that hasn't matched a file since」と、ファイルに match していない状態を前提にしている。
 
-**この harness では auto mode が Bash を主経路に指示する。** 「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」という指示が session へ入る。これに従う限り `paths` 付き rule は発火しない。この Bash 優先の指示は system-reminder にのみ現れる。[Configure permissions](https://code.claude.com/docs/en/permissions)、[Choose a permission mode](https://code.claude.com/docs/en/permission-modes)、[Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) のいずれにも記載が無い。制御する設定キーがあるかは未確認で、文書化されていない以上いつ変わるかも分からない。
+**auto mode は shell での読み書きを認める指示を session へ入れる。** 2026-09-02 の文面は「read files with cat, head, or sed -n ... rather than using the dedicated Read, Edit, or Write tools」だった。2026-11-08 の文面は shell での読み取りを認め、厳密な置換と複数行の置換では Edit / Write を勧める。どちらの文面に従っても、pipe を挟んで shell で読めば `paths` 付き rule は発火しない。この指示は session へ入る文面にだけ現れる。2026-09-02 は system-reminder、2026-11-08 は system prompt に現れた。[Configure permissions](https://code.claude.com/docs/en/permissions)、[Choose a permission mode](https://code.claude.com/docs/en/permission-modes)、[Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) のいずれにも記載が無い。制御する設定キーがあるかは未確認で、文書化されていない以上いつ変わるかも分からない。
 
-`CLAUDE.md` の共通契約で Read / Edit / Write tool を使うよう定める案を試し、apply 後の別 session で契約が harness の指示に勝つことを確認した（2026-09-02）。それでも外したのは、auto mode では Bash の方が効率と正確さで優るため（[claude-md-design.md](./claude-md-design.md)）。`paths` の側を諦めている。
+`CLAUDE.md` の共通契約は、読み取りを Read tool、編集を Edit / Write tool に定めている。そう定めた理由は [claude-md-design.md](./claude-md-design.md) の「tool の使い分けを契約に置く理由」にある。
 
 ### 外部からの裏付け
 
@@ -45,7 +49,9 @@ path 条件付き rule は Read tool でしか発火せず、この harness は 
 - **sticky**: load は directory ごとに session 1 回。早い段階の Bash read 1 回で、その directory の memory が session 中ずっと落ちる
 - **compaction 後に復旧しない**: 再読み込みも Bash 呼び出しになるため
 
-**`rules/` の廃止により、この harness はこの issue の影響範囲から外れる。** `paths` 付き rule も nested `CLAUDE.md` も持たず、残るのは launch 時に無条件 load される user-scope の `CLAUDE.md` 1 枚だけになる。issue が解決した場合は `paths` を再検討する余地があるが、その時はこの note で判断し直す。
+issue の、`cat` では何も load されないという結果は、2026-11-08 の実測と合わない。
+
+**この dotfiles 自身は、`rules/` の廃止でこの issue の影響範囲から外れる。** `paths` 付き rule も nested `CLAUDE.md` も持たず、残るのは launch 時に無条件 load される user-scope の `CLAUDE.md` 1 枚だけになる。ただし、契約を配る先の作業対象 repo は `paths` 付き rule や nested `CLAUDE.md` を持ちうる。共通契約が読み取りを Read に定めているのは、その repo で issue の影響を避けるため（[claude-md-design.md](./claude-md-design.md) の「tool の使い分けを契約に置く理由」）。issue が解決した場合は `paths` を再検討する余地があるが、その時はこの note で判断し直す。
 
 ## rule でなく skill に置く基準
 
@@ -79,3 +85,4 @@ doc の書き方は `skills/scribe` が正本で、doc 追従の要否の明示�
 ## 未確認
 
 - compaction 後に user-scope の `CLAUDE.md` が再注入されるかは、公式に記載が無い。公式が compaction について書いているのは、project-root `CLAUDE.md` と `paths` 付き rule だけ。user-scope には触れていない。統合前後で条件は変わらないため、`rules/` 廃止の根拠には数えていない。
+- 2026-09-02 と 2026-11-08 で `cat` の結果が違う理由。command の形か Claude Code の version の差かは、2026-09-02 の記録に無い。2026-11-08 の desktop app の version も、`claude` が PATH に無く取れていない。
