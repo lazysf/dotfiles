@@ -21,7 +21,6 @@ scripts
 .gitattributes
 .gitignore
 .markdownlint-cli2.jsonc
-.pre-commit-config.yaml
 .python-version
 .tombi.toml
 AGENTS.md
@@ -29,6 +28,7 @@ CLAUDE.md
 LICENSE
 package.json
 package-lock.json
+prek.toml
 README.md
 TODO.md
 nvim.log

@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-11-02
+- Date: 2026-11-08
 
 このファイルは、着手を保留している項目の一覧。
 
@@ -78,3 +78,27 @@ native Windows では、Claude Code の Bash が sandbox の外で動く。mac �
 - 原則の「引き継ぎや完了報告では、変更内容、根拠、検証結果、未確認事項を分ける」
 
 条件に「大きな変更の時」のような主観語は使わない。どの義務も過去の失敗への対策なので、`docs/notes/claude-md-design.md` の対応する節を読み、その失敗の場面を条件の内側に残す。「変更前の確認」では、停止線（認証認可、権限、秘密情報など）に当たるかの確認も内側に残す。
+
+---
+
+## 6. markdownlint の依存に残る npm audit の警告
+
+- 記載: 2026-11-08（tombi の導入で npm audit を見た時）
+
+markdownlint-cli2 を 0.22.1 から 0.24.0 に上げると、`npm audit` の警告は 8 件から 5 件（high 3、low 2）に減った。残る 5 件は 2 つの package から来ていて、どちらも markdownlint 0.42.0 の依存にある。
+
+- `re2js` 2.8.6: 0.24.0（markdownlint 0.42.0）で新しく依存に加わった。markdownlint が完全固定している。修正版は 2.9.1 以降。
+- `katex` 0.16.47: 上げる前から入っている。`micromark-extension-math` が `^0.16.0` を要求し、修正版は範囲の外にある。
+
+npm の `overrides` で強制はしない。markdownlint が想定しない組み合わせで動かすことになるため。markdownlint の新しい版が出たら、`npm update` と `npm audit` で解消したかを見る。prek の hook 環境にも同じ版が入るので、`rev` を上げた後の hook 環境も見る。7 の rumdl へ移れば、この項目は消える。
+
+---
+
+## 7. Markdown の lint の見直し
+
+- 記載: 2026-11-08（6 の audit の警告を見て、markdownlint 以外の lint を相談した時）
+
+2 つの候補を試す。どちらも未検証。
+
+- [rumdl](https://github.com/rvben/rumdl) で markdownlint-cli2 を置き換える。Rust 製で、rule 名は markdownlint と同じ `MD001` 形式。公式の pre-commit hook がある。Node の依存が消えるので、6 の警告も消える。試す時は、今の `.markdownlint-cli2.jsonc` を読めるか、repo 全体で判定が markdownlint と揃うか、VS Code の拡張があるかを確かめる。
+- [textlint](https://github.com/textlint/textlint) と [`textlint-rule-preset-ja-technical-writing`](https://github.com/textlint-ja/textlint-rule-preset-ja-technical-writing) を併用する。markdownlint が構造を見るのに対し、こちらは日本語の文章を見る。preset の既定は厳しめなので、まず repo 全体での違反の件数を数え、残す rule を選ぶ。
