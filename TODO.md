@@ -6,32 +6,13 @@
 
 `CLAUDE.md` は「1 つの作業で扱う目的は 1 つにする」「作業中に見つけた無関係の問題は、直さずにユーザーへ伝える」と定めている。**逸れた分の行き先がここ。** ある作業の途中で見つかった別スコープの問題を、その場で直さずに移し、今のスコープを閉じてから改めて扱う。
 
-各項目に記載日と、どの作業中に見つけたかを書く。どの文脈で浮上したかが分かると、再開時に前提を取り直せる。項目はテーマごとに並べる（Codex、Windows）。
+各項目に記載日と、どの作業中に見つけたかを書く。どの文脈で浮上したかが分かると、再開時に前提を取り直せる。項目はテーマごとに並べる。
 
 判断の記録は `docs/adr/`、設計の理由は `docs/notes/` を正本とし、ここには重複させない。
 
 ---
 
-## 1. Codex の新しい契約と skills を実機で確かめる
-
-- 記載: 2026-11-09（`dot_codex/` を Claude 側の新しい設計に揃えた時）
-
-2026-11-09 に、apply の後の Codex の session で次を確かめた。設計は `docs/notes/codex-harness-operation.md` にある。
-
-- session が global の `AGENTS.md` と 4 つの skill（`coding`、`git-commit`、`lapidary`、`scribe`）を読み込んでいた。
-- skill の名前と手順を知らせたうえで、`$TMPDIR` の使い捨ての repo に commit を頼むと、`git-commit` が `lapidary` を通し、署名付きの commit ができた。
-- 契約と skills の各行を Codex の公式情報と照らした。挙がった修正は、両方の skill と notes に入れた。
-
-残っているのは、最後の apply の後に開いた新しい session での確認。
-
-- `/skills` の画面に 4 つの skill が出る。今の Build skills の docs が user skill の置き場に挙げるのは `~/.agents/skills` だけで、配布先の `~/.codex/skills` には触れていない。
-- skill の名前も手順も知らせずに commit を頼んだ時に、`git-commit` が発火して `lapidary` を通す。
-- `lapidary` が、自分の変更で古くなった notes を直し、別の commit に分けるものを示す。
-- 返答が `AGENTS.md` の「返答」に従って、結論から短くなる。
-
----
-
-## 2. Windows の Codex のエージェント用署名
+## 1. Windows の Codex のエージェント用署名
 
 - 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
 
@@ -42,7 +23,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 3. Windows 実機での動作確認
+## 2. Windows 実機での動作確認
 
 - 記載: 2026-10-22（machine profile の導入、セットアップスクリプトの統合、`chezmoi apply` からのセットアップ実行）
 
@@ -66,7 +47,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 4. Windows の Claude Code で sandbox が担う防御の代わりを確かめる
+## 3. Windows の Claude Code で sandbox が担う防御の代わりを確かめる
 
 - 記載: 2026-11-07（今日の commit の security review で範囲外とした項目）。署名鍵の項目は 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
