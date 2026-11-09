@@ -101,9 +101,18 @@ script は file を `od -N3` に入力のリダイレクトで渡し、先頭の
 
 2026-11-09 に、script を直接呼ぶと、BOM 付きは名前が `-` で始まっても exit 0、BOM の無いもの、空の file、存在しない path、読む権限の無い file は exit 1 だった。`prek run check-ps1-bom --files` でも、BOM の無い `.ps1` と `.PS1` で止まり、BOM 付きでは通った。`.ps1.tmpl` は対象にならなかった。
 
+## Windows での実測
+
+2026-11-09 に、個人の Windows の Claude Code の session で確かめた。版は prek 0.5.7、Git for Windows 2.56.0.windows.4、rumdl 0.3.2。`$TMPDIR` の下の使い捨ての repo に `prek.toml`、`scripts/`、`.rumdl.toml` を写して `prek install` し、Git Bash から `git commit` した。
+
+- `check-identifiers`: `$HOME` を展開した行を stage した commit は止まり、値の無い commit は通った。
+- `check-commit-msg`: 形式に合わない title と、73 文字の title は止まった。72 文字は通った。日本語の 72 文字は通り、73 文字は止まったので、`wc -m` は byte ではなく文字で数えている。Git Bash の `locale -a` には `en_US.utf8` がある。
+- `check-ps1-bom`: BOM の無い `.ps1` は止まり、BOM 付きは通った。Git Bash の `od` で動く。
+- rumdl の hook: 空行を重ねた `.md` で Failed になり、修正が unstaged の変更として残った。
+
+repo の `npm run lint` と `npm run lint:toml` も通った。`node_modules` に lockfile の rumdl が入っていないと、`npm run lint` は `rumdl` が見つからずに失敗する（2026-11-09、markdownlint の時代の `node_modules` が残っていた）。この時は `npm ci` で lockfile どおりに入れ直す。
+
 ## 未確認
 
-- `check-identifiers`、`check-commit-msg`、`check-ps1-bom` が Windows の prek で動くか。`check-commit-msg` は文字数を `LC_ALL=en_US.UTF-8 wc -m` で数える。`check-ps1-bom` は `od` を使う。
-- rumdl の hook と `npm run lint` が Windows で動くか。
 - VS Code の rumdl 拡張が `.rumdl.toml` を読んで同じ判定をするか。拡張は入れていない。
 - `check-toml` / `check-yaml` は登録されていない。TOML は `tombi-lint` が構文も見る。YAML は `nvim.yml` などの対象があるが、意図的に外したのか未検討なのかは不明。

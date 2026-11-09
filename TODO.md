@@ -45,24 +45,6 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 2026-10-22 に、セットアップ済みの個人の Windows で、状態の読み取りと画面の目視で確かめられる項目は確認した。
 
-### agent が確かめる
-
-`$TMPDIR` の下に使い捨ての repo を作り、この repo の `prek.toml`、`scripts/`、`.rumdl.toml` を写して `prek install` する。その repo で次を確かめる。
-
-- `check-identifiers`: home の絶対パスを含む行を stage した commit が止まり、値の無い commit は通る。値はファイルに手で書かず、`$HOME` を展開して作る。（2026-11-08 追加）
-- `check-commit-msg`: 形式に合わない title と、72 文字を超える title が止まる。文字数は `LC_ALL=en_US.UTF-8 wc -m` で数えるので、Git Bash でこの locale が使えるかも見る。
-- `check-ps1-bom`: BOM の無い `.ps1` が止まり、BOM 付きの `.ps1` は通る。script は `od` を使う。
-- rumdl の hook が動く。この repo では `npm run lint` が通る。
-
-### ユーザーが操作する
-
-agent は手順を示し、ユーザーの結果を聞く。
-
-- Windows PowerShell 5.1 で `scripts/windows/setup.ps1 personal` を実行し、日本語の出力が化けないことを見る。先頭に UTF-8 の BOM を付けてある。
-- 同じ実行で、1Password の設定画面で待たずに進む。`Parsec.Parsec (skip)` と `VB-CABLE (skip)` が出る。（Parsec は 2026-11-02 追加）
-- Parsec の host settings で Fallback To Virtual Display をオンにでき、物理ディスプレイが無い状態で接続すると仮想ディスプレイが出る。`Parsec.ParsecVDD` が `-Scope` 無しの winget で入り、Parsec Virtual Display Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
-- Parsec の host settings で Virtual Mouse をオンにでき、物理マウスが無い状態で接続してもカーソルが出る。`Parsec.ParsecVUD` が `-Scope` 無しの winget で入り、Parsec Virtual USB Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
-
 ### 条件を待つ
 
 - 新しいマシン（chezmoi の設定ファイルが無く、各ツールが未導入）:
