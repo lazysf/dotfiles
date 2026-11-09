@@ -1,18 +1,33 @@
 # 残タスク
 
-- Date: 2026-11-08
+- Date: 2026-11-09
 
 このファイルは、着手を保留している項目の一覧。
 
 `CLAUDE.md` は「1 つの作業で扱う目的は 1 つにする」「作業中に見つけた無関係の問題は、直さずにユーザーへ伝える」と定めている。**逸れた分の行き先がここ。** ある作業の途中で見つかった別スコープの問題を、その場で直さずに移し、今のスコープを閉じてから改めて扱う。
 
-各項目に記載日と、どの作業中に見つけたかを書く。どの文脈で浮上したかが分かると、再開時に前提を取り直せる。
+各項目に記載日と、どの作業中に見つけたかを書く。どの文脈で浮上したかが分かると、再開時に前提を取り直せる。項目はテーマごとに並べる（Codex、Windows、Markdown の lint）。
 
 判断の記録は `docs/adr/`、設計の理由は `docs/notes/` を正本とし、ここには重複させない。
 
 ---
 
-## 1. Windows の Codex のエージェント用署名
+## 1. Codex の新しい契約と skills を実機で確かめる
+
+- 記載: 2026-11-09（`dot_codex/` を Claude 側の新しい設計に揃えた時）
+
+`dot_codex/` の契約と skills は、Claude 版を元に移しただけで、Codex では動かしていない。`chezmoi apply` の後に新しい Codex の session を開き、次を確かめる。設計は `docs/notes/codex-harness-operation.md` にある。
+
+- `/skills` に `coding`、`git-commit`、`lapidary`、`scribe` の 4 つが出る。公式 docs が user skill の置き場に挙げるのは `~/.agents/skills` だけで、配布先の `~/.codex/skills` には触れていない。
+- 「commit して」と頼むと、`git-commit` が発火して `lapidary` を通し、`git add` と `git commit` をコマンドごとに申請する。
+- 返答が `AGENTS.md` の「返答」に従って、結論から短くなる。
+- 契約と skills の各行が、Codex で要るか。Claude で残した行をそのまま移したので、Codex の既定の振る舞いと重なる行や、Claude では既定で持っていて書かなかったため Codex に抜けている規定があるかもしれない。
+
+確かめる前に、source から消したファイル（`~/.codex/agents/` の 2 つの reviewer、`skills/caveman`、`skills/coding/references`、`skills/git-commit/references/failure-handling.md`）を `~/.codex` から消す。残っていると、旧版の skill や agent が読まれる。
+
+---
+
+## 2. Windows の Codex のエージェント用署名
 
 - 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
 
@@ -23,7 +38,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 2. Windows 実機での動作確認
+## 3. Windows 実機での動作確認
 
 - 記載: 2026-10-22（machine profile の導入、セットアップスクリプトの統合、`chezmoi apply` からのセットアップ実行）
 
@@ -47,24 +62,15 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 ---
 
-## 3. Claude Code からの署名鍵の書き込みを制限する
-
-- 記載: 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
-
-承認された書き込みで `~/.ssh/agent_signing_ed25519` の鍵ペアを置かれると、`scripts/macos/setup.sh` と `scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップする。その後、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。
-
-2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を、`sandbox.filesystem.denyWrite` へ `~/.ssh` を足した。Windows では sandbox が効かないので、`mv`、`ssh-keygen -f`、`rm` は止まらない（2026-11-07 実測）。mac で止まる範囲と、その実測は `docs/notes/agent-commit-signing-design.md` の「`~/.ssh` への書き込みを止める」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
-
----
-
 ## 4. Windows の Claude Code で sandbox が担う防御の代わりを確かめる
 
-- 記載: 2026-11-07（今日の commit の security review で範囲外とした項目）
+- 記載: 2026-11-07（今日の commit の security review で範囲外とした項目）。署名鍵の項目は 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
 
-native Windows では、Claude Code の Bash が sandbox の外で動く。mac で sandbox が担っている次の 3 つが、Windows で何に止められるかは確かめていない。前提は `docs/notes/claude-code-settings-design.md` の「Windows では sandbox の防御が効かない」にある。
+native Windows では、Claude Code の Bash が sandbox の外で動く。mac で sandbox が担っている次の 4 つが、Windows で何に止められるかは確かめていない。前提は `docs/notes/claude-code-settings-design.md` の「Windows では sandbox の防御が効かない」にある。
 
 - エージェントの session からの push がどこで止まるか。mac では、sandbox の proxy が SSH を運ばないので止まる。Windows で見るのは、`core.sshCommand`、1Password の承認がどの範囲まで記憶されるか、gh の credential helper の 3 つ。
-- エージェントの Bash が、`mv` や python で `~/.claude/settings.json` や hook を書き換えられるか。mac では protected paths が止める（`~/.claude/settings.json` は 2026-11-07 に実測）。Windows の `~/.ssh` では、同じ形の `mv` と `ssh-keygen -f` が通った（2026-11-07 実測）。
+- エージェントの Bash が、`mv` や python で `~/.claude/settings.json` や hook を書き換えられるか。mac では protected paths が止める（`~/.claude/settings.json` は 2026-11-07 に実測）。
+- エージェントが `~/.ssh/agent_signing_ed25519` の鍵ペアを置けるか。Windows の session では、`mv`、`ssh-keygen -f`、`rm` が `~/.ssh` で通った（2026-11-07 実測）。置かれると、`scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップし、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。mac で止まる範囲は `docs/notes/agent-commit-signing-design.md` の「`~/.ssh` への書き込みを止める」にある。塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
 - 大文字で書いた `~/.SSH/...` が、`Edit(~/.ssh/**)` と `Read(~/.ssh/**)` の rule を外れるか。Windows の file system は既定で大文字と小文字を区別しないので、rule を外れると同じファイルに届く。
 
 ---
@@ -98,18 +104,3 @@ npm の `overrides` で強制はしない。markdownlint が想定しない組�
 - 記載: 2026-11-08（`docs/notes/` を整備した時）
 
 `.markdownlint-cli2.jsonc` は MD024 を無効にしているが、無効のままにする理由は anchor link が増えて成り立たなくなった。件数、入れ直す時の形、その理由は `docs/notes/markdownlint-and-pre-commit-execution.md` の「MD013 / MD024 を無効化している理由」にある。6 で lint を置き換える場合は、置き換えた先の同じ rule で判断する。
-
----
-
-## 8. Codex の新しい契約と skills を実機で確かめる
-
-- 記載: 2026-11-09（`dot_codex/` を Claude 側の新しい設計に揃えた時）
-
-`dot_codex/` の契約と skills は、Claude 版を元に移しただけで、Codex では動かしていない。`chezmoi apply` の後に新しい Codex の session を開き、次を確かめる。設計は `docs/notes/codex-harness-operation.md` にある。
-
-- `/skills` に `coding`、`git-commit`、`lapidary`、`scribe` の 4 つが出る。公式 docs が user skill の置き場に挙げるのは `~/.agents/skills` だけで、配布先の `~/.codex/skills` には触れていない。
-- 「commit して」と頼むと、`git-commit` が発火して `lapidary` を通し、`git add` と `git commit` をコマンドごとに申請する。
-- 返答が `AGENTS.md` の「返答」に従って、結論から短くなる。
-- 契約と skills の各行が、Codex で要るか。Claude で残した行をそのまま移したので、Codex の既定の振る舞いと重なる行や、Claude では既定で持っていて書かなかったため Codex に抜けている規定があるかもしれない。
-
-確かめる前に、source から消したファイル（`~/.codex/agents/` の 2 つの reviewer、`skills/caveman`、`skills/coding/references`、`skills/git-commit/references/failure-handling.md`）を `~/.codex` から消す。残っていると、旧版の skill や agent が読まれる。
