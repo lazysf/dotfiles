@@ -1,6 +1,6 @@
 # エージェントの commit 署名の設計
 
-- Date: 2026-11-07
+- Date: 2026-11-09
 - 出典: [hamakou108.com の記事](https://hamakou108.com/posts/coding-agent-credentials-for-claude-code) / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / hooks docs の Windows の shell、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Claude Code 2.1.317 の binary にある sandbox profile の生成コード（2026-11-06） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07） / cwd が home の mac の session での `~/.ssh` への `mv` と `ssh-keygen -f` の実測（2026-11-07、v2.1.311） / cwd が home の mac の session での `denyWrite` の path への書き込みの実測、mac の session での Write ツールの `~/.ssh` の拒否の実測、Edit ツールでの `start-signing-agent` の拒否の実測（2026-11-07） / Windows の session での `~/.ssh` への書き込みの実測（2026-11-07、Claude Code 2.1.317） / GitHub の commits API の `verification`（2026-11-07） / [GitHub の署名検証記録](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#persistent-commit-signature-verification)
 
 エージェントの commit を、人の 1Password とは別の専用の鍵で署名する構成の理由と実測を残す。人の commit の署名を sandbox 内で通す設定は [claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」にある。手元での署名の検証は [git-signature-verification-design.md](./git-signature-verification-design.md) にある。Codex はこの鍵で署名しない（[ADR 0047](../adr/0047-stop-codex-agent-signing.md)）。
@@ -106,6 +106,8 @@ hook は Windows でも同じスクリプトを使う。hooks docs によると�
 - socket の path が長いと `ssh-agent -a` が `too long for Unix domain socket` で失敗する。127 文字で失敗した。`~/.local/state/agent-signing/agent.sock` は短いので当たらないが、テストで長い一時ディレクトリを HOME にすると当たる。
 
 `setup.ps1` は鍵を、hook の `ssh-add` と同じ Git for Windows の `ssh-keygen` で作る。上の実測で agent に載せたのも、この `ssh-keygen` で作った鍵になる。
+
+2026-11-09 に Windows PowerShell 5.1.26100.9818 と Git for Windows 2.56.0.windows.4 で、`setup.ps1` の `New-AgentSigningKey` を単独で実行した。そのプロセスの `USERPROFILE` を空の一時ディレクトリに向けると、鍵ペアが生成された。生成した公開鍵の SHA-256 fingerprint を Windows 標準 OpenSSH の `ssh-keygen -E sha256 -lf` で計算したところ、setup が表示した値と一致した。照合後に一時ディレクトリと鍵ペアを削除した。
 
 `chezmoi apply` で `setup.ps1` が鍵を作った後に開いた実際の Windows の session で、次を確かめた（2026-11-07）。
 
