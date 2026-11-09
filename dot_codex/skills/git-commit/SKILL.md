@@ -69,9 +69,9 @@ EOF
 
 - pre-commit や commit-msg の hook が失敗した時、commit はできていない。ここで `--amend` すると 1 つ前の commit を書き換える。原因を直して stage し直し、新しい commit を作る。
 - 自動修正型の hook（末尾改行の補正、`markdownlint --fix` など）は、ファイルを書き換えたうえで失敗する。修正差分を `git diff` で確かめてから stage し直す。確かめずに stage すると、hook が何を変えたか分からないまま commit する。
-- hunk 単位の stage（`git add -p` / `-i`）はしない。agent は対話に答えられず、答えを流し込むと順番がずれて別の hunk が stage される。1 ファイル内で分ける必要が出たら、「止まる条件」に当たる。
+- hunk 単位の stage（`git add -p` / `-i`）はしない。対話で選ぶ hunk を取り違えると、同じファイルにあるユーザーの編集や範囲外の変更まで stage される。1 ファイル内で分ける必要が出たら、「止まる条件」に当たる。
 - 署名に失敗したら、迂回せず止まって報告する。
-- `workspace-write` の sandbox は、書き込める root の中でも `.git` を読み取り専用にする。`git add` と `git commit` は sandbox の外での実行が要るので、そのコマンドだけを正式な承認経路へ申請する（`AGENTS.md` の「権限」）。`git add` の許可を `git commit` に流用しない。拒否されたら止まって報告する。
+- 既定の `workspace-write` sandbox では、`<writable_root>/.git` は読み取り専用。`.git` が `gitdir:` ファイルなら参照先も保護される。現在の権限で実行できるコマンドはそのまま実行する。sandbox の制限で実行できず、承認で許可できる場合に限り、必要な `git add` と `git commit` を別々に正式な承認経路へ申請する（`AGENTS.md` の「権限」）。明示的な deny や承認の拒否に当たったら止まって報告する。
 - 再実行は 1 回だけ、index lock の競合のように再実行で解ける見込みがある失敗に限る。hook の失敗、conflict、権限エラーは、再実行しても変わらない。
 
 ## 出力
