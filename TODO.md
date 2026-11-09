@@ -24,18 +24,17 @@
 
 ---
 
-## 1. Windows の Codex のエージェント用署名
+## 1. Codex の署名の解除と Windows の確認
 
 - 記載: 2026-11-07（Windows の `personal` にエージェント用署名鍵を入れた時）
-- 書き先: `docs/notes/codex-harness-operation.md`。方針が決まったら ADR
+- 書き先: `docs/notes/codex-harness-operation.md`
 
-Windows では Claude Code だけがエージェント用の鍵で署名する。この項目は設計なので、agent は案を示して止まる。
+Codex はエージェント用の鍵で署名しない（[ADR 0047](docs/adr/0047-stop-codex-agent-signing.md)）。署名以外の確認は残っている。この項目は設計なので、agent は案を示して止まる。CLI の版、`execpolicy check` の照合、公式 docs を調べた結果は [Windows の署名とコマンド制限](docs/notes/codex-harness-operation.md#windows-の署名とコマンド制限) にある。
 
-- agent: Windows に Codex CLI があるかと、その版を見る。Codex の Windows の sandbox、hook を動かす shell、`~/.ssh` を読ませない設定を、公式 docs（`docs/notes/codex-harness-operation.md` の出典）で確かめる。
-- agent: mac の `scripts/macos/configure-codex-signing.py` と `run_after_zz-configure-codex-signing.sh.tmpl` は、zsh のログインシェルを前提にしている。Windows に移せるか、移すなら何が要るかを案にする。
-- ユーザー: Codex の session で、`~/.ssh` の中の存在しない path（`~/.ssh/claude-probe-missing`）を読ませる。拒否されるか、「無い」と返るかを agent に伝える。後者なら、Windows の Codex は `~/.ssh/agent_signing_ed25519` も読める。
-- agent: `dot_codex/rules/destructive.rules` に、Windows の disk 系の command を揃えるかの案を出す。揃える対象は、2026-11-07 に Claude Code の `permissions.deny` へ足した `diskpart`、`format.com`、`convert.exe`、`wbadmin`。Codex の rules が Windows の command 名をどう照合するかを、docs で確かめてから出す。
-- agent: `dot_codex/rules/destructive.rules` に `git push` の禁止を揃えるかの案を出す。Claude Code は 2026-11-09 に、`permissions.deny` の `Bash(git push *)` と `autoMode.hard_deny` で push を止めた。Windows では、保存済みの Git Credential Manager の資格情報で、承認なしに push が通る（`docs/notes/claude-code-settings-design.md` の「push は sandbox 内で SSH を通らない」）。Codex の sandbox が Windows と mac で push の通信を止めるかを、docs で確かめてから出す。（2026-11-09 追加）
+- ユーザー: mac の作業機で、apply 済みの `~/.codex` から署名の設定を外す。手順は [macOS のエージェント用署名](docs/notes/codex-harness-operation.md#macos-のエージェント用署名) にある。`~/.ssh` の `deny` は残す。
+- ユーザー: 通常の権限で開いた Codex の session で、実際のユーザーの `~/.ssh/claude-probe-missing` を PowerShell から読ませる。拒否か「無い」かと、実効の sandbox と profile を伝える。「無い」だけでは既存ファイルの読み取り可否は分からない。確認が必要なら承認を得て、秘密を含まない既存の検証用ファイルで確かめる。
+- agent: sandbox 内から外向き通信が止まるかを確認する方法をユーザーと決める。push と `--dry-run` は「Windows での進め方」に従う。
+- agent: 無害なコマンドを対象にした一時 rule で、新しい Codex session の PowerShell 経由の実行が止まるかを確かめる。`~/.codex/rules/` に書く前に確認を取る。この結果をもとに、`dot_codex/rules/destructive.rules` に Windows の disk 系（`diskpart`、`format.com`、`convert.exe`、`wbadmin`）と `git push` の禁止を足すか決める。
 
 ---
 

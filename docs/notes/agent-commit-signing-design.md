@@ -3,7 +3,7 @@
 - Date: 2026-11-07
 - 出典: [hamakou108.com の記事](https://hamakou108.com/posts/coding-agent-credentials-for-claude-code) / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / hooks docs の Windows の shell、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Claude Code 2.1.317 の binary にある sandbox profile の生成コード（2026-11-06） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07） / cwd が home の mac の session での `~/.ssh` への `mv` と `ssh-keygen -f` の実測（2026-11-07、v2.1.311） / cwd が home の mac の session での `denyWrite` の path への書き込みの実測、mac の session での Write ツールの `~/.ssh` の拒否の実測、Edit ツールでの `start-signing-agent` の拒否の実測（2026-11-07） / Windows の session での `~/.ssh` への書き込みの実測（2026-11-07、Claude Code 2.1.317） / GitHub の commits API の `verification`（2026-11-07） / [GitHub の署名検証記録](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#persistent-commit-signature-verification)
 
-エージェントの commit を、人の 1Password とは別の専用の鍵で署名する構成の理由と実測を残す。人の commit の署名を sandbox 内で通す設定は [claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」にある。手元での署名の検証は [git-signature-verification-design.md](./git-signature-verification-design.md)、Codex 側の設定は [codex-harness-operation.md](./codex-harness-operation.md) にある。
+エージェントの commit を、人の 1Password とは別の専用の鍵で署名する構成の理由と実測を残す。人の commit の署名を sandbox 内で通す設定は [claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」にある。手元での署名の検証は [git-signature-verification-design.md](./git-signature-verification-design.md) にある。Codex はこの鍵で署名しない（[ADR 0047](../adr/0047-stop-codex-agent-signing.md)）。
 
 ## 専用の鍵で署名する理由
 
@@ -12,7 +12,7 @@
 ## 構成
 
 - 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。`personal` では、macOS は `scripts/macos/setup.sh`、Windows は `scripts/windows/setup.ps1` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。macOS の sandbox 内のコマンドは、sandbox の read 制限に合流する `permissions.deny` の `Read(~/.ssh/**)` で `~/.ssh` を読めない。Windows については「Windows では鍵を持ち出せる」にある。
-- `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）は、Claude Code と Codex で共用する `~/.config/git/start-signing-agent` を呼ぶ。このスクリプトが専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。Claude Code の公式 docs によると、command hook は sandbox の外で動く。
+- `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）は、`~/.config/git/start-signing-agent` を呼ぶ。このスクリプトが専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。Claude Code の公式 docs によると、command hook は sandbox の外で動く。
 - hook は `CLAUDE_ENV_FILE` に、`SSH_AUTH_SOCK` と `GIT_CONFIG_COUNT` 系（`gpg.ssh.program=ssh-keygen`、`user.signingkey=key::<公開鍵>`）を書く。公式によると、この値はその session の Bash コマンドにだけ効く。人の terminal の git には届かない。Claude Code 自身も sandbox のコマンドに `GIT_CONFIG_COUNT` 系（`safe.directory` の 2 件）を入れているので（2026-11-06 に env で確認）、番号は固定せず、env file が読まれた時点の `GIT_CONFIG_COUNT` の後ろへ足す。
 - `settings.json` の `env` に書かないのは、記事によると `env` では `~` も `$HOME` も展開されず（この repo では実測していない）、home の絶対パスを repo に置くことになるため。hook は実行時に `$HOME` と公開鍵を読むので、repo には絶対パスも鍵も残らない。`settings.json` を `.tmpl` にしなくて済み、`check json` も残る。
 - env を書く前に失敗した時は、stderr に理由を出して exit 0 で抜け、env を書かない。この場合は `~/.config/git/config` の 1Password 署名に戻る。鍵を作っていない作業機でも同じ経路になる。env を書いた後で agent が止まったり鍵が消えたりした時は 1Password に戻らず、その session の commit が署名に失敗する。`commit.gpgsign` が `true` なので、署名の無い commit にはならない。
@@ -93,7 +93,7 @@ native Windows では、sandbox の層（`Read` deny の sandbox への合流、
 
 Windows のエージェントは `~/.ssh` に鍵ペアを置ける（「`~/.ssh` への書き込みを止める」の実測）。置かれた鍵ペアを `setup.ps1` は既存のものとして使い、人がその公開鍵を GitHub に登録するおそれがある。それでも `setup.ps1` に置き換えの検査を足さない（2026-11-09 のユーザー判断）。置かれた鍵の秘密鍵を他人が持つ状態は、鍵を持ち出された状態と同じで、Windows ではそれを既に受け入れているため。検査を足しても、鍵の持ち出しは防げない。
 
-Codex には Windows の署名設定を入れていない。mac の Codex の署名用プロファイルにある `~/.ssh` の deny も Windows には入らないので、Windows の Codex の session がこの鍵を読めるかは確かめていない。
+Windows の Codex の config には `~/.ssh` の deny が無いので、Windows の Codex の session がこの鍵を読めるかは確かめていない。
 
 ## Windows の hook
 

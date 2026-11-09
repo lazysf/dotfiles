@@ -1,9 +1,9 @@
 # Codex harness の運用
 
 - Date: 2026-11-09
-- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / 実際の作業機での Codex の署名設定と署名の確認、GitHub の commits API の `verification`（2026-11-07）
+- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows の Codex session での署名の実測（2026-11-09）
 
-`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。macOS の `personal` では [ADR 0046](../adr/0046-distribute-codex-signing-settings.md) に従い、署名に必要な設定だけを追加する。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md) にある。
+`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md) にある。
 
 ## 構成と権限
 
@@ -30,7 +30,7 @@
 
 ## 適用前後の確認
 
-配布前に `chezmoi diff ~/.codex` でファイルの差分を確認する。`config.toml` はファイル単位の配布から除外している。macOS の署名設定は、適用後に動くスクリプトが追加するため、この差分には出ない。
+配布前に `chezmoi diff ~/.codex` でファイルの差分を確認する。`config.toml` はファイル単位の配布から除外している。
 
 MCP、plugin、通知、モデル、権限などは、アプリまたは実機の `~/.codex/config.toml` で管理する。既存 config を手動で削除・変更する場合は、必要な追加設定を事前に退避する。個人や作業機を特定する値、秘密情報を repo の source へ取り込まない。
 
@@ -40,34 +40,65 @@ MCP、plugin、通知、モデル、権限などは、アプリまたは実機�
 
 ## macOS のエージェント用署名
 
-Codex は Claude Code と同じ署名鍵と ssh-agent を使う。macOS の `personal` では `chezmoi apply` が、鍵と共有スクリプトの準備後に `~/.codex/hooks.json` の `SessionStart` と `~/.codex/config.toml` の署名に必要な設定を追加する。公開鍵がまだ無い場合は次回の適用まで見送る。設定が競合した場合は適用時のエラーに対象の設定キーが出る。
+Codex はエージェント用の鍵で署名しない（[ADR 0047](../adr/0047-stop-codex-agent-signing.md)）。commit の署名は global の Git 設定に任せる。`chezmoi apply` は Codex の署名設定を足さない。
 
-初回は Codex CLI の `/hooks` で `"$HOME/.config/git/start-signing-agent" >/dev/null` を確認して信頼する。適用を繰り返しても同じ hook の定義は書き直さない。GitHub への鍵の登録は [README](../../README.md#手作業が要るもの) を参照。[Codex Hooks](https://learn.chatgpt.com/docs/hooks)
+配布をやめる前に apply した mac の `~/.codex` には、足した設定が残る。mac で次の順に外す。
 
-新しいセッションで、使い捨ての repo に署名付きコミットを作り、`git log -1 --format='%G?'` が `G` になることを確かめる。秘密鍵の読み取りと socket の置き換えが拒否されることも確かめる。プロキシが動いていないと `network.enabled = true` は直接通信を許すため、許可外の Unix socket とローカルのテスト用 TCP ポートへの直接接続が拒否されることを確かめる。[Codex Permissions](https://learn.chatgpt.com/docs/permissions#unix-sockets)
+1. 配布の script を消した source を `chezmoi apply` する。先に手で外すと、古い script の apply が入れ直す。
+2. `~/.codex/hooks.json` の `SessionStart` から、`start-signing-agent` を呼ぶ hook を消す。公式の Hooks に、ファイルから消す手順の記載は無い。新しい session の `/hooks` で出なくなったことを確かめる。
+3. `~/.codex/config.toml` から、`shell_environment_policy.set` の `SSH_AUTH_SOCK` と `GIT_CONFIG_*`、`permissions.agent-signing.network`、`features.network_proxy` を消す。
+4. `default_permissions` と `permissions.agent-signing.filesystem` は残す。
+5. 新しい session で確かめる。
+   - `~/.ssh` の中のファイルの読み取りが拒否される。
+   - 外向きの通信が止まる。
+   - commit を作ると 1Password の承認が出て、`git log -1 --format='%G? %GK'` の `%G?` が `G`、`%GK` がエージェント用の鍵と違う。
 
-Codex の Git 署名設定はコマンドの環境変数に入る。zsh の初期化（`dot_config/zsh/dot_zshenv`）は、`SSH_AUTH_SOCK` が署名専用の socket ではなく、1Password の socket がある時だけ、`SSH_AUTH_SOCK` を 1Password の socket に差し替える。署名専用の socket を指している時と、1Password の socket が無い時は、元の値のまま残る。通常の terminal の Git は 1Password で署名する。
+手順 4 で残す `filesystem` は、署名とは別の防御になる。mac には Claude Code のためにエージェント用の鍵が残るので、`~/.ssh` の `deny` が無いと Codex がその鍵を読める。`read` の項目は、cwd が `~` や `~/.config` の session で、Codex が Claude Code の署名の起動スクリプトと socket を書き換えることを止める。profile の名前は `agent-signing` のまま残る。
 
-Codex の command hook はログインシェルから起動する。署名用プロファイルは、この repo が使う zsh の初期化ファイルを読み取り専用にする。別のシェルや独自の `ZDOTDIR` を使う端末では、その初期化ファイルも確認する。
+network を外すのは、Unix socket を通すためだけに有効にしていたため。公式の Permissions では、`network.enabled` の既定は `false` で、network が off の時は proxy の設定によらず通信できない。
 
-2026-11-06 に macOS の Codex CLI 0.166.0-alpha.6 で確認した。信頼済みの `SessionStart` は、一時ホームの使い捨て鍵を専用 agent に載せた。1Password が起動した実機で、新しく起動した app-server の `command/exec` から zsh のログインシェルを使うと、一時 repo の署名が `%G? = G` になった。一時ホームでの sandbox 検証では、秘密鍵の読み取り、起動スクリプトへの書き込み、socket の削除、許可外の Unix socket とローカル TCP への接続が拒否された。
+## Windows の署名とコマンド制限
 
-2026-11-07 に、実際の作業機（macOS の `personal`）で、apply 後の `~/.codex` を確かめた。確認はユーザーが実行し、ChatGPT app 同梱の Codex CLI は 0.167.0-alpha.3.2 だった。
+2026-11-09 の Windows の Claude Code session と Codex session で確かめた。アプリは OpenAI.Codex 26.1103.4239.0。同梱の Codex CLI は 0.167.0-alpha.3.2 で、`%LOCALAPPDATA%\OpenAI\Codex\bin\` にあり、`PATH` にはない。Git for Windows は 2.56.0.windows.4 で、同梱の OpenSSH は 10.6p1。`config.toml` の Windows の設定は `elevated` で、permission profile、明示的な network 許可、hook は入っていない。調査時に参照した Codex session の記録では shell は PowerShell、sandbox policy は `read-only`、approval policy は `never` だった。通常作業の session にもこの policy が適用されるかは未確認。Git の global 設定は `commit.gpgsign = true` で、署名に `op-ssh-sign.exe` を使う。
 
-- `hooks.json` には `SessionStart` の hook が入っていた。
-- `config.toml` には `default_permissions`、`features.network_proxy`、`permissions.agent-signing`、`shell_environment_policy.set` が入っていた。
-- `user.signingkey` の公開鍵は、専用 agent が載せた鍵と fingerprint が一致した。
-- 新しい Codex の session で、使い捨ての repo に署名付きコミットを作ると、`%G? = G` になった。`%GK` はエージェント用の鍵の fingerprint だった。
-- 同じ鍵で署名して push した Claude Code のコミットは、GitHub の commits API で `verification.verified` が `true`、`reason` が `valid` になった（`04622bf` など）。
+### コマンド制限
 
-この時、専用 agent は Claude Code の session の hook がすでに起動していた。Codex の hook が agent を起動して鍵を載せることは、この確認には含まれない。
+同梱 CLI の `codex execpolicy check --rules <一時ルール> -- <コマンドと引数>` で次を確かめた。判定対象のコマンドは実行していない。
 
-2026-11-07 に、ユーザーは実際の作業機で署名専用 agent を停止した。プロセスと socket の消失を確認してから新しい Codex の session を開くと、`SessionStart` hook が agent を起動して鍵を載せた。session 内の `SSH_AUTH_SOCK` は専用 socket を指していた。`ssh-add -l` は comment が `agent-signing` の ED25519 鍵を 1 本だけ返した。`$TMPDIR` の使い捨て repo で `git -c commit.gpgsign=true commit --allow-empty -m probe` を実行すると、`git log -1 --format='%G? %GK'` の `%G?` は `G` になった。`%GK` は `ssh-add -l` の fingerprint と一致した。
+| rule の `pattern` | 一致 | 不一致 |
+| --- | --- | --- |
+| `[["diskpart", "git"]]` | `diskpart`、`git push`、`git -C . push` | `diskpart.exe`、`DISKPART`、`C:\Windows\System32\diskpart.exe`、`git.exe push`、絶対パスで呼んだ `git.exe` |
+| `["git", "push"]` | `git push` | `git -C . push`、`git -c a=b push` |
 
-停止後の起動を確かめる時は、Claude Code より先に Codex の session を開く。Claude Code の `SessionStart` も同じ agent を起動するためである。停止の手順は [代償と失効](agent-commit-signing-design.md#代償と失効) を参照。
+`powershell.exe -Command "git push"` と `bash -lc "git push"` も、この照合では一致しなかった。公式 docs の照合単位は argv のリテラルの prefix。実行時には、単純な `bash -lc`、`zsh`、`sh` の wrapper を分解して照合する場合がある。PowerShell の分解は記載されていない。[Rules](https://learn.chatgpt.com/docs/agent-configuration/rules)
+
+Claude Code で適用後に push が実行前に止まった結果は、[push は sandbox 内で SSH を通らない](claude-code-settings-design.md#push-は-sandbox-内で-ssh-を通らない) を参照。
+
+Windows と macOS の `workspace-write` では、sandbox 内の外向き通信は既定で無効。[Agent approvals & security](https://learn.chatgpt.com/docs/agent-approvals-security#network-access)
+
+### 読み取りの deny
+
+公式 docs では、Windows の `mxc` と `elevated` は読み取りの deny に対応し、`unelevated` は対応しない。`elevated` は低権限の専用ユーザーで実行する。[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox) / [Permissions](https://learn.chatgpt.com/docs/permissions#deny-reads-with-exact-paths-or-globs)
+
+同梱 CLI の `elevated` で `:workspace` と、検証用ディレクトリを `deny` にした一時 profile を比較した。`deny` を入れると、対象ディレクトリ内の既存ファイルだけが `UnauthorizedAccessException` になった。ユーザー側では同じファイルを読めた。実在の `~/.ssh` はこの比較の対象外。
+
+### 自動署名を入れなかった理由
+
+Claude Code は Windows で、Git Bash から Git for Windows の `ssh-keygen` と専用の `ssh-agent` を使う（[Windows の hook](agent-commit-signing-design.md#windows-の-hook)）。同じ経路は、Codex の sandbox の中では通らなかった。検証にはすべて使い捨ての鍵と repo を使い、実在のセットアップ鍵には触れていない。
+
+- Git for Windows の同梱ツールの起動: 通常の Codex session の `ssh-add -l`、`bash --version`、`ssh-agent -V`、`cygpath -u .` は `0xC0000142`（`STATUS_DLL_INIT_FAILED`）で終了した。この session の sandbox の実効実装は未確認。CLI に `-c windows.sandbox=mxc` を渡すと `bash --version` は同じエラーになり、`-c windows.sandbox=elevated -c features.prefer_mxc=false` を渡すと成功した。
+- 専用 agent への接続: `elevated` の sandbox の中の `ssh-add -l` は `communication with agent failed` で終了し、agent は `uid mismatch` を記録した。ローカルの TCP には接続できた。OpenSSH は、接続元の実効 UID が root でも自分でもない時に接続を閉じる。`elevated` は専用ユーザーで動くので、socket の path や権限の調整では通らない。[OpenSSH 10.6p1 の `ssh-agent`](https://github.com/openssh/openssh-portable/blob/V_10_6_P1/ssh-agent.c#L1902-L1917)
+- named pipe での取り次ぎ: ユーザー側の pipe の ACL で sandbox のユーザー SID に `ReadWrite` と `Synchronize` を許可すると、sandbox から接続できた（`ReadData`、`WriteData`、`Synchronize` だけでは拒否された）。この経路でユーザー側の agent が固定のデータに署名し、sandbox の中の `ssh-keygen -Y verify` が検証できた。[Named Pipe Security and Access Rights](https://learn.microsoft.com/en-us/windows/win32/ipc/named-pipe-security-and-access-rights)
+- `git commit` からの取り次ぎ: Git は `gpg.ssh.program` の試作を起動したが、Windows PowerShell 5.1 が試作の `client.ps1` を実行ポリシーで拒否した。Git は `fatal: failed to write commit object` で終了した。有効な policy の値は、同じ sandbox で `Get-ExecutionPolicy` を読み込めず確認できなかった。実用にするには、起動できるクライアントと、常駐する取り次ぎ処理を新しく作ることになる。
+- Windows 標準 OpenSSH: 公開実装では agent の named pipe 名が固定で、署名専用の接続先を分ける機能は確認できなかった。実機は 9.5p2。[Win32 OpenSSH の agent 実装](https://github.com/PowerShell/openssh-portable/blob/latestw_all/contrib/win32/win32compat/ssh-agent/agent.c)
+- `windows.sandbox_private_desktop`: 現行の設定リファレンスと schema に無く、回避策にできる根拠は得られなかった。[Config schema](https://learn.chatgpt.com/docs/config-schema.json)
+
+どれも sandbox の中の `git commit` の結果で、承認を得て sandbox の外で実行する `git commit` の署名は試していない。
 
 ## 未確認
 
-- Windows 実機での動作。
-- 署名用プロファイルで、許可していない外部ドメインへの通信を proxy が拒否するか。2026-11-06 の確認は、許可外の Unix socket とローカル TCP への接続に限る。公式によると、proxy が動いていない時の `network.enabled = true` はドメインを制限しない。
-- 署名用プロファイルの `read` が、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` のセッションで問題になる。
+- Windows の通常の Codex session での `~/.ssh` の読み取り境界、外向き通信、PowerShell 経由の rules の発火。[TODO 1](../../TODO.md#1-codex-の署名の解除と-windows-の確認) に残す。
+- Codex の session の commit で、1Password の承認が出て署名できるか。Windows と、設定を外した後の mac のどちらも未確認。mac は手順 5 で確かめる。
+- `extends = ":workspace"` の profile で `network` を外した時に、network が off になるか。公式の Permissions は既定を `false` と書くが、`extends` との関係は明記していない。mac は手順 5 で確かめる。
+- `permissions.agent-signing.filesystem` の `read` が、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` のセッションで問題になる。
+- `dot_config/zsh/dot_zshenv` の署名用 socket の条件は、Codex の署名のために足した。Claude Code に要るかは確かめていないので残している。

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Claude Code と Codex の SessionStart から、署名専用の ssh-agent を起動する。
+# Claude Code の SessionStart から、署名専用の ssh-agent を起動する。
 # 成功時だけ、呼び出し元が署名設定に使える公開鍵を stdout に返す。
 
 set -u
