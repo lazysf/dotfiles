@@ -1,6 +1,6 @@
 ---
 name: lapidary
-description: 自分が加えた変更を、commit できる状態まで見直して仕上げる時に使う。commit の前（git-commit スキルの手順から呼ばれる時を含む）と、「見直して」「問題ない？」「これで大丈夫？」と頼まれた時に使う。スコープ、事実、参照の整合、過剰さを確かめ、自分の変更の中で見つけたものを直す。agent は起動せず、必要な時だけ組み込みの /review を提案する。コードの bug を探す依頼は /review、commit は git-commit、doc の更新は scribe。
+description: 自分が加えた変更を、commit できる状態まで見直して仕上げる時に使う。commit の前（git-commit スキルの手順から呼ばれる時を含む）と、「見直して」「問題ない？」「これで大丈夫？」と頼まれた時に使う。スコープ、事実、参照の整合、過剰さを確かめ、自分の変更の中で見つけたものを直す。subagent は起動せず、必要な時だけ組み込みの review を提案する。コードの bug を探す依頼は組み込みの review、commit は git-commit、doc の更新は scribe。
 ---
 
 # Lapidary
@@ -46,10 +46,16 @@ description: 自分が加えた変更を、commit できる状態まで見直し
 
 ## 組み込みの review を提案する条件
 
-この skill は agent を起動しない。次に当たる時だけ、報告の最後で `/review` を提案する。走らせるかはユーザーが決める。ユーザーが「じっくり見て」と言った時は、提案を挟まず走らせる。
+この skill は subagent を起動しない。次に当たる時だけ、報告の最後で組み込みの review を提案する。走らせるかはユーザーが決める。ユーザーが「じっくり見て」と言った時は、`codex review` を実行できる環境なら起動する。実行できない時は、ユーザーが起動する手順を案内する。
 
-- 正しさへの影響が大きい。データの変換、並行処理、境界条件、失敗時の処理、公開 IF。commit の前に「Review uncommitted changes」で見る。
-- 権限、認証、秘密情報、外部入力、hook、CI、agent の設定に触れた。「Custom review instructions」で security の観点を指定する。
+- 正しさへの影響が大きい。データの変換、並行処理、境界条件、失敗時の処理、公開 IF。commit の前に未 commit の変更を見る。
+- 権限、認証、秘密情報、外部入力、hook、CI、agent の設定に触れた。review の指示に対象の差分と security の観点を書く。
+
+起動方法はクライアントに合わせる。
+
+- CLI の対話画面では `/review` を開く。未 commit の変更は「Review uncommitted changes」、観点を指定する時は「Custom review instructions」を選ぶ。
+- アプリでは入力欄に `/review` と入力し、「Review uncommitted changes」か「Review against a base branch」を選ぶ。観点を指定する時は CLI の方法を案内する。
+- shell からは `codex review --uncommitted` で未 commit の変更を見る。観点を指定する時は `codex review '<指示>'` を使い、対象の差分も指示に含める。`--uncommitted` と指示の引数は併用しない。
 
 doc の追従が要りそうな変更（使い方、設定、公開挙動を変えた）なら、scribe を通すよう一言添える。
 
