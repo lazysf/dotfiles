@@ -25,7 +25,7 @@ Remote Control と terminal CLI は自分のマシンで走るので、ここに
 
 | 領域 | default | 設定が要るか |
 | --- | --- | --- |
-| sandbox の write | cwd とセッション temp のみ書ける | 少しだけ要る。pre-commit が `~/.cache/prek/` に書くので `allowWrite` を 1 件足す（受け入れたリスクは「sandbox で効いている層と効いていない層」）。cwd が home の session でも署名 agent の socket を書き換えさせないため、`denyWrite` を 1 件足す（[agent-commit-signing-design.md](./agent-commit-signing-design.md)）。署名の鍵の置き場と起動スクリプトの 2 件は今の settings に無く、戻すかは `TODO.md` で扱う |
+| sandbox の write | cwd とセッション temp のみ書ける | 少しだけ要る。pre-commit が `~/.cache/prek/` に書くので `allowWrite` を 1 件足す（受け入れたリスクは「sandbox で効いている層と効いていない層」）。cwd が home の session でも、署名の鍵の置き場（`~/.ssh`）、署名 agent の socket、hook が sandbox の外で呼ぶ起動スクリプトを書き換えさせないため、`denyWrite` を 3 件足す（[agent-commit-signing-design.md](./agent-commit-signing-design.md)） |
 | sandbox の read | **computer 全体を読める。credential も読める** | **要る**。公式が「this default still allows reading credential files such as `~/.aws/credentials` and `~/.ssh/`」と明記 |
 | sandbox の network | pre-allow なし。新しい host は prompt、auto mode では classifier に回る | 要らない。`allowedDomains` だけでは遮断にならず、遮断には `strictAllowlist` が要る（「入れていない設定と理由」） |
 | Bash の危険操作 | auto mode の built-in が判断 | ほぼ要らない（下記） |

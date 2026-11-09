@@ -11,7 +11,7 @@
 
 ## 構成
 
-- 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。`personal` では、macOS は `scripts/macos/setup.sh`、Windows は `scripts/windows/setup.ps1` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。macOS の sandbox 内のコマンドは `credentials` の deny で `~/.ssh` を読めない。Windows については「Windows では鍵を持ち出せる」にある。
+- 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。`personal` では、macOS は `scripts/macos/setup.sh`、Windows は `scripts/windows/setup.ps1` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。macOS の sandbox 内のコマンドは、sandbox の read 制限に合流する `permissions.deny` の `Read(~/.ssh/**)` で `~/.ssh` を読めない。Windows については「Windows では鍵を持ち出せる」にある。
 - `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）は、Claude Code と Codex で共用する `~/.config/git/start-signing-agent` を呼ぶ。このスクリプトが専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。Claude Code の公式 docs によると、command hook は sandbox の外で動く。
 - hook は `CLAUDE_ENV_FILE` に、`SSH_AUTH_SOCK` と `GIT_CONFIG_COUNT` 系（`gpg.ssh.program=ssh-keygen`、`user.signingkey=key::<公開鍵>`）を書く。公式によると、この値はその session の Bash コマンドにだけ効く。人の terminal の git には届かない。Claude Code 自身も sandbox のコマンドに `GIT_CONFIG_COUNT` 系（`safe.directory` の 2 件）を入れているので（2026-11-06 に env で確認）、番号は固定せず、env file が読まれた時点の `GIT_CONFIG_COUNT` の後ろへ足す。
 - `settings.json` の `env` に書かないのは、記事によると `env` では `~` も `$HOME` も展開されず（この repo では実測していない）、home の絶対パスを repo に置くことになるため。hook は実行時に `$HOME` と公開鍵を読むので、repo には絶対パスも鍵も残らない。`settings.json` を `.tmpl` にしなくて済み、`check json` も残る。
@@ -75,7 +75,7 @@ Claude Code の新しい session で agent を自動起動させない場合は�
 
 setup スクリプトは鍵ペアが既にあると生成をスキップする。エージェントが鍵ペアを置くと、人がその公開鍵を GitHub に登録するおそれがある。そのため、`~/.ssh` へのエージェントの書き込みを、`permissions.deny` の `Edit(~/.ssh/**)` と `sandbox.filesystem.denyWrite` の `~/.ssh` で止める。
 
-公式の permissions docs によると、`Edit` rule が止めるのは、組み込みの編集ツールと、Claude Code が認識する Bash の書き込み（`tee` やリダイレクト）。sandboxing docs によると、`credentials` の `deny` が止めるのは読み取りだけになる。cwd が home の session では、sandbox は既定で home 全体に書き込める。そのため `denyWrite` に `~/.ssh` を入れる。
+公式の permissions docs によると、`Edit` rule が止めるのは、組み込みの編集ツールと、Claude Code が認識する Bash の書き込み（`tee` やリダイレクト）。python のように自分でファイルを開くプロセスの書き込みは、`Edit` rule では止まらない。`Read(~/.ssh/**)` の deny は sandbox に read 制限として合流する層で、sandboxing docs はそれが書き込みも止めるとは書いていない。cwd が home の session では、sandbox は既定で home 全体に書き込める。そのため `denyWrite` に `~/.ssh` を入れる。
 
 2026-11-07 に auto mode の session で次を確かめた。
 
@@ -87,7 +87,7 @@ setup スクリプトは鍵ペアが既にあると生成をスキップする�
 
 ## Windows では鍵を持ち出せる
 
-native Windows では、sandbox の層（`credentials` の deny、`denyWrite`、`allowUnixSockets`）が効かない（[claude-code-settings-design.md](./claude-code-settings-design.md) の「Windows では sandbox の防御が効かない」）。
+native Windows では、sandbox の層（`Read` deny の sandbox への合流、`denyWrite`、`allowUnixSockets`）が効かない（[claude-code-settings-design.md](./claude-code-settings-design.md) の「Windows では sandbox の防御が効かない」）。
 
 その結果、Windows のエージェントの Bash と PowerShell のコマンドは、パスフレーズの無い秘密鍵を読んで外へ送れる。mac の sandbox 内のコマンドは agent に署名を頼めるだけで、鍵そのものは持ち出せない。Windows では鍵を持ち出せるので、session が終わった後も別の場所で署名できる。漏れた後の影響と失効の手順は「代償と失効」と同じ。それでも、エージェントの作業が 1Password の承認で止まらないことを優先し、Windows の `personal` にも入れる。sandbox を使える WSL2 で Claude Code を動かす案は、環境を作り直す範囲が大きいので採らない。
 

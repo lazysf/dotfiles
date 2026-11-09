@@ -55,8 +55,6 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 
 2026-11-07 に `permissions.deny` へ `Edit(~/.ssh/**)` を、`sandbox.filesystem.denyWrite` へ `~/.ssh` を足した。Windows では sandbox が効かないので、`mv`、`ssh-keygen -f`、`rm` は止まらない（2026-11-07 実測）。mac で止まる範囲と、その実測は `docs/notes/agent-commit-signing-design.md` の「`~/.ssh` への書き込みを止める」にある。残りを塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
 
-再構築した `dot_claude/settings.json` の `sandbox.filesystem.denyWrite` には、`~/.ssh` と `~/.config/git/start-signing-agent` が無い（2026-11-09、notes の見直しで気づいた）。残っているのは `~/.local/state/agent-signing` だけ。戻すかをユーザーと相談する。戻さないなら、`agent-commit-signing-design.md` の記述も合わせて直す。
-
 ---
 
 ## 4. Windows の Claude Code で sandbox が担う防御の代わりを確かめる
