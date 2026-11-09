@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "claude-opus-5-5",
+  "language": "japanese",
+  "outputStyle": "Concise",
+  "autoUpdatesChannel": "stable",
+  "autoMemoryEnabled": false,
+  "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/usage-band"
+  },
+  "attribution": false,
+  "includeGitInstructions": false,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/signing-agent.sh\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "defaultMode": "auto",
+    "disableBypassPermissionsMode": "disable",
+    "deny": [
+      "Read(//**/.env)",
+      "Read(//**/.env.*)",
+      "Read(//**/secrets/**)",
+      "Read(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
+      "Edit(~/.config/git/start-signing-agent)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.docker/config.json)",
+      "Read(~/.netrc)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)",
+      "Read(~/.codex/auth.json)",
+      "Bash(mkfs *)",
+      "Bash(mkfs.* *)",
+      "Bash(newfs_* *)",
+      "Bash(diskutil *)",
+      "Bash(fdisk *)",
+      "Bash(gpt *)",
+      "Bash(pdisk *)",
+      "Bash(apfs_hfs_convert *)",
+      "Bash(asr *)",
+      "Bash(diskpart *)",
+      "Bash(diskpart.exe *)",
+      "Bash(format.com *)",
+      "Bash(convert.exe *)",
+      "Bash(wbadmin *)",
+      "Bash(wbadmin.exe *)",
+      "Bash(DISKPART *)",
+      "Bash(DISKPART.EXE *)",
+      "Bash(FORMAT.COM *)",
+      "Bash(CONVERT.EXE *)",
+      "Bash(WBADMIN *)",
+      "Bash(WBADMIN.EXE *)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "allowWrite": [
+        "~/.cache/prek/"
+      ],
+      "denyWrite": [
+        "~/.local/state/agent-signing"
+      ]
+    },
+    "network": {
+      "allowUnixSockets": [
+        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock",
+        "~/.local/state/agent-signing/agent.sock"
+      ]
+    }
+  }
+}
