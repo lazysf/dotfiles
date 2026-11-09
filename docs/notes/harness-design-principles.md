@@ -71,7 +71,7 @@ notes と README は人が読む doc なので、この基準の対象にしな�
 
 公式は逆を勧めている。Claude Code の skills doc は `disable-model-invocation: true` を "workflows with side effects or that you want to control timing, like `/commit`, `/deploy`" に使えと書く。`git-commit` で採らないのは、「commit して」という自然文では slash 起動にならず、staging 規律と機密情報の検索だけが落ちるため。
 
-入口の条件が要るのは、作業ツリーの外へ出す操作を持つ skill。`git-commit` は履歴を作り push の対象にするので持つ。**可逆性では分けられない。** push 前の commit は reflog と reset で戻せる一方、未 commit の編集を上書きすると git に控えが無い。`lapidary` は作業ツリー内で閉じるが、そのぶん手順 4 が直す対象を自分の変更へ限っている。
+入口の条件が要るのは、作業ツリーの外へ出す操作を持つ skill。`git-commit` は履歴を作り push の対象にするので持つ。**可逆性では分けられない。** push 前の commit は reflog と reset で戻せる一方、未 commit の編集を上書きすると git に控えが無い。`lapidary` は作業ツリー内で閉じるが、そのぶん手順 4 が、直す対象を自分の変更と、それが古くした記述に限っている。
 
 各 skill での適用は [lapidary-skill-design.md](./lapidary-skill-design.md) と [git-commit-skill-design.md](./git-commit-skill-design.md) にある。
 
