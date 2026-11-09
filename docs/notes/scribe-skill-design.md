@@ -39,7 +39,7 @@ SKILL.md が持つのはどの層を選ぶかの判断で、書式は選択後�
 
 ## doc をいつ直すかを description に持たせる理由
 
-doc を直すべき場面は、実装の区切りで訪れる。そこでは `scribe` を含めて何も起動していない。そのため、いつ直すかは skill の本文ではなく description に置いている。description は常時 context にあるので、「使い方・設定・公開挙動を変えた時」という場面で発火の手がかりになる。commit の前には `lapidary` も、doc の追従が要りそうな変更なら scribe を通すよう一言添える。
+doc を直すべき場面は、実装の区切りで訪れる。そこでは `scribe` を含めて何も起動していない。そのため、いつ直すかは skill の本文ではなく description に置いている。description は常時 context にあるので、「使い方・設定・公開挙動を変えた時」という場面で発火の手がかりになる。commit の前には `lapidary` も、新しく書く doc が要る変更なら scribe を通すよう一言添える。今ある doc が自分の変更で古くなった分は、`lapidary` が自分で直す（[lapidary-skill-design.md](./lapidary-skill-design.md) の「直す範囲を、自分の変更と、それが古くした記述にしている理由」）。
 
 いつ直すかの全部は決めていない。仕様（README / docs）をいつ更新するかと、事前の doc を作るかは、repo の運用に従う。仕様を先に書いて開発する repo もあり、全層へ一律に時期を決めると、その repo の CLAUDE.md と矛盾する。CLAUDE.md は上書きでなく連結で読まれ、矛盾があると Claude はどちらかを任意に選ぶ（[How Claude remembers your project](https://code.claude.com/docs/en/memory)）。skill の冒頭に「repo が独自の doc 規約を持っていれば、そちらに従う」を置いているのも同じ理由。
 

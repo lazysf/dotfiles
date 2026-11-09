@@ -12,7 +12,7 @@
 - 返答の文体: Claude 側は組み込みの output style（`Concise`）で決めている。Codex には output style の仕組みが無い。公式の Personalize は、Codex の個人の指示は global の `AGENTS.md` に置くとしている。そのため `AGENTS.md` の「返答」に、`Concise` の要点を書いている。
 - 権限: Claude 側は `settings.json` の deny と sandbox で credential の読み取りを止めている。Codex の `config.toml` はこの repo から配布しないので、credential を読まないことと承認経路の扱いを `AGENTS.md` の「権限」に書いている。
 - 独立した review: 自作の reviewer agent は置かない。Claude 側と同じく、必要になってから作る。`skills/lapidary` は組み込みの review を提案し、起動の方法を CLI の `/review`、アプリの `/review`、shell の `codex review` に分けて書いている。起動できる対象と観点の指定の仕方が、クライアントごとに違うため。CLI 0.167.0-alpha.3.2 では、`codex review` の `--uncommitted` と指示の引数を同時に渡すと拒否された（2026-11-09、Codex の session での実測）。アプリの画面での起動は試していない。作業機の `review-agent` system skill は、`/review` の preset と同じ対象（uncommitted changes、base branch との差分、commit、custom instructions）を扱い、正しさに加えて security、performance、保守性への影響も指摘の対象にしている。`/review` がこの skill を使うことは、docs では確かめていない。Codex Security の plugin は作業機に入っていないので、提案しない。
-- commit: 既定の `workspace-write` の sandbox は、`<writable_root>/.git` を読み取り専用にする。`.git` が `gitdir:` のファイルなら、参照先も保護される（[Protected paths in writable roots](https://learn.chatgpt.com/docs/agent-approvals-security#protected-paths-in-writable-roots)）。書ける root の下に作った別の repo の `.git` には、sandbox の中から書けた（2026-11-09、`$TMPDIR` の下の使い捨ての repo での実測）。`skills/git-commit` は、今の権限で実行できない時だけ、`git add` と `git commit` を別々に申請する手順を Gotchas に持つ。
+- commit: 既定の `workspace-write` の sandbox は、`<writable_root>/.git` を読み取り専用にする。`.git` が `gitdir:` のファイルなら、参照先も保護される（[Protected paths in writable roots](https://learn.chatgpt.com/docs/agent-approvals-security#protected-paths-in-writable-roots)）。書ける root の下に作った別の repo の `.git` には、sandbox の中から書けた（2026-11-09、`$TMPDIR` の下の使い捨ての repo での実測）。`git add` と `git commit` をいつ申請し、いつ止まるかは、`skills/git-commit` の Gotchas を正本にする。
 
 [`destructive.rules`](../../dot_codex/rules/destructive.rules) は、列挙したディスク操作コマンドを sandbox 外で禁止する設定。コマンド名と `/bin/`、`/sbin/`、`/usr/bin/`、`/usr/sbin/` の絶対パスに対応する。未知の `mkfs.*` / `newfs_*` や任意の script は網羅しない。契約と設定は管理者による強制ではない。
 
@@ -40,7 +40,7 @@ Codex は Claude Code と同じ署名鍵と ssh-agent を使う。macOS の `per
 
 新しいセッションで、使い捨ての repo に署名付きコミットを作り、`git log -1 --format='%G?'` が `G` になることを確かめる。秘密鍵の読み取りと socket の置き換えが拒否されることも確かめる。プロキシが動いていないと `network.enabled = true` は直接通信を許すため、許可外の Unix socket とローカルのテスト用 TCP ポートへの直接接続が拒否されることを確かめる。[Codex Permissions](https://learn.chatgpt.com/docs/permissions#unix-sockets)
 
-Codex の Git 署名設定はコマンドの環境変数に入る。zsh の初期化は、専用 socket が明示されている時だけ `SSH_AUTH_SOCK` を維持する。通常の terminal の Git は 1Password で署名する。
+Codex の Git 署名設定はコマンドの環境変数に入る。zsh の初期化（`dot_config/zsh/dot_zshenv`）は、`SSH_AUTH_SOCK` が署名専用の socket ではなく、1Password の socket がある時だけ、`SSH_AUTH_SOCK` を 1Password の socket に差し替える。署名専用の socket を指している時と、1Password の socket が無い時は、元の値のまま残る。通常の terminal の Git は 1Password で署名する。
 
 Codex の command hook はログインシェルから起動する。署名用プロファイルは、この repo が使う zsh の初期化ファイルを読み取り専用にする。別のシェルや独自の `ZDOTDIR` を使う端末では、その初期化ファイルも確認する。
 
