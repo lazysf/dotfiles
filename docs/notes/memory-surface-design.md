@@ -23,7 +23,7 @@
 
 `CLAUDE.md` の「確認してから進めること」とは重ならない。そちらが挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`## Privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。
 
-**強制層はこの repo の commit にだけ持つ。** 公式は CLAUDE.md を context であって enforced configuration ではないと明示している。この repo の commit は、prek の local hook が staged の path と追加行を home の path、ユーザー名、ホスト名で検査する（[markdownlint-and-pre-commit-execution.md](./markdownlint-and-pre-commit-execution.md) の「作業機の識別子を検査する local hook」）。他の repo と、pattern にできない識別子は、契約だけが担う。
+**強制層はこの repo の commit にだけ持つ。** 公式は CLAUDE.md を context であって enforced configuration ではないと明示している。この repo の commit は、prek の local hook が staged の path と追加行を home の path、ユーザー名、ホスト名で検査する（[lint-and-pre-commit-execution.md](./lint-and-pre-commit-execution.md) の「作業機の識別子を検査する local hook」）。他の repo と、pattern にできない識別子は、契約だけが担う。
 
 ## `paths` を使わない
 

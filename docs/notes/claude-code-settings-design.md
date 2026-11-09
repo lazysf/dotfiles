@@ -220,7 +220,7 @@ output style は main の会話にだけ効き、subagent には効かない（�
 
 `excludedCommands: ["git"]` を入れても解決しなかった（2026-08-05 実測、`53be6a5` → `9afdbb7` で revert）。`allowUnsandboxedCommands` を `true` へ戻す案は、失敗した全 command に sandbox 外再試行を開くので採らない。
 
-**push は人が手元の terminal で打つ運用を正とし、agent は commit までを担う。**
+push は人が手元の terminal で打つ運用を正とし、agent は commit までを担う。
 
 **Keychain にある GitHub の credential は、sandbox 内から取り出せた。** 2026-11-07 に sandbox 内から、`git credential-osxkeychain get` で github.com の credential を、`security find-generic-password -w` で gh の token（`gh:github.com`）を取り出せた。値は表示せず、取れたかだけを見た。git の helper は、Homebrew の `/opt/homebrew/etc/gitconfig` が `osxkeychain` にしている。
 

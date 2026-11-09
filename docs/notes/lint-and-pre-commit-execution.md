@@ -1,20 +1,22 @@
-# markdownlint / pre-commit の実行経路
+# lint / pre-commit の実行経路
 
 - Date: 2026-11-09
-- 出典: `prek.toml` / `scripts/check-identifiers.sh` / `scripts/check-commit-msg.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Configuration Reference](https://prek.j178.dev/reference/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / markdownlint 0.40.0 の API による rule 単体実測 / `node_modules/markdownlint/doc/md024.md` / commit `287cc7b` `be928f2`
+- 出典: `prek.toml` / `scripts/check-identifiers.sh` / `scripts/check-commit-msg.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Configuration Reference](https://prek.j178.dev/reference/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.rumdl.toml` / `package.json` / `.git/hooks/pre-commit` / `prek --version` / 使い捨て repo での `git commit` 実測 / [rumdl](https://github.com/rvben/rumdl) / [rumdl Global Settings](https://rumdl.dev/global-settings/) / [rumdl Stability and Compatibility](https://rumdl.dev/stability/) / [rvben/rumdl-pre-commit](https://github.com/rvben/rumdl-pre-commit)（2026-11-09 確認） / rumdl 0.3.2 での repo 全体の実測と、`rumdl config --defaults`（2026-11-09） / markdownlint 0.40.0 の API による rule 単体実測 / commit `287cc7b` `be928f2`
 
-Markdown（markdownlint）と TOML（tombi）の lint は、それぞれ「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
+Markdown（rumdl）と TOML（tombi）の lint は、それぞれ「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
 
-hook の一覧と設定値は `prek.toml` と `.markdownlint-cli2.jsonc` を正本とし、ここでは繰り返さない。
+hook の一覧と設定値は `prek.toml` と `.rumdl.toml` を正本とし、ここでは繰り返さない。
 
 ## 2 本の経路
 
 | 経路 | 起動 | 実行される binary |
 | --- | --- | --- |
-| 手動 | `npm run lint` / `npm run lint:fix` | repo の `node_modules/markdownlint-cli2` |
-| commit 時 | `git commit` → `.git/hooks/pre-commit` | prek が cache に用意した hook 環境の `markdownlint-cli2` |
+| 手動 | `npm run lint` / `npm run lint:fix` | repo の `node_modules/rumdl` |
+| commit 時 | `git commit` → `.git/hooks/pre-commit` | prek が `rvben/rumdl-pre-commit` から用意した hook 環境の `rumdl` |
 
-同じ `.markdownlint-cli2.jsonc` を読み、2026-11-08 時点はどちらも 0.24.0 なので判定は揃う。version を上げる時は `package.json` の dependency と `prek.toml` の `rev` の両方を動かさないと、この 2 経路がずれる。
+どちらも `.rumdl.toml` を読み、2026-11-09 時点はどちらも 0.3.2 なので判定は揃う。version を上げる時は `package.json` の dependency と `prek.toml` の `rev` の両方を動かさないと、この 2 経路がずれる。
+
+`package.json` は rumdl を `^` を付けずに完全固定している。rumdl は Beta で、公式の方針では 0.x の minor release に breaking change が入りうる。新しい rule が既定で有効になって、指摘が増えることもある。公式は、結果を揃えたいなら版を完全に固定するよう勧めている。固定すると、版を上げた時だけ判定が変わる。
 
 ## TOML の tombi も同じ 2 本
 
@@ -31,7 +33,7 @@ hook は `uv.lock` を対象から外している。prek は `uv.lock` を `toml
 
 ## runner は pre-commit ではなく prek
 
-`.git/hooks/pre-commit` は prek（`/opt/homebrew/bin/prek`、2026-11-08 時点 0.5.10）が生成したもので、`prek hook-impl` へ委譲する。hook は設定ファイルの名前を持たず、prek が実行時に探す。Python の `pre-commit` は install されていない。
+`.git/hooks/pre-commit` は prek（`/opt/homebrew/bin/prek`、2026-11-09 時点 0.5.10）が生成したもので、`prek hook-impl` へ委譲する。hook は設定ファイルの名前を持たず、prek が実行時に探す。Python の `pre-commit` は install されていない。
 
 設定は prek 独自の `prek.toml` に置く。Python の `pre-commit` を使わないので、`.pre-commit-config.yaml` で互換を保つ利点が無い。hook は配列テーブル（`[[repos.hooks]]`）で書く。`prek util yaml-to-toml` の出力は複数行のインラインテーブルを使うが、tombi の format はこれを 1 行に詰め、hook の一覧が読めなくなる（tombi 1.10.0、2026-11-08）。配列テーブルなら tombi の format を通っても形が変わらない。`.pre-commit-config.yaml` を置き直さない。prek は同じ directory に両方あると `prek.toml` を優先し、どちらが効いているか分かりにくくなる。
 
@@ -41,29 +43,24 @@ hook の `rev` は commit SHA でなく tag で固定している（2026-11-08 �
 
 hook の実行環境（Node / Python）は prek が `~/.cache/prek/` 配下へ自前で用意する。repo の `node_modules` や `.venv` は使わない。sandbox で `~/.cache/prek/` への write を許可しているのはこのため（[claude-code-settings-design.md](./claude-code-settings-design.md)）。
 
-## staged 分だけでなく repo 全体が lint される
+## rumdl の hook は `rumdl-check` だけを使う
 
-`markdownlint-cli2` は設定の `globs` を **コマンドライン引数へ追加する**（置換しない。`markdownlint-cli2.mjs` の `appendToArray(globPatterns, globs)`）。hook は staged file を引数で渡すが、設定に `**/*.md` があるため、実際の対象は毎回 repo 全体の Markdown になる。
+`rvben/rumdl-pre-commit` は `rumdl-check`（lint、`--fix` で修正）と `rumdl-fmt`（format）の 2 つを持ち、公式は両方を並べる形を勧めている。この repo は `rumdl-check` に `--fix` を付けて 1 つだけ使う。`--fix` で自動修正できる指摘は直り、直せない指摘は exit 1 で commit を止める。`rumdl-fmt` は残った指摘があっても exit 0 で抜けるので、足しても止める役は増えない。
 
-```console
-$ npx markdownlint-cli2 README.md
-Finding: README.md **/*.md !node_modules/** !.venv/** !.cache/** !.git/**
-```
+hook が発火するのは staged に `.md` がある時だけ（hook 定義の `types: [markdown]`）。rumdl は引数で渡した file だけを見る。2026-11-09 に、違反を仕込んだ file を `prek run rumdl-check --files` で渡すと、hook は exit 1 で止まった。MD089 の指摘は直り、自動修正の無い MD024 の指摘は残った。
 
-hook 自体が発火するのは staged に `.md` がある時だけ（hook 定義の `types: [markdown]`）。だが一度発火すると、staged していない Markdown の違反でも commit は止まる。使い捨て repo で `git commit` を実測した結果は次の 2 通りだった。
+hook が file を書き換えると、prek はその commit を失敗させ、修正は unstaged の変更として working tree に残る。修正を確かめてから stage し直す。対象の file に unstaged の変更がある時は、prek が hook の前に unstaged 分を patch へ退避する。hook の修正がその patch と衝突すると、hook の修正は捨てられて退避分が戻る。この時は手で直す。書き換える hook の一覧と失敗時の扱いは [git-commit-skill-design.md](./git-commit-skill-design.md) にある。
 
-- **対象 file に unstaged 変更が無い場合**: `--fix` が適用され、commit は `files were modified by this hook` で失敗する。修正内容は unstaged の変更として working tree に残る（`Summary: 0 error(s)` でも失敗する）。
-- **対象 file に unstaged 変更がある場合**: prek は hook 実行前に unstaged 分を patch へ退避する。hook の修正がその patch と衝突すると `Hook changes conflicted with the saved unstaged changes. Reverting the hook changes` となり、hook の修正は捨てられて退避分が戻る。この時は手で直すしかない。
+## rule の選び方
 
-どちらも「今の commit と無関係な file が原因で止まる」ので、失敗時はまず対象 file 名を見る。書き換える hook の一覧と失敗時の扱いは [git-commit-skill-design.md](./git-commit-skill-design.md) にある。
+rumdl の既定の rule に、次の 2 つの調整を加えている。
 
-## MD013 / MD024 を無効化している理由
+- `MD013`（line-length、既定 80）を無効にしている。この repo の Markdown は日本語の段落を 1 行で書き、hard wrap しない。rule 自体が書き方と噛み合わない。markdownlint の時代の 2026-08-31 の tree で有効に戻すと 460 件出た。無効にした `287cc7b`（2026-04-21）には理由の記載が無い。
+- `MD089`（cjk-spacing）を足している。日本語と英数字の間に半角の空白を入れる書き方を、自動修正で揃える。rumdl の独自の rule で、既定では無効になっている。2026-11-09 の tree で有効にすると 4 件出た。うち 3 件はリンクの直後に日本語が続く箇所で、リンクの後に空白を入れる形に揃えた。
 
-どちらも commit message に理由の記載がないので、rule を単体で有効にした時の違反数を実測した（`{ "default": false, "<rule>": true }` を markdownlint の API へ渡す。設定ファイルの `config` は `--config` より優先されるため、CLI からは上書きできない）。
+ADR も含めて、全 file に同じ rule を当てている。ADR で守るのは何を決めたかで、書式ではない。rumdl を入れた時（2026-11-09）は、ユーザーの判断で ADR の本文の書式も rule に合わせて直した。
 
-- **`MD013`（line-length、既定 80）**: `287cc7b`（2026-04-21）で無効化。markdownlint-cli2 導入より前で、当時から理由の記載はない。2026-08-31 時点の tree で有効に戻すと 460 件。この repo の Markdown は日本語の段落を 1 行で書き hard wrap しないので、rule 自体が書き方と噛み合わない。
-- **`MD024`（no-duplicate-heading）**: `be928f2` で markdownlint-cli2 導入と同時に無効化。その時点の tree で有効にすると 164 件 / 8 file 出て、全て `docs/requests/**/test.md` の繰り返し見出し（「対応」「種別」「手順」）だった。この artifact 群は [ADR 0039](../adr/0039-retire-docs-requests-artifacts.md) で削除済み。2026-08-31 時点の tree では有効にしても 0 件で、無効化の原因は消えている。
-  MD024 の目的は、同名見出しから同じ anchor が生成される事故を防ぐこと（`markdownlint` の `doc/md024.md`）。無効のままにしていたのは、anchor link が無く、防ぐ対象が無かったため。2026-11-08 時点では、tracked の Markdown に、repo 内の別ファイルの見出しを指す anchor link が 5 件ある（`README.md` に 2、`docs/notes/` に 2、`docs/adr/` に 1）。この理由は成り立たない。入れ直すかは未判断（[TODO.md](../../TODO.md)）。入れ直す時は、既定ではなく `"MD024": { "siblings_only": true }` にする。MD024 は自動修正を持たず、既定の `siblings_only: false` のままだと、changelog 型の繰り返し見出しを書いた時に commit が止まり、手で直すことになる。
+`MD024`（no-duplicate-heading）は有効にしている。rumdl の既定は `siblings-only = true` で、同じ親の下の同名の見出しだけを止める（`rumdl config --defaults`、0.3.2）。2026-11-09 の tree では 0 件だった。tracked の Markdown には repo 内の別 file の見出しを指す anchor link があり、同名の見出しは anchor を取り違える原因になる。markdownlint の時代は無効にしていた。導入時（`be928f2`）の tree で有効にすると、削除済みの `docs/requests/**/test.md` の繰り返し見出しで 164 件出たため。
 
 ## 作業機の識別子を検査する local hook
 
@@ -95,4 +92,6 @@ commit-msg の shim は `prek install` で入る。shim を足す前に `prek in
 ## 未確認
 
 - `check-identifiers` と `check-commit-msg` が Windows の prek で動くか。`check-commit-msg` は文字数を `LC_ALL=en_US.UTF-8 wc -m` で数える。
+- rumdl の hook と `npm run lint` が Windows で動くか。
+- VS Code の rumdl 拡張が `.rumdl.toml` を読んで同じ判定をするか。拡張は入れていない。
 - `check-toml` / `check-yaml` は登録されていない。TOML は `tombi-lint` が構文も見る。YAML は `nvim.yml` などの対象があるが、意図的に外したのか未検討なのかは不明。

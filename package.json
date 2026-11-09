@@ -1,12 +1,12 @@
 {
   "scripts": {
-    "lint": "markdownlint-cli2",
-    "lint:fix": "markdownlint-cli2 --fix",
+    "lint": "rumdl check .",
+    "lint:fix": "rumdl check --fix .",
     "lint:toml": "tombi format --check && tombi lint",
     "lint:toml:fix": "tombi format && tombi lint"
   },
   "devDependencies": {
-    "markdownlint-cli2": "^0.24.0",
+    "rumdl": "0.3.2",
     "tombi": "^1.10.0"
   }
 }

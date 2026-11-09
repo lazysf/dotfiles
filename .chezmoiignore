@@ -20,8 +20,8 @@ scripts
 # Repo-only files
 .gitattributes
 .gitignore
-.markdownlint-cli2.jsonc
 .python-version
+.rumdl.toml
 .tombi.toml
 AGENTS.md
 CLAUDE.md

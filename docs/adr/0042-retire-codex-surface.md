@@ -12,7 +12,7 @@ ADR 0036 で Codex surface を軽量 LLM-native workflow へ再設計し、両 s
 
 ## 決定
 
-**Codex surface を廃止し、Claude Code 単独にする。**
+Codex surface を廃止し、Claude Code 単独にする。
 
 - `dot_codex/` を削除する。`AGENTS.md`、`agents/*.toml`、`rules/*.rules`、`skills/`（`caveman` / `git-commit` / `git-push` / `scribe`）が対象。
 - root `AGENTS.md` から Codex 固有の参照（Codex Docs、`~/.codex/config.toml`、両 surface 対称の規定）を外す。
