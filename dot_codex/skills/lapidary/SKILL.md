@@ -54,7 +54,7 @@ description: 自分が加えた変更を、commit できる状態まで見直し
 起動方法はクライアントに合わせる。
 
 - CLI の対話画面では `/review` を開く。未 commit の変更は「Review uncommitted changes」、観点を指定する時は「Custom review instructions」を選ぶ。
-- アプリでは入力欄に `/review` と入力する。対象を選ぶメニューが出たら、未 commit の変更か base branch との差分を選ぶ。メニューではなく「Review Agent」の skill が候補に出たら、それを選び、対象の差分（未 commit の変更、`origin/main...HEAD` など）と観点を続けて本文に書く。アプリの review は、既定では今の chat の中で進む。
+- アプリでは入力欄に `/review` と入力し、候補の一番上の「コードレビュー」を選ぶ。選ぶとすぐ、base branch との差分を review する依頼が送られる。スキルの欄の「Review Agent」は別物なので選ばない。未 commit の変更だけを見る時と、観点を指定する時は、CLI か shell の方法を使う。
 - shell からは `codex review --uncommitted` で未 commit の変更を見る。観点を指定する時は `codex review '<指示>'` を使い、対象の差分も指示に含める。`--uncommitted` と指示の引数は併用しない。
 
 使い方、設定、公開挙動を変え、新しく書く doc が要る時は、scribe を通すよう一言添える。今ある doc の追従は手順 4 で直す。
