@@ -20,7 +20,7 @@ CLAUDE.md は全セッションの先頭で読まれる。残すのは、Claude 
 
 外す側の「設定や防御を外す前に、それに依存しているものが無いことを確かめる」は残している。`sandbox.network.allowUnixSockets` を「push に使えないので用途が無い」と判断して落とし、commit の署名を壊したことがある（[claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」）。同じ socket を署名も使うことは、Claude の既定の確認では見えなかった。
 
-公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 45 行（2026-11-09、`wc -l`）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
+公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 46 行（2026-11-09、`wc -l`）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
 
 ## Git の節を持つ理由
 
@@ -91,6 +91,14 @@ shell での書き換えを残す 2 つの場面には、それぞれ理由が�
 auto mode は、shell での読み書きを認める指示を session へ入れる（文面は [memory-surface-design.md](./memory-surface-design.md)）。契約は harness の指示に勝つ（2026-09-02、apply 後の別 session で確認）。
 
 2026-09-02 に同じ規則を一度外している。理由は「auto mode では Bash の方が効率と正確さで優る」というユーザー判断で、二次情報に基づいていた。効率のうち出力の量と形式は、上の実測で差が無かった。正確さの根拠は記録に無く、2026-11-08 時点でユーザーも覚えていない。同じ理由で外す前に、根拠を一次情報で確かめる。
+
+## git の author を差し替えない規律を Privacy に置く理由
+
+Privacy の節は、git の author と committer を repo の git 設定のまま使い、環境変数や option で差し替えないと定めている。公開用のアドレスを入れる役目は、人が持つ git の設定（`dot_config/git/config.tmpl` が GitHub の noreply を入れる）に任せる。
+
+以前は「git の author には公開用のアドレス（GitHub なら noreply）を使う」と書いていた。これは設定を作る人に向けた書き方で、commit するだけの agent には「author をそう差し替えろ」と読める。2026-11-09 に、Codex が `$TMPDIR` の使い捨ての repo で commit を頼まれ、`GIT_AUTHOR_*` と `GIT_COMMITTER_*` を合成の名前とアドレスに差し替えた。理由を聞くと、この行を根拠に挙げた。git の設定は既に noreply を返していて、差し替える必要は無かった。本物の repo で同じことをすると、commit の名義が変わる。
+
+設定が個人のアドレスを指していた時に agent が直さず、ユーザーに伝えて止まるのは、git の設定を変えない規律（「Git」の節）と揃えるため。
 
 ## 未確認
 
