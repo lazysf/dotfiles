@@ -1,25 +1,24 @@
 # Codex harness の運用
 
-- Date: 2026-11-07
-- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / 実際の作業機での Codex の署名設定と署名の確認、GitHub の commits API の `verification`（2026-11-07）
+- Date: 2026-11-09
+- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / 実際の作業機での Codex の署名設定と署名の確認、GitHub の commits API の `verification`（2026-11-07）
 
 `dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。macOS の `personal` では [ADR 0046](../adr/0046-distribute-codex-signing-settings.md) に従い、署名に必要な設定だけを追加する。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md) にある。
 
 ## 構成と権限
 
-skills は [`skills/`](../../dot_codex/skills/)、reviewer は [`agents/`](../../dot_codex/agents/) に置く。通常作業のモデル、effort、権限、自動 memory は実機側の設定に委ねる。reviewer は親のモデル選択に依存せず、`gpt-6.1-sol` を使う。effort は品質 reviewer が `high`、security reviewer が `xhigh`。通常の応答には `caveman` skill を使う。
+契約と skills は、Claude 側（`dot_claude/CLAUDE.md` と `dot_claude/skills/`）と同じ意図で書く。違えているのは、runtime の仕組みが違う箇所だけ。通常作業のモデル、effort、権限、自動 memory は実機側の設定に委ねる。
 
-reviewer の実効 sandbox と承認設定は親のセッションから継承する。書き込みを sandbox で禁止する必要がある時は、親を読み取り専用に設定してから reviewer を起動する。agent ファイルの `default_permissions` と `approval_policy` を子の強制境界として数えない。標準の `:read-only` に credential store 向けの独自の deny 設定は追加していない。
-
-[Web search](https://learn.chatgpt.com/docs/web-search) はホスト側のツールで、ローカルコマンドのネットワーク制限とは別に制御される。MCP は親の設定を継承する。reviewer の本文では外部 I/O を禁止している。外部取得を設定でも制限する必要がある時は、親で web search と MCP、apps / plugins の利用可否を確認する。
+- 返答の文体: Claude 側は組み込みの output style（`Concise`）で決めている。Codex には output style の仕組みが無い。公式の Personalize は、Codex の個人の指示は global の `AGENTS.md` に置くとしている。そのため `AGENTS.md` の「返答」に、`Concise` の要点を書いている。
+- 権限: Claude 側は `settings.json` の deny と sandbox で credential の読み取りを止めている。Codex の `config.toml` はこの repo から配布しないので、credential を読まないことと承認経路の扱いを `AGENTS.md` の「権限」に書いている。
+- 独立した review: 自作の reviewer agent は置かない。Claude 側と同じく、必要になってから作る。`skills/lapidary` は組み込みの `/review` を提案する。作業機の `review-agent` system skill は、`/review` の preset と同じ対象（uncommitted changes、base branch との差分、commit、custom instructions）を扱い、正しさに加えて security、performance、保守性への影響も指摘の対象にしている。`/review` がこの skill を使うことは、docs では確かめていない。Codex Security の plugin は作業機に入っていないので、提案しない。
+- commit: `workspace-write` の sandbox は `.git` を読み取り専用にする（[Protected paths in writable roots](https://learn.chatgpt.com/docs/agent-approvals-security#protected-paths-in-writable-roots)）。`skills/git-commit` は、`git add` と `git commit` をそのコマンドだけに限って申請する手順を Gotchas に持つ。
 
 [`destructive.rules`](../../dot_codex/rules/destructive.rules) は、列挙したディスク操作コマンドを sandbox 外で禁止する設定。コマンド名と `/bin/`、`/sbin/`、`/usr/bin/`、`/usr/sbin/` の絶対パスに対応する。未知の `mkfs.*` / `newfs_*` や任意の script は網羅しない。契約と設定は管理者による強制ではない。
 
 ## 検証範囲
 
-2026-10-08 に macOS・Linux・Windows の 3 通りの OS 分岐で、一時領域への chezmoi 展開を確認した。`config.toml` は管理対象から除外される。既存 config の内容は保持され、存在しない場合も作成されない。AGENTS、skills、agents、rules の配布は継続する。macOS 上の Codex CLI 0.162.0-alpha.2 では、独自の `protected` がなくても両 reviewer のモデル・権限設定が読み込めることを確認した。
-
-2026-11-06 に Codex CLI 0.166.0-alpha.6 で両 reviewer を起動した。合成 diff では、quality は timeout の記述と設定の不一致を、security は未認証入力からのコマンド実行を指摘した。配布後の合成 diff でも、security は web search と connector の操作範囲が広がる変更を指摘した。セッション記録では、両 reviewer の sandbox は親が `workspace-write` の時に `workspace-write`、親が `read-only` の時に `read-only` だった。書き込み試行は役割の指示に従って見送られた。
+2026-10-08 に macOS・Linux・Windows の 3 通りの OS 分岐で、一時領域への chezmoi 展開を確認した。`config.toml` は管理対象から除外される。既存 config の内容は保持され、存在しない場合も作成されない。AGENTS、skills、rules の配布は継続する。
 
 移植時の記録では、Codex CLI 0.160.0 の一時 home で `~/.codex/skills/` 相当のスキル発見を確認している。公式の user skill 配置は `~/.agents/skills/`。client 更新後はスキル発見を再確認する。
 
@@ -63,8 +62,6 @@ Codex の command hook はログインシェルから起動する。署名用プ
 
 ## 未確認
 
-- reviewer の書き込みを sandbox が拒否するか。
-- reviewer 自身が web search や MCP で外部の内容を取得できるか。
 - Windows 実機での動作。
 - 署名用プロファイルで、許可していない外部ドメインへの通信を proxy が拒否するか。2026-11-06 の確認は、許可外の Unix socket とローカル TCP への接続に限る。公式によると、proxy が動いていない時の `network.enabled = true` はドメインを制限しない。
 - 署名用プロファイルの `read` が、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` のセッションで問題になる。
