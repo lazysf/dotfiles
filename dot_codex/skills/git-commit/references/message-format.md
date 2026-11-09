@@ -66,6 +66,9 @@ permissions remain unchanged.
 ```txt
 feat: rename the config key from timeout to timeout_ms
 
+Why: every other duration key is in milliseconds, so values for the
+seconds-based `timeout` were often written in milliseconds by mistake.
+
 BREAKING CHANGE: config files using `timeout` fail to load. Rename the
 key and convert the value from seconds to milliseconds.
 ```
