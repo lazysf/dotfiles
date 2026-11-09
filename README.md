@@ -157,7 +157,7 @@ launchctl bootout "gui/$(id -u)/local.mole.weekly-check"
 
 ## 開発
 
-commit 時に lint と、作業機の識別子（home の絶対パス、ユーザー名、ホスト名）の検査を走らせる:
+commit 時に lint、作業機の識別子（home の絶対パス、ユーザー名、ホスト名）の検査、commit message の title が `<type>: <description>` の形かの検査を走らせる。commit-msg の hook を足す前に入れた clone でも、もう一度打つ:
 
 ```sh
 prek install
