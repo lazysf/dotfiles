@@ -6,7 +6,7 @@
 
 ## 配布の前提
 
-- 今の session を動かしているのは、配布済みの設定（Claude Code は `~/.claude`、Codex は `~/.codex`）。source の `dot_claude/` と `dot_codex/` を直しても、今の session には効かない。効くのはユーザーが `chezmoi apply` した後から。Claude Code の `CLAUDE.md` は次の session から効く（反映の違いは `docs/notes/harness-design-principles.md`）。Codex の `AGENTS.md` がいつ読み直されるかは確かめていない。
+- 今の session を動かしているのは、配布済みの設定（Claude Code は `~/.claude`、Codex は `~/.codex`）。source の `dot_claude/` と `dot_codex/` を直しても、今の session には効かない。効くのはユーザーが `chezmoi apply` した後から。Claude Code の `CLAUDE.md` は次の session から効く（反映の違いは `docs/notes/harness-design-principles.md`）。Codex の `AGENTS.md` は、公式 docs によると起動時に 1 回読まれるので、次に起動した session から効く。
 - `chezmoi apply` はユーザーが手元の terminal で行う。Claude Code の sandbox が書けるのは作業ディレクトリなどに限られ、apply の書き込み先の大半はその外にある。
 - Claude Code の sandbox では、`chezmoi status` を repo 全体に打たず、`chezmoi status ~/.claude` のように path を絞る。全体に打つと `~/.config/gh` の読み取り拒否で止まる。
 
@@ -46,7 +46,7 @@
 ## 置き場
 
 - `dot_claude/`: 全 project へ配る Claude Code の契約（`CLAUDE.md`）、settings、hooks、skills、mods
-- `dot_codex/`: 全 project へ配る Codex の契約、skills、agents、config、rules。内訳は `dot_codex/AGENTS.md` の「置き場」を正本にする
+- `dot_codex/`: 全 project へ配る Codex の契約（`AGENTS.md`）、skills、rules。`config.toml` は配布せず、macOS の署名設定だけを apply の後の script が足す（`docs/notes/codex-harness-operation.md`）
 - `archive/`: 再構築の前の旧版の退避先。配布しない。直さずに参照だけする
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
 - `.claude/rules/`: 使わない。この repo に閉じる規則はこの `AGENTS.md` に置き、Claude と Codex の両方に読ませる（`docs/notes/memory-surface-design.md`）

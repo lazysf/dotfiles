@@ -146,7 +146,7 @@ skill は trailer を規定していない。付くかどうかは実行する h
 
 Codex の `workspace-write` は、書き込み可能な root 内でも `.git` を読取り専用として保護する。worktree の参照先も対象になる。コミットの作業指示だけでは、この境界を越える実行権限は得られない（[Protected paths in writable roots](https://learn.chatgpt.com/docs/agent-approvals-security#protected-paths-in-writable-roots)）。
 
-同じ権限での再実行と、正式な承認を得た実行経路への切替を区別する必要がある。Auto-review は必要な申請を審査するもので、sandbox の権限を広げる設定ではない（[Auto-review](https://learn.chatgpt.com/docs/sandboxing/auto-review)）。判断手順の正本は `dot_codex/skills/git-commit/references/failure-handling.md` に置く。
+同じ権限での再実行と、正式な承認を得た実行経路への切替を区別する必要がある。Auto-review は必要な申請を審査するもので、sandbox の権限を広げる設定ではない（[Auto-review](https://learn.chatgpt.com/docs/sandboxing/auto-review)）。Codex の skill は、`git add` と `git commit` をそのコマンドだけに限って申請することと、拒否されたら止まることを Gotchas に持つ。申請の一般的な規定は `dot_codex/AGENTS.md` の「権限」にある。
 
 Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公式仕様では sandbox 外への再試行を禁止する設定であり、Codex の承認経路を機械的に移植しない（[Claude Code sandboxing](https://code.claude.com/docs/en/sandboxing)）。Claude 側の skill は、署名の失敗で迂回せず止まることと、再実行を 1 回に限ることを Gotchas に持つ。作業指示と実行権限を分け、deny を迂回しない意図は共通にする。
 

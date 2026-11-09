@@ -1,77 +1,81 @@
 ---
 name: git-commit
-description: Git の変更を stage・commit する依頼で使う。1 commit 1 変更、明示 path での staging、staged diff の確認を行う。実行はユーザー指示時だけ。push と履歴の書き換えは対象外。
+description: Git の変更を commit する時に使う。「commit して」「コミットして」「変更を確定して」などの依頼に加え、作業を Git の履歴に残す流れになったら、commit という語が無くても使う。変更を目的ごとの commit に分け、明示した path だけを stage し、staged diff と秘密情報を確かめてから、`<type>: <description>` 形式の英語 message で通常の commit を作る。push、rebase、amend は扱わない。
 ---
 
 # Git Commit
 
 ## 手順
 
-**今の変更セットについて、指示された段までしか進まない。** stage する段（手順 3）は stage か commit を指示された時、commit を作る段（手順 5〜6）は commit を指示された時だけ実行する。指示が無ければ、そこまでの確認結果を報告して止まる。
+指示された段までしか進まない。「stage して」なら手順 5 で止める。「進めて」のような作業を続ける言葉や、このスキルが読み込まれたことは、commit の指示に数えない。
 
-指示に当たらないもの。「進めて」「直して」のような作業継続の語、この skill が load されたこと、`lapidary` など他の skill や agent が「commit できる状態」と判定したこと。skill が load されるのは、commit する流れで staging 規律と機密情報の検索を通すため。
+1. `git status -sb`、`git diff`、`git diff --staged` で変更の全体を読む。`git status` に `-uall` は付けない。
+2. 「止まる条件」に当たらないか確かめる。
+3. 「変更の単位」に従って commit の範囲を決める。複数の commit に分かれるなら、1 つずつ手順 4〜8 を回す。
+4. 範囲を `lapidary` で見直す。ユーザーが見直しは要らないと言った時は飛ばす。`lapidary` が commit できないと判定したら、止まって報告する。
+5. 範囲の path を `git add <path>` で stage する。stage と commit は別のコマンドで打つ。同じコマンドにすると、手順 6 の確認が stage 前の状態に当たる。
+6. `git diff --staged` を読み、意図しない削除、debug 出力、無関係な整形が無いか見る。秘密情報は目視で済ませず、staged diff を検索して確かめる。
+7. message を heredoc で渡して commit する。
+8. `git status -sb` と `git log -1 --format='%h %s'` で結果を確かめる。
 
-1. `git status -sb` で状態を確認する。必要なら `git diff --stat` / `git diff` / `git diff --staged` で差分を読む。
-2. 1 commit 1 変更になるよう範囲を決める。性質の違う変更が混ざっていれば分割し、1 つずつ commit する。
-3. 合意した範囲だけを明示 path で stage する。
-4. `git diff --staged --stat` と `git diff --staged` で内容を確認する。
-5. commit message を書き、通常 commit を実行する。
-6. `git log -1 --format='%h %s'` で結果を確認する。
-7. 「出力」に従って返す。
+## 止まる条件
 
-停止条件に当たった時、stage / commit / pre-commit hook が失敗した時、実行前に追加の権限が必要と分かった時は [references/failure-handling.md](references/failure-handling.md) を読む。必要な実行権限は正式な承認経路へ申請し、許可された場合に続行する。
+次に当たったら commit せず、状況と人が取れる選択肢を報告する。rebase の中断、conflict の解決、branch の切り替えは人が決めることなので、自分で解消しない。
 
-## 停止条件
+- detached HEAD
+- merge / rebase / cherry-pick / revert の途中
+- 未解決の conflict
+- 変更が混ざっていて、分け方が決まらない
+- 1 つのファイルの中に、範囲に入れる変更と入れない変更が混ざっている。ユーザー自身の編集や前の作業の残りで、範囲に入るか確かめられない変更も、入れない側に数える
+- commit する変更が無い。空の commit は作らない
 
-どの手順の途中であっても、次に当たったら commit せず、状況と選択肢を報告する。
+## 変更の単位
 
-- detached HEAD で対象 branch が曖昧
-- merge / rebase / cherry-pick / revert が進行中
-- worktree または index に未解決 conflict がある
-- 変更が混在していて、分割の単位が判断できない
-- 1 つのファイル内で無関係な変更が混ざり、ファイル単位では分けられない
+1 commit は、目的が 1 つで type が 1 つに決まる変更のまとまり。
+
+- 目的か type が違えば分ける。同じ目的から出た変更は分けない。機械的な追従（参照の更新、番号の振り直し）は同じ commit に入れる。分けすぎると、単独では壊れた commit ができる。
+- repo の `AGENTS.md` が commit の分け方を決めていれば、それに従う。
 
 ## staging
 
-- 合意した単一の変更だけを `git add <path>` で stage する。`git add .` と `git add -A` は使わない。範囲を広く取ると、意図しない変更が混ざっても気づけない。
-- 無関係、曖昧、危険、またはユーザー自身が編集した変更は unstaged のまま残す。
-- directory を stage する時は、含まれる全 path が同じ変更に属することを確認する。
-- 未追跡ファイル、機密情報、env / local / editor / temp / debug / build / generated、lockfile、migration、config は、含める意図が確認できる時だけ stage する。
-
-stage 後の確認では、意図しない削除、debug 出力、機密情報、無関係な整形を見る。**機密情報の混入は目視で済ませず、staged diff 全体に対する検索で確認する。** diff が長いと目視は必ず漏れる。
+- `git add .` と `git add -A` は使わない。意図しないファイルが混ざっても気づけない。
+- directory を stage する時は、中の全 path が同じ変更に属することを確かめる。
+- 無関係な変更、曖昧な変更、ユーザー自身が編集した変更は unstaged に残す。
+- 未追跡ファイル、env・local・editor・temp・build・generated のファイル、lockfile、migration、config は、含める意図が確かめられた時だけ stage する。
+- 秘密情報（`.env`、credential、鍵、token）を含みそうなファイルは commit しない。ユーザーに頼まれた時も、先に警告する。
 
 ## commit message
 
-title は `<type>: <description>` の 1 行。
+形式は repo の commit-msg hook が検査する。ここの規定は、最初から hook を通る message を書くためのもの。repo が別の形式を決めていれば、そちらに従う。
 
-- `<type>` は `feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert` から選ぶ。この集合を増やさない。どれにも当てはまらないと感じたら、その commit が複数の変更を含んでいないか疑う。
-- **scope は使わない。** `<type>(<scope>): <description>` の形にしない。repo 規約が scope を要求する場合は、scope 付き message を作らず停止して報告する。
-- 命令形で書く。`add` / `fix` / `remove` を使い、`added` / `adds` / `adding` は使わない。
-- 英語で書く。応答は日本語だが、`git log` を追う時に履歴の言語が混ざっていると読みにくい。
-- 50 文字以内を目安にし、72 文字を上限にする。
-- 末尾にピリオドを付けない。
-- emoji を使わない。
+- title は `<type>: <description>` の 1 行。
+- type は `feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert` から選ぶ。scope は付けない。どれにも当たらないと感じたら、その commit が複数の変更を含んでいないか疑う。
+- description は英語の命令形で、小文字で始める（`add` / `fix` / `remove`）。末尾にピリオドを付けない。emoji を使わない。50 文字を目安、72 文字を上限にする。
+- body には原則 `Why:` で変えた理由を 1〜2 文書く。doc は今の形を書くので、なぜ変えたかは commit にしか残らない。英語で書き、72 文字で折り返す。`This commit`、`I` / `we`、`now` / `currently` は使わない。commit は変更そのものの記録で、書き手や時点の話ではない。
+- 理由は具体的な事実、判断、失敗を書く。「保守しやすくするため」のような一般論しか書けないなら省く。title だけで理由が明らかな変更（typo、機械的な追従、整形、lint の指摘への対応、依存の更新）でも省く。
+- breaking change、security の修正、data migration、revert では、`Why:` に加えて影響も書く。`Why:` 以外のラベル、footer、`BREAKING CHANGE` を書く時は、先に [references/message-format.md](references/message-format.md) を読む。
 
-body は原則不要。title だけで理由と影響が伝わるなら書かない。ただし次の 4 つは title に圧縮せず body を付ける。後から原因を追う人には、title の情報量では足りないため。
+```sh
+git commit -F - <<'EOF'
+fix: drop the duplicated sandbox credential entries
 
-- breaking change
-- security 修正
-- data migration
-- 過去の commit を revert するもの
-
-body / footer / BREAKING CHANGE を書く時は形式と禁止事項が決まっているので、書く前に [references/message-format.md](references/message-format.md) を読み、その規定に従う。自己流の body / footer を書かない。title だけで足りる時は読まなくてよい。
+Why: Read deny rules are merged into the sandbox denyRead list, so the
+credentials.files entries protected the same paths twice.
+EOF
+```
 
 ## Gotchas
 
-- **pre-commit hook はファイルを書き換えることがある。** 自動修正型の hook が発火すると commit が失敗し、修正後の内容が unstaged で残る。修正差分を確認してから再 stage して commit し直す。確認せずに再 stage しない。
-- **`git add -i` と `git add -p` は使わない。** この skill は明示 path による staging だけを扱う。1 ファイル内で変更を分ける必要が出た時は、上の停止条件に当たる。
-
-## 扱わないもの
-
-通常 commit だけを行う。push、rebase、amend、squash、`--no-verify`、直接の refs 操作は扱わず、commit が失敗してもこれらへ切り替えて回避しない。push は人が手元の terminal で実行する。知見の蓄積（README / docs、ADR、notes）は `scribe` が扱う。
+- hook が失敗した時、commit はできていない。ここで `--amend` すると 1 つ前の commit を書き換える。原因を直して stage し直し、新しい commit を作る。
+- 自動修正型の hook（末尾改行の補正、`markdownlint --fix` など）は、ファイルを書き換えたうえで失敗する。修正差分を `git diff` で確かめてから stage し直す。確かめずに stage すると、hook が何を変えたか分からないまま commit する。
+- hunk 単位の stage（`git add -p` / `-i`）はしない。agent は対話に答えられず、答えを流し込むと順番がずれて別の hunk が stage される。1 ファイル内で分ける必要が出たら、「止まる条件」に当たる。
+- 署名に失敗したら、迂回せず止まって報告する。
+- `workspace-write` の sandbox は、書き込める root の中でも `.git` を読み取り専用にする。`git add` と `git commit` は sandbox の外での実行が要るので、そのコマンドだけを正式な承認経路へ申請する（`AGENTS.md` の「権限」）。`git add` の許可を `git commit` に流用しない。拒否されたら止まって報告する。
+- 再実行は 1 回だけ、index lock の競合のように再実行で解ける見込みがある失敗に限る。hook の失敗、conflict、権限エラーは、再実行しても変わらない。
 
 ## 出力
 
-staged diff で何を確認したか（削除、debug 出力、機密情報、無関係な整形）と pre-commit hook の結果を書く。単語 1 つで済ませず、何を見て何が無かったかを書く。「確認した」だけでは、次に読む人が確認の範囲を再現できない。続けて、無関係または意図的に除外して unstaged で残した変更を書く。失敗、no-op、指示が無くて手前で止まった場合でも同じ 2 つを返し、確認を行わなかった場合はその理由を書く。
-
-エラー全文をそのまま貼らない。`git` の出力には認証 URL や token が混ざることがあり、報告に残すと秘密情報が履歴に残る。要点だけを書く。
+- 作った commit の hash と title。
+- staged diff で確かめたこと（削除、debug 出力、秘密情報の検索、無関係な整形）と、hook の結果。「確認した」だけでは、何を見たかを次の人が再現できない。
+- unstaged に残した変更と、その理由。
+- 止まった時や失敗した時は、その理由の要点。git の出力は全文を貼らない。認証 URL や token が混ざることがある。

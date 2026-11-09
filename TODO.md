@@ -101,14 +101,15 @@ npm の `overrides` で強制はしない。markdownlint が想定しない組�
 
 ---
 
-## 8. Codex 側の追従
+## 8. Codex の新しい契約と skills を実機で確かめる
 
-- 記載: 2026-11-08（Claude 側の開発フローを公式の Best practices と照らして直した時）
+- 記載: 2026-11-09（`dot_codex/` を Claude 側の新しい設計に揃えた時）
 
-Claude 側（`dot_claude/`）に入れた次の変更を、`dot_codex/` にも同じ意図で入れるかを判断する。tool 名、配置、権限、hook の仕組みのような runtime 固有の差は、機械的に揃えない（`AGENTS.md`）。
+`dot_codex/` の契約と skills は、Claude 版を元に移しただけで、Codex では動かしていない。`chezmoi apply` の後に新しい Codex の session を開き、次を確かめる。設計は `docs/notes/codex-harness-operation.md` にある。
 
-- 規則文の太字を外す（`a4cfae2`）。基準は `docs/notes/harness-design-principles.md` の「規則文に太字を使わない」。根拠は Claude Code の公式ページなので、Codex の公式情報でも同じことが言えるかを確かめる。
-- lapidary の目的の文を「直す価値のある不足と過剰を直す」にする（`36efe8a`）。
-- git-commit の手順 2 で、commit の範囲に lapidary を通したかを確かめる（`0546bb2`）。
-- 契約と skill を、Claude が既定ではしないことと repo から読めないことだけに削る（2026-11-08）。`dot_codex/AGENTS.md`、`dot_codex/skills/coding`、`dot_codex/skills/lapidary`、`dot_codex/skills/git-commit` は、Claude 側で消した規則と同じ文を持っている。基準は `docs/notes/claude-md-design.md` にある。Codex の既定の振る舞いは Claude と違うので、行ごとに Codex の公式情報で判断する。
-- 報告を 4 つに分ける行を、ファイルを変えた作業の完了報告と引き継ぎに絞る（2026-11-08）。理由は `docs/notes/claude-md-design.md` の「報告を 4 つに分ける条件」。Codex の既定の報告が、検証結果と未確認事項を持つかを確かめる。
+- `/skills` に `coding`、`git-commit`、`lapidary`、`scribe` の 4 つが出る。公式 docs が user skill の置き場に挙げるのは `~/.agents/skills` だけで、配布先の `~/.codex/skills` には触れていない。
+- 「commit して」と頼むと、`git-commit` が発火して `lapidary` を通し、`git add` と `git commit` をコマンドごとに申請する。
+- 返答が `AGENTS.md` の「返答」に従って、結論から短くなる。
+- 契約と skills の各行が、Codex で要るか。Claude で残した行をそのまま移したので、Codex の既定の振る舞いと重なる行や、Claude では既定で持っていて書かなかったため Codex に抜けている規定があるかもしれない。
+
+確かめる前に、source から消したファイル（`~/.codex/agents/` の 2 つの reviewer、`skills/caveman`、`skills/coding/references`、`skills/git-commit/references/failure-handling.md`）を `~/.codex` から消す。残っていると、旧版の skill や agent が読まれる。
