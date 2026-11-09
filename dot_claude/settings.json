@@ -42,6 +42,7 @@
       "Read(~/.npmrc)",
       "Read(~/.pypirc)",
       "Read(~/.codex/auth.json)",
+      "Bash(git push *)",
       "Bash(mkfs *)",
       "Bash(mkfs.* *)",
       "Bash(newfs_* *)",
@@ -63,6 +64,12 @@
       "Bash(CONVERT.EXE *)",
       "Bash(WBADMIN *)",
       "Bash(WBADMIN.EXE *)"
+    ]
+  },
+  "autoMode": {
+    "hard_deny": [
+      "$defaults",
+      "Agent Git Push: Running `git push` in any form, to any remote or branch, including `--dry-run`, `git -C <dir> push`, `git -c <key>=<value> push`, git aliases, and scripts or other programs that push. The user pushes from their own terminal. On native Windows no sandbox stops an agent push, and the stored Git Credential Manager credential is handed over without a prompt."
     ]
   },
   "sandbox": {
