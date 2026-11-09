@@ -67,3 +67,4 @@
   - [0045-distribute-claude-mods-via-plugin-dirs.md](./adr/0045-distribute-claude-mods-via-plugin-dirs.md)
   - [0046-distribute-codex-signing-settings.md](./adr/0046-distribute-codex-signing-settings.md)
   - [0047-stop-codex-agent-signing.md](./adr/0047-stop-codex-agent-signing.md)
+  - [0048-approve-codex-commits-outside-sandbox.md](./adr/0048-approve-codex-commits-outside-sandbox.md)
