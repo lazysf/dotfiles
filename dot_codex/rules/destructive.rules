@@ -19,3 +19,24 @@ prefix_rule(
     match = ["diskutil eraseDisk APFS example /dev/example", "mkfs.ext4 /dev/example", "/usr/sbin/diskutil list"],
     not_match = ["git status", "df -h"],
 )
+
+windows_disk_commands = [
+    "diskpart", "diskpart.exe", "format.com", "convert.exe", "wbadmin", "wbadmin.exe",
+    "DISKPART", "DISKPART.EXE", "FORMAT.COM", "CONVERT.EXE", "WBADMIN", "WBADMIN.EXE",
+]
+
+prefix_rule(
+    pattern = [windows_disk_commands],
+    decision = "forbidden",
+    justification = "Windows のディスク・バックアップ操作は人が terminal で行う。",
+    match = windows_disk_commands,
+    not_match = ["convert", "git status"],
+)
+
+prefix_rule(
+    pattern = [["git", "git.exe"], "push"],
+    decision = "forbidden",
+    justification = "push はユーザーが手元の terminal で行う。",
+    match = ["git push", "git.exe push origin main"],
+    not_match = ["git status", "git.exe fetch"],
+)
