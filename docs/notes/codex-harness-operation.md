@@ -14,7 +14,7 @@
 - 独立した review: 自作の reviewer agent は置かない。Claude 側と同じく、必要になってから作る。`skills/lapidary` は組み込みの review を提案し、起動の方法を CLI の `/review`、アプリの `/review`、shell の `codex review` に分けて書いている。起動できる対象と観点の指定の仕方が、クライアントごとに違うため。CLI 0.167.0-alpha.3.2 では、`codex review` の `--uncommitted` と指示の引数を同時に渡すと拒否された（2026-11-09、Codex の session での実測）。公式 docs では、アプリの `/review` は対象（base branch との差分か未 commit の変更）を選ぶメニューを出し、既定では今の chat の中で review する。作業機のアプリでは、入力欄に `/review` と打つと、候補の一番上に組み込みの command「コードレビュー」（説明は「サブエージェントで変更内容をレビュー」）が、その下のスキルの欄に system skill の「Review Agent」が出た。「コードレビュー」を選ぶと、対象を選ぶメニューは出ず、`origin/main` を基準に今の branch の変更を review する依頼が「レビューモード」としてすぐ送られた（2026-11-09、ユーザーの目視）。そのため、アプリでは「コードレビュー」を案内し、未 commit の変更だけを見る時と観点を指定する時は、CLI か shell を案内している。アプリで未 commit の変更を対象にできるかと、観点を足せるかは確かめていない。作業機の `review-agent` system skill は、`/review` の preset と同じ対象（uncommitted changes、base branch との差分、commit、custom instructions）を扱い、正しさに加えて security、performance、保守性への影響も指摘の対象にしている。`/review` がこの skill を使うことは、docs では確かめていない。Codex Security の plugin は作業機に入っていないので、提案しない。
 - commit: 既定の `workspace-write` の sandbox は、`<writable_root>/.git` を読み取り専用にする。`.git` が `gitdir:` のファイルなら、参照先も保護される（[Protected paths in writable roots](https://learn.chatgpt.com/docs/agent-approvals-security#protected-paths-in-writable-roots)）。書ける root の下に作った別の repo の `.git` には、sandbox の中から書けた（2026-11-09、`$TMPDIR` の下の使い捨ての repo での実測）。`git add` と `git commit` をいつ申請し、いつ止まるかは、`skills/git-commit` の Gotchas を正本にする。
 
-[`destructive.rules`](../../dot_codex/rules/destructive.rules) は、列挙したディスク操作コマンドを sandbox 外で禁止する設定。コマンド名と `/bin/`、`/sbin/`、`/usr/bin/`、`/usr/sbin/` の絶対パスに対応する。未知の `mkfs.*` / `newfs_*` や任意の script は網羅しない。契約と設定は管理者による強制ではない。
+[`destructive.rules`](../../dot_codex/rules/destructive.rules) は、列挙したディスク操作コマンドと Git の push を Codex のコマンド実行で禁止する。Unix 系のディスク操作はコマンド名と `/bin/`、`/sbin/`、`/usr/bin/`、`/usr/sbin/` の絶対パスに対応する。Windows のディスク操作と push の対象は [コマンド制限](#コマンド制限) を参照。契約と設定は管理者による強制ではない。
 
 ## 検証範囲
 
@@ -73,15 +73,29 @@ mac の Codex の commit は、承認を受けて sandbox の外で実行する�
 
 `powershell.exe -Command "git push"` と `bash -lc "git push"` も、この照合では一致しなかった。公式 docs の照合単位は argv のリテラルの prefix。実行時には、単純な `bash -lc`、`zsh`、`sh` の wrapper を分解して照合する場合がある。PowerShell の分解は記載されていない。[Rules](https://learn.chatgpt.com/docs/agent-configuration/rules)
 
+2026-11-09 に Codex CLI 0.167.0-alpha.3.2 と Git for Windows 2.56.0.windows.4 で確認した。`git version --build-options` を `forbidden` にする一時 rule を置いた。`execpolicy check` では `git` から始まる argv に一致し、`pwsh.exe -NoProfile -Command` で包んだ argv には一致しなかった。
+
+新しい `codex exec` の session（`workspace-write`、`mxc`）では、実行ツールがコマンドを `pwsh.exe -NoProfile -Command` で包んだ。`git --version` は終了コード 0 だった。`git version --build-options` は一時 rule の `justification` を返してプロセス作成前に拒否された。検証後に一時 rule を削除した。
+
+Windows のディスク操作は Claude Code 側と同じ名前を小文字と全大文字で列挙する。拡張子なしの `convert` は macOS の ImageMagick と名前が重なるため、対象は `convert.exe` に絞る。push はユーザーが手元の terminal で行う方針に合わせ、全 OS で `git push` と `git.exe push` を止める。
+
+2026-11-09 に配布元の rule を Codex CLI 0.167.0-alpha.3.2 の `execpolicy check` で確認した。Windows の絶対パスや大小文字が混在する名前、`git -C . push` のように Git の前置き option がある呼び出しには別のパターンが要る。
+
 Claude Code で適用後に push が実行前に止まった結果は、[push は sandbox 内で SSH を通らない](claude-code-settings-design.md#push-は-sandbox-内で-ssh-を通らない) を参照。
 
+### 外向き通信
+
 Windows と macOS の `workspace-write` では、sandbox 内の外向き通信は既定で無効。[Agent approvals & security](https://learn.chatgpt.com/docs/agent-approvals-security#network-access)
+
+2026-11-09 に Windows の Codex session（`workspace-write`、permission profile は `managed`）で、PowerShell 7.6.9 から `curl.exe` で `https://example.com/` に HTTPS GET を送った。接続 timeout は 5 秒、全体の timeout は 10 秒にした。承認を受けた sandbox 外の対照では HTTP 200 だった。sandbox 内では名前解決に失敗し、curl の終了コードは 6 で HTTP 応答は無かった。
 
 ### 読み取りの deny
 
 公式 docs では、Windows の `mxc` と `elevated` は読み取りの deny に対応し、`unelevated` は対応しない。`elevated` は低権限の専用ユーザーで実行する。[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox) / [Permissions](https://learn.chatgpt.com/docs/permissions#deny-reads-with-exact-paths-or-globs)
 
 同梱 CLI の `elevated` で `:workspace` と、検証用ディレクトリを `deny` にした一時 profile を比較した。`deny` を入れると、対象ディレクトリ内の既存ファイルだけが `UnauthorizedAccessException` になった。ユーザー側では同じファイルを読めた。実在の `~/.ssh` はこの比較の対象外。
+
+2026-11-09 に Windows の Codex session（`workspace-write`、permission profile は `managed`）から、実際のユーザーの `~/.ssh` を PowerShell 7.6.9 で確認した。`File.OpenRead` で存在しない `claude-probe-missing` を開くと `FileNotFoundException` になった。ユーザーの承認を受けて作った検証用ファイルは、sandbox 内の `File.ReadAllText` で読めた。固定文字列との一致だけを確認し、検証後にファイルを削除した。
 
 ### 自動署名を入れなかった理由
 
@@ -98,13 +112,11 @@ Claude Code は Windows で、Git Bash から Git for Windows の `ssh-keygen` �
 
 2026-11-09 に Windows の Codex CLI 0.167.0-alpha.3.2、Git for Windows 2.56.0.windows.4、PowerShell 7.6.9 で確認した。session の権限は `workspace-write`、permission profile は `managed`、承認の審査は `auto_review` だった。
 
-使い捨ての repo で、承認を経て sandbox の外から `git commit --allow-empty` を実行した。Git の設定で署名には `op-ssh-sign.exe` が選ばれていた。sandbox の外で `git log -1 --format='%G? %GK'` を実行すると、`%G?` は `G` だった。`%GK` は Git に設定した公開鍵の fingerprint と一致した。
+使い捨ての repo で、承認を経て sandbox の外から `git commit --allow-empty` を実行した。Git の設定で署名には `op-ssh-sign.exe` が選ばれていた。ユーザーは 1Password の署名承認画面が表示されたことを確認した。sandbox の外で `git log -1 --format='%G? %GK'` を実行すると、`%G?` は `G` だった。`%GK` は Git に設定した公開鍵の fingerprint と一致した。
 
 sandbox 内で同じ `git log` を実行すると、Git が `op-ssh-sign.exe` を起動できず、`Function not implemented` が出た。署名の判定は sandbox 外での検証結果を使う。
 
 ## 未確認
 
-- Windows の通常の Codex session での `~/.ssh` の読み取り境界、外向き通信、PowerShell 経由の rules の発火。[TODO 1](../../TODO.md#1-windows-の-codex-の確認) に残す。
-- Windows の署名確認で 1Password の承認画面が出たか。TODO 1 に残す。
 - mac の Codex が `~/.ssh` の秘密鍵を実際に読めるか。`~/.ssh/config` までしか確かめていない。
 - `dot_config/zsh/dot_zshenv` の署名用 socket の条件は、Codex の署名のために足した。Claude Code に要るかは確かめていないので残している。
