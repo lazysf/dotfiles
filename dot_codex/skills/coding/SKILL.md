@@ -19,7 +19,7 @@ description: ソースコードを書く・直す時に使う。新しい機能�
 
 ## 既存ファイルの形式を保つ
 
-- 既存ファイルの charset、改行（CRLF / LF）、BOM、インデントを変えない。変わると diff がファイル全体に広がり、読み込めなくなる形式もある（Windows の `.cmd` / `.bat` は CRLF が要る）。
+- 既存ファイルの charset、改行（CRLF / LF）、BOM、インデントを変えない。変わると diff がファイル全体に広がり、読み違えられる形式もある（Windows PowerShell は、BOM の無い UTF-8 のスクリプトを ANSI のコードページで読む）。
 - 既存ファイルは、変える箇所だけを直す。ファイル全体を書き直すと、BOM や改行が黙って変わる。
 - 新しいファイルは、repo の `.editorconfig` や `.gitattributes`、同じ種類の既存ファイルに合わせる。
 
