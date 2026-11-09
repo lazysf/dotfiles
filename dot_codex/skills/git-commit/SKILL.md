@@ -9,7 +9,7 @@ description: "Git の変更を commit する時に使う。「commit して」�
 
 指示された段までしか進まない。「stage して」なら手順 5 で止める。「進めて」のような作業を続ける言葉や、このスキルが読み込まれたことは、commit の指示に数えない。
 
-1. `git status -sb`、`git diff`、`git diff --staged` で変更の全体を読む。`git status` に `-uall` は付けない。commit の名義は `git var GIT_AUTHOR_IDENT` と `git var GIT_COMMITTER_IDENT` で見る。
+1. `git status -sb`、`git diff`、`git diff --staged` で変更の全体を読む。`git status` に `-uall` は付けない。commit まで進む時は、名義を `git var GIT_AUTHOR_IDENT` と `git var GIT_COMMITTER_IDENT` で見る。
 2. 「止まる条件」に当たらないか確かめる。
 3. 「変更の単位」に従って commit の範囲を決める。複数の commit に分かれるなら、1 つずつ手順 4〜8 を回す。
 4. 範囲を `lapidary` で見直す。ユーザーが見直しは要らないと言った時は飛ばす。`lapidary` が commit できないと判定したら、止まって報告する。見直しで直したファイルが増えたら、手順 3 に戻って範囲を決め直す。
@@ -28,7 +28,7 @@ description: "Git の変更を commit する時に使う。「commit して」�
 - 変更が混ざっていて、分け方が決まらない
 - 1 つのファイルの中に、範囲に入れる変更と入れない変更が混ざっている。ユーザー自身の編集や前の作業の残りで、範囲に入るか確かめられない変更も、入れない側に数える
 - 範囲に入らない変更が、すでに stage されている。自分で stage したものでなければ、unstage せずに報告する
-- author か committer のアドレスが、個人のアドレスに見える（GitHub の repo で noreply でない、など）。名義は差し替えずに報告する
+- commit に進む時、author か committer のアドレスが、公開してよいと確かめられない（GitHub の repo で noreply でない、など）。名義は差し替えずに報告し、判断を待つ
 - commit する変更が無い。空の commit は作らない
 
 ## 変更の単位
