@@ -6,13 +6,14 @@ set -u
 
 status=0
 for file in "$@"; do
-  if [ ! -r "$file" ]; then
+  # ファイルは入力のリダイレクトで渡す。`-` で始まる名前を option と読ませないため。
+  if [ ! -r "$file" ] || ! bytes=$(od -An -tx1 -N3 < "$file"); then
     echo "check-ps1-bom: $file を読めず、検査できなかった。" >&2
     status=1
     continue
   fi
-  head=$(head -c 3 "$file" | od -An -tx1 | tr -d ' \n')
-  if [ "$head" != "efbbbf" ]; then
+  bytes=$(printf '%s' "$bytes" | tr -d ' \n')
+  if [ "$bytes" != "efbbbf" ]; then
     echo "check-ps1-bom: $file が UTF-8 の BOM で始まっていない。BOM 付きの UTF-8 で保存し直す。" >&2
     status=1
   fi

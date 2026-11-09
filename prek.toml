@@ -52,7 +52,7 @@ id = "check-ps1-bom"
 name = "check-ps1-bom"
 language = "script"
 entry = "scripts/check-ps1-bom.sh"
-files = '\.ps1$'
+files = '(?i)\.ps1$'
 
 [[repos.hooks]]
 id = "check-commit-msg"
