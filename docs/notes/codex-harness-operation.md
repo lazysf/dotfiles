@@ -94,11 +94,17 @@ Claude Code は Windows で、Git Bash から Git for Windows の `ssh-keygen` �
 - Windows 標準 OpenSSH: 公開実装では agent の named pipe 名が固定で、署名専用の接続先を分ける機能は確認できなかった。実機は 9.5p2。[Win32 OpenSSH の agent 実装](https://github.com/PowerShell/openssh-portable/blob/latestw_all/contrib/win32/win32compat/ssh-agent/agent.c)
 - `windows.sandbox_private_desktop`: 現行の設定リファレンスと schema に無く、回避策にできる根拠は得られなかった。[Config schema](https://learn.chatgpt.com/docs/config-schema.json)
 
-どれも sandbox の中の `git commit` の結果で、承認を得て sandbox の外で実行する `git commit` の署名は試していない。
+### sandbox 外での 1Password 署名
+
+2026-11-09 に Windows の Codex CLI 0.167.0-alpha.3.2、Git for Windows 2.56.0.windows.4、PowerShell 7.6.9 で確認した。session の権限は `workspace-write`、permission profile は `managed`、承認の審査は `auto_review` だった。
+
+使い捨ての repo で、承認を経て sandbox の外から `git commit --allow-empty` を実行した。Git の設定で署名には `op-ssh-sign.exe` が選ばれていた。sandbox の外で `git log -1 --format='%G? %GK'` を実行すると、`%G?` は `G` だった。`%GK` は Git に設定した公開鍵の fingerprint と一致した。
+
+sandbox 内で同じ `git log` を実行すると、Git が `op-ssh-sign.exe` を起動できず、`Function not implemented` が出た。署名の判定は sandbox 外での検証結果を使う。
 
 ## 未確認
 
 - Windows の通常の Codex session での `~/.ssh` の読み取り境界、外向き通信、PowerShell 経由の rules の発火。[TODO 1](../../TODO.md#1-windows-の-codex-の確認) に残す。
-- Windows の Codex で、承認を受けて sandbox の外で実行する commit が 1Password で署名できるか。TODO 1 に残す。
+- Windows の署名確認で 1Password の承認画面が出たか。TODO 1 に残す。
 - mac の Codex が `~/.ssh` の秘密鍵を実際に読めるか。`~/.ssh/config` までしか確かめていない。
 - `dot_config/zsh/dot_zshenv` の署名用 socket の条件は、Codex の署名のために足した。Claude Code に要るかは確かめていないので残している。

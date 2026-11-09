@@ -31,7 +31,7 @@
 
 Codex はエージェント用の鍵で署名せず、commit は sandbox の外で都度承認する（[ADR 0047](docs/adr/0047-stop-codex-agent-signing.md)、[ADR 0048](docs/adr/0048-approve-codex-commits-outside-sandbox.md)）。この項目は設計なので、agent は案を示して止まる。CLI の版、`execpolicy check` の照合、公式 docs を調べた結果は [Windows の署名とコマンド制限](docs/notes/codex-harness-operation.md#windows-の署名とコマンド制限) にある。
 
-- ユーザー: Windows の Codex の session で、承認を受けて sandbox の外で使い捨ての repo に commit させる。1Password の承認が出るかと、`git log -1 --format='%G? %GK'` の結果を agent に伝える。
+- ユーザー: Windows の署名確認で、1Password の承認画面が出たかを agent に伝える。署名の検証結果は [sandbox 外での 1Password 署名](docs/notes/codex-harness-operation.md#sandbox-外での-1password-署名) に記録済み。
 - ユーザー: 通常の権限で開いた Codex の session で、実際のユーザーの `~/.ssh/claude-probe-missing` を PowerShell から読ませる。拒否か「無い」かと、実効の sandbox と profile を伝える。「無い」だけでは既存ファイルの読み取り可否は分からない。確認が必要なら承認を得て、秘密を含まない既存の検証用ファイルで確かめる。
 - agent: sandbox 内から外向き通信が止まるかを確認する方法をユーザーと決める。push と `--dry-run` は「Windows での進め方」に従う。
 - agent: 無害なコマンドを対象にした一時 rule で、新しい Codex session の PowerShell 経由の実行が止まるかを確かめる。`~/.codex/rules/` に書く前に確認を取る。この結果をもとに、`dot_codex/rules/destructive.rules` に Windows の disk 系（`diskpart`、`format.com`、`convert.exe`、`wbadmin`）と `git push` の禁止を足すか決める。
