@@ -22,6 +22,12 @@
 
 移植時の記録では、Codex CLI 0.160.0 の一時 home で `~/.codex/skills/` 相当のスキル発見を確認している。公式の user skill 配置は `~/.agents/skills/`。client 更新後はスキル発見を再確認する。
 
+2026-11-09 に、`dot_codex/` を Claude 側の設計に揃えて apply した後、作業機（macOS の `personal`）の Codex の新しい session で次を確かめた。
+
+- session が global の `AGENTS.md` と、`~/.codex/skills/` の 4 つの skill を読み込んだ。`/skills` の画面にも 4 つが出た（ユーザーの目視）。
+- skill の名前も手順も知らせずに、`$TMPDIR` の使い捨ての repo で commit を頼むと、`git-commit` が発火して `lapidary` を通し、署名付きの commit ができた。返答は `AGENTS.md` の「返答」どおり、結論から始まって短かった（ユーザーの目視）。
+- 設定の key を rename して commit するよう頼むと、その key を説明する notes も直し、使い捨ての repo の `AGENTS.md` の規約どおり、設定と notes を別の commit に分けた。notes の古さに気づいたのは作業の最初の検索で、`lapidary` の手順 4 だけが拾ったとは言えない。
+
 ## 適用前後の確認
 
 配布前に `chezmoi diff ~/.codex` でファイルの差分を確認する。`config.toml` はファイル単位の配布から除外している。macOS の署名設定は、適用後に動くスクリプトが追加するため、この差分には出ない。

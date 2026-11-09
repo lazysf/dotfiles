@@ -59,7 +59,7 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 `disable-model-invocation: true` は採らない。`/lapidary` と打った時しか走らず、明示指定と変わらないため。
 
-入口の実行条件は置いていない。この skill は作業ツリー内で閉じ、履歴も外部も触らない。代わりに手順 4 が直す対象を自分の変更へ限っている。`git-commit` が「ユーザー自身が編集した変更は unstaged に残す」を持つのと対になる。一般則は [harness-design-principles.md](./harness-design-principles.md) の「発火面と実行条件を分ける」にある。
+入口の実行条件は置いていない。この skill は作業ツリー内で閉じ、履歴も外部も触らない。代わりに手順 4 が、直す対象を自分の変更と、それが古くした記述に限っている。元からあった問題とユーザー自身の編集は直さない。`git-commit` が「ユーザー自身が編集した変更は unstaged に残す」を持つのと対になる。一般則は [harness-design-principles.md](./harness-design-principles.md) の「発火面と実行条件を分ける」にある。
 
 ## 検証を実行せず確認だけする理由
 
