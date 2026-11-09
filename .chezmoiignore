@@ -13,7 +13,6 @@
 
 # Repo-only directories
 .vscode
-archive
 docs
 node_modules
 scripts

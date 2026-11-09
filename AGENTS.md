@@ -38,7 +38,7 @@
 
 ## 変更後の確認
 
-- 追加、rename、削除した path、名前（skill / rule / agent）、設定キーは、`rg --hidden -g '!.git' -g '!archive'` で参照を探す。`--hidden` は `.github/` などの dot path を含めるため。ADR 本文は採用時点の記録なので直さない。
+- 追加、rename、削除した path、名前（skill / rule / agent）、設定キーは、`rg --hidden -g '!.git'` で参照を探す。`--hidden` は `.github/` などの dot path を含めるため。ADR 本文は採用時点の記録なので直さない。
 - Markdown を変えたら `npm run lint`、TOML を変えたら `npm run lint:toml` で lint する。`markdownlint-cli2` と `tombi` は repo の devDependency なので、PATH 上の command を探さない。commit 時は prek の hook が同じ設定で走る（`docs/notes/markdownlint-and-pre-commit-execution.md`）。
 - `.gitignore` の追跡対象と `.chezmoiignore` の配布対象は、別々に確かめる。source から消したファイルは target に残るので、apply の後に `chezmoi managed` と target の実体を突き合わせる。
 - surface（`dot_claude/`、`dot_codex/`、`.claude/`、root の `AGENTS.md` / `CLAUDE.md`）の変更と、その理由を書いた `docs/notes/` は別の commit にする（`docs/notes/git-commit-skill-design.md`）。後から見つけた追従漏れも別の commit にする。
@@ -47,7 +47,6 @@
 
 - `dot_claude/`: 全 project へ配る Claude Code の契約（`CLAUDE.md`）、settings、hooks、skills、mods
 - `dot_codex/`: 全 project へ配る Codex の契約（`AGENTS.md`）、skills、rules。`config.toml` は配布せず、macOS の署名設定だけを apply の後の script が足す（`docs/notes/codex-harness-operation.md`）
-- `archive/`: 再構築の前の旧版の退避先。配布しない。直さずに参照だけする
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
 - `.claude/rules/`: 使わない。この repo に閉じる規則はこの `AGENTS.md` に置き、Claude と Codex の両方に読ませる（`docs/notes/memory-surface-design.md`）
 - `docs/notes/`: repo の知見と、今の設計の理由。`docs/adr/`: repo の判断の記録
