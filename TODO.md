@@ -6,7 +6,7 @@
 
 `CLAUDE.md` は「1 つの作業で扱う目的は 1 つにする」「作業中に見つけた無関係の問題は、直さずにユーザーへ伝える」と定めている。**逸れた分の行き先がここ。** ある作業の途中で見つかった別スコープの問題を、その場で直さずに移し、今のスコープを閉じてから改めて扱う。
 
-各項目に記載日と、どの作業中に見つけたかを書く。どの文脈で浮上したかが分かると、再開時に前提を取り直せる。項目はテーマごとに並べる（Codex、Windows、Markdown の lint）。
+各項目に記載日と、どの作業中に見つけたかを書く。どの文脈で浮上したかが分かると、再開時に前提を取り直せる。項目はテーマごとに並べる（Codex、Windows）。
 
 判断の記録は `docs/adr/`、設計の理由は `docs/notes/` を正本とし、ここには重複させない。
 
@@ -72,16 +72,3 @@ native Windows では、Claude Code の Bash が sandbox の外で動く。mac �
 - エージェントの Bash が、`mv` や python で `~/.claude/settings.json` や hook を書き換えられるか。mac では protected paths が止める（`~/.claude/settings.json` は 2026-11-07 に実測）。
 - エージェントが `~/.ssh/agent_signing_ed25519` の鍵ペアを置けるか。Windows の session では、`mv`、`ssh-keygen -f`、`rm` が `~/.ssh` で通った（2026-11-07 実測）。置かれると、`scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップし、README の登録手順で置かれた公開鍵を GitHub に登録するおそれがある。mac で止まる範囲は `docs/notes/agent-commit-signing-design.md` の「`~/.ssh` への書き込みを止める」にある。塞ぐなら、setup スクリプトが既存の鍵ペアを使う前に確かめる形などを検討する。
 - 大文字で書いた `~/.SSH/...` が、`Edit(~/.ssh/**)` と `Read(~/.ssh/**)` の rule を外れるか。Windows の file system は既定で大文字と小文字を区別しないので、rule を外れると同じファイルに届く。
-
----
-
-## 5. textlint で日本語の文章を検査する
-
-- 記載: 2026-11-08（markdownlint の npm audit の警告を見て、ほかの lint を相談した時）。2026-11-09 に rumdl へ乗り換えた後、textlint を入れる方針になった
-
-[textlint](https://github.com/textlint/textlint) を入れ、rumdl が見ない日本語の文章を検査する。候補は [`textlint-rule-preset-ja-technical-writing`](https://github.com/textlint-ja/textlint-rule-preset-ja-technical-writing) と、表記揺れを辞書で揃える `textlint-rule-prh`。rumdl の MD089 と重なる `textlint-rule-preset-ja-spacing` は入れない。
-
-- preset の既定は厳しめなので、まず repo の外の一時領域で動かして repo 全体での違反の件数を数え、残す rule を選ぶ。
-- 文の長さや助詞の重複のように自動修正の無い rule は、commit を止める hook にすると、直すまで commit できなくなる。hook に入れる rule と、手で走らせるだけの rule を分けるかを決める。
-- Node の依存が増える。入れた後に `npm audit` を見る。
-- ADR の本文は直さないので、rumdl と同じく ADR の扱いを決める。
