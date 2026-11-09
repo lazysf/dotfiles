@@ -1,67 +1,53 @@
 # AGENTS.md
 
-この dotfiles repo を保守するときの repo-local な案内。chezmoi の展開対象にしない。root `CLAUDE.md` はこのファイルを参照させるだけの import shim。
+この dotfiles repo を保守する時の、repo に固有の案内。Claude Code と Codex の両方が読む。chezmoi の配布対象にしない。
 
-## Agent Skills に関する作業
+全 project に共通する進め方は、配布済みの `~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md`（source は `dot_claude/` と `dot_codex/`）が持つ。ここには、この repo でだけ要ることを置く。
 
-- Claude Code / Codex のスキルを新規作成する、既存スキルの設計を変更する、または description / trigger / 構成 / references / scripts / 品質評価について判断する場合は、判断前に必ず `skill-creator` スキルを使用する
-- スキル内容の検討・編集として、仕様、構造、description、progressive disclosure、best practice に関わる判断を行う場合は Agent Skills 公式情報を確認する。runtime 固有の発火、配置、権限、frontmatter は Claude Code の公式情報も確認する。既存スキルの内容を読み取るだけの場合は必須としない
-  - [Overview](https://agentskills.io/home)
-  - [Documentation Index](https://agentskills.io/llms.txt)
-  - [Quickstart](https://agentskills.io/skill-creation/quickstart)
-  - [Specification](https://agentskills.io/specification)
-  - [Best practices](https://agentskills.io/skill-creation/best-practices)
-  - [Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
-  - [Evaluating skills](https://agentskills.io/skill-creation/evaluating-skills)
-  - [Using scripts](https://agentskills.io/skill-creation/using-scripts)
-  - [Claude Code skills](https://code.claude.com/docs/en/skills)
-- Agent Skills 公式情報を確認した場合は、最終返答で参照した公式ページを簡潔に明示する。確認が必要だったが確認できない場合は、その事実と理由を明示し、進め方を相談する
-- `SKILL.md` へ仕様や長い手順を転載せず、必要な詳細は `references/` などの progressive disclosure に分ける
+## 配布の前提
 
-### docs-only と扱わないもの
+- 今の session を動かしているのは、配布済みの設定（Claude Code は `~/.claude`、Codex は `~/.codex`）。source の `dot_claude/` と `dot_codex/` を直しても、今の session には効かない。効くのはユーザーが `chezmoi apply` した後から。Claude Code の `CLAUDE.md` は次の session から効く（反映の違いは `docs/notes/harness-design-principles.md`）。Codex の `AGENTS.md` がいつ読み直されるかは確かめていない。
+- `chezmoi apply` はユーザーが手元の terminal で行う。Claude Code の sandbox が書けるのは作業ディレクトリなどに限られ、apply の書き込み先の大半はその外にある。
+- Claude Code の sandbox では、`chezmoi status` を repo 全体に打たず、`chezmoi status ~/.claude` のように path を絞る。全体に打つと `~/.config/gh` の読み取り拒否で止まる。
 
-- 実行条件、権限、停止線、reviewer 起動、スキル定義、agent 定義、承認ルール、runtime 設定に触れるファイルは、拡張子に関係なく docs-only と扱わない
-- `scribe` 単独で進めないのは `dot_claude/**` と `dot_codex/**` 全体（契約、skills、agents、応答スタイル、runtime 設定、rules）と、root `AGENTS.md` / `CLAUDE.md`
+## surface を直す時
 
-### 軽量例外
+`dot_claude/**`、`dot_codex/**`、root の `AGENTS.md` / `CLAUDE.md` は、拡張子が `.md` でも agent の挙動を変える設定として扱い、この節の確認を通す。
 
-- 誤字修正、単純な diff 確認、commit / push、合意済み文言の機械的反映、パスや現状確認だけの場合は、`skill-creator` や公式情報確認を必須とはしない。ただし、scripts / references / trigger / 権限 / secret / 外部 I/O / 実行挙動に触れる変更は除く
-
-## Claude Code に関する作業
-
-- Claude Code の設定や編集に関わる判断を行う場合は、事前に [Claude Code Docs](https://code.claude.com/docs) と [Docs index](https://code.claude.com/docs/llms.txt) を参照する
-- Claude Code の運用方針や作業設計を判断する場合は、[Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) を参照する
-- Claude Code の拡張先を選ぶ場合は、[Extend Claude Code](https://code.claude.com/docs/en/features-overview) の使い分けに従う
-- 判断対象ごとに該当する公式ページを参照する:
-  - `CLAUDE.md` / memory / rules / `@` import: [How Claude remembers your project](https://code.claude.com/docs/en/memory)
-  - `.claude/` 配下の置き場: [Explore the .claude directory](https://code.claude.com/docs/en/claude-directory)
-  - `settings.json` / environment variables / precedence: [Claude Code settings](https://code.claude.com/docs/en/settings)
-  - permissions / sandbox / modes: [Configure permissions](https://code.claude.com/docs/en/permissions)
-  - skills / commands: [Extend Claude with skills](https://code.claude.com/docs/en/skills)
+- skill を作る時と、skill の設計（description、trigger、構成、references、scripts、評価）を変える時は、判断の前に `skill-creator` スキルを使い、Agent Skills の公式情報を確かめる。発火、配置、権限、frontmatter は runtime の公式情報も確かめる。
+  - [Specification](https://agentskills.io/specification)、[Best practices](https://agentskills.io/skill-creation/best-practices)、[Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)、[Evaluating skills](https://agentskills.io/skill-creation/evaluating-skills)、[Using scripts](https://agentskills.io/skill-creation/using-scripts)、[Documentation Index](https://agentskills.io/llms.txt)
+- Claude Code の設定は、判断の対象ごとに次の公式ページを確かめる。一覧に無い対象は [Docs index](https://code.claude.com/docs/llms.txt) から探す。
+  - 運用方針、作業設計: [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)
+  - 拡張先の選び方: [Extend Claude Code](https://code.claude.com/docs/en/features-overview)
+  - `CLAUDE.md`、memory、`@` import: [How Claude remembers your project](https://code.claude.com/docs/en/memory)
+  - `.claude/` の置き場: [Explore the .claude directory](https://code.claude.com/docs/en/claude-directory)
+  - `settings.json`、環境変数、優先順位: [Claude Code settings](https://code.claude.com/docs/en/settings)
+  - permissions、sandbox、mode: [Configure permissions](https://code.claude.com/docs/en/permissions)
+  - skills: [Extend Claude with skills](https://code.claude.com/docs/en/skills)
   - subagents: [Create custom subagents](https://code.claude.com/docs/en/sub-agents)
   - hooks: [Hooks reference](https://code.claude.com/docs/en/hooks)
   - MCP: [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp)
   - plugins: [Create plugins](https://code.claude.com/docs/en/plugins)
+  - mods: [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference)
   - output styles: [Output styles](https://code.claude.com/docs/en/output-styles)
   - 設定が効かない時: [Debug your configuration](https://code.claude.com/docs/en/debug-your-config)
-
-## Codex に関する作業
-
-- Codex の設定や運用を判断する場合は `openai-docs` を使い、対象の公式情報を確認する。
-- [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic)、[Permissions](https://learn.chatgpt.com/docs/permissions)、[Skills](https://learn.chatgpt.com/docs/build-skills)、[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[Rules](https://learn.chatgpt.com/docs/agent-configuration/rules) を判断対象に応じて参照する。
-- `dot_claude/` と `dot_codex/` を変えたら、共通の意図と runtime 固有の差を確認する。tool 名、配置、権限を機械的に揃えない。
+- Codex の設定は、Codex では `openai-docs` スキルで、Claude Code では次のページで確かめる: [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic)、[Permissions](https://learn.chatgpt.com/docs/permissions)、[Skills](https://learn.chatgpt.com/docs/build-skills)、[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[Rules](https://learn.chatgpt.com/docs/agent-configuration/rules)
+- 確かめた公式ページは、最終返答で挙げる。確かめられなかった時は、その理由を書いて進め方を相談する。
+- `dot_claude/` と `dot_codex/` の片方を変えたら、もう片方へ同じ意図を入れるかを確かめる。tool 名、配置、権限は機械的に揃えない。
+- 誤字の修正、合意済みの文言の機械的な反映、path や現状の確認だけなら、`skill-creator` と公式情報の確認を省いてよい。scripts、references、trigger、権限、秘密情報、外部 I/O、実行の挙動に触れる変更は省かない。
 
 ## 変更後の確認
 
-- 追加、rename、削除した path、名前（skill / rule / agent）、設定キーは、`rg --hidden -g '!.git'` で参照を探す。`--hidden` は `.github/` などの dot path を含めるため、`-g '!.git'` は `.git/` の log を除くため。ADR 本文は採用時点の記録なので直さない。
-- Markdown を変えたら `npm run lint`、TOML を変えたら `npm run lint:toml` で lint する。`markdownlint-cli2` と `tombi` は repo の devDependency なので、PATH 上の command を探さない。commit 時は prek の hook が同じ設定で走る（2 経路の違いは `docs/notes/markdownlint-and-pre-commit-execution.md`）。
-- `.gitignore` の追跡対象と `.chezmoiignore` の配布対象は独立に確認する。source から消したファイルは target に残るので、適用後は `chezmoi managed` と target の実体を突き合わせる。
-- surface（`dot_claude/`、`dot_codex/`、`.claude/`、root の `AGENTS.md` / `CLAUDE.md`）の変更と、その理由を書いた `docs/notes/` は別 commit にする（根拠は `docs/notes/git-commit-skill-design.md`）。後から見つけた追従漏れも別 commit にする。
+- 追加、rename、削除した path、名前（skill / rule / agent）、設定キーは、`rg --hidden -g '!.git' -g '!archive'` で参照を探す。`--hidden` は `.github/` などの dot path を含めるため。ADR 本文は採用時点の記録なので直さない。
+- Markdown を変えたら `npm run lint`、TOML を変えたら `npm run lint:toml` で lint する。`markdownlint-cli2` と `tombi` は repo の devDependency なので、PATH 上の command を探さない。commit 時は prek の hook が同じ設定で走る（`docs/notes/markdownlint-and-pre-commit-execution.md`）。
+- `.gitignore` の追跡対象と `.chezmoiignore` の配布対象は、別々に確かめる。source から消したファイルは target に残るので、apply の後に `chezmoi managed` と target の実体を突き合わせる。
+- surface（`dot_claude/`、`dot_codex/`、`.claude/`、root の `AGENTS.md` / `CLAUDE.md`）の変更と、その理由を書いた `docs/notes/` は別の commit にする（`docs/notes/git-commit-skill-design.md`）。後から見つけた追従漏れも別の commit にする。
 
-## 置き場の原則
+## 置き場
 
-- `dot_claude/`: 全 project へ配る運用契約（`CLAUDE.md`）、settings、hooks、skills、mods
-- `dot_codex/`: 全 project へ配る運用契約、skills、agents、config、rules。内訳は `dot_codex/AGENTS.md` の「置き場」を正本にする
+- `dot_claude/`: 全 project へ配る Claude Code の契約（`CLAUDE.md`）、settings、hooks、skills、mods
+- `dot_codex/`: 全 project へ配る Codex の契約、skills、agents、config、rules。内訳は `dot_codex/AGENTS.md` の「置き場」を正本にする
+- `archive/`: 再構築の前の旧版の退避先。配布しない。直さずに参照だけする
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
-- `.claude/rules/`: 使わない。この repo に閉じる運用ルールはこの `AGENTS.md` に置き、Claude と Codex の両方に読ませる（根拠は `docs/notes/memory-surface-design.md`）
-- `docs/notes/`: repo-level の通常知見や背景。`docs/adr/`: repo-level の判断記録
+- `.claude/rules/`: 使わない。この repo に閉じる規則はこの `AGENTS.md` に置き、Claude と Codex の両方に読ませる（`docs/notes/memory-surface-design.md`）
+- `docs/notes/`: repo の知見と、今の設計の理由。`docs/adr/`: repo の判断の記録
