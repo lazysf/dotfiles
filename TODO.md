@@ -16,14 +16,18 @@
 
 - 記載: 2026-11-09（`dot_codex/` を Claude 側の新しい設計に揃えた時）
 
-`dot_codex/` の契約と skills は、Claude 版を元に移しただけで、Codex では動かしていない。`chezmoi apply` の後に新しい Codex の session を開き、次を確かめる。設計は `docs/notes/codex-harness-operation.md` にある。
+2026-11-09 に、apply の後の Codex の session で次を確かめた。設計は `docs/notes/codex-harness-operation.md` にある。
 
-- `/skills` に `coding`、`git-commit`、`lapidary`、`scribe` の 4 つが出る。公式 docs が user skill の置き場に挙げるのは `~/.agents/skills` だけで、配布先の `~/.codex/skills` には触れていない。
-- 「commit して」と頼むと、`git-commit` が発火して `lapidary` を通し、`git add` と `git commit` をコマンドごとに申請する。
+- session が global の `AGENTS.md` と 4 つの skill（`coding`、`git-commit`、`lapidary`、`scribe`）を読み込んでいた。
+- skill の名前と手順を知らせたうえで、`$TMPDIR` の使い捨ての repo に commit を頼むと、`git-commit` が `lapidary` を通し、署名付きの commit ができた。
+- 契約と skills の各行を Codex の公式情報と照らした。挙がった修正は、両方の skill と notes に入れた。
+
+残っているのは、最後の apply の後に開いた新しい session での確認。
+
+- `/skills` の画面に 4 つの skill が出る。今の Build skills の docs が user skill の置き場に挙げるのは `~/.agents/skills` だけで、配布先の `~/.codex/skills` には触れていない。
+- skill の名前も手順も知らせずに commit を頼んだ時に、`git-commit` が発火して `lapidary` を通す。
+- `lapidary` が、自分の変更で古くなった notes を直し、別の commit に分けるものを示す。
 - 返答が `AGENTS.md` の「返答」に従って、結論から短くなる。
-- 契約と skills の各行が、Codex で要るか。Claude で残した行をそのまま移したので、Codex の既定の振る舞いと重なる行や、Claude では既定で持っていて書かなかったため Codex に抜けている規定があるかもしれない。
-
-確かめる前に、source から消したファイル（`~/.codex/agents/` の 2 つの reviewer、`skills/caveman`、`skills/coding/references`、`skills/git-commit/references/failure-handling.md`）を `~/.codex` から消す。残っていると、旧版の skill や agent が読まれる。
 
 ---
 
