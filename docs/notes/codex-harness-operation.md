@@ -58,7 +58,7 @@ Codex の command hook はログインシェルから起動する。署名用プ
 
 2026-11-07 に、ユーザーは実際の作業機で署名専用 agent を停止した。プロセスと socket の消失を確認してから新しい Codex の session を開くと、`SessionStart` hook が agent を起動して鍵を載せた。session 内の `SSH_AUTH_SOCK` は専用 socket を指していた。`ssh-add -l` は comment が `agent-signing` の ED25519 鍵を 1 本だけ返した。`$TMPDIR` の使い捨て repo で `git -c commit.gpgsign=true commit --allow-empty -m probe` を実行すると、`git log -1 --format='%G? %GK'` の `%G?` は `G` になった。`%GK` は `ssh-add -l` の fingerprint と一致した。
 
-停止後の起動を確かめる時は、Claude Code より先に Codex の session を開く。Claude Code の `SessionStart` も同じ agent を起動するためである。停止の手順は [代償と失効](agent-commit-signing-design.md#代償と失効)を参照。
+停止後の起動を確かめる時は、Claude Code より先に Codex の session を開く。Claude Code の `SessionStart` も同じ agent を起動するためである。停止の手順は [代償と失効](agent-commit-signing-design.md#代償と失効) を参照。
 
 ## 未確認
 

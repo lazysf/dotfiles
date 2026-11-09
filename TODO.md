@@ -56,7 +56,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 - Parsec の host settings で Fallback To Virtual Display をオンにでき、物理ディスプレイが無い状態で接続すると仮想ディスプレイが出る。`Parsec.ParsecVDD` が `-Scope` 無しの winget で入り、Parsec Virtual Display Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
 - Parsec の host settings で Virtual Mouse をオンにでき、物理マウスが無い状態で接続してもカーソルが出る。`Parsec.ParsecVUD` が `-Scope` 無しの winget で入り、Parsec Virtual USB Adapter が出ることは 2026-11-02 に確認した。（2026-11-02 追加）
 - `powershell` から `winget upgrade Microsoft.PowerShell` で PowerShell 7 を更新できる。次の版が出るまで確かめられない。`chezmoi apply` で 7.6.9 の MSIX 版が入り、`pwsh` で profile が読まれて starship と `ls`（eza）が効くことは 2026-11-03 に確認した。（2026-11-03 追加）
-- prek の `check-identifiers` hook が動き、値を仕込んだ staged の commit を止める。設計は `docs/notes/markdownlint-and-pre-commit-execution.md` の「作業機の識別子を検査する local hook」にある。（2026-11-08 追加）
+- prek の `check-identifiers` hook が動き、値を仕込んだ staged の commit を止める。設計は `docs/notes/lint-and-pre-commit-execution.md` の「作業機の識別子を検査する local hook」にある。（2026-11-08 追加）
 
 仕事の Windows では、`work` を選んだ時に 1Password と Zotero と Parsec が入らず、git の identity と署名の設定が出ないことを確かめる。
 
@@ -75,32 +75,13 @@ native Windows では、Claude Code の Bash が sandbox の外で動く。mac �
 
 ---
 
-## 5. markdownlint の依存に残る npm audit の警告
+## 5. textlint で日本語の文章を検査する
 
-- 記載: 2026-11-08（tombi の導入で npm audit を見た時）
+- 記載: 2026-11-08（markdownlint の npm audit の警告を見て、ほかの lint を相談した時）。2026-11-09 に rumdl へ乗り換えた後、textlint を入れる方針になった
 
-markdownlint-cli2 を 0.22.1 から 0.24.0 に上げると、`npm audit` の警告は 8 件から 5 件（high 3、low 2）に減った。残る 5 件は 2 つの package から来ていて、どちらも markdownlint 0.42.0 の依存にある。
+[textlint](https://github.com/textlint/textlint) を入れ、rumdl が見ない日本語の文章を検査する。候補は [`textlint-rule-preset-ja-technical-writing`](https://github.com/textlint-ja/textlint-rule-preset-ja-technical-writing) と、表記揺れを辞書で揃える `textlint-rule-prh`。rumdl の MD089 と重なる `textlint-rule-preset-ja-spacing` は入れない。
 
-- `re2js` 2.8.6: 0.24.0（markdownlint 0.42.0）で新しく依存に加わった。markdownlint が完全固定している。修正版は 2.9.1 以降。
-- `katex` 0.16.47: 上げる前から入っている。`micromark-extension-math` が `^0.16.0` を要求し、修正版は範囲の外にある。
-
-npm の `overrides` で強制はしない。markdownlint が想定しない組み合わせで動かすことになるため。markdownlint の新しい版が出たら、`npm update` と `npm audit` で解消したかを見る。prek の hook 環境にも同じ版が入るので、`rev` を上げた後の hook 環境も見る。6 の rumdl へ移れば、この項目は消える。
-
----
-
-## 6. Markdown の lint の見直し
-
-- 記載: 2026-11-08（5 の audit の警告を見て、markdownlint 以外の lint を相談した時）
-
-2 つの候補を試す。どちらも未検証。
-
-- [rumdl](https://github.com/rvben/rumdl) で markdownlint-cli2 を置き換える。Rust 製で、rule 名は markdownlint と同じ `MD001` 形式。公式の pre-commit hook がある。Node の依存が消えるので、5 の警告も消える。試す時は、今の `.markdownlint-cli2.jsonc` を読めるか、repo 全体で判定が markdownlint と揃うか、VS Code の拡張があるかを確かめる。
-- [textlint](https://github.com/textlint/textlint) と [`textlint-rule-preset-ja-technical-writing`](https://github.com/textlint-ja/textlint-rule-preset-ja-technical-writing) を併用する。markdownlint が構造を見るのに対し、こちらは日本語の文章を見る。preset の既定は厳しめなので、まず repo 全体での違反の件数を数え、残す rule を選ぶ。
-
----
-
-## 7. MD024 を入れ直すか判断する
-
-- 記載: 2026-11-08（`docs/notes/` を整備した時）
-
-`.markdownlint-cli2.jsonc` は MD024 を無効にしているが、無効のままにする理由は anchor link が増えて成り立たなくなった。件数、入れ直す時の形、その理由は `docs/notes/markdownlint-and-pre-commit-execution.md` の「MD013 / MD024 を無効化している理由」にある。6 で lint を置き換える場合は、置き換えた先の同じ rule で判断する。
+- preset の既定は厳しめなので、まず repo の外の一時領域で動かして repo 全体での違反の件数を数え、残す rule を選ぶ。
+- 文の長さや助詞の重複のように自動修正の無い rule は、commit を止める hook にすると、直すまで commit できなくなる。hook に入れる rule と、手で走らせるだけの rule を分けるかを決める。
+- Node の依存が増える。入れた後に `npm audit` を見る。
+- ADR の本文は直さないので、rumdl と同じく ADR の扱いを決める。

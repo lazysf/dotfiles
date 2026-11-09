@@ -86,7 +86,7 @@ chezmoi apply
 
 ## 手作業が要るもの
 
-macOS の `personal` では、`chezmoi apply` が Codex の署名設定を追加します。初回は Codex CLI の `/hooks` で署名用の hook を確認して信頼します。[Codex の署名設定と動作確認](docs/notes/codex-harness-operation.md#macos-のエージェント用署名)を参照してください。
+macOS の `personal` では、`chezmoi apply` が Codex の署名設定を追加します。初回は Codex CLI の `/hooks` で署名用の hook を確認して信頼します。[Codex の署名設定と動作確認](docs/notes/codex-harness-operation.md#macos-のエージェント用署名) を参照してください。
 
 - macOS の Terminal プロファイル: [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は配布されますが、Terminal への import は手で行います。
 - エージェント用の署名鍵の GitHub への登録（`personal`）は、作業機で新しい鍵を使い始めるときに行います。GitHub 上でエージェントの commit を Verified にするために必要です。

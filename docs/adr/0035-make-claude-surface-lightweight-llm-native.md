@@ -16,7 +16,7 @@
 
 **Claude surface（`dot_claude`）に限り**、決定論 workflow を撤去し、要所だけ固定して残りを LLM に自律させる。Codex surface は本 ADR の対象外で不変。
 
-- **進行はガイド**。`orchestrate` 必須入口・tier・Phase/Gate を廃止し、`CLAUDE.md` に「掘り下げ→方針(Plan)→実装⇄検証→review→doc→commit」のガイドと工程ごとの独立発火条件を置く。各工程は条件を満たす時だけ通す。
+- **進行はガイド**。`orchestrate` 必須入口・tier・Phase/Gate を廃止し、`CLAUDE.md` に「掘り下げ→方針 (Plan)→実装⇄検証→review→doc→commit」のガイドと工程ごとの独立発火条件を置く。各工程は条件を満たす時だけ通す。
 - **掘り下げ 4 条件 AND** と **ADR 3 条件 AND** で過剰／過少を抑える。掘り下げと Plan mode は「探索で埋まる曖昧さか」で振り分ける。重い変更は Plan mode の承認を捨てた Gate の代替にする。
 - **doc は後追い**。開発駆動の事前 doc（requirements / design / tasks）と request folder を廃止し、実装が固まった後に確定事実から 3 層（仕様＝README/docs、ADR、notes）で作る。doc 要否は silent skip 禁止で明示する。
 - **agent は read-only 3 つに集約**し self-contained 化する。`researcher` / `quality-reviewer` / `security-reviewer` を残し、Claude 側の `inspector` / `requirements-reviewer` / `design-reviewer` を廃止する。reviewer はユーザー明示トリガで、diff を呼び出し元が渡す前提。read-only は frontmatter の `tools:` で強制する（`researcher` から Bash を外す）。

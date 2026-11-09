@@ -55,11 +55,11 @@ entry = "scripts/check-commit-msg.sh"
 stages = ["commit-msg"]
 
 [[repos]]
-repo = "https://github.com/DavidAnson/markdownlint-cli2"
-rev = "v0.24.0"
+repo = "https://github.com/rvben/rumdl-pre-commit"
+rev = "v0.3.2"
 
 [[repos.hooks]]
-id = "markdownlint-cli2"
+id = "rumdl-check"
 args = ["--fix"]
 
 [[repos]]

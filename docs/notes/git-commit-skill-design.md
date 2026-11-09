@@ -20,7 +20,7 @@ message 生成だけに絞ると、止まる条件、staging の規定、staged 
 - 50 文字を目安、72 文字を上限。実測が既にこの範囲へ収まっており、現状追認になる。
 - 命令形、末尾ピリオド禁止、emoji 禁止は `caveman-commit` から採った。
 
-形式の検査は repo の commit-msg hook が持つ。この repo では prek の `check-commit-msg` が、type、scope の有無、description の先頭の小文字、末尾のピリオド、72 文字の上限を見る（[markdownlint-and-pre-commit-execution.md](./markdownlint-and-pre-commit-execution.md) の「commit message の title を検査する hook」）。skill の規定は、最初から hook を通る message を書くためのもの。repo が別の形式を決めていればそちらに従うのは、形式の正本が repo の hook の側にあるため。
+形式の検査は repo の commit-msg hook が持つ。この repo では prek の `check-commit-msg` が、type、scope の有無、description の先頭の小文字、末尾のピリオド、72 文字の上限を見る（[lint-and-pre-commit-execution.md](./lint-and-pre-commit-execution.md) の「commit message の title を検査する hook」）。skill の規定は、最初から hook を通る message を書くためのもの。repo が別の形式を決めていればそちらに従うのは、形式の正本が repo の hook の側にあるため。
 
 ## body の規定
 
@@ -80,7 +80,7 @@ repo の `AGENTS.md` や `CLAUDE.md` が分け方を決めていればそれに�
 
 ## pre-commit hook の実態
 
-この repo の pre-commit hook のうちファイルを書き換えるのは `fix end of files`、`mixed line ending`、`markdownlint-cli2 --fix`、`tombi-format`。`trim trailing whitespace` も書き換えるが、`.md` を exclude しており、skill や docs のような主要ファイルには発火しない。commit-msg の段では `check-commit-msg` だけが走る。
+この repo の pre-commit hook のうちファイルを書き換えるのは `fix end of files`、`mixed line ending`、`rumdl-check --fix`、`tombi-format`。`trim trailing whitespace` も書き換えるが、`.md` を exclude しており、skill や docs のような主要ファイルには発火しない。commit-msg の段では `check-commit-msg` だけが走る。
 
 自動修正型が発火すると commit が失敗し、修正後の内容が unstaged で残る。差分を確認せずに再 stage すると、hook が何を変えたか分からないまま commit することになる。
 
