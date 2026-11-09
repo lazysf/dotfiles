@@ -150,7 +150,7 @@ launchctl bootout "gui/$(id -u)/local.mole.weekly-check"
 
 ## 構成
 
-- [`dot_claude/`](dot_claude/): `~/.claude/` へ配布する Claude Code の設定、skills、agents、mod。
+- [`dot_claude/`](dot_claude/): `~/.claude/` へ配布する Claude Code の設定、hook、skills、mod。
 - [`dot_codex/`](dot_codex/): `~/.codex/` へ配布する Codex の設定。`config.toml` は配布しません。
 - [`scripts/`](scripts/): セットアップスクリプトと、commit 時の hook が呼ぶスクリプト。chezmoi は配布しません。
 - [`docs/`](docs/): 設計の理由（notes）と判断の記録（ADR）。一覧は [`docs/README.md`](docs/README.md)。
