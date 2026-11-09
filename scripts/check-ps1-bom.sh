@@ -12,7 +12,9 @@ for file in "$@"; do
     status=1
     continue
   fi
-  bytes=$(printf '%s' "$bytes" | tr -d ' \n')
+  # 引用しない展開で空白と改行を落として連結する。外部の command を挟まないので、ここでは失敗しない。
+  # shellcheck disable=SC2086
+  bytes=$(printf '%s' $bytes)
   if [ "$bytes" != "efbbbf" ]; then
     echo "check-ps1-bom: $file が UTF-8 の BOM で始まっていない。BOM 付きの UTF-8 で保存し直す。" >&2
     status=1
