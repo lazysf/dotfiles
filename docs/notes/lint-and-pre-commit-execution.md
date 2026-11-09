@@ -89,9 +89,19 @@ git の pre-commit として動かすのは、git が commit 先の repo の、s
 
 commit-msg の shim は `prek install` で入る。shim を足す前に `prek install` した clone は、打ち直すまで検査されない。`.git/hooks` は Claude Code の sandbox の中から書けないので、打つのは人。
 
+## `.ps1` の BOM を検査する hook
+
+`check-ps1-bom`（`scripts/check-ps1-bom.sh`）は、staged の `.ps1` が UTF-8 の BOM で始まるかを見る。Windows PowerShell は、BOM の無い UTF-8 のスクリプトを ANSI のコードページで読み、非 ASCII の文字を読み違える（[about_Character_Encoding](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding?view=powershell-5.1)、2026-11-09 確認）。`Documents/WindowsPowerShell/` の profile と `scripts/windows/setup.ps1` は日本語を含み、Windows PowerShell で動く。
+
+改行は `.gitattributes` の `eol=lf` が git の側で揃えるが、git は UTF-8 の BOM を足しも消しもしない。エディタや agent の編集 tool が BOM を落としても、git は気づかない。そのため BOM だけは hook で止める。直しはせずに止めるだけにしている。BOM を足すと、ファイルの先頭の byte が変わるため。
+
+対象は拡張子が `.ps1` の file だけ。PowerShell 7 の profile は `.ps1.tmpl` で、chezmoi の template の記法から始まるので外れる。PowerShell 7 は BOM の無い UTF-8 を既定で読む。
+
+2026-11-09 に、script を直接呼ぶと、BOM 付きは exit 0、BOM の無いもの、空の file、読めない path は exit 1 だった。`prek run check-ps1-bom --files` でも、BOM の無い `.ps1` で止まり、BOM 付きでは通った。
+
 ## 未確認
 
-- `check-identifiers` と `check-commit-msg` が Windows の prek で動くか。`check-commit-msg` は文字数を `LC_ALL=en_US.UTF-8 wc -m` で数える。
+- `check-identifiers`、`check-commit-msg`、`check-ps1-bom` が Windows の prek で動くか。`check-commit-msg` は文字数を `LC_ALL=en_US.UTF-8 wc -m` で数える。`check-ps1-bom` は `head -c` と `od` を使う。
 - rumdl の hook と `npm run lint` が Windows で動くか。
 - VS Code の rumdl 拡張が `.rumdl.toml` を読んで同じ判定をするか。拡張は入れていない。
 - `check-toml` / `check-yaml` は登録されていない。TOML は `tombi-lint` が構文も見る。YAML は `nvim.yml` などの対象があるが、意図的に外したのか未検討なのかは不明。
