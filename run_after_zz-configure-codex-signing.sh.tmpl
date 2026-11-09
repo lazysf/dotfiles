@@ -1,7 +1,0 @@
-{{ if and (eq .chezmoi.os "darwin") (eq .profile "personal") -}}
-#!/bin/sh
-set -eu
-
-# パッケージと鍵のセットアップ、および共有スクリプトの配布が終わってから反映する。
-exec /usr/bin/python3 {{ joinPath .chezmoi.sourceDir "scripts/macos/configure-codex-signing.py" | quote }} {{ .chezmoi.destDir | quote }}
-{{ end -}}
