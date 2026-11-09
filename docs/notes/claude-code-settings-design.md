@@ -237,6 +237,11 @@ auto mode の built-in も push を止めない。`allow` の Git Push Destinati
 - `permissions.deny` の `Bash(git push *)`。auto-mode-config docs によると、deny rule は classifier より前に評価される。permissions docs によると、`&&` や `;` で繋いだ subcommand、`$(...)` の中、`timeout` などの wrapper と、先頭の環境変数の代入の後ろにも当たる。末尾の `*` の前に空白を置いているので、引数の無い `git push` にも当たる。`git -C <dir> push` や `git -c <key>=<value> push` のように形を変えると外れる。
 - `autoMode.hard_deny` に足した Agent Git Push の rule。classifier は rule を文として読むので、上の deny を外れる形の push も止められる。`"$defaults"` を入れているので、built-in の `hard_deny` は残る。auto mode の時にしか効かない。`soft_deny` に置かないのは、公式の docs によると `allow` の rule が `soft_deny` の例外として上書きし、Git Push Destination がこれに当たりうるため。`hard_deny` は `allow` にもユーザーの意図にも上書きされないので、ユーザーが頼んでも、エージェントは push しない。これは `CLAUDE.md` の「push はユーザーが手元の terminal で行う」と揃う。classifier は `autoMode` を project settings からは読まないので、置き場は `dot_claude/settings.json` になる（「`/auto-mode-setup` の結果を取り込まない」）。
 
+この 2 つの層を apply した後に新しく開いた Windows の session（Claude Code 2.1.317、Git for Windows 2.56.0.windows.4、auto mode）で、エージェントの Bash から `--dry-run` を試した（2026-11-09）。
+
+- `git push --dry-run` は、実行前に permission の拒否で止まった。
+- `git -C . push --dry-run` は、実行前に auto mode の classifier の拒否で止まった。classifier は理由を返さなかったので、Agent Git Push の rule と built-in のどちらで止めたかは分からない。
+
 どちらも model の誤りと事故への guardrail で、侵害されたプロセスに対する境界ではない。境界にするなら、Git Credential Manager の保存済みの資格情報をやめ、push のたびに 1Password の承認を挟む credential helper にする。手元の push にも承認が要るうえ、helper を自前で持つことになるので採らない。
 
 ## 署名 agent の socket を通す理由
