@@ -31,7 +31,7 @@ title の後に 1 行空けて書く。通常の英文で、先頭 1 文字は�
 
 - `This commit does X` のような書き出し。diff が何をしたかを語るので、body は理由に集中する。
 - `I` / `we` / `now` / `currently`。commit は変更そのものの記録で、書き手や時点の話ではない。
-- `As requested by ...`。依頼者を残したいなら `Co-authored-by` trailer を使う。
+- `As requested by ...`。誰が頼んだかは、変更の理由ではない。
 - ファイル名の再掲。`files` に出るので body で繰り返さない。
 
 ## footer(s)

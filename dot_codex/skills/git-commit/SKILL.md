@@ -27,6 +27,7 @@ description: Git の変更を commit する時に使う。「commit して」「
 - 未解決の conflict
 - 変更が混ざっていて、分け方が決まらない
 - 1 つのファイルの中に、範囲に入れる変更と入れない変更が混ざっている。ユーザー自身の編集や前の作業の残りで、範囲に入るか確かめられない変更も、入れない側に数える
+- 範囲に入らない変更が、すでに stage されている。自分で stage したものでなければ、unstage せずに報告する
 - commit する変更が無い。空の commit は作らない
 
 ## 変更の単位
@@ -46,12 +47,12 @@ description: Git の変更を commit する時に使う。「commit して」「
 
 ## commit message
 
-形式は repo の commit-msg hook が検査する。ここの規定は、最初から hook を通る message を書くためのもの。repo が別の形式を決めていれば、そちらに従う。
+repo に commit-msg hook があれば、形式はそれが検査する。ここの規定は、最初から hook を通る message を書くためのもの。repo が別の形式を決めていれば、そちらに従う。
 
 - title は `<type>: <description>` の 1 行。
 - type は `feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert` から選ぶ。scope は付けない。どれにも当たらないと感じたら、その commit が複数の変更を含んでいないか疑う。
 - description は英語の命令形で、小文字で始める（`add` / `fix` / `remove`）。末尾にピリオドを付けない。emoji を使わない。50 文字を目安、72 文字を上限にする。
-- body には原則 `Why:` で変えた理由を 1〜2 文書く。doc は今の形を書くので、なぜ変えたかは commit にしか残らない。英語で書き、72 文字で折り返す。`This commit`、`I` / `we`、`now` / `currently` は使わない。commit は変更そのものの記録で、書き手や時点の話ではない。
+- body には原則 `Why:` で変えた理由を 1〜2 文書く。doc は今の形を書くので、変えた直接の理由は commit に残す。英語で書き、72 文字で折り返す。`This commit`、`I` / `we`、`now` / `currently` は使わない。commit は変更そのものの記録で、書き手や時点の話ではない。
 - 理由は具体的な事実、判断、失敗を書く。「保守しやすくするため」のような一般論しか書けないなら省く。title だけで理由が明らかな変更（typo、機械的な追従、整形、lint の指摘への対応、依存の更新）でも省く。
 - breaking change、security の修正、data migration、revert では、`Why:` に加えて影響も書く。`Why:` 以外のラベル、footer、`BREAKING CHANGE` を書く時は、先に [references/message-format.md](references/message-format.md) を読む。
 
@@ -66,7 +67,7 @@ EOF
 
 ## Gotchas
 
-- hook が失敗した時、commit はできていない。ここで `--amend` すると 1 つ前の commit を書き換える。原因を直して stage し直し、新しい commit を作る。
+- pre-commit や commit-msg の hook が失敗した時、commit はできていない。ここで `--amend` すると 1 つ前の commit を書き換える。原因を直して stage し直し、新しい commit を作る。
 - 自動修正型の hook（末尾改行の補正、`markdownlint --fix` など）は、ファイルを書き換えたうえで失敗する。修正差分を `git diff` で確かめてから stage し直す。確かめずに stage すると、hook が何を変えたか分からないまま commit する。
 - hunk 単位の stage（`git add -p` / `-i`）はしない。agent は対話に答えられず、答えを流し込むと順番がずれて別の hunk が stage される。1 ファイル内で分ける必要が出たら、「止まる条件」に当たる。
 - 署名に失敗したら、迂回せず止まって報告する。
