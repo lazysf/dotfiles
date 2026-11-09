@@ -30,7 +30,7 @@ branch と PR の運用は、repo ごとの `AGENTS.md` / `CLAUDE.md` に任せ�
 
 ### push を契約に書いている理由
 
-push は sandbox の proxy が SSH を運ばないため、agent が実行しても失敗する（[claude-code-settings-design.md](./claude-code-settings-design.md) の「push は sandbox 内で SSH を通らない」）。`skills/git-commit` は push を扱わないと書くだけで、理由は持たない。その skill も commit 依頼でしか発火しない。「push して」とだけ言われた時、agent は失敗する経路へ進む。
+push を agent が実行した時の結果は、OS で違う。mac の sandbox では、SSH の remote への push は、proxy が SSH を運ばないので失敗する。native Windows の HTTPS の `origin` では、止める設定が無いと、保存済みの資格情報で通る。どちらの理由も、止める設定も、[claude-code-settings-design.md](./claude-code-settings-design.md) の「push は sandbox 内で SSH を通らない」にある。契約には、OS で変わらない「agent は実行しない」だけを書く。`skills/git-commit` は push を扱わないと書くだけで、理由は持たない。その skill も commit 依頼でしか発火しない。「push して」とだけ言われた時、agent は push を試みる経路へ進む。
 
 常時読まれる側に 1 文だけ置く必要がある。
 
