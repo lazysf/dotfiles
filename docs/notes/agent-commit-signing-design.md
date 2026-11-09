@@ -91,6 +91,8 @@ native Windows では、sandbox の層（`Read` deny の sandbox への合流、
 
 その結果、Windows のエージェントの Bash と PowerShell のコマンドは、パスフレーズの無い秘密鍵を読んで外へ送れる。mac の sandbox 内のコマンドは agent に署名を頼めるだけで、鍵そのものは持ち出せない。Windows では鍵を持ち出せるので、session が終わった後も別の場所で署名できる。漏れた後の影響と失効の手順は「代償と失効」と同じ。それでも、エージェントの作業が 1Password の承認で止まらないことを優先し、Windows の `personal` にも入れる。sandbox を使える WSL2 で Claude Code を動かす案は、環境を作り直す範囲が大きいので採らない。
 
+Windows のエージェントは `~/.ssh` に鍵ペアを置ける（「`~/.ssh` への書き込みを止める」の実測）。置かれた鍵ペアを `setup.ps1` は既存のものとして使い、人がその公開鍵を GitHub に登録するおそれがある。それでも `setup.ps1` に置き換えの検査を足さない（2026-11-09 のユーザー判断）。置かれた鍵の秘密鍵を他人が持つ状態は、鍵を持ち出された状態と同じで、Windows ではそれを既に受け入れているため。検査を足しても、鍵の持ち出しは防げない。
+
 Codex には Windows の署名設定を入れていない。mac の Codex の署名用プロファイルにある `~/.ssh` の deny も Windows には入らないので、Windows の Codex の session がこの鍵を読めるかは確かめていない。
 
 ## Windows の hook

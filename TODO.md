@@ -12,11 +12,11 @@
 
 ## Windows での進め方
 
-1〜3 は、個人の Windows で、この repo を cwd にした Claude Code の session に「TODO を実施して」と頼めば進められるように書いてある。agent は次に従う。
+1〜2 は、個人の Windows で、この repo を cwd にした Claude Code の session に「TODO を実施して」と頼めば進められるように書いてある。agent は次に従う。
 
 - 1 項目ずつ進める。項目に入る前に、agent が実行するコマンドと、ユーザーに頼む操作を並べて示し、確認を取る。
 - Windows の Bash は sandbox の外で動く。実在の鍵、`~/.claude/settings.json`、hook、`~/.config/git/start-signing-agent` の中身を変えない。書き込めるかを試す時は、控えを `$TMPDIR` に取って同じ内容で上書きし、前後のハッシュが一致することを確かめる。試しに作るファイルは名前を `claude-probe-` で始め、終わったら消す。
-- push しない。リモートに届くかは `git ls-remote origin` で見る。
+- push しない。`--dry-run` も打たない。
 - UAC、GUI の操作、対話の選択、機器の抜き差しが要る手順は、agent が実行しない。ユーザーに手順と見てほしいものを示し、結果を聞く。
 - 「条件を待つ」に挙げた確認は、条件が揃うまで飛ばして TODO に残す。
 - 結果は項目ごとの「書き先」に、日付、版（Claude Code、Git for Windows、prek、Codex など）、確かめ方を付けて書く。確かめ終えた行は TODO から消す。ユーザー名、ホスト名、鍵の fingerprint の値は書かず、一致したかだけを書く。
@@ -35,6 +35,7 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 - agent: mac の `scripts/macos/configure-codex-signing.py` と `run_after_zz-configure-codex-signing.sh.tmpl` は、zsh のログインシェルを前提にしている。Windows に移せるか、移すなら何が要るかを案にする。
 - ユーザー: Codex の session で、`~/.ssh` の中の存在しない path（`~/.ssh/claude-probe-missing`）を読ませる。拒否されるか、「無い」と返るかを agent に伝える。後者なら、Windows の Codex は `~/.ssh/agent_signing_ed25519` も読める。
 - agent: `dot_codex/rules/destructive.rules` に、Windows の disk 系の command を揃えるかの案を出す。揃える対象は、2026-11-07 に Claude Code の `permissions.deny` へ足した `diskpart`、`format.com`、`convert.exe`、`wbadmin`。Codex の rules が Windows の command 名をどう照合するかを、docs で確かめてから出す。
+- agent: `dot_codex/rules/destructive.rules` に `git push` の禁止を揃えるかの案を出す。Claude Code は 2026-11-09 に、`permissions.deny` の `Bash(git push *)` と `autoMode.hard_deny` で push を止めた。Windows では、保存済みの Git Credential Manager の資格情報で、承認なしに push が通る（`docs/notes/claude-code-settings-design.md` の「push は sandbox 内で SSH を通らない」）。Codex の sandbox が Windows と mac で push の通信を止めるかを、docs で確かめてから出す。（2026-11-09 追加）
 
 ---
 
@@ -56,24 +57,3 @@ Windows では Claude Code だけがエージェント用の鍵で署名する�
 - 署名鍵を新規生成した時: setup が表示する SHA-256 fingerprint が公開鍵と一致する。CLI で登録した場合は、その鍵で署名した commit が GitHub で Verified になる。（2026-11-07 追加）
 - PowerShell 7 の次の版が出た時: `powershell` から `winget upgrade Microsoft.PowerShell` で更新できる。`chezmoi apply` で 7.6.9 の MSIX 版が入り、`pwsh` で profile が読まれて starship と `ls`（eza）が効くことは 2026-11-03 に確認した。（2026-11-03 追加）
 - 仕事の Windows: `work` を選んだ時に 1Password と Zotero と Parsec が入らず、git の identity と署名の設定が出ない。
-
----
-
-## 3. Windows の Claude Code で sandbox が担う防御の代わりを確かめる
-
-- 記載: 2026-11-07（今日の commit の security review で範囲外とした項目）。署名鍵の項目は 2026-11-06（エージェント用署名鍵の security review で範囲外とした項目）
-- 書き先: `docs/notes/claude-code-settings-design.md` の「Windows では sandbox の防御が効かない」。鍵の件は `docs/notes/agent-commit-signing-design.md` の「Windows では鍵を持ち出せる」
-
-native Windows では、Claude Code の Bash が sandbox の外で動く。mac で sandbox が担っている次の 4 つが、Windows で何に止められるかを確かめる。前提は `docs/notes/claude-code-settings-design.md` の「Windows では sandbox の防御が効かない」にある。
-
-- push がどこで止まるか。mac では、sandbox の proxy が SSH を運ばないので止まる。
-  - agent: `core.sshCommand`、`credential.helper`、`gh auth status` を見る。token の値は写さない。
-  - agent: Bash で `git ls-remote origin` を実行し、1Password の承認が出るかを見る。出たら、ユーザーは拒否する。
-  - ユーザー: 手元の terminal で 1 回承認した直後に、agent がもう一度実行する。承認なしで通るかで、1Password の承認がどの範囲まで記憶されるかを見る。
-- agent の Bash が、`~/.claude/settings.json` と hook を書き換えられるか。mac では protected paths が止める（`~/.claude/settings.json` は 2026-11-07 に実測）。
-  - agent: 進め方の手順で、同じ内容への上書きを Bash で試す。今の permission mode で、Claude Code が実行前に止めるか、確認を求めるか、そのまま通すかを見る。
-- `~/.ssh/agent_signing_ed25519` の鍵ペアを置けるか。これは確かめ済みで、Windows の session では `mv`、`ssh-keygen -f`、`rm` が `~/.ssh` で通った（2026-11-07 実測）。置かれると、`scripts/windows/setup.ps1` は既存の鍵ペアとして生成をスキップし、README の登録手順で、置かれた公開鍵を GitHub に登録するおそれがある。mac で止まる範囲は `docs/notes/agent-commit-signing-design.md` の「`~/.ssh` への書き込みを止める」にある。
-  - agent: setup が既存の鍵ペアを使う前に、何を確かめれば置き換えに気づけるかを案にして止まる。
-- 大文字で書いた `~/.SSH/...` が、`Edit(~/.ssh/**)` と `Read(~/.ssh/**)` の rule を外れるか。Windows の file system は既定で大文字と小文字を区別しないので、rule を外れると同じファイルに届く。
-  - agent: Read ツールで、存在しない `~/.SSH/claude-probe-missing` を読む。拒否されるか、「無い」と返るかを見る。Bash の `ls ~/.SSH` も同じように見る。
-  - 外れたら、rule を大文字でも書くかの案を出す。
