@@ -38,7 +38,7 @@ setup スクリプトが、Claude を入れた直後に `Claude-2nd` という�
 ## 共有されるもの
 
 `--user-data-dir` で分かれるのは Desktop のデータフォルダだけ。home 直下の `~/.claude/` と `~/.claude.json` は、両方のインスタンスが同じものを読む。
-dotfiles で配る `CLAUDE.md`、`settings.json`、skills、agents、output-styles、mods を両方のアカウントで使えるのは、この共有による。
+dotfiles で配る `CLAUDE.md`、`settings.json`、hooks、skills、mods を両方のアカウントで使えるのは、この共有による。
 
 一方で、アカウントに依存する状態も共有される。
 

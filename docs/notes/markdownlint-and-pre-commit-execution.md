@@ -1,7 +1,7 @@
 # markdownlint / pre-commit の実行経路
 
-- Date: 2026-11-08
-- 出典: `prek.toml` / `scripts/check-identifiers.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / markdownlint 0.40.0 の API による rule 単体実測 / `node_modules/markdownlint/doc/md024.md` / commit `287cc7b` `be928f2`
+- Date: 2026-11-09
+- 出典: `prek.toml` / `scripts/check-identifiers.sh` / `scripts/check-commit-msg.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Configuration Reference](https://prek.j178.dev/reference/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.markdownlint-cli2.jsonc` / `package.json` / `.git/hooks/pre-commit` / `node_modules/markdownlint-cli2/markdownlint-cli2.mjs` / `~/.cache/prek/repos/*/.pre-commit-hooks.yaml` / `prek --version` / 使い捨て repo での `git commit` 実測 / markdownlint 0.40.0 の API による rule 単体実測 / `node_modules/markdownlint/doc/md024.md` / commit `287cc7b` `be928f2`
 
 Markdown（markdownlint）と TOML（tombi）の lint は、それぞれ「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
 
@@ -84,7 +84,15 @@ git の pre-commit として動かすのは、git が commit 先の repo の、s
 
 同じ日に、使い捨ての repo に `prek install` して `git commit` した。home を指す symlink だけの commit と、`"` を含む名前のファイルの commit は、`check-identifiers` が Failed で止めた。値の無い commit は通った。
 
+## commit message の title を検査する hook
+
+`check-commit-msg`（`scripts/check-commit-msg.sh`）は commit-msg の段で走り、title が `<type>: <description>` の形かを見る。規約の正本は `dot_claude/skills/git-commit/SKILL.md` で、hook は title の形だけを機械的に見る。理由は [git-commit-skill-design.md](./git-commit-skill-design.md) の「title の規定」。
+
+`prek.toml` は `default_install_hook_types` に `commit-msg` を足し、`default_stages` を `pre-commit` に絞っている。prek の docs では、`stages` を書かない hook は全 stage が対象で、`default_install_hook_types` の既定は `[pre-commit]`（[prek Configuration Reference](https://prek.j178.dev/reference/configuration/)、2026-11-09 確認）。使い捨ての repo で commit-msg の shim を入れて試すと、`stages` を書かない local hook が commit-msg の段でも走り、1 回の commit で 2 回動いた。`default_stages = ["pre-commit"]` を足すと 1 回になった。commit-msg の hook には message file の path が 1 つだけ渡された（2026-11-09、prek 0.5.10）。
+
+commit-msg の shim は `prek install` で入る。shim を足す前に `prek install` した clone は、打ち直すまで検査されない。`.git/hooks` は Claude Code の sandbox の中から書けないので、打つのは人。
+
 ## 未確認
 
-- `check-identifiers` が Windows の prek で動くか。
+- `check-identifiers` と `check-commit-msg` が Windows の prek で動くか。`check-commit-msg` は文字数を `LC_ALL=en_US.UTF-8 wc -m` で数える。
 - `check-toml` / `check-yaml` は登録されていない。TOML は `tombi-lint` が構文も見る。YAML は `nvim.yml` などの対象があるが、意図的に外したのか未検討なのかは不明。
