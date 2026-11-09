@@ -97,7 +97,7 @@ commit-msg の shim は `prek install` で入る。shim を足す前に `prek in
 
 対象は拡張子が `.ps1` の file だけで、大文字と小文字は区別しない（`files = '(?i)\.ps1$'`）。Windows では `setup.PS1` のような名前でも PowerShell のスクリプトとして動くため。PowerShell 7 の profile は `.ps1.tmpl` で、chezmoi の template の記法から始まるので外れる。PowerShell 7 は BOM の無い UTF-8 を既定で読む。
 
-script は file を `od -N3` に入力のリダイレクトで渡し、先頭の 3 byte を読む。引数で渡すと、`-` で始まる名前を option と読み違えて失敗するため。`od` が失敗した時は、BOM の判定とは分けて「読めない」と報告する。`od` の出力の空白は、引用しない展開で落として連結する。外部の command を挟まないので、整形の段では失敗しない。`od` の出力は 16 進数と空白だけなので、パス名の展開も起きない。
+script は file を `od -N3` に入力のリダイレクトで渡し、先頭の 3 byte を読む。引数で渡すと、`-` で始まる名前を option と読み違えて失敗するため。`od` が失敗した時は、BOM の判定とは分けて「読めない」と報告する。`od` の出力の空白は、引用しない展開で落として連結する。連結に使う `printf` は shell の組み込みで、`tr` のような外部の command を起動しない。`od` の出力は 16 進数と空白だけなので、パス名の展開も起きない。
 
 2026-11-09 に、script を直接呼ぶと、BOM 付きは名前が `-` で始まっても exit 0、BOM の無いもの、空の file、存在しない path、読む権限の無い file は exit 1 だった。`prek run check-ps1-bom --files` でも、BOM の無い `.ps1` と `.PS1` で止まり、BOM 付きでは通った。`.ps1.tmpl` は対象にならなかった。
 

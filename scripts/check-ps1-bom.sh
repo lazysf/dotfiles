@@ -12,7 +12,7 @@ for file in "$@"; do
     status=1
     continue
   fi
-  # 引用しない展開で空白と改行を落として連結する。外部の command を挟まないので、ここでは失敗しない。
+  # 引用しない展開で空白と改行を落として連結する。printf は shell の組み込みで、外部の command を起動しない。
   # shellcheck disable=SC2086
   bytes=$(printf '%s' $bytes)
   if [ "$bytes" != "efbbbf" ]; then
