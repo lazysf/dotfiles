@@ -14,7 +14,7 @@
   - [git-signature-verification-design.md](./notes/git-signature-verification-design.md): 手元で commit の署名を検証する構成の理由と、allowed_signers の形式の実測、GitHub 側で署名を必須にする ruleset の管理方法
   - [harness-design-principles.md](./notes/harness-design-principles.md): この harness に何を置き、どう書くかの判断基準
   - [lapidary-skill-design.md](./notes/lapidary-skill-design.md): `lapidary` skill が今の形になっている理由と、組み込みの review との使い分け
-  - [lint-and-pre-commit-execution.md](./notes/lint-and-pre-commit-execution.md): rumdl / tombi の手動と commit 時の 2 経路、rumdl の rule の選び方、prek による実行と commit message の検査の実測
+  - [lint-and-pre-commit-execution.md](./notes/lint-and-pre-commit-execution.md): rumdl / tombi の手動と commit 時の 2 経路、rumdl の rule の選び方、prek による実行、commit message と `.ps1` の BOM の検査の実測
   - [memory-surface-design.md](./notes/memory-surface-design.md): 配布する memory を `CLAUDE.md` 1 枚にしている理由と、`paths` 付き rule が発火する条件の実測
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager に nvm を使う理由と、ほかの候補を使わない理由
   - [scribe-skill-design.md](./notes/scribe-skill-design.md): `scribe` skill が今の形になっている理由
