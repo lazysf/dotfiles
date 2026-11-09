@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: "Git の変更を commit する時に使う。「commit して」「コミットして」「変更を確定して」などの依頼に加え、作業を Git の履歴に残す流れになったら、commit という語が無くても使う。変更を目的ごとの commit に分け、明示した path だけを stage し、staged diff と秘密情報を確かめてから、`<type>: <description>` 形式の英語 message で通常の commit を作る。push、rebase、amend は扱わない。"
+description: "Git の変更を commit する時に使う。「commit して」「コミットして」「変更を確定して」などの依頼に加え、作業を Git の履歴に残す流れになったら、commit という語が無くても使う。変更を目的ごとの commit に分け、明示した path だけを stage し、staged diff と秘密情報を確かめてから、`type: description` 形式の英語 message で通常の commit を作る。push、rebase、amend は扱わない。"
 ---
 
 # Git Commit
@@ -12,7 +12,7 @@ description: "Git の変更を commit する時に使う。「commit して」�
 1. `git status -sb`、`git diff`、`git diff --staged` で変更の全体を読む。`git status` に `-uall` は付けない。
 2. 「止まる条件」に当たらないか確かめる。
 3. 「変更の単位」に従って commit の範囲を決める。複数の commit に分かれるなら、1 つずつ手順 4〜8 を回す。
-4. 範囲を `lapidary` で見直す。ユーザーが見直しは要らないと言った時は飛ばす。`lapidary` が commit できないと判定したら、止まって報告する。
+4. 範囲を `lapidary` で見直す。ユーザーが見直しは要らないと言った時は飛ばす。`lapidary` が commit できないと判定したら、止まって報告する。見直しで直したファイルが増えたら、手順 3 に戻って範囲を決め直す。
 5. 範囲の path を `git add <path>` で stage する。stage と commit は別のコマンドで打つ。同じコマンドにすると、手順 6 の確認が stage 前の状態に当たる。
 6. `git diff --staged` を読み、意図しない削除、debug 出力、無関係な整形が無いか見る。秘密情報は目視で済ませず、staged diff を検索して確かめる。
 7. message を heredoc で渡して commit する。
