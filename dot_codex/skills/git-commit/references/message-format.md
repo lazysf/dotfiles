@@ -44,9 +44,9 @@ title の後に 1 行空けて書く。通常の英文で、先頭 1 文字は�
 
 ## BREAKING CHANGE
 
-`BREAKING CHANGE:` を footer に書くか、`type` 直後に `!` を付ける。任意の型に付けられる。
+footer に `BREAKING CHANGE:` を書いて示す。任意の型に付けられる。
 
-- `!` がある場合 `BREAKING CHANGE:` は省略できる。その時は `title` の description で内容を説明する。
+- `type` の直後に `!` を付けない。`git log --oneline` で `feat!:` と `feat:` は 1 文字しか違わず、見落とす。`!` を付けると footer を省けるので、何が壊れるかの説明が title に縮む。
 - `BREAKING CHANGE:` は大文字 + 半角スペース + 説明。
 
 ## 例
@@ -64,7 +64,7 @@ permissions remain unchanged.
 互換性が壊れる場合。
 
 ```txt
-feat!: rename the config key from timeout to timeout_ms
+feat: rename the config key from timeout to timeout_ms
 
 BREAKING CHANGE: config files using `timeout` fail to load. Rename the
 key and convert the value from seconds to milliseconds.
