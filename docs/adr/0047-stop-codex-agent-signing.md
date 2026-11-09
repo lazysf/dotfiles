@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Supersedes: 0046
+- Amended-By: 0048
 
 ## 背景
 

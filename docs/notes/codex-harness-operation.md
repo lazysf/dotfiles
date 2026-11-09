@@ -1,9 +1,9 @@
 # Codex harness の運用
 
 - Date: 2026-11-09
-- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows の Codex session での署名の実測（2026-11-09）
+- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows と mac の Codex session での署名の実測（2026-11-09）
 
-`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md) にある。
+`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md)、commit を sandbox の外で都度承認する判断は [ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md) にある。
 
 ## 構成と権限
 
@@ -42,20 +42,21 @@ MCP、plugin、通知、モデル、権限などは、アプリまたは実機�
 
 Codex はエージェント用の鍵で署名しない（[ADR 0047](../adr/0047-stop-codex-agent-signing.md)）。commit の署名は global の Git 設定に任せる。`chezmoi apply` は Codex の署名設定を足さない。
 
+mac の Codex の commit は、承認を受けて sandbox の外で実行する（[ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md)）。sandbox の中からは 1Password に届かないため。
+
+2026-11-09 に、mac の Codex CLI 0.167.0-alpha.3.2 の環境で、profile と hook を外した新しい session を使って確かめた。session の実効の設定は、sandbox が `workspace-write`、permission profile が `managed`、filesystem が `restricted` だった。
+
+- 使い捨ての repo で sandbox の中から `git commit` を実行すると、`1Password: Could not connect to socket` に続けて `fatal: failed to write commit object` で失敗した。
+- 同じ条件で別の session を開き、承認を受けて sandbox の外で `git commit` を実行すると署名できた。`git log -1 --format='%G? %GK'` の `%G?` は `G` で、`%GK` は 1Password の鍵だった。
+- `~/.ssh/config` のバイト数を読めた。実在の秘密鍵は開いていない。
+- sandbox の中の `curl https://example.com` は、名前解決に失敗して HTTP の応答が無かった。
+
 配布をやめる前に apply した mac の `~/.codex` には、足した設定が残る。mac で次の順に外す。
 
 1. 配布の script を消した source を `chezmoi apply` する。先に手で外すと、古い script の apply が入れ直す。
-2. `~/.codex/hooks.json` の `SessionStart` から、`start-signing-agent` を呼ぶ hook を消す。公式の Hooks に、ファイルから消す手順の記載は無い。新しい session の `/hooks` で出なくなったことを確かめる。
-3. `~/.codex/config.toml` から、`shell_environment_policy.set` の `SSH_AUTH_SOCK` と `GIT_CONFIG_*`、`permissions.agent-signing.network`、`features.network_proxy` を消す。
-4. `default_permissions` と `permissions.agent-signing.filesystem` は残す。
-5. 新しい session で確かめる。
-   - `~/.ssh` の中のファイルの読み取りが拒否される。
-   - 外向きの通信が止まる。
-   - commit を作ると 1Password の承認が出て、`git log -1 --format='%G? %GK'` の `%G?` が `G`、`%GK` がエージェント用の鍵と違う。
-
-手順 4 で残す `filesystem` は、署名とは別の防御になる。mac には Claude Code のためにエージェント用の鍵が残るので、`~/.ssh` の `deny` が無いと Codex がその鍵を読める。`read` の項目は、cwd が `~` や `~/.config` の session で、Codex が Claude Code の署名の起動スクリプトと socket を書き換えることを止める。profile の名前は `agent-signing` のまま残る。
-
-network を外すのは、Unix socket を通すためだけに有効にしていたため。公式の Permissions では、`network.enabled` の既定は `false` で、network が off の時は proxy の設定によらず通信できない。
+2. `~/.codex/hooks.json` の `SessionStart` から、`start-signing-agent` を呼ぶ hook を消す。他に hook が無ければファイルごと消してよい。公式の Hooks に、ファイルから消す手順の記載は無い。新しい session の `/hooks` で出なくなったことを確かめる。
+3. `~/.codex/config.toml` から、`default_permissions`、`features.network_proxy`、`shell_environment_policy.set` の `SSH_AUTH_SOCK` と `GIT_CONFIG_*`、`permissions.agent-signing` の全体、消した hook の `hooks.state` を消す。
+4. 新しい session で、承認を受けて sandbox の外で使い捨ての repo に commit し、`%G?` が `G`、`%GK` がエージェント用の鍵と違うことを確かめる。
 
 ## Windows の署名とコマンド制限
 
@@ -97,8 +98,7 @@ Claude Code は Windows で、Git Bash から Git for Windows の `ssh-keygen` �
 
 ## 未確認
 
-- Windows の通常の Codex session での `~/.ssh` の読み取り境界、外向き通信、PowerShell 経由の rules の発火。[TODO 1](../../TODO.md#1-codex-の署名の解除と-windows-の確認) に残す。
-- Codex の session の commit で、1Password の承認が出て署名できるか。Windows と、設定を外した後の mac のどちらも未確認。mac は手順 5 で確かめる。
-- `extends = ":workspace"` の profile で `network` を外した時に、network が off になるか。公式の Permissions は既定を `false` と書くが、`extends` との関係は明記していない。mac は手順 5 で確かめる。
-- `permissions.agent-signing.filesystem` の `read` が、親ディレクトリの rename による置き換えも防ぐか。cwd が `~` や `~/.config` のセッションで問題になる。
+- Windows の通常の Codex session での `~/.ssh` の読み取り境界、外向き通信、PowerShell 経由の rules の発火。[TODO 1](../../TODO.md#1-windows-の-codex-の確認) に残す。
+- Windows の Codex で、承認を受けて sandbox の外で実行する commit が 1Password で署名できるか。TODO 1 に残す。
+- mac の Codex が `~/.ssh` の秘密鍵を実際に読めるか。`~/.ssh/config` までしか確かめていない。
 - `dot_config/zsh/dot_zshenv` の署名用 socket の条件は、Codex の署名のために足した。Claude Code に要るかは確かめていないので残している。
