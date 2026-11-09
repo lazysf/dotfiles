@@ -1,6 +1,6 @@
 # memory surface の設計
 
-- Date: 2026-11-08
+- Date: 2026-11-09
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [anthropics/claude-code#90450](https://github.com/anthropics/claude-code/issues/90450) / `dot_claude/CLAUDE.md` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / [Tools reference](https://code.claude.com/docs/en/tools-reference) / この環境での実測（`paths` の発火経路は 2026-09-02 の Claude Code v2.1.255 と、2026-11-08 の desktop app）
 
 配布する memory surface を `dot_claude/CLAUDE.md` 1 枚にしている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -21,7 +21,7 @@
 
 分けても、コードを書かない作業（doc、設定、commit message）で品質規範を読ませずに済むわけではない。`paths` を使わない以上、どちらのファイルも毎 session 全文が load される。
 
-`CLAUDE.md` の停止線とは重ならない。停止線が挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`## Privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。
+`CLAUDE.md` の「確認してから進めること」とは重ならない。そちらが挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`## Privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。
 
 **強制層はこの repo の commit にだけ持つ。** 公式は CLAUDE.md を context であって enforced configuration ではないと明示している。この repo の commit は、prek の local hook が staged の path と追加行を home の path、ユーザー名、ホスト名で検査する（[markdownlint-and-pre-commit-execution.md](./markdownlint-and-pre-commit-execution.md) の「作業機の識別子を検査する local hook」）。他の repo と、pattern にできない識別子は、契約だけが担う。
 
@@ -31,7 +31,7 @@ path 条件付き rule が発火するのは、match するファイルを Read 
 
 2026-11-08 に、repo 内へ probe の directory と rule を一時的に作って確かめた。読み方ごとに別の directory と rule を用意し、各 directory は 1 回だけ読んだので、directory ごとに 1 回しか load しない sticky な挙動は結果に混ざらない。実測したのは次の 3 つの読み方だけ。`cat file` では、`paths` 付き rule と subdirectory の `CLAUDE.md` の両方が注入された。`cat -n file | head` では rule が注入されなかった。Read tool では両方が注入された。session の途中で作った rule でも発火した。
 
-2026-09-02 には `src/probe.bas` を `cat` で読み、何も注入されなかった。Read tool の直後には当時の `rules/vba.md` の全文が注入された。現在 VBA の規約は `skills/coding/references/` にある。
+2026-09-02 には `src/probe.bas` を `cat` で読み、何も注入されなかった。Read tool の直後には当時の `rules/vba.md` の全文が注入された。
 
 [Tools reference](https://code.claude.com/docs/en/tools-reference) は、Bash で読んで load される command として `cat`、`head`、`tail`、`sed -n 'X,Yp'`、`grep`、`rg` などを挙げる。1 ファイルを対象に、pipe も redirect も無いことを条件にしている。
 
@@ -60,15 +60,15 @@ issue の、`cat` では何も load されないという結果は、2026-11-08 
 1. **どの依頼でも要るか。** 要るなら `CLAUDE.md`。
 2. 要らないなら、**発火しなかった時の実害**を見る。security、privacy、データ損失に関わるなら確実性を取って `CLAUDE.md` に置く。skill の発火は description 依存で、外れると守られない。
 
-両方に当たらないものだけ `skills/` へ置く。VBA の保存形式と識別子制約は `.bas` / `.cls` を触る時にしか意味がない。発火しなくても実害は形式の崩れに留まる。そのため `skills/coding/references/vba.md` にある（[coding-skill-design.md](./coding-skill-design.md)）。
+両方に当たらないものだけ `skills/` へ置く。たとえば ADR と notes の書式は、doc を書く時にしか意味がない。発火しなくても実害は書式の崩れに留まる。そのため `skills/scribe/references/` にある。
 
-## 優先順位に「短さ・巧妙さ」を置かない
+## 短さと巧妙さを「優先しない側」にだけ書く
 
-priority list に載せると「上位を損なわない範囲で巧妙さを追求してよい」と読める。巧妙さは可読性の敵なので、「短さと巧妙さは目標にしない」と否定形で書く。`DRY` は「性能より下」という位置情報が有用なので list に残す。
+契約は「可読性と直しやすさを、短さ、巧妙さ、必要以上の性能より優先する」と書く。短さと巧妙さは、比べて負ける側にだけ現れる。優先順位の list に目標として並べると、「上位を損なわない範囲で巧妙さを追求してよい」と読める。巧妙さは可読性の敵なので、目標の側には置かない。
 
 ## doc / artifact の規定を契約に持たない
 
-doc の書き方は `skills/scribe` が正本で、doc 追従の要否の明示は `CLAUDE.md` の `## doc` が常時側を担う。書き方まで契約へ足すと同じ規定が二重になり、scribe を直すたびに契約も直すことになる。
+doc の書き方と、doc をいつ直すかは `skills/scribe` が正本にする。いつ直すかは description が「使い方・設定・公開挙動を変えた時」として持つ。契約へ足すと同じ規定が二重になり、scribe を直すたびに契約も直すことになる。
 
 ## repo 固有の rule を配らない
 

@@ -19,7 +19,7 @@
 
 ## socket の path を sandbox から守る
 
-`security-reviewer` の指摘（2026-11-06）。Claude Code 2.1.317 の binary にある sandbox profile の生成コードを読むと、`allowUnixSockets` の path には connect だけでなく bind も許可が出ている。sandbox が state ディレクトリに書ける session では、sandbox 内のプロセスが socket を消して偽の agent を bind できる。たとえば cwd が `$HOME` か `~/.local` の session がそうなる。hook が、接続できる agent に鍵が無い時に `ssh-add` で鍵を送る形だと、次の `SessionStart` でパスフレーズの無い秘密鍵が偽の agent へ出る。
+`security-reviewer`（当時の reviewer agent）の指摘（2026-11-06）。Claude Code 2.1.317 の binary にある sandbox profile の生成コードを読むと、`allowUnixSockets` の path には connect だけでなく bind も許可が出ている。sandbox が state ディレクトリに書ける session では、sandbox 内のプロセスが socket を消して偽の agent を bind できる。たとえば cwd が `$HOME` か `~/.local` の session がそうなる。hook が、接続できる agent に鍵が無い時に `ssh-add` で鍵を送る形だと、次の `SessionStart` でパスフレーズの無い秘密鍵が偽の agent へ出る。
 
 これに 2 つの対策を重ねた。
 

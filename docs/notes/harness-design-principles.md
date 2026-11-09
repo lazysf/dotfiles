@@ -1,7 +1,7 @@
 # harness の設計原則
 
-- Date: 2026-11-08
-- 出典: `dot_claude/` / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / この環境での実測
+- Date: 2026-11-09
+- 出典: `dot_claude/` / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / [Settings reference](https://code.claude.com/docs/en/settings-reference) の `outputStyle`（2026-11-09 確認） / この環境での実測
 
 この harness に何を置き、どう書くかの判断基準を残す。個別の設定や skill が今の形である理由は、それぞれの設計 note にある。
 
@@ -13,13 +13,13 @@
 
 surface に残すのは、Claude が既定ではしないこと、または repo から読めないことを指示する記述だけ。公式の [Best practices](https://code.claude.com/docs/en/best-practices) は、Claude は書き留めたくなることの大半を既に知っているとし、skill にも同じ規則を当てる。既定でもすることの言い直しは、正しくても消す。
 
-この harness の記述の多くは、踏んだ失敗への対策として足されている。そのため削る前に、対応する設計 note を読む。note が失敗の記録を持つ項目は、その失敗を Claude の既定の振る舞いが防ぐと言える時だけ消す。言えない部分は残す。例えば `CLAUDE.md` の「設定や防御を外す前に、使っているものが無いことを確かめる」は、`allowUnixSockets` を外して署名を壊した失敗（[claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」）への対策で、既定の振る舞いでは防げない。`skills/lapidary` の各観点の `確認` は、それが無かった間は収束しなかった記録に基づく。
+この harness の記述の多くは、踏んだ失敗への対策として足されている。そのため削る前に、対応する設計 note を読む。note が失敗の記録を持つ項目は、その失敗を Claude の既定の振る舞いが防ぐと言える時だけ消す。言えない部分は残す。例えば `CLAUDE.md` の「設定や防御を外す前に、それに依存しているものが無いことを確かめる」は、`allowUnixSockets` を外して署名を壊した失敗（[claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」）への対策で、既定の振る舞いでは防げない。`skills/lapidary` の各観点が何を確かめるかまで書いているのは、それが無かった間は収束しなかった記録に基づく（[lapidary-skill-design.md](./lapidary-skill-design.md) の「終わりを回数でなく網羅で決めている理由」）。
 
 分量そのものは指標にならない。判断に効くなら長くてよい。
 
 ## source から消しても配布先には残る
 
-`chezmoi apply` は source から消えたファイルを target から削除しない。managed の対象外になるだけで実体は残り、skill / rule / agent を廃止しても `~/.claude/` を手で消すまで古い定義が有効なままになる。2026-08-29 の apply では、配布をやめたものが 6 つ残った。`researcher` agent、`git-push` skill、rule 2 本、rename 前の reference 2 本。
+`chezmoi apply` は source から消えたファイルを target から削除しない。managed の対象外になるだけで実体は残り、skill / rule / agent / output style を廃止しても `~/.claude/` を手で消すまで古い定義が有効なままになる。2026-08-29 の apply では、配布をやめたものが 6 つ残った。`researcher` agent、`git-push` skill、rule 2 本、rename 前の reference 2 本。
 
 廃止した時は `chezmoi managed` の一覧と target 側の実体を突き合わせ、差分を手で消す。
 
@@ -33,11 +33,11 @@ session へ渡る skill 一覧も即反映される。`scribe` の description �
 
 `SKILL.md` の本文も、書き換えて apply した後に同じ session で invoke すると新しいものが届いた（2026-09-01、`lapidary` の手順で確認）。
 
-`outputStyle` の値も即反映される。`~/.claude/settings.json` を `caveman` → `Concise` → `caveman` と書き換えたところ、`/clear` も新しい session も挟まずに切り替わった（2026-09-02、同じ session 内で往復 2 回）。公式は「Changes take effect after `/clear` or a new session」と書くので、挙動が食い違う。ただし観測できたのは、harness が注入する reminder の文言と、それに沿って応答が変わったことまで。system prompt の style 本体が差し替わったかは切り分けていない。
+`outputStyle` の値も即反映される。`~/.claude/settings.json` を当時の自作 style と `Concise` の間で書き換えたところ、`/clear` も新しい session も挟まずに切り替わった（2026-09-02、同じ session 内で往復 2 回）。公式の Settings reference も、session 中に変えると次の message から効くと書き、v2.1.251 未満は `/clear` か新しい session の後だったとしている（2026-11-09 確認）。
 
 `CLAUDE.md` は session 開始時に load されるため、apply しても動いている session は旧版のまま走り続ける。新版になるのは次に session を開いた時から。契約を直した効果を確かめるには session を開き直す。
 
-同じ output style でも、style ファイルの内容を編集した場合は session 開始時のままになる。2026-08-31 に `Caveman.md`（当時は `caveman.md`）へ probe 文字列を足して apply し、同じ session で応答が変わらないことを確認した。公式の "reads once at session start" は `outputStyle` 設定について書かれていて内容の編集に触れていないが、実測では内容の側が公式の記述どおりに振る舞い、値の側が食い違う。
+同じ output style でも、自作の style ファイルの内容を編集した場合は session 開始時のままになる。2026-08-31 に当時の自作 style のファイルへ probe 文字列を足して apply し、同じ session で応答が変わらないことを確認した。今は組み込みの style を使うので、この差は自作の style を戻す時に効く。
 
 ## skill description の書き方
 
@@ -55,7 +55,7 @@ session へ渡る skill 一覧も即反映される。`scribe` の description �
 
 ## 規則文に太字を使わない
 
-agent が読む surface では、規則の文や句を太字にしない。対象は `CLAUDE.md`、`skills/` とその `references/`、`agents/`、`output-styles/`。太字を使うのは、語の後に `:` が続くラベルだけにする（`CLAUDE.md` の `**review**:`、`**commit**:` など）。
+agent が読む surface では、規則の文や句を太字にしない。対象は `CLAUDE.md`、`skills/` とその `references/`。agent や output style を足した時は、それも対象になる。太字を使うのは、語の後に `:` が続くラベルだけにする（`skills/scribe/SKILL.md` の ADR の 3 条件の `**複数案を実際に比べた**:` など）。
 
 公式の [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) は、今の model は平易に書いた行に従うとしている。強調を重ねると、規則を過剰に適用するとも書いている。守られない規則に強調を足しても、たいてい直らない。例外の無い規則なら hook か deny rule に移す。長いファイルの中で埋もれているなら、ファイルを短くする。
 

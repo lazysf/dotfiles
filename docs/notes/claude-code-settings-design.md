@@ -1,7 +1,7 @@
 # Claude Code Settings の設計
 
-- Date: 2026-11-08
-- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / sandboxing docs の native Windows の記述、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / [Tools reference](https://code.claude.com/docs/en/tools-reference) の PowerShell tool 節、hooks docs の「Persisted variables in PowerShell commands」、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Windows の session での shell のツールと `Read` deny の実測（2026-11-07、Claude Code 2.1.317） / Windows と mac の実機 `claude auto-mode defaults`（v2.1.317）と、disk 系 command の解決と権限の実測（2026-11-07） / mac の session での絶対パスの `diskutil` の拒否の実測（2026-11-07、v2.1.317） / [Environment variables](https://code.claude.com/docs/en/env-vars) の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`（2026-11-07 確認） / [Windows Security Servicing Criteria](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria) と [User Account Control settings and configuration](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration)（2026-11-07 確認） / mac の sandbox 内での Keychain の github.com の credential と gh の token の取り出しと、auto mode の session での host を申告しない HTTPS の接続の実測（2026-11-07） / cwd が home の mac の session での `~/.claude/settings.json` への書き込みの実測、mac の session での Read ツールの `~/.ssh` の拒否の実測（2026-11-07） / CLI 2.1.311 で bypass mode を指定した起動の実測、desktop app の「バイパス権限モードを許可」の確認（2026-11-07） / [Configure auto mode](https://code.claude.com/docs/en/auto-mode-config)（2026-11-08 確認） / desktop app で実行した `/auto-mode-setup` の書き込みと、v2.1.317 の `claude auto-mode defaults` の比較（2026-11-08）
+- Date: 2026-11-09
+- 出典: [Claude Code settings](https://code.claude.com/docs/en/settings) / [Output styles](https://code.claude.com/docs/en/output-styles) / [Settings reference](https://code.claude.com/docs/en/settings-reference) / [Model configuration](https://code.claude.com/docs/en/model-config)（2026-11-02 確認） / [Configure permissions](https://code.claude.com/docs/en/permissions) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [Configure the sandboxed Bash tool](https://code.claude.com/docs/en/sandboxing) / [JSON schema](https://www.schemastore.org/claude-code-settings.json) / 実機 `claude auto-mode defaults`（v2.1.259） / 実機 `claude --settings <file> -p ...` と `claude --settings <file> --remote-control` で空 commit を作らせた `attribution` の A/B（v2.1.247） / Settings reference の `attribution` 節（2026-11-05 確認）と、desktop app で `attribution: false` を apply した後に空 commit を作らせた実測（2026-11-05） / [Get started with Claude Code on the web](https://code.claude.com/docs/en/web-quickstart) の実行経路比較表 / 実機 `man diskutil` と disk 系 command の実在確認（2026-09-02） / 実機 sandbox 内での破壊系 command 13 本の到達性と追加した deny の発火の実測、`man hdiutil` / `man nvram` / `man bless` / `man csrutil`（2026-09-04） / 実機 sandbox 内での `op` 到達性の実測（2026-09-04）と chezmoi の template 展開の実測（2026-10-22） / sandboxing docs の protected paths 節（2026-09-04 確認） / [Codex authentication](https://learn.chatgpt.com/docs/auth)（2026-10-16 確認） / [Mods reference](https://code.claude.com/docs/en/plugins/mods/reference) と [Environment variables](https://code.claude.com/docs/en/env-vars)（2026-10-16 確認） / sandboxing docs の native Windows の記述、permissions docs の `Read` deny rule の適用範囲（2026-11-07 確認） / [Tools reference](https://code.claude.com/docs/en/tools-reference) の PowerShell tool 節、hooks docs の「Persisted variables in PowerShell commands」、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Windows の session での shell のツールと `Read` deny の実測（2026-11-07、Claude Code 2.1.317） / Windows と mac の実機 `claude auto-mode defaults`（v2.1.317）と、disk 系 command の解決と権限の実測（2026-11-07） / mac の session での絶対パスの `diskutil` の拒否の実測（2026-11-07、v2.1.317） / [Environment variables](https://code.claude.com/docs/en/env-vars) の `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`（2026-11-07 確認） / [Windows Security Servicing Criteria](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria) と [User Account Control settings and configuration](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration)（2026-11-07 確認） / mac の sandbox 内での Keychain の github.com の credential と gh の token の取り出しと、auto mode の session での host を申告しない HTTPS の接続の実測（2026-11-07） / cwd が home の mac の session での `~/.claude/settings.json` への書き込みの実測、mac の session での Read ツールの `~/.ssh` の拒否の実測（2026-11-07） / CLI 2.1.311 で bypass mode を指定した起動の実測、desktop app の「バイパス権限モードを許可」の確認（2026-11-07） / [Configure auto mode](https://code.claude.com/docs/en/auto-mode-config)（2026-11-08 確認） / desktop app で実行した `/auto-mode-setup` の書き込みと、v2.1.317 の `claude auto-mode defaults` の比較（2026-11-08）
 
 `dot_claude/settings.json` が今の形になっている理由を残す。`.tmpl` を付けていないのは template 構文を使わないためで、素の JSON なので pre-commit の `check json` が検証する。template 化が必要になれば `.tmpl` へ戻せるが、その時はこの検証を失う。
 
@@ -25,7 +25,7 @@ Remote Control と terminal CLI は自分のマシンで走るので、ここに
 
 | 領域 | default | 設定が要るか |
 | --- | --- | --- |
-| sandbox の write | cwd とセッション temp のみ書ける | 少しだけ要る。pre-commit が `~/.cache/prek/` に書くので `allowWrite` を 1 件足す（受け入れたリスクは「sandbox で効いている層と効いていない層」）。cwd が home の session でも、署名の鍵の置き場、署名 agent の socket、その起動スクリプトを書き換えさせないため、`denyWrite` を 3 件足す（[agent-commit-signing-design.md](./agent-commit-signing-design.md)） |
+| sandbox の write | cwd とセッション temp のみ書ける | 少しだけ要る。pre-commit が `~/.cache/prek/` に書くので `allowWrite` を 1 件足す（受け入れたリスクは「sandbox で効いている層と効いていない層」）。cwd が home の session でも署名 agent の socket を書き換えさせないため、`denyWrite` を 1 件足す（[agent-commit-signing-design.md](./agent-commit-signing-design.md)）。署名の鍵の置き場と起動スクリプトの 2 件は今の settings に無く、戻すかは `TODO.md` で扱う |
 | sandbox の read | **computer 全体を読める。credential も読める** | **要る**。公式が「this default still allows reading credential files such as `~/.aws/credentials` and `~/.ssh/`」と明記 |
 | sandbox の network | pre-allow なし。新しい host は prompt、auto mode では classifier に回る | 要らない。`allowedDomains` だけでは遮断にならず、遮断には `strictAllowlist` が要る（「入れていない設定と理由」） |
 | Bash の危険操作 | auto mode の built-in が判断 | ほぼ要らない（下記） |
@@ -69,7 +69,7 @@ built-in が扱わないもの。**disk と partition table の直接書き換�
 
 足す基準は 3 つで、全部を満たすものだけ足す。既存の行と同じ題目に属すること。classifier のルール本文が名指ししないこと。read-only の verb を失っても実務に響かないこと。3 番目が要るのは、deny に例外を作れないため（上記）。
 
-2026-09-02 の `security-reviewer` は、macOS に実在して deny に無い破壊系を 13 本挙げた。13 本はすべて sandbox 内から起動できる（2026-09-04 実測）。うち 8 本は足さない。
+2026-09-02 の `security-reviewer`（当時の reviewer agent）は、macOS に実在して deny に無い破壊系を 13 本挙げた。13 本はすべて sandbox 内から起動できる（2026-09-04 実測）。うち 8 本は足さない。
 
 | command | 足さない理由 |
 | --- | --- |
@@ -120,13 +120,13 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 | filesystem の read/write 制限 | **効いている**。`~/.config/gh` を deny した状態で `gh` を実行すると `operation not permitted` で落ちる（2026-08-28 実測） |
 | raw socket / DNS | **遮断**（`gaierror`）。egress は local の認証付き proxy に強制される |
 | `network.allowedDomains` | **auto mode では、host を申告しない通信を proxy が止める**。2026-11-07 に auto mode の session で、host を申告せずに `curl https://example.com` と `curl https://api.github.com/zen` を実行すると、どちらも `CONNECT tunnel failed, response 403` で失敗した。sandbox が示した拒否の理由は、その command の `allowed_domains` に host が無いことだった。2026-08-27 と 2026-08-29 の実測では、同じ `curl https://example.com` が prompt なしで 200 を返した。違いが版によるのか mode によるのかは切り分けていない。Manual mode では測り直していない。公式は「pre-allow なし、新しい host は prompt か classifier」と定める |
-| `permissions.deny` の `Read(...)` | **効いている。sandbox の read 制限にも合流する**。`credentials` に無い `$TMPDIR/probe/secrets/x.txt` を python から開くと `PermissionError`（2026-08-31 実測）。公式も、`Read` deny rule は Bash の `cat` / `head` / `tail` / `sed` に適用され、sandbox 設定の構築にも使われると書く。Read ツールも、mac の session（auto mode）で `~/.ssh` の下の path を拒否した（2026-11-07 実測） |
+| `permissions.deny` の `Read(...)` | **効いている。sandbox の read 制限にも合流する**。当時の `sandbox.credentials` に無い `$TMPDIR/probe/secrets/x.txt` を python から開くと `PermissionError`（2026-08-31 実測）。公式も、`Read` deny rule は Bash の `cat` / `head` / `tail` / `sed` に適用され、sandbox 設定の構築にも使われると書く。Read ツールも、mac の session（auto mode）で `~/.ssh` の下の path を拒否した（2026-11-07 実測） |
 | `Bash(curl *)` / `wget` / `nc` の deny | permission rule としては有効だが**名前ベース**。`python3 -c "import urllib.request; ..."` で素通りする（実測） |
 | disk 系 command の `Bash(...)` deny | **効いている**。`diskutil list` が実行前に拒否される（2026-09-02 実測）。後から足した 5 本も同じく拒否される（2026-09-04 実測）。ただし**名前ベース**で、`sudo` / `sh -c` は覆わない（下記） |
 | `sudo` | **sandbox が止める**。`sudo -n true` が `operation not permitted` で落ちる（2026-09-02 実測） |
 | `WebFetch` | 公式仕様上 sandbox の対象外 |
 
-**Bash の外向き通信に実効的な domain 境界は無い。** 歯止めは LLM 契約と停止線、および credential 側の deny。
+**Bash の外向き通信に実効的な domain 境界は無い。** 歯止めは LLM 契約の「確認してから進めること」と、credential 側の deny。
 
 切り分けの注意: proxy の拒否は HTTP status ではなく `URLError: Tunnel connection failed` として現れる。HTTP status を deny の証拠と読むと誤判定する（406 を返す origin に到達しているだけ、ということがある）。
 
@@ -163,9 +163,9 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 2026-08-29 の apply 後に `cat ~/.ssh/config` を試すと拒否された。session へ渡る sandbox 設定からも、apply 前にあった `~/.ssh/known_hosts` と `~/.ssh/config` の例外が消えている。
 
-**どの層が止めたかは切り分けていない。** `sandbox.credentials` の deny、`permissions.deny` の `Read(~/.ssh/**)`、auto mode の classifier のいずれもこの command を止めうる。観測できたのは「credential への Bash 経由のアクセスが通らない」ことだけで、個々の層が効いている証明にはならない。
+**どの層が止めたかは切り分けていない。** 当時の設定では、`sandbox.credentials` の deny、`permissions.deny` の `Read(~/.ssh/**)`、auto mode の classifier のいずれもこの command を止めうる。観測できたのは「credential への Bash 経由のアクセスが通らない」ことだけで、個々の層が効いている証明にはならない。
 
-`~/.codex/auth.json` は層を 1 つに絞って測れた。sandbox 内の python から開くと `PermissionError: [Errno 1] Operation not permitted` で拒否された（2026-10-16、Manual mode の session）。python の `open` は `Read(...)` rule の対象外で、Manual mode では classifier が働かないので、止めたのは sandbox の read 制限と読める。Errno 1（EPERM）は Seatbelt の拒否で、ファイル権限による拒否なら Errno 13（EACCES）になる。`permissions.deny` の合流と `credentials` のどちらの entry が効いたかは切り分けていない。
+`~/.codex/auth.json` は層を 1 つに絞って測れた。sandbox 内の python から開くと `PermissionError: [Errno 1] Operation not permitted` で拒否された（2026-10-16、Manual mode の session）。python の `open` は `Read(...)` rule の対象外で、Manual mode では classifier が働かないので、止めたのは sandbox の read 制限と読める。Errno 1（EPERM）は Seatbelt の拒否で、ファイル権限による拒否なら Errno 13（EACCES）になる。当時は `sandbox.credentials` にも同じ path があり、`permissions.deny` の合流とどちらの entry が効いたかは切り分けていない。
 
 **deny の実測は auto mode では取れない。** deny 済みの path を開く probe を、classifier が `Auto-Mode Bypass` として実行前に止めた（2026-10-16）。sandbox の deny を確かめる時は Manual mode の session で取る。
 
@@ -175,31 +175,36 @@ sandbox 内から子の `claude` session を起こそうとすると `401 OAuth 
 
 拒否が permission prompt でなく即時 denial だったことは確認できた。`default` mode は操作ごとに prompt を出す仕様なので、`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` が `defaultMode` を黙って `default` へ落とした前例は再発していないと読める。
 
-## credentials block を使う理由
+## credential の read は `permissions.deny` だけで止める
 
-credential の read を止める方法は `filesystem.denyRead` と `sandbox.credentials` の 2 つあり、公式は後者を勧めている。
-
-- credential 規則が一般の filesystem 規則から分離される
-- **環境変数の unset / mask も同じブロックで書ける**
-
-`deny` の効果は `filesystem.denyRead` と同じ。組み込みの deny リストは無いので、守りたい path は自分で列挙する。v2.1.187 以降。
-
-**同じ path を `permissions.deny` の `Read(...)` にも書いている。重複は意図したもので、射程が違う。**
+credential の read を止める方法は、`permissions.deny` の `Read(...)`、`sandbox.filesystem.denyRead`、`sandbox.credentials` の 3 つある。`permissions.deny` だけを書いている。
 
 | | 止める対象 |
 | --- | --- |
 | `permissions.deny` の `Read(...)` | Read tool、Bash の `cat` / `head` / `tail` / `sed`、および sandbox の read 制限 |
-| `sandbox.credentials` の file entry | **sandboxed Bash command のみ**（公式: 「affects sandboxed Bash commands only」） |
+| `sandbox.credentials` の file entry | sandboxed Bash command のみ（公式: 「affects sandboxed Bash commands only」） |
 
-`credentials` 側だけでは Read tool を止められないので、`permissions.deny` は外せない。逆に `credentials` 固有なのは環境変数の unset / mask。file 保護の方は filesystem 層の一部で、`filesystem.disabled` にすると消える。env 保護は残る。公式仕様の上では、**file の deny に限れば `credentials` は `permissions.deny` の上に層を足していない**。実測での切り分けはしていない。
+`Read(...)` の deny は sandbox の read 制限にも合流する（「sandbox で効いている層と効いていない層」の実測）。`sandbox.credentials` の file entry は、公式仕様の上では同じ path を二重に守るだけで、`permissions.deny` の上に層を足さない。そのため書いていない。`credentials` 固有なのは環境変数の unset / mask で、環境変数を守る時はこのブロックが置き場になる。
 
-2 つの列挙は完全には一致していないが、片方にしか無い path は他方がカバーしている。`//**/secrets/**` は `permissions.deny` にだけあり、その範囲は「sandbox で効いている層と効いていない層」の実測が示す。`~/.env` は `credentials` にだけあり、`Read(//**/.env)` が filesystem-wide に match する。**揃えていないのは、揃えても塞がる穴が無いため。**
+`~/.codex` は `auth.json` だけを deny する。Codex はログイン情報をこのファイルか OS の credential store に置く（[Codex authentication](https://learn.chatgpt.com/docs/auth)）。ディレクトリ全体を deny しないのは、`chezmoi apply` の後に配布先の `~/.codex/AGENTS.md` などを読んで source と突き合わせるため（`AGENTS.md` の「変更後の確認」）。
 
-`~/.codex` は `auth.json` だけを両方に書く。Codex はログイン情報をこのファイルか OS の credential store に置く（[Codex authentication](https://learn.chatgpt.com/docs/auth)）。ディレクトリ全体を deny しないのは、`chezmoi apply` の後に配布先の `~/.codex/AGENTS.md` などを読んで source と突き合わせるため（`AGENTS.md` の「変更後の確認」）。
+## 組み込みの git 指示を止める理由
 
-`credentials` 側は外していない。外しても read が止まると確かめるには、設定を変えた A/B が要る。それは sandbox 外の terminal でしか取れない（「実測: credential への Bash アクセスは通らない」）。現状で実害が出ていないので、確認のコストに見合わない。環境変数の保護を書く時はこのブロックが置き場になる。
+`includeGitInstructions: false` で、Claude Code の system prompt に入る組み込みの commit と PR の指示を止めている。組み込みの指示は、この環境の commit の規約（`skills/git-commit`）や、branch を repo に任せる契約とぶつかる。たとえば組み込みには「If on the default branch, branch first.」がある。止めた後、組み込みの git の節が system prompt に無いことを、2026-11-09 の session で確かめた。
 
-**注意**: `credentials` の deny は例外を作れない可能性がある。公式は「A `deny` entry only ever narrows access, so any scope can add one, but **no scope can remove one** that another scope added」と書く。`denyRead: ~/.ssh` + `allowRead: ~/.ssh/known_hosts` のような例外が要るなら、`filesystem` 側で書く必要があるかもしれない。未検証。
+止めると安全側の規定も消える。そのうち要るものは `dot_claude/CLAUDE.md` の「Git」と `skills/git-commit` に置いた（[claude-md-design.md](./claude-md-design.md) の「Git の節を持つ理由」）。
+
+## output style に組み込みの Concise を使う理由
+
+`outputStyle` は組み込みの `Concise` にしている。Claude Code の組み込みの output style は Default / Concise / Proactive / Explanatory / Learning の 5 つ（[Output styles](https://code.claude.com/docs/en/output-styles)）。Concise（v2.1.237 以降）は、結果を先に出し、preamble と narration を省き、既定で短く返す。error report、security warning、破壊的操作の確認は完全な内容を保つ。自作の output style で求めていた圧縮の規定と、大きく重なる。
+
+output style は main の会話にだけ効き、subagent には効かない（公式: "Output styles apply to the main conversation only"）。
+
+### 応答言語は `language` が持つ
+
+`language: "japanese"` が応答言語を固定する。system prompt には `Always respond in japanese.` として現れる。output style の側では言語を規定しない。style が「ユーザーの言語に合わせる」と書くと、ユーザーが日本語以外で書いた時に、固定と追従で指示が割れる。
+
+`language` は、tool 呼び出しの合間に挟まる短い行で破られることがある。2026-08-31 の観測例は `I'll investigate the markdownlint and pre-commit setup in this repo.` と `Add index entry, then lint.`。規則が無いのではなく守られていない状態なので、同じ指示を契約や style に足しても直らない。hook は tool と permission の層で動き、生成されたテキストには介入しない。そのため機械的な担保も持てない。
 
 ## bypassPermissions を封じる理由
 
@@ -241,7 +246,7 @@ mac では、gh の token を Keychain ではなく `~/.config/gh/hosts.yml` に
 
 ## Windows では sandbox の防御が効かない
 
-公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。`credentials` の deny、`denyWrite`、`allowUnixSockets` は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。Windows の session でも、Read ツール、Glob、Grep と、Bash の `ls ~/.ssh` は `~/.ssh` で拒否された。Read ツールは、`\` 区切りの path と `/` 区切りの path のどちらでも拒否された（2026-11-07 実測、Claude Code 2.1.317、auto mode。存在しないファイルと、何にも一致しない pattern で試した）。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
+公式の sandboxing docs によると、native Windows では Claude Code の Bash と PowerShell のコマンドが sandbox の外で動く。`denyWrite`、`allowUnixSockets` と、`Read` deny の sandbox への合流は sandbox の層なので、Windows では効かない。`permissions.deny` の `Read(~/.ssh/**)` は sandbox の層ではない。Windows の session でも、Read ツール、Glob、Grep と、Bash の `ls ~/.ssh` は `~/.ssh` で拒否された。Read ツールは、`\` 区切りの path と `/` 区切りの path のどちらでも拒否された（2026-11-07 実測、Claude Code 2.1.317、auto mode。存在しないファイルと、何にも一致しない pattern で試した）。ただし公式によると、この rule が Bash に効くのは `cat` や `sed` のように Claude Code が認識するコマンドだけで、自分でファイルを開く Python などのスクリプトには効かない。PowerShell tool は無効のまま使う（下の「Windows の PowerShell tool は無効のまま使う」）。`chmod 700` や `ssh-keygen` が付ける `0600` も、Git for Windows の mount が `noacl` なので ACL に反映されない。他のローカルアカウントから鍵を守っているのは、`%USERPROFILE%` から継承した ACL だけになる。
 
 この結果、Windows ではエージェント用の署名鍵を持ち出せる。それを受け入れている理由は [agent-commit-signing-design.md](./agent-commit-signing-design.md) の「Windows では鍵を持ち出せる」にある。
 
@@ -325,12 +330,12 @@ classifier が `autoMode` を読むのは、user settings、managed settings、`
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
 | `sandbox.filesystem.denyWrite`（`dot_claude/` への適用） | 署名 agent の state ディレクトリには入れている（[agent-commit-signing-design.md](./agent-commit-signing-design.md) の「socket の path を sandbox から守る」）。default で cwd 外は書けない。cwd 内の `dot_claude/` は protected paths に入らないが、そこはこの repo の編集対象そのもの。塞ぐと Bash からの編集と、そのファイルを置き換える `git checkout` / `merge` が落ちる。live 側は protected paths に入っており、source の変更は人の `chezmoi apply` を経ないと効かないので、そこを gate として持つ |
 | `includeCoAuthoredBy` | 公式で deprecated。同じ制御は後継の `attribution` で書く（「attribution を止める理由」） |
-| `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`sandbox.credentials` が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
+| `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`permissions.deny` の `Read` rule が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する。`/auto-mode-setup` の結果も取り込まない（「`/auto-mode-setup` の結果を取り込まない」） |
 | PowerShell 版 deny | Windows では sandbox が動かず（公式: native Windows 非対応）、`denyRead` も効かない。PowerShell は prefix match を容易に外せるため speed bump にしかならない。Claude Code は native Windows で動かし、sandbox の層が無いことと、エージェント用の署名鍵を持ち出せることを受け入れている（「Windows では sandbox の防御が効かない」と [agent-commit-signing-design.md](./agent-commit-signing-design.md) の「Windows では鍵を持ち出せる」）。足すと、Windows で無効になっている PowerShell tool が有効になる（「Windows の PowerShell tool は無効のまま使う」） |
 | `permissions.blockReadsOutsideWorkingDirectories` | sandbox が有効な時は、sandbox 内のコマンドからも home 全体を読めなくする（settings-reference、v2.1.257+）。それでも上の deny の列挙は外せない。Windows には sandbox が無く、cwd が home の session では home 全体が作業ディレクトリになり、cwd の中の `.env` は対象外になるため。mac の v2.1.317 で `claude -p --settings` に入れて試すと、`chezmoi` は `~/.config/chezmoi` を開けず、pre-commit は `~/.cache/prek` を読めずに落ちた。`~/.claude` と `~/.codex` の配布先は、Read ツールでも Bash でも読めなかった。署名付きの commit はできたが、`%G?` は `U` になった（2026-11-07 実測）。`~/.nvm` の node と署名 agent の socket は動いた。戻すには、壊れた path を全 project に配る設定で読めるようにすることになる |
-| `env.CLAUDE_CODE_EFFORT_LEVEL` | subagent の frontmatter の `effort` より優先される。設定すると reviewer の固定が効かなくなる |
-| `env.CLAUDE_CODE_SUBAGENT_MODEL` / `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`、同名の `Explore` 定義 | 振り分ける対象の subagent が呼ばれていない（`~/.claude/projects/` の transcript 10 本で 0 回、2026-11-02）。`FORCE` は frontmatter の `model` を無視するので、reviewer の固定も外れる。`Explore` を定義すると built-in の prompt と tool 制限を自前で持つことになる |
+| `env.CLAUDE_CODE_EFFORT_LEVEL` | main の effort は既定に任せ、重い作業の session だけ上げる（「model を full ID で固定し、effort を書かない理由」）。env で固定すると、その切り替えより優先される |
+| `env.CLAUDE_CODE_SUBAGENT_MODEL` / `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`、同名の `Explore` 定義 | 振り分ける対象の subagent が呼ばれていない（`~/.claude/projects/` の transcript 10 本で 0 回、2026-11-02）。`Explore` を定義すると built-in の prompt と tool 制限を自前で持つことになる |
 | OS 分岐（`{{ if eq .chezmoi.os "windows" }}`） | `failIfUnavailable` が default の `false` なので、Windows でも警告して sandbox なしで続行する |
 
 ## 仕様の確認記録
@@ -347,6 +352,8 @@ classifier が `autoMode` を読むのは、user settings、managed settings、`
 | `WebFetch(domain:...)` | hostname に case-insensitive match。`domain:` 形は sandbox の allowed domain list へも合流する |
 | `model` | alias（`opus` 等）と full model name の両方を受け付ける |
 | `effortLevel` | `low` / `medium` / `high` / `xhigh` / `max` / `auto`。最上位の `effortLevel` は、Opus 5.5 とそれ以降に出た model に効かない。`/effort` と `/model` picker は level を model ごとに `modelSettings` へ保存する |
+| `includeGitInstructions` | 公式の説明は「Remove the built-in commit and PR instructions from Claude's context.」。scope は任意のファイル（Settings reference の索引、2026-11-09 確認）。default と版の条件は索引に無く、確かめていない |
+| `outputStyle` | 名前で style を選ぶ。未設定なら default style。session 中に変えると次の message から効く。v2.1.251 未満は `/clear` か新しい session の後だった（Settings reference、2026-11-09 確認） |
 | `autoUpdatesChannel` | default は `latest`。`stable` は約 1 週間前の版で、major regression のある版を飛ばす |
 | `autoMemoryEnabled` | default は `true`。`~/.claude/projects/<project>/memory/` へ自動保存する |
 | `cleanupPeriodDays` | default は `30` |
@@ -363,7 +370,6 @@ classifier が `autoMode` を読むのは、user settings、managed settings、`
 
 - `attribution` を object の形に書き換えたのが `/auto-mode-setup` か。書き込みの前の live の値を記録していない。
 - `chezmoi apply` が、`op` 不達で失敗した template より後のファイルの適用まで中断するか。sandbox 内では `~/.config/gh` の lstat 拒否が先に出るため、切り分けられていない。
-- `credentials` の deny に例外を作れるか。SSH を sandbox 内で使う必要が出た時に問題になる。
 - `attribution: false` の PR description への効果。この repo で PR を作っていないので実測していない。
 - `diskutil` が sandbox 内で動かない原因。permission layer と classifier は候補から外せる。どちらも実行前に拒否するが、返るのは `diskutil` 自身の error なので実行されている。残るのは Seatbelt の mach-lookup 制限と DiskArbitration の可用性で、どちらかは切り分けていない。
 - disk 破壊の deny rule が、どの呼び出し形なら block するか。`diskutil list` と `/usr/sbin/diskutil list` の形は block する（2026-09-02 と 2026-11-07 実測）。`sudo` / `sh -c` が外れることは公式仕様から言える。大文字の `DISKUTIL list` は外れる（2026-11-07 実測）。tab 区切りの形は実測していない。危険 command を実行せずに確かめられる範囲がここまで。

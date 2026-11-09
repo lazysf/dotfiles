@@ -1,7 +1,7 @@
 # scribe skill の設計
 
-- Date: 2026-09-03
-- 出典: [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
+- Date: 2026-11-09
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -19,7 +19,7 @@ ADR 0022 が「ADR は最新仕様への上書き先ではなく、採用時点�
 
 ## notes に変更履歴を書かない理由
 
-notes が「旧規定は〜だった」を書き始めると、skill を直すたびに notes も直す必要が出る。実際にこの repo の notes は 2 回古くなった。過去の状態は git 履歴にあるので、notes は現在の設計とその理由だけを持つ。
+notes が「旧規定は〜だった」を書き始めると、skill を直すたびに notes も直す必要が出る。実際にこの repo の notes は 2 回古くなった。過去の状態は git 履歴にあり、なぜ変えたかは commit の `Why:` が持つ（[git-commit-skill-design.md](./git-commit-skill-design.md) の「body の規定」）。notes は今の設計とその理由だけを持つ。
 
 ## notes に実体を写さない理由
 
@@ -37,27 +37,27 @@ README / ADR / notes は同時に書かない。1 ファイルにまとめると
 
 SKILL.md が持つのはどの層を選ぶかの判断で、書式は選択後にしか要らないので reference にある。
 
-## doc 要否の判断を持たない理由
+## doc をいつ直すかを description に持たせる理由
 
-この規律が効くべき実装の区切りに `scribe` は起動していない。skill に書いても実効しないため、常時 load される `CLAUDE.md` が持つ。理由は [claude-md-design.md](./claude-md-design.md)。
+doc を直すべき場面は、実装の区切りで訪れる。そこでは `scribe` を含めて何も起動していない。そのため、いつ直すかは skill の本文ではなく description に置いている。description は常時 context にあるので、「使い方・設定・公開挙動を変えた時」という場面で発火の手がかりになる。commit の前には `lapidary` も、doc の追従が要りそうな変更なら scribe を通すよう一言添える。
 
-skill 側に残したのは起動後の責務だけ。doc が不要と判断した場合もその旨と理由を返す、という部分は「出力」が持つ。
+いつ直すかの全部は決めていない。仕様（README / docs）をいつ更新するかと、事前の doc を作るかは、repo の運用に従う。仕様を先に書いて開発する repo もあり、全層へ一律に時期を決めると、その repo の CLAUDE.md と矛盾する。CLAUDE.md は上書きでなく連結で読まれ、矛盾があると Claude はどちらかを任意に選ぶ（[How Claude remembers your project](https://code.claude.com/docs/en/memory)）。skill の冒頭に「repo が独自の doc 規約を持っていれば、そちらに従う」を置いているのも同じ理由。
 
-## 用語の一貫を doc 側だけに持たせた理由
+doc が不要と判断した時もその旨と理由を返す、という部分は skill の末尾が持つ。
 
-「共通の進め方」に「1 つの概念に 1 つの語を使い、doc の途中で言い換えない」を置いている。同じ節の「既存の章構成、用語、粒度、文体に寄せ」が既存 doc への追従を担い、この 1 文が同一 doc の中での一貫を担う。
+## 用語の一貫を doc 側に持たせた理由
 
-根拠は ISO 24495-1 の Understandable にある「同じ語を一貫して使う」。対になる「修飾を浅く保つ」は `Caveman.md` の規則にあり、その理由は [claude-code-output-style-design.md](./claude-code-output-style-design.md) にある。
+「進め方」に「1 つの概念に 1 つの語を使い、途中で言い換えない」を置いている。同じ項目の「既存の章構成、用語、粒度、文体に寄せる」が既存 doc への追従を担い、この 1 文が同一 doc の中での一貫を担う。
+
+根拠は ISO 24495-1 の Understandable にある「同じ語を一貫して使う」。
 
 契約へ置く案は採らない。[memory-surface-design.md](./memory-surface-design.md) の「doc / artifact の規定を契約に持たない」が、doc の書き方は skill を正本とすると定めている。
 
-## Caveman の規則を一部だけ doc へ移した理由
+## 文体の規則を doc の側に持つ理由
 
-`Caveman.md` の「境界」節は README / docs / ADR / notes を chat の外として、通常の文体で書くと定めている。この境界は動かさない。圧縮の副作用（常体、断片文、前置きの除去）が成果物へ漏れるのを止める歯止め。その役割は [claude-code-output-style-design.md](./claude-code-output-style-design.md) の「成果物への影響」に書いてある。
+「文体と分量」の規則（1 文に 1 つの主張、修飾を浅く保つ、造語の名詞化を避ける、略語を作らない、断定できることは断定する）は、読み手が誰でも効く。根拠は ISO 24495-1 の「主語と述語を近づける、曖昧さを避ける」。ISO 24495-1 は有料規格で、本文は未取得。
 
-一方で、Caveman の規則には**読み手が誰でも効くもの**が混ざっている。一文一事実、修飾を浅く保つ、略語を作らない、過剰な保留表現を削る、短くならないなら通常形を使う——この 5 つを `scribe` の「文体」へ移した。根拠は用語の一貫と同じ ISO 24495-1。そちらの Understandable が「同じ語を一貫して使う」なら、こちらは「主語と述語を近づける、曖昧さを避ける」に当たる。
-
-移さなかったのは、常体、断片文、前置きの除去、求められた範囲だけ答える、結論の根拠を 1 文で添える。いずれも chat の応答形式で、doc には対応する場面が無い。
+output style は組み込みの Concise で、chat の応答の圧縮だけを扱う（[claude-code-settings-design.md](./claude-code-settings-design.md) の「output style に組み込みの Concise を使う理由」）。doc の文体の規定は、この skill だけが持つ。
 
 doc 側に修飾の規定が無いと、地の文が名詞化した造語（「判定語」「受け皿」「有限性の担保」）と、1 文に 2〜3 主張を詰める形になる。修飾の深さを output style だけが持っていた 2026-09-03 までの notes が、そうなっていた。
 
@@ -67,7 +67,7 @@ doc 側に修飾の規定が無いと、地の文が名詞化した造語（「�
 
 長さを判定にすると、載っている記述を機械的に削る方向へ倒れる。2026-09-03 の surface 圧縮でこれが起きた。「理由の説明だから削れる」と分類した記述の多くが、実際には踏んだ失敗への対策だった（[harness-design-principles.md](./harness-design-principles.md) の「削る基準」）。doc 側で同じことをすると、後から読む人が今の形の理由を追えなくなる。
 
-そのため「答えられるなら長くてよく、短くすること自体は目標にしない」を同じ節に置いてある。これが無いと、規定が削る側だけに働く。
+そのため「答えられるなら長くてよい」を同じ項目に置いてある。これが無いと、規定が削る側だけに働く。
 
 `lapidary` の「過剰さ」観点と重ならない。あちらは書いた後に変更セットを見る観点で、こちらは書く前の基準。同じ判定（判断に効くか）を書く時と見直す時の両方に置いている。
 
@@ -77,9 +77,9 @@ doc 側に修飾の規定が無いと、地の文が名詞化した造語（「�
 
 ## description を依頼語でなく作業の流れに寄せた理由
 
-`description` は「作業の流れで doc を更新する場面が主で、ユーザーが doc という語を出さないことの方が多い」と書いている。依頼語（「notes に残して」など）は例示に留め、重心を置いていない。全文は `dot_claude/skills/scribe/SKILL.md` を正本とする。
+`description` は「作業の流れで doc を直す場面が主で、ユーザーが doc という語を出さないことの方が多い」と書いている。依頼語（「notes に残して」など）は例示に留め、重心を置いていない。全文は `dot_claude/skills/scribe/SKILL.md` を正本とする。
 
-「点検する時」と「ずれが見つかった時」を分けて書いているのは、点検の入口で発火させるため。ずれ検出後だけを条件にすると、「合っているか確認して」という点検依頼では発火せず、ずれが無いという結論も skill の外で出ることになる。
+「既存の doc が実態と合っているかを点検する時」を書いているのは、点検の入口で発火させるため。ずれが見つかった後だけを条件にすると、「合っているか確認して」という点検依頼では発火せず、ずれが無いという結論も skill の外で出ることになる。
 
 依頼語を重心にすると発火しない。2026-08-30 の session では notes を更新する commit を 4 つ作ったが、この skill は一度も呼ばれなかった。ユーザーの指示は「未確認事項を潰したい」「進めて」で、doc を書けという語が無かった。doc の更新は依頼としてではなく、調査や実測が決着した副産物として起きる。
 
