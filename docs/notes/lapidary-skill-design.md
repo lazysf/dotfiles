@@ -19,7 +19,7 @@ ADR は書かない。3 条件のうち「覆すコストが高い」を満た�
 
 `git-commit` の責務も膨らむ。あちらは止まる条件、staging の規定、staged diff の確認を持つ。観点を本文に混ぜると、load されるたびに観点まで読むことになる。
 
-`git-commit` の手順 4 が、commit の範囲をこの skill で見直す。発火の起点を足すだけで、観点は取り込んでいない。description だけに頼ると毎回は発火しなかった（数え方と結果は [git-commit-skill-design.md](./git-commit-skill-design.md) の「lapidary を手順で呼ぶ理由」）。
+`git-commit` の手順 4 が、commit する変更の全体をこの skill で見直す。発火の起点を足すだけで、観点は取り込んでいない。description だけに頼ると毎回は発火しなかった（数え方と結果は [git-commit-skill-design.md](./git-commit-skill-design.md) の「lapidary を手順で呼ぶ理由」）。
 
 ## commit の前に通す理由
 

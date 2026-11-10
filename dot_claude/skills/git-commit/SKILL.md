@@ -11,8 +11,8 @@ description: "Git の変更を commit する時に使う。「commit して」�
 
 1. `git status -sb`、`git diff`、`git diff --staged` で変更の全体を読む。`git status` に `-uall` は付けない。commit まで進む時は、名義を `git var GIT_AUTHOR_IDENT` と `git var GIT_COMMITTER_IDENT` で見る。
 2. 「止まる条件」に当たらないか確かめる。
-3. 「変更の単位」に従って commit の範囲を決める。複数の commit に分かれるなら、1 つずつ手順 4〜8 を回す。
-4. 範囲を `lapidary` で見直す。ユーザーが見直しは要らないと言った時は飛ばす。`lapidary` が commit できないと判定したら、止まって報告する。見直しで直したファイルが増えたら、手順 3 に戻って範囲を決め直す。
+3. 「変更の単位」に従って commit の範囲を決める。複数の commit に分かれるなら、手順 4 の後で、1 つずつ手順 5〜8 を回す。
+4. commit する変更の全体を `lapidary` で見直す。範囲が複数でも、分けずに 1 回で通す。分けて見ると、ある範囲の変更が別の範囲の記述を古くした箇所を見落とす。ユーザーが見直しは要らないと言った時は飛ばす。`lapidary` が commit できないと判定したら、止まって報告する。見直しで直したファイルが増えたら、手順 3 に戻って範囲を決め直す。見直しの後に変更を足した時は、足した分を通し直す。
 5. 範囲の path を `git add <path>` で stage する。stage と commit は別のコマンドで打つ。同じコマンドにすると、手順 6 の確認が stage 前の状態に当たる。
 6. `git diff --staged` を読み、意図しない削除、debug 出力、無関係な整形が無いか見る。秘密情報は目視で済ませず、staged diff を検索して確かめる。
 7. message を heredoc で渡して commit する。
@@ -78,5 +78,6 @@ EOF
 
 - 作った commit の hash と title。
 - staged diff で確かめたこと（削除、debug 出力、秘密情報の検索、無関係な整形）と、hook の結果。「確認した」だけでは、何を見たかを次の人が再現できない。
+- `lapidary` が直したものと、提案した組み込みの review。ここに書かないと、提案がユーザーに届かないまま push される。見直しを飛ばした時は、その旨。
 - unstaged に残した変更と、その理由。
 - 止まった時や失敗した時は、その理由の要点。git の出力は全文を貼らない。認証 URL や token が混ざることがある。
