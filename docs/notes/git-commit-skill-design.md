@@ -1,7 +1,7 @@
 # git-commit skill の設計
 
-- Date: 2026-11-09
-- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Extend Claude with skills](https://code.claude.com/docs/en/skills)（2026-11-08 確認） / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測 / Claude Code の session の記録 / 使い捨て repo での skill の版の比較
+- Date: 2026-11-10
+- 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Extend Claude with skills](https://code.claude.com/docs/en/skills)（2026-11-08 と 2026-11-10 確認） / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測 / Claude Code の session の記録 / 使い捨て repo での skill の版の比較
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
 
@@ -78,6 +78,8 @@ repo の `AGENTS.md` や `CLAUDE.md` が分け方を決めていればそれに�
 
 報告は「staged diff で何を見たか」と「hook の結果」を持つ。「確認した」だけでは、次に読む人が確認の範囲を再現できない。2 種類の確認は性質が違い、単語 1 つの enum に収まらない。
 
+報告は、`lapidary` が直したものと、提案した組み込みの review も持つ。`lapidary` は提案を自分の報告の最後に置くが、手順 4 から呼ばれた時は、最後の報告がこの skill の「出力」の形になる。そこに項目が無いと、提案が落ちる。2026-11-10 の session では、agent の設定（`dot_codex/AGENTS.md`）に触れる commit で、`lapidary` の条件に当たる `/security-review` の提案が報告に出なかった。
+
 ## pre-commit hook の実態
 
 この repo の pre-commit hook のうちファイルを書き換えるのは `fix end of files`、`mixed line ending`、`rumdl-check --fix`、`tombi-format`。`trim trailing whitespace` も書き換えるが、`.md` を exclude しており、skill や docs のような主要ファイルには発火しない。commit-msg の段では `check-commit-msg` だけが走る。
@@ -126,15 +128,21 @@ description は作業を Git の履歴に残す流れなら skill を通すと�
 
 ## lapidary を手順で呼ぶ理由
 
-手順 4 で、commit の範囲を `lapidary` で見直す。`lapidary` は description で commit の前に発火する設計だが、それだけでは発火しない場面が多かった。`lapidary` の description を当時の形にした `5b9b39d`（2026-11-07）の後の 4 session（2026-11-07〜08）で、commit を頼む発言を数えた。
+手順 4 で、commit する変更の全体を `lapidary` で見直す。`lapidary` は description で commit の前に発火する設計だが、それだけでは発火しない場面が多かった。`lapidary` の description を当時の形にした `5b9b39d`（2026-11-07）の後の 4 session（2026-11-07〜08）で、commit を頼む発言を数えた。
 
 - 「見直して commit」のように見直しの語を含む発言は 2 回で、2 回とも `lapidary` が発火した。
 - 見直しの語を含まない発言は 6 回。直前に `lapidary` が発火したのは 1 回だった。1 回は、直前の発言で `lapidary` を通した後だった。残る 4 回は、commit する変更に `lapidary` を通さないまま commit した。
 - この skill は、commit を実行した発言のすべてで、起動していたか load 済みだった。
 
-確実に load されるこの skill の手順に置くと、`lapidary` の発火を description だけに頼らずに済む。上の 4 回は、どれも同じ session の前の段階で `lapidary` を通しており、その後に変更を足していた。公式の [Extend Claude with skills](https://code.claude.com/docs/en/skills) によると、skill の本文は一度 load されると会話に残り、後の turn で読み直されない。load 済みの skill は、変更が増えても通し直されにくいと見ている。そのため「通したか」を確かめるのでなく、commit の範囲ごとに毎回通す形にしている。
+確実に load されるこの skill の手順に置くと、`lapidary` の発火を description だけに頼らずに済む。上の 4 回は、どれも同じ session の前の段階で `lapidary` を通しており、その後に変更を足していた。公式の [Extend Claude with skills](https://code.claude.com/docs/en/skills) によると、skill の本文は一度 load されると会話に残り、後の turn で読み直されない。load 済みの skill は、変更が増えても通し直されにくいと見ている。そのため「通したか」を確かめるのでなく、commit を頼まれるたびに、その時 commit する変更の全体を通す形にしている。見直しの後に変更を足した時は、足した分を通し直す。
 
-`lapidary` の観点はここへ写さない。この skill が持つのは、範囲を渡して通す 1 段だけ。観点を取り込まない理由は [lapidary-skill-design.md](./lapidary-skill-design.md) の「`git-commit` に組み込まない理由」にある。
+範囲が複数でも、範囲ごとには分けずに 1 回で通す。理由は 3 つある。
+
+- 見直しは変更セット全体を見る行為で、commit の分け方とは層が違う（[lapidary-skill-design.md](./lapidary-skill-design.md) の「commit の前に通す理由」）。surface と notes を別の範囲として別々に見ると、追従漏れを見つける場が消える。
+- 範囲ごとに回すと書いていた間に観測した 2 回は、どちらも 1 回だけ通していた。2026-11-09 の session は 5 つの範囲を、2026-11-10 の session は 2 つの範囲を、まとめて 1 回通した。
+- 呼び直しても読み込まれるものが無い。公式の Extend Claude with skills によると、同じ内容の skill を呼び直した時は、本文ではなく読み込み済みを示す短い注記が足される。
+
+`lapidary` の観点はここへ写さない。この skill が持つのは、変更の全体を渡して通す 1 段だけ。観点を取り込まない理由は [lapidary-skill-design.md](./lapidary-skill-design.md) の「`git-commit` に組み込まない理由」にある。
 
 ## Co-authored-by trailer は skill の外で決まる
 
@@ -154,5 +162,7 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 
 - description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
 - 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。
-- 手順 4 が毎回効くかは未測定。2026-11-09 の session では、commit を頼む引き継ぎの文で手順 4 から `lapidary` が起動した。ただし 5 つの範囲をまとめて 1 回通し、範囲ごとには回さなかった。この skill が load 済みのまま次の commit を頼まれた時に、手順 4 が読み直されるかは確かめていない。
+- 手順 4 が毎回効くかは未測定。2026-11-09 と 2026-11-10 の session では、commit の依頼で手順 4 から `lapidary` が起動した。この skill が load 済みのまま次の commit を頼まれた時に、手順 4 が読み直されるかは確かめていない。
+- 「出力」に足した `lapidary` の項目で、提案が報告に出るようになるか。落ちた観測は 2026-11-10 の 1 回だけ。
+- Codex で、同じ内容の skill を呼び直した時に本文が読み直されるか。Codex の skill にも同じ手順を入れているが、呼び直しの挙動と 2 回の観測は Claude Code のもの。
 - 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
