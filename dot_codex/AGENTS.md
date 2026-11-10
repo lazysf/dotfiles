@@ -43,7 +43,7 @@
 
 - commit はユーザーに指示された時だけ作る。作る時は `git-commit` スキルを使う。
 - branch と PR の運用は、repo の `AGENTS.md` に従う。書かれていなければ、branch を作らずに今の branch へ commit する。
-- push はユーザーが手元の terminal で行う。
+- push はユーザーが手元の terminal で行う。agent は `--dry-run` も含めて実行しない。
 - git config を変えない。hook と署名を迂回しない（`--no-verify`、`--no-gpg-sign`、`-c commit.gpgsign=false`）。
 - 頼まれない限り、未 commit の変更や履歴を壊す操作をしない（`reset --hard`、`checkout .`、`restore .`、`clean -f`、`branch -D`、`--amend`、rebase、force push）。
 - commit と PR に、AI の attribution や session の URL を足さない。ユーザーが求めた時だけ足す。
