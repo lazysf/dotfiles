@@ -21,6 +21,8 @@ description だけでは、コードを編集する session で発火しなか�
 - Bash では届かなかった。試したのは、`cat file | head`、pipe の無い `cat file`、redirect でのファイルの作成の 3 つ。rule の `paths` は pipe の無い `cat file` で注入されるので（[memory-surface-design.md](./memory-surface-design.md)）、skill の `paths` とは動きが違う。
 - 書式は、1 行の文字列、YAML の list、直下のフォルダを指す `src/**`、brace でまとめた `**/*.{a,b}` のどれも通った。
 
+配布した `coding` 自身も、apply の後に開いた session で同じ動きをした（2026-11-10、desktop app、model は Fable 5.2）。起動時の一覧に `coding` は無く、名前で呼ぶと `Unknown skill` になった。`dot_config/nvim/init.lua` を Read した直後に、`coding` だけを載せた一覧が届き、その後は名前で呼ぶと本文が読み込まれた。apply を挟んだ古い session では、Read の後に呼べるようにはなったが、一覧は届かなかった。その session は、起動時に `coding` を一覧で受け取っていた。
+
 狙いは、一覧が届く時点をコードを触った直後へ移すこと。`paths` が無い skill の一覧は、session の最初に載る。その後に再提示されるかは確かめていない。読み込むかは、`paths` を付けても model が description で決める。
 
 代償は 4 つある。
@@ -47,5 +49,4 @@ security に関わる上限を marker の対象から外した。`CLAUDE.md` の
 ## 未確認
 
 - `paths` を付けた後、コードを編集する session で発火が増えるか。
-- 配布した `coding` 自身が、apply の後に一覧へ現れるか。書式は probe skill で確かめたもので、`coding` の `paths` では確かめていない。
 - mac の作業機での集計と、mac での `paths` の動き。
