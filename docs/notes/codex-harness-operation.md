@@ -3,14 +3,14 @@
 - Date: 2026-11-09
 - 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows と mac の Codex session での署名の実測（2026-11-09）
 
-`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布しない。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を管理しない判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md)、commit を sandbox の外で都度承認する判断は [ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md) にある。
+`dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布せず、決めたキーだけを上書きする。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を作業機ごとに管理する判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、一部のキーだけを上書きする判断は [ADR 0049](../adr/0049-manage-selected-codex-config-keys.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md)、commit を sandbox の外で都度承認する判断は [ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md) にある。
 
 ## 構成と権限
 
 契約と skills は、Claude 側（`dot_claude/CLAUDE.md` と `dot_claude/skills/`）と同じ意図で書く。違えているのは、runtime の仕組みが違う箇所だけ。通常作業のモデル、effort、権限、自動 memory は実機側の設定に委ねる。
 
 - 返答の文体: Claude 側は組み込みの output style（`Concise`）で決めている。Codex には output style の仕組みが無い。公式の Personalize は、Codex の個人の指示は global の `AGENTS.md` に置くとしている。そのため `AGENTS.md` の「返答」に、`Concise` の要点を書いている。
-- 権限: Claude 側は `settings.json` の deny と sandbox で credential の読み取りを止めている。Codex の `config.toml` はこの repo から配布しないので、credential を読まないことと承認経路の扱いを `AGENTS.md` の「権限」に書いている。
+- 権限: Claude 側は `settings.json` の deny と sandbox で credential の読み取りを止めている。Codex の permission profile はこの repo から配布しないので、credential を読まないことと承認経路の扱いを `AGENTS.md` の「権限」に書いている。
 - 独立した review: 自作の reviewer agent は置かない。Claude 側と同じく、必要になってから作る。`skills/lapidary` は組み込みの review を提案し、起動の方法を CLI の `/review`、アプリの `/review`、shell の `codex review` に分けて書いている。起動できる対象と観点の指定の仕方が、クライアントごとに違うため。CLI 0.167.0-alpha.3.2 では、`codex review` の `--uncommitted` と指示の引数を同時に渡すと拒否された（2026-11-09、Codex の session での実測）。公式 docs では、アプリの `/review` は対象（base branch との差分か未 commit の変更）を選ぶメニューを出し、既定では今の chat の中で review する。作業機のアプリでは、入力欄に `/review` と打つと、候補の一番上に組み込みの command「コードレビュー」（説明は「サブエージェントで変更内容をレビュー」）が、その下のスキルの欄に system skill の「Review Agent」が出た。「コードレビュー」を選ぶと、対象を選ぶメニューは出ず、`origin/main` を基準に今の branch の変更を review する依頼が「レビューモード」としてすぐ送られた（2026-11-09、ユーザーの目視）。そのため、アプリでは「コードレビュー」を案内し、未 commit の変更だけを見る時と観点を指定する時は、CLI か shell を案内している。アプリで未 commit の変更を対象にできるかと、観点を足せるかは確かめていない。作業機の `review-agent` system skill は、`/review` の preset と同じ対象（uncommitted changes、base branch との差分、commit、custom instructions）を扱い、正しさに加えて security、performance、保守性への影響も指摘の対象にしている。`/review` がこの skill を使うことは、docs では確かめていない。Codex Security の plugin は作業機に入っていないので、提案しない。
 - commit: 既定の `workspace-write` の sandbox は、`<writable_root>/.git` を読み取り専用にする。`.git` が `gitdir:` のファイルなら、参照先も保護される（[Protected paths in writable roots](https://learn.chatgpt.com/docs/agent-approvals-security#protected-paths-in-writable-roots)）。書ける root の下に作った別の repo の `.git` には、sandbox の中から書けた（2026-11-09、`$TMPDIR` の下の使い捨ての repo での実測）。`git add` と `git commit` をいつ申請し、いつ止まるかは、`skills/git-commit` の Gotchas を正本にする。
 
@@ -30,13 +30,26 @@
 
 ## 適用前後の確認
 
-配布前に `chezmoi diff ~/.codex` でファイルの差分を確認する。`config.toml` はファイル単位の配布から除外している。
+配布前に `chezmoi diff ~/.codex` でファイルの差分を確認する。`config.toml` の差分は、管理するキーの値が実機と違う時だけ出る。
 
-MCP、plugin、通知、モデル、権限などは、アプリまたは実機の `~/.codex/config.toml` で管理する。既存 config を手動で削除・変更する場合は、必要な追加設定を事前に退避する。個人や作業機を特定する値、秘密情報を repo の source へ取り込まない。
+MCP、plugin、通知、権限などの、管理するキー以外は、アプリまたは実機の `~/.codex/config.toml` で管理する。既存 config を手動で削除・変更する場合は、必要な追加設定を事前に退避する。個人や作業機を特定する値、秘密情報を repo の source へ取り込まない。
 
 適用後は `chezmoi managed` と target の実体を突き合わせる。source から削除したファイルが target に残る場合がある。
 
 実機の権限設定を変更したら、設定を読み直した新しいセッションで必要な作業とアクセス境界を検証する。既存セッションでの承認付き実行だけを根拠に、変更後の権限が有効だと判断しない。
+
+## config.toml の一部のキーの管理
+
+[`modify_private_config.toml`](../../dot_codex/modify_private_config.toml) は chezmoi の modify テンプレート。apply の時に実機の `config.toml` を読み、テンプレートに並べたキーだけを上書きして書き戻す。管理するキーと値の正本はこのテンプレート。[Manage different types of file](https://www.chezmoi.io/user-guide/manage-different-types-of-file/)
+
+- 管理するのは、model、reasoning effort、sandbox mode、workspace-write の network、アプリの表示の設定。作業機の間で揃えたい値で、作業機固有のパスを含まない。
+- `windows.sandbox` は Windows の時だけ上書きする。他の OS では、実機にある値をそのまま残す。
+- permission profile は入れない。ADR 0044 の起動しなかった配布に入っていたため。
+- 実機にファイルが無い時は、管理するキーだけのファイルを作る。
+- `setValueAtPath` は、パスの途中にあるテーブル以外の値を、黙ってテーブルに置き換える。テンプレートは、置き換える前にエラーで apply を止める。
+- `toToml` はキーの並び、引用符、字下げを変え、コメントを消す。管理するキーの値が既に同じなら、テンプレートは実機のファイルをそのまま返す。
+
+2026-11-10 に chezmoi v2.74.0 で、この Windows 機の `config.toml` を入力にして確かめた。値が同じ時の出力は、実機のファイルとバイト単位で一致した。reasoning effort だけを変えた写しでは、その値だけが戻り、MCP のテーブルは残った。別の写しで、往復の前後を JSON にして比べると、足したキー以外は一致した。空の入力、`desktop` が文字列の入力、`.chezmoi.os` を `darwin` にした入力も試した。macOS の実機での apply は確かめていない。
 
 ## macOS のエージェント用署名
 

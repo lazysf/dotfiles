@@ -1,0 +1,35 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /*
+  Codex がこのファイルを書き換えるので、ファイル全体ではなく下のキーだけを管理する。
+  他のキーは読み込んだまま残す。理由は docs/notes/codex-harness-operation.md。
+*/ -}}
+{{- $settings := list
+      (list "model" "gpt-6.1-sol")
+      (list "model_reasoning_effort" "medium")
+      (list "sandbox_mode" "workspace-write")
+      (list "desktop.ambient-suggestions-enabled" false)
+      (list "desktop.show-context-window-usage" true)
+      (list "sandbox_workspace_write.network_access" true) -}}
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $settings = append $settings (list "windows.sandbox" "elevated") -}}
+{{- end -}}
+
+{{- /* setValueAtPath は渡した dict を書き換えるので、比較用の元の値は別に読む。 */ -}}
+{{- $original := fromToml .chezmoi.stdin -}}
+{{- $config := fromToml .chezmoi.stdin -}}
+{{- range $settings -}}
+{{-   $path := index . 0 -}}
+{{-   $table := index (splitList "." $path) 0 -}}
+{{- /* setValueAtPath はテーブル以外の値を黙ってテーブルに置き換えるので、既存の値を壊す前に止める。 */ -}}
+{{-   if and (ne $table $path) (hasKey $config $table) (not (kindIs "map" (index $config $table))) -}}
+{{-     fail (printf "config.toml: %q is not a table; refusing to overwrite it with %q" $table $path) -}}
+{{-   end -}}
+{{-   $config = setValueAtPath $path (index . 1) $config -}}
+{{- end -}}
+
+{{- /* toToml は並びと書式を変えるので、値が同じ時は Codex が書いたままを返し、差分を出さない。 */ -}}
+{{- if eq (toJson $config) (toJson $original) -}}
+{{-   .chezmoi.stdin -}}
+{{- else -}}
+{{-   toToml $config -}}
+{{- end -}}
