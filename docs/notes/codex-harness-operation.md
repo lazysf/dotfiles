@@ -7,7 +7,7 @@
 
 ## 構成と権限
 
-契約と skills は、Claude 側（`dot_claude/CLAUDE.md` と `dot_claude/skills/`）と同じ意図で書く。違えているのは、runtime の仕組みが違う箇所だけ。通常作業のモデル、effort、権限、自動 memory は実機側の設定に委ねる。
+契約と skills は、Claude 側（`dot_claude/CLAUDE.md` と `dot_claude/skills/`）と同じ意図で書く。違えているのは、runtime の仕組みが違う箇所だけ。model、reasoning effort、sandbox の設定は、決めたキーだけを repo から上書きする（[config.toml の一部のキーの管理](#configtoml-の一部のキーの管理)）。permission profile と自動 memory は実機側の設定に委ねる。
 
 - 返答の文体: Claude 側は組み込みの output style（`Concise`）で決めている。Codex には output style の仕組みが無い。公式の Personalize は、Codex の個人の指示は global の `AGENTS.md` に置くとしている。そのため `AGENTS.md` の「返答」に、`Concise` の要点を書いている。
 - 権限: Claude 側は `settings.json` の deny と sandbox で credential の読み取りを止めている。Codex の permission profile はこの repo から配布しないので、credential を読まないことと承認経路の扱いを `AGENTS.md` の「権限」に書いている。
@@ -100,6 +100,12 @@ Claude Code で適用後に push が実行前に止まった結果は、[push �
 
 Windows と macOS の `workspace-write` では、sandbox 内の外向き通信は既定で無効。[Agent approvals & security](https://learn.chatgpt.com/docs/agent-approvals-security#network-access)
 
+`modify_private_config.toml` は `sandbox_workspace_write.network_access` を `true` にして、sandbox 内の外向き通信を有効にする。依存の取得や `git fetch` のような通常の作業を、承認の往復なしで通すため（2026-11-10 のユーザー判断）。
+
+**代償として、Codex の sandbox 内のコマンドは、読めた credential を外へ送れる。受け入れている（2026-11-10 のユーザー判断）。** 読み取りの deny を持つ permission profile は repo から配らない（[ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、[ADR 0049](../adr/0049-manage-selected-codex-config-keys.md)）。Windows の実測では、sandbox 内から `~/.ssh` の検証用ファイルを読めた（[読み取りの deny](#読み取りの-deny)）。歯止めは `AGENTS.md` の「権限」の契約だけで、強制ではない。Claude Code も Windows では同じ状態を受け入れている（[Windows では鍵を持ち出せる](agent-commit-signing-design.md#windows-では鍵を持ち出せる)）。見直すのは、秘密を含む repo で Codex を使い始める時。その時は作業機の config に読み取りの deny を入れるか、このキーを管理から外す。
+
+この節の下の実測と、[macOS のエージェント用署名](#macos-のエージェント用署名) の `curl` の実測は、このキーを管理に入れる前のもの。
+
 2026-11-09 に Windows の Codex session（`workspace-write`、permission profile は `managed`）で、PowerShell 7.6.9 から `curl.exe` で `https://example.com/` に HTTPS GET を送った。接続 timeout は 5 秒、全体の timeout は 10 秒にした。承認を受けた sandbox 外の対照では HTTP 200 だった。sandbox 内では名前解決に失敗し、curl の終了コードは 6 で HTTP 応答は無かった。
 
 ### 読み取りの deny
@@ -131,5 +137,6 @@ sandbox 内で同じ `git log` を実行すると、Git が `op-ssh-sign.exe` �
 
 ## 未確認
 
+- `sandbox_workspace_write.network_access` を `true` にした後、sandbox 内の外向き通信が実際に通るか。この Windows 機の `config.toml` の値が `true` であることは、`chezmoi diff ~/.codex` が空であることで確かめた（2026-11-10）。
 - mac の Codex が `~/.ssh` の秘密鍵を実際に読めるか。`~/.ssh/config` までしか確かめていない。
 - `dot_config/zsh/dot_zshenv` の署名用 socket の条件は、Codex の署名のために足した。Claude Code に要るかは確かめていないので残している。
