@@ -46,7 +46,7 @@
 ## 置き場
 
 - `dot_claude/`: 全 project へ配る Claude Code の契約（`CLAUDE.md`）、settings、hooks、skills、mods
-- `dot_codex/`: 全 project へ配る Codex の契約（`AGENTS.md`）、skills、rules。`config.toml` は配布しない（`docs/notes/codex-harness-operation.md`）
+- `dot_codex/`: 全 project へ配る Codex の契約（`AGENTS.md`）、skills、rules。`config.toml` はファイルごとには配布せず、`modify_private_config.toml` で決めたキーだけを上書きする（`docs/notes/codex-harness-operation.md`）
 - root `TODO.md`: 着手を保留している残タスク。作業中に見つけた別スコープの問題を、今のスコープを閉じてから扱うために移す先
 - `.claude/rules/`: 使わない。この repo に閉じる規則はこの `AGENTS.md` に置き、Claude と Codex の両方に読ませる（`docs/notes/memory-surface-design.md`）
 - `docs/notes/`: repo の知見と、今の設計の理由。`docs/adr/`: repo の判断の記録

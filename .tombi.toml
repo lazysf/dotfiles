@@ -1,3 +1,7 @@
 [files]
 include = ["**/*.toml"]
-exclude = ["dot_config/starship.toml"]
+exclude = [
+  "dot_config/starship.toml",
+  # chezmoi の modify テンプレートで、TOML ではない。
+  "dot_codex/modify_private_config.toml",
+]

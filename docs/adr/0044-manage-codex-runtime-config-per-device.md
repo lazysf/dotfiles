@@ -1,7 +1,7 @@
 # 0044: Codex の runtime 設定を作業機ごとに管理する
 
 - Status: Accepted
-- Amended-By: 0046
+- Amended-By: 0046, 0049
 - Amends: 0043
 
 ## 背景
