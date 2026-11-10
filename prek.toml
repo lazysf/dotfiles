@@ -71,7 +71,7 @@ args = ["--fix"]
 
 [[repos]]
 repo = "https://github.com/tombi-toml/tombi-pre-commit"
-rev = "v1.10.0"
+rev = "v1.11.1"
 
 [[repos.hooks]]
 id = "tombi-format"
