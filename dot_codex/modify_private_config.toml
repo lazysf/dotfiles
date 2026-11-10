@@ -33,9 +33,15 @@
 {{-   $config = setValueAtPath $path (index . 1) $config -}}
 {{- end -}}
 
-{{- /* toToml は並びと書式を変えるので、値が同じ時は Codex が書いたままを返し、差分を出さない。 */ -}}
-{{- if eq (toJson $config) (toJson $original) -}}
+{{- $rendered := toToml $config -}}
+{{- /* 値が同じ時は手元の書式を保つ。従来の toToml 出力と一致する時だけ字下げを外す。 */ -}}
+{{- if and (eq (toJson $config) (toJson $original)) (ne .chezmoi.stdin $rendered) -}}
 {{-   .chezmoi.stdin -}}
 {{- else -}}
-{{-   toToml $config -}}
+{{-   $unindented := $rendered | replaceAllRegex "(?m)^ +" "" -}}
+{{- /* 複数行の値に行頭の空白が含まれても、値が変わる出力は書き戻さない。 */ -}}
+{{-   if not (deepEqual (fromToml $unindented) (fromToml $rendered)) -}}
+{{-     fail "config.toml: removing indentation changed the TOML data" -}}
+{{-   end -}}
+{{-   $unindented -}}
 {{- end -}}
