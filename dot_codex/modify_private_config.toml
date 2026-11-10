@@ -9,9 +9,15 @@
       (list "sandbox_mode" "workspace-write")
       (list "desktop.ambient-suggestions-enabled" false)
       (list "desktop.show-context-window-usage" true)
+      (list "desktop.sidebar-show-projects-in-recents" false)
       (list "sandbox_workspace_write.network_access" true) -}}
 {{- if eq .chezmoi.os "windows" -}}
-{{-   $settings = append $settings (list "windows.sandbox" "elevated") -}}
+{{-   if eq .profile "personal" -}}
+{{-     $settings = append $settings (list "windows.sandbox" "mxc") -}}
+{{-   else -}}
+{{-     $settings = append $settings (list "windows.sandbox" "elevated") -}}
+{{-     $settings = append $settings (list "features.prefer_mxc" false) -}}
+{{-   end -}}
 {{- end -}}
 
 {{- /* setValueAtPath は渡した dict を書き換えるので、比較用の元の値は別に読む。 */ -}}
