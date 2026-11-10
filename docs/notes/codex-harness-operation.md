@@ -1,6 +1,6 @@
 # Codex harness の運用
 
-- Date: 2026-11-09
+- Date: 2026-11-10
 - 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows と mac の Codex session での署名の実測（2026-11-09）
 
 `dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布せず、決めたキーだけを上書きする。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を作業機ごとに管理する判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、一部のキーだけを上書きする判断は [ADR 0049](../adr/0049-manage-selected-codex-config-keys.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md)、commit を sandbox の外で都度承認する判断は [ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md) にある。
@@ -43,7 +43,7 @@ MCP、plugin、通知、権限などの、管理するキー以外は、アプ�
 [`modify_private_config.toml`](../../dot_codex/modify_private_config.toml) は chezmoi の modify テンプレート。apply の時に実機の `config.toml` を読み、テンプレートに並べたキーだけを上書きして書き戻す。管理するキーと値の正本はこのテンプレート。[Manage different types of file](https://www.chezmoi.io/user-guide/manage-different-types-of-file/)
 
 - 管理するのは、model、reasoning effort、sandbox mode、workspace-write の network、アプリの表示の設定。作業機の間で揃えたい値で、作業機固有のパスを含まない。
-- `windows.sandbox` は Windows の時だけ上書きする。他の OS では、実機にある値をそのまま残す。
+- 個人用 Windows は MXC を明示する。端末やポリシーが MXC に対応しない場合、sandbox の起動は失敗する。仕事用 Windows は `elevated` を選ぶ。デスクトップアプリによる MXC の自動選択を避けるため、仕事用 Windows では `features.prefer_mxc` も無効にする。Windows 以外では両キーを実機側で管理する。[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox) / [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference)
 - permission profile は入れない。ADR 0044 の起動しなかった配布に入っていたため。
 - 実機にファイルが無い時は、管理するキーだけのファイルを作る。
 - `setValueAtPath` は、パスの途中にあるテーブル以外の値を、黙ってテーブルに置き換える。テンプレートは、置き換える前にエラーで apply を止める。
