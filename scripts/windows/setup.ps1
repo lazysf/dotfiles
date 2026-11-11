@@ -276,9 +276,11 @@ function New-AgentSigningKey {
 }
 
 function Install-AiStack {
-    Write-Host '==> AI ツール (デスクトップ)'
+    Write-Host '==> AI ツール (デスクトップ + CLI)'
     Install-WingetPackage Anthropic.Claude
     New-ClaudeAccountShortcut
+    # Desktop の Code タブは同梱の別コピーを使う。こちらはターミナルの claude で、更新は winget upgrade。
+    Install-WingetPackage Anthropic.ClaudeCode
     # ChatGPT デスクトップは Microsoft Store 経由で入手可能だが現状未採用。
 }
 
