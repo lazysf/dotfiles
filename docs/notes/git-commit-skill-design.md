@@ -86,12 +86,17 @@ repo の `AGENTS.md` や `CLAUDE.md` が分け方を決めていればそれに�
 
 Windows でも同じ手順で動く。OS で分岐する設定は持たない。
 
-- Windows の Claude Code は、shell の tool が Bash（Git Bash）だけになっている（[claude-code-settings-design.md](./claude-code-settings-design.md) の「Windows の PowerShell tool は無効のまま使う」）。PowerShell 版の script は作らない。同じ検査の実装が 2 本になるため。
+- Windows の Claude Code は、shell の tool が Bash（Git Bash）だけになっている（[claude-code-settings-design.md](./claude-code-settings-design.md) の「Windows の PowerShell tool は無効のまま使う」）。Claude 側の skill は PowerShell 版を使わない。Git Bash から sh 版が動くため（次の項目）。PowerShell 版は Codex のために置いている。
 - Windows の desktop app では、本文の `${CLAUDE_SKILL_DIR}` は `C:/Users/<user>/.claude/skills/git-commit` のような、ドライブ文字付きの `/` 区切りの path に置き換わった。本文の冒頭に付く base directory の行だけは `\` 区切りだった（2026-11-11、apply 後の新しい session で実測）。その session で、置き換わった path を `sh` で呼ぶと、exit は stage なしで 0、home を含むファイルで 1、存在しない script で 127 だった。`\` 区切りの絶対パスでも `sh` が script を実行できることは、別に確かめた（2026-11-11）。
 - script が見つからない時は、`sh` 自身のエラーが home の絶対パスを含む。報告に写す時はプレースホルダへ置き換える。
 - Git Bash の `$HOME` は `/c/Users/<user>` の形なので、home の検査は `C:\Users\<user>` と `C:/Users/<user>` の形には当たらない。どちらの形も、ユーザー名の検査が止めた（2026-11-11、使い捨ての repo で実測。exit 1、種類は `user`）。Git Bash では `USER` が空で、script は `USERNAME` を読む。
 
-Codex の skill には入れていない。Codex には `${CLAUDE_SKILL_DIR}` が無い。Windows の Codex はコマンドを `pwsh.exe` で包み、sandbox の種類によっては Git for Windows の `bash` を起動できなかった（[codex-harness-operation.md](./codex-harness-operation.md) の「自動署名を入れなかった理由」）。
+macOS の Claude Code desktop app の sandbox の中でも、配布済みの sh は動く（2026-11-11 に実測）。script の path は `${CLAUDE_SKILL_DIR}` を通さず、絶対パスで渡した。
+
+- 配布済みの `~/.claude/skills/git-commit/scripts/check-identifiers.sh` を、sandbox の中の `sh` で読めた。`sh scripts/tests/check-identifiers.tests.sh` の 10 ケースは、正本でも、検査対象を配布済みの sh に差し替えた実行でも成功した。
+- 使い捨ての repo で配布済みの sh を呼ぶと、exit は stage なしと識別子なしで 0、home・user・host のどれかを含むファイルで 1、存在しない script path で 127 だった。診断に実際の home・user・host は含まれなかった。
+
+Codex の skill も同じ検査を持つが、script の path の解決と Windows の実装が違う（下の「Codex の OS ごとの識別子検査」）。Codex には `${CLAUDE_SKILL_DIR}` が無い。Windows の Codex はコマンドを `pwsh.exe` で包み、sandbox の種類によっては Git for Windows の `bash` を起動できなかった（[codex-harness-operation.md](./codex-harness-operation.md) の「自動署名を入れなかった理由」）。
 
 ## 確認の報告に何を見たかを書かせる理由
 
@@ -185,7 +190,6 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - 「出力」に足した `lapidary` の項目で、提案が報告に出るようになるか。落ちた観測は 2026-11-10 の 1 回だけ。
 - Codex で、同じ内容の skill を呼び直した時に本文が読み直されるか。Codex の skill にも同じ手順を入れているが、呼び直しの挙動と 2 回の観測は Claude Code のもの。
 - mac で、`${CLAUDE_SKILL_DIR}` が置き換わった形。
-- mac の sandbox の中で、`~/.claude/skills/` の下の script を `sh` で読めるか。
 - 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
 
 ## Codex の OS ごとの識別子検査
