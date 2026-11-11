@@ -238,9 +238,11 @@ create_agent_signing_key() {
 }
 
 install_ai_stack() {
-  echo "==> AI ツール (デスクトップ)"
+  echo "==> AI ツール (デスクトップ + CLI)"
   cask claude
   create_claude_account_app
+  # Desktop の Code タブは同梱の別コピーを使う。こちらはターミナルの claude。claude-code は stable channel の cask。
+  cask claude-code
   cask chatgpt
 }
 
