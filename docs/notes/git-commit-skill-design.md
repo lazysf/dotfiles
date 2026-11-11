@@ -202,9 +202,19 @@ script の場所は読み込んだ SKILL.md を基準に解決し、検査対象
 
 両 OS の差分取得は `--ignore-submodules=none` を明示する。Windows 版は連続した追加行の元の LF byte を復元してから decode する。UTF-16 の文字内部の LF byte を捨てないため。追加区間は削除・context・hunk の境界を越えて連結しない。終端改行なしの marker も復元へ反映する。候補は UTF-8・UTF-16 LE/BE・Latin1、UTF-16 の開始位置は 0 と 1。path は別途 UTF-8 で検査する。
 
+Windows 版は追加行用の全体 diff と `--name-only -z` をそれぞれ 1 回取得する。全体 diff は `diff --git` で分割し、内容の所属先は `+++ b/...` から取る。Git の quoted path は byte に戻してから UTF-8 で decode する。ファイルごとの pathspec を使わないため、subdirectory から起動しても root からの path を取り違えない。header のない hunk、行数の不一致、変更名があるのに空の patch は検査不能として終了する。追加行のないファイルの path も name-only の結果で検査する。
+
+両実装の照合条件は同一ではない。home は PowerShell 版では大文字小文字を区別せず、sh 版では区別する。user と host の語境界は、PowerShell 版では `\p{L}`・`\p{N}`・`_` に隣接しないこと、sh 版では `grep -w` の定義に従う。sh 版の定義は実行環境の locale にも依存する。PowerShell 版は上記の UTF-16 decode を行うが、sh 版は明示的な UTF-16 decode を行わない。
+
 Windows 版は Job Object に所属させた worker へ開始指示を送り、その後に Git を起動する。Job の handle は controller だけが保持する。起動と両 stream の byte 回収を合わせて 30 秒、Job の停止確認と stream の後始末は最大 5 秒。親が先に終了しても子孫を Job ごと終了できる。初期化・所属に失敗した場合は Git を起動しない。新しい package は使わず、同梱の C# helper を Add-Type で読み込む。
 
+worker は JSON の文字列を `System.Text.Json.JsonDocument` の `GetString()` で読み出す。ISO-8601 の形の引数も日付へ変換しない。`ConvertFrom-Json -DateKind String` は PowerShell 7.5 以降の機能なので、最低要件の 7.0 を保つため使わない。
+
 両 OS の診断は path の識別子を伏せる。sh 版は既存の awk で環境変数の値を固定文字列として照合し、quoted path や制御文字を含む path は <path> に倒す。正本の修正は Codex・Claude Code・prek に効く。
+
+PowerShell 版は制御文字か `"` を含む path を `<path>` と表示する。Git の生の stderr と例外の詳細も表示しない。
+
+2026-11-11 に PowerShell の全 82 ケースが成功した。subdirectory からの起動、日付形式の path と引数、ESC を含む path の診断、全体 patch の不正な header・hunk・path の拒否を含む。指定の 3 回帰ケースは修正前の実装でそれぞれ失敗し、修正後に成功した。
 
 Windows 版は path の識別子も伏せ、Git の生のエラーを出さない。検査不能も非ゼロ終了にする。実行ポリシーや sandbox を変更して通さない。回帰検査は `pwsh -NoProfile -NonInteractive -File scripts/tests/check-identifiers.tests.ps1`。一時 repo を削除し、commit は作らない。 2026-11-11 に Windows の 54 ケースが成功した。文字内部に LF byte を含む UTF-16、BOM、終端改行、親終了後の子孫による pipe 保持・子孫の終了、worker の開始前 EOF を含む。別の確認で Job 外の対照プロセスの存続と、生成した一式だけでの起動を確認した。
 
@@ -215,3 +225,9 @@ chezmoi v2.74.1 の `chezmoi managed --include=files --path-style=absolute` で�
 出典: [Build skills](https://learn.chatgpt.com/docs/build-skills)、[Agent Skills Specification](https://agentskills.io/specification)、[Using scripts](https://agentskills.io/skill-creation/using-scripts)、[PowerShell CLI](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pwsh?view=powershell-7.6)、[git diff](https://git-scm.com/docs/git-diff)（2026-11-11 確認）。Windows の前版は apply 後の実行と、会話履歴を渡さない子 agent での skill 発見・本文の読み取りを確認済み。helper 一式も apply 後に正本との一致と配布先からの 54 ケース成功を確認済み。
 
 Job の根拠: [Windows Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)（2026-11-11 確認）。
+
+2026-11-11 に Windows、PowerShell 7.6.9、Git 2.56.0.windows.4 で、通常のテキスト 30 ファイルを stage した同じ使い捨て repo の検査を測定した。各実装でウォームアップ 1 回の後、別プロセスで 3 回実行した。ファイルごとの diff 取得では 16.203・16.099・16.378 秒（中央値 16.203 秒）、全体 diff 取得では 1.810・1.833・1.831 秒（中央値 1.831 秒）だった。全実行が exit 0。中央値で約 8.8 倍の速度になった。
+
+同日の Windows での sh suite は、sandbox 内では sh の起動が `0xC0000142` で失敗した。正式な承認経路で実行した場合は、`"` を含む名前の fixture を stage する時に pathspec 不一致で終了した。Windows 上での既存 sh 全 10 ケースの成功は未確認。WSL は未導入で、sh の検査コードと suite は変更していない。
+
+JSON の根拠: [ConvertFrom-Json](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json?view=powershell-7.6)、[JsonElement.GetString](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.jsonelement.getstring)（2026-11-11 確認）。
