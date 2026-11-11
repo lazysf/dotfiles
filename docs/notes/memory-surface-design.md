@@ -1,6 +1,6 @@
 # memory surface の設計
 
-- Date: 2026-11-09
+- Date: 2026-11-11
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [anthropics/claude-code#90450](https://github.com/anthropics/claude-code/issues/90450) / `dot_claude/CLAUDE.md` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / [Tools reference](https://code.claude.com/docs/en/tools-reference) / この環境での実測（`paths` の発火経路は 2026-09-02 の Claude Code v2.1.255 と、2026-11-08 の desktop app）
 
 配布する memory surface を `dot_claude/CLAUDE.md` 1 枚にしている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -23,7 +23,7 @@
 
 `CLAUDE.md` の「確認してから進めること」とは重ならない。そちらが挙げる「秘密情報」は credential と token で、触る前に人へ確認するもの。`## Privacy` が扱うのは書き手と作業機の識別子で、確認ではなく置換で解決する。
 
-**強制層はこの repo の commit にだけ持つ。** 公式は CLAUDE.md を context であって enforced configuration ではないと明示している。この repo の commit は、prek の local hook が staged の path と追加行を home の path、ユーザー名、ホスト名で検査する（[lint-and-pre-commit-execution.md](./lint-and-pre-commit-execution.md) の「作業機の識別子を検査する local hook」）。他の repo と、pattern にできない識別子は、契約だけが担う。
+**強制層はこの repo の commit にだけ持つ。** 公式は CLAUDE.md を context であって enforced configuration ではないと明示している。この repo の commit は、prek の local hook が staged の path と追加行を home の path、ユーザー名、ホスト名で検査する（[lint-and-pre-commit-execution.md](./lint-and-pre-commit-execution.md) の「作業機の識別子を検査する local hook」）。他の repo では、`git-commit` skill が手順 6 で同じ script を走らせる（[git-commit-skill-design.md](./git-commit-skill-design.md) の「識別子の検査を script で持つ理由」）。これは skill の手順で、強制ではない。pattern にできない識別子は、今も契約だけが担う。
 
 ## `paths` を使わない
 
