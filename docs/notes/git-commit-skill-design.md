@@ -206,6 +206,12 @@ Windows 版は追加行用の全体 diff と `--name-only -z` をそれぞれ 1 
 
 両実装の照合条件は同一ではない。home は PowerShell 版では大文字小文字を区別せず、sh 版では区別する。user と host の語境界は、PowerShell 版では `\p{L}`・`\p{N}`・`_` に隣接しないこと、sh 版では `grep -w` の定義に従う。sh 版の定義は実行環境の locale にも依存する。PowerShell 版は上記の UTF-16 decode を行うが、sh 版は明示的な UTF-16 decode を行わない。
 
+この違いは揃えていない。home の大文字小文字と UTF-16 の decode は、PowerShell 版が sh 版より多く止める向きの違い。語境界は locale によって向きが変わる。たとえば C locale の `grep -w` は ASCII 以外の文字を語の外と見るので、隣に ASCII 以外の文字が付いたユーザー名は、sh 版だけが止める。揃えるには、sh 版に UTF-16 の decode と Unicode の語境界を足すか、PowerShell 版の検出を減らすことになる。前者は POSIX の `sh` と `awk` だけでは書きにくく、後者は Windows で見つけていたものを見逃すようになる。次のどれかが起きたら揃えるかを決め直す。
+
+- どちらかの script の照合の処理を直す時。
+- 同じ staged diff が、OS によって通ったり止まったりした commit が実際に起きた時。
+- sh 版だけが見逃した識別子が、commit に残った時。
+
 Windows 版は Job Object に所属させた worker へ開始指示を送り、その後に Git を起動する。Job の handle は controller だけが保持する。起動と両 stream の byte 回収を合わせて 30 秒、Job の停止確認と stream の後始末は最大 5 秒。親が先に終了しても子孫を Job ごと終了できる。初期化・所属に失敗した場合は Git を起動しない。新しい package は使わず、同梱の C# helper を Add-Type で読み込む。
 
 worker は JSON の文字列を `System.Text.Json.JsonDocument` の `GetString()` で読み出す。ISO-8601 の形の引数も日付へ変換しない。`ConvertFrom-Json -DateKind String` は PowerShell 7.5 以降の機能なので、最低要件の 7.0 を保つため使わない。
