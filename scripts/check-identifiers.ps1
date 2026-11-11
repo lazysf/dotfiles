@@ -31,11 +31,13 @@ try {
     $reports = [Collections.Generic.List[string]]::new()
     $contentEncodings = @([Text.Encoding]::UTF8, [Text.Encoding]::Unicode, [Text.Encoding]::BigEndianUnicode, [Text.Encoding]::Latin1)
     $names = Invoke-GitDiff @('--name-only', '-z')
-    foreach ($path in $names.Split([char]0, [StringSplitOptions]::RemoveEmptyEntries)) {
+    $paths = @($names.Split([char]0, [StringSplitOptions]::RemoveEmptyEntries))
+    $patch = Invoke-GitDiff -DiffArguments @('-U0', '--text', '--src-prefix=a/', '--dst-prefix=b/') -OutputEncoding ([Text.Encoding]::Latin1)
+    $files = Get-IdentifierPatchFiles -Patch $patch -Paths $paths
+    foreach ($path in $paths) {
         $added = [Collections.Generic.List[string]]::new()
         $added.Add($path)
-        $patch = Invoke-GitDiff -DiffArguments @('-U0', '--text', '--', $path) -OutputEncoding ([Text.Encoding]::Latin1)
-        foreach ($segment in @(Get-IdentifierAddedSegments $patch)) {
+        foreach ($segment in $files[$path]) {
             $bytes = [Text.Encoding]::Latin1.GetBytes($segment)
             foreach ($encoding in $contentEncodings) {
                 $added.Add($encoding.GetString($bytes))
@@ -50,8 +52,8 @@ try {
             $replacement = switch ($kind) { home { '~' } user { '<user>' } host { '<host>' } }
             $displayPath = [regex]::Replace($displayPath, $displayPatterns[$kind], $replacement)
         }
-        # 制御文字を escape し、path が診断の行構造を変えないようにする。
-        $displayPath = $displayPath.Replace("`r", '\r').Replace("`n", '\n').Replace("`t", '\t')
+        # terminal の制御や Git の quoted path と混同する表示を避ける。
+        if ($path -match '[\p{Cc}"]') { $displayPath = '<path>' }
         foreach ($kind in $patterns.Keys) {
             if ([regex]::IsMatch($text, $patterns[$kind])) { $reports.Add("  ${kind}: $displayPath") }
         }
