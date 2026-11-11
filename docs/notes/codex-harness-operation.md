@@ -145,4 +145,4 @@ sandbox 内で同じ `git log` を実行すると、Git が `op-ssh-sign.exe` �
 
 Windows は既存セットアップ対象の PowerShell 7、macOS は sh で同梱 script を呼ぶ。配置の解決と停止条件は `dot_codex/skills/git-commit/SKILL.md`、二つの実装を持つ理由と回帰検査は [git-commit-skill-design.md](./git-commit-skill-design.md#codex-の-os-ごとの識別子検査) にある。
 
-2026-11-11 に Windows の `workspace-write`（Windows sandbox の設定値 `mxc`）で PowerShell 7 の `-File` による検査を確認した。実行ポリシーは RemoteSigned。前版の Windows target の一致と配布先の検査、子 agent の初期一覧からの skill 発見と最新版本文の読み取りは確認済み。helper 一式と Claude 側の sh は apply 後に正本との一致を確認済み。配布済み Windows 版の 54 ケースも成功した。macOS の sandbox 内の実行は未確認。apply はユーザーが行う。
+2026-11-11 に Windows の `workspace-write`（Windows sandbox の設定値 `mxc`）で PowerShell 7 の `-File` による検査を確認した。実行ポリシーは RemoteSigned。前版の Windows target の一致と配布先の検査、子 agent の初期一覧からの skill 発見と最新版本文の読み取りは確認済み。helper 一式と Claude 側の sh は apply 後に正本との一致を確認済み。配布済み Windows 版の 54 ケースも成功した。macOS の配布先と sandbox 内の実行も確認済み。実測は [git-commit-skill-design.md](./git-commit-skill-design.md#codex-の-os-ごとの識別子検査) にある。apply はユーザーが行う。

@@ -186,7 +186,6 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - Codex で、同じ内容の skill を呼び直した時に本文が読み直されるか。Codex の skill にも同じ手順を入れているが、呼び直しの挙動と 2 回の観測は Claude Code のもの。
 - mac で、`${CLAUDE_SKILL_DIR}` が置き換わった形。
 - mac の sandbox の中で、`~/.claude/skills/` の下の script を `sh` で読めるか。
-- Codex の macOS 配布先で sh 版を実行できるか。
 - 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
 
 ## Codex の OS ごとの識別子検査
@@ -203,8 +202,12 @@ Windows 版は Job Object に所属させた worker へ開始指示を送り、�
 
 両 OS の診断は path の識別子を伏せる。sh 版は既存の awk で環境変数の値を固定文字列として照合し、quoted path や制御文字を含む path は <path> に倒す。正本の修正は Codex・Claude Code・prek に効く。
 
-Windows 版は path の識別子も伏せ、Git の生のエラーを出さない。検査不能も非ゼロ終了にする。実行ポリシーや sandbox を変更して通さない。回帰検査は `pwsh -NoProfile -NonInteractive -File scripts/tests/check-identifiers.tests.ps1`。一時 repo を削除し、commit は作らない。 2026-11-11 に Windows の 54 ケースが成功した。文字内部に LF byte を含む UTF-16、BOM、終端改行、親終了後の子孫による pipe 保持・子孫の終了、worker の開始前 EOF を含む。別の確認で Job 外の対照プロセスの存続と、生成した一式だけでの起動を確認した。sh の 10 ケースは追加済みだが、この環境では sh を起動できず未実行。
+Windows 版は path の識別子も伏せ、Git の生のエラーを出さない。検査不能も非ゼロ終了にする。実行ポリシーや sandbox を変更して通さない。回帰検査は `pwsh -NoProfile -NonInteractive -File scripts/tests/check-identifiers.tests.ps1`。一時 repo を削除し、commit は作らない。 2026-11-11 に Windows の 54 ケースが成功した。文字内部に LF byte を含む UTF-16、BOM、終端改行、親終了後の子孫による pipe 保持・子孫の終了、worker の開始前 EOF を含む。別の確認で Job 外の対照プロセスの存続と、生成した一式だけでの起動を確認した。
 
-出典: [Build skills](https://learn.chatgpt.com/docs/build-skills)、[Agent Skills Specification](https://agentskills.io/specification)、[Using scripts](https://agentskills.io/skill-creation/using-scripts)、[PowerShell CLI](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pwsh?view=powershell-7.6)、[git diff](https://git-scm.com/docs/git-diff)（2026-11-11 確認）。Windows の前版は apply 後の実行と、会話履歴を渡さない子 agent での skill 発見・本文の読み取りを確認済み。helper 一式も apply 後に正本との一致と配布先からの 54 ケース成功を確認済み。macOS の実行は未確認。
+2026-11-11 に macOS の Codex `workspace-write` sandbox 内で、`sh scripts/tests/check-identifiers.tests.sh` の 10 ケースが成功した。同じ suite の検査対象だけを配布済み `~/.codex/skills/git-commit/scripts/check-identifiers.sh` に差し替えた実行も成功した。診断の識別子漏えい防止と、`diff.ignoreSubmodules=all` 下の staged gitlink の path 検査を含む。別の一時 repo では、配布済み sh が stage なし・識別子なしで exit 0、実行環境の home を追加した場合に exit 1 を返した。診断に実際の home・user・host が含まれないことも確認した。存在しない script path は exit 127 になった。
+
+chezmoi v2.74.1 の `chezmoi managed --include=files --path-style=absolute` で、Codex の git-commit skill と Claude 側 sh の配布対象を調べた。9 ファイルすべてが実在し、`chezmoi cat` の生成結果と byte 単位で一致した。Codex skill 内に未管理ファイルはなかった。両者の sh は正本とも一致した。
+
+出典: [Build skills](https://learn.chatgpt.com/docs/build-skills)、[Agent Skills Specification](https://agentskills.io/specification)、[Using scripts](https://agentskills.io/skill-creation/using-scripts)、[PowerShell CLI](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pwsh?view=powershell-7.6)、[git diff](https://git-scm.com/docs/git-diff)（2026-11-11 確認）。Windows の前版は apply 後の実行と、会話履歴を渡さない子 agent での skill 発見・本文の読み取りを確認済み。helper 一式も apply 後に正本との一致と配布先からの 54 ケース成功を確認済み。
 
 Job の根拠: [Windows Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)（2026-11-11 確認）。
