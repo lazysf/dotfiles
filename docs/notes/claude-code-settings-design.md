@@ -188,6 +188,8 @@ credential の read を止める方法は、`permissions.deny` の `Read(...)`�
 
 `~/.codex` は `auth.json` だけを deny する。Codex はログイン情報をこのファイルか OS の credential store に置く（[Codex authentication](https://learn.chatgpt.com/docs/auth)）。ディレクトリ全体を deny しないのは、`chezmoi apply` の後に配布先の `~/.codex/AGENTS.md` などを読んで source と突き合わせるため（`AGENTS.md` の「変更後の確認」）。
 
+`~/.claude` も `.credentials.json` だけを deny する。Desktop の Code タブは Desktop のログインで動き、このファイルを使わない。Code タブの session から子の `claude` を起こす時は、CLI のログインが要り、Windows ではこのファイルに refresh token が置かれる（[Authentication](https://code.claude.com/docs/en/authentication)。mac は Keychain で、このファイルは Keychain に書けない時の予備）。2026-11-11 の CLI のログインで、Windows にこのファイルができた。Read の deny は agent のツールからの読み取りを止めるだけで、Claude Code 自身がログインのために読むのは止めない（permissions の仕様からの判断で、実測していない）。ディレクトリ全体を deny しないのは、`~/.codex` と同じ理由。
+
 ## 組み込みの git 指示を止める理由
 
 `includeGitInstructions: false` で、Claude Code の system prompt に入る組み込みの commit と PR の指示を止めている。組み込みの指示は、この環境の commit の規約（`skills/git-commit`）や、branch を repo に任せる契約とぶつかる。たとえば組み込みには「If on the default branch, branch first.」がある。止めた後、組み込みの git の節が system prompt に無いことを、2026-11-09 の session で確かめた。
