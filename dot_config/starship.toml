@@ -74,7 +74,7 @@ style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
 [python]
-python_binary = [".venv/bin/python", "python", "python3"]
+python_binary = [".venv/bin/python", ".venv/Scripts/python", "python", "python3"]
 symbol = ""
 style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
