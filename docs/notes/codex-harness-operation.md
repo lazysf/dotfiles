@@ -1,6 +1,6 @@
 # Codex harness の運用
 
-- Date: 2026-11-10
+- Date: 2026-11-11
 - 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows と mac の Codex session での署名の実測（2026-11-09）
 
 `dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布せず、決めたキーだけを上書きする。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を作業機ごとに管理する判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、一部のキーだけを上書きする判断は [ADR 0049](../adr/0049-manage-selected-codex-config-keys.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md)、commit を sandbox の外で都度承認する判断は [ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md) にある。
@@ -140,3 +140,9 @@ sandbox 内で同じ `git log` を実行すると、Git が `op-ssh-sign.exe` �
 - `sandbox_workspace_write.network_access` を `true` にした後、sandbox 内の外向き通信が実際に通るか。この Windows 機の `config.toml` の値が `true` であることは、`chezmoi diff ~/.codex` が空であることで確かめた（2026-11-10）。
 - mac の Codex が `~/.ssh` の秘密鍵を実際に読めるか。`~/.ssh/config` までしか確かめていない。
 - `dot_config/zsh/dot_zshenv` の署名用 socket の条件は、Codex の署名のために足した。Claude Code に要るかは確かめていないので残している。
+
+## git-commit の識別子検査
+
+Windows は既存セットアップ対象の PowerShell 7、macOS は sh で同梱 script を呼ぶ。配置の解決と停止条件は `dot_codex/skills/git-commit/SKILL.md`、二つの実装を持つ理由と回帰検査は [git-commit-skill-design.md](./git-commit-skill-design.md#codex-の-os-ごとの識別子検査) にある。
+
+2026-11-11 に Windows の `workspace-write`（Windows sandbox の設定値 `mxc`）で PowerShell 7 の `-File` による検査を確認した。実行ポリシーは RemoteSigned。前版の Windows target の一致と配布先の検査、子 agent の初期一覧からの skill 発見と最新版本文の読み取りは確認済み。helper 一式と Claude 側の sh は apply 後に正本との一致を確認済み。配布済み Windows 版の 54 ケースも成功した。macOS の sandbox 内の実行は未確認。apply はユーザーが行う。

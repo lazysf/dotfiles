@@ -186,5 +186,25 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - Codex で、同じ内容の skill を呼び直した時に本文が読み直されるか。Codex の skill にも同じ手順を入れているが、呼び直しの挙動と 2 回の観測は Claude Code のもの。
 - mac で、`${CLAUDE_SKILL_DIR}` が置き換わった形。
 - mac の sandbox の中で、`~/.claude/skills/` の下の script を `sh` で読めるか。
-- Codex で同じ検査を走らせる方法。
+- Codex の macOS 配布先で sh 版を実行できるか。
 - 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
+
+## Codex の OS ごとの識別子検査
+
+Codex は Windows で PowerShell 7 版、macOS で既存の sh 版を使う。正本は `scripts/check-identifiers.ps1` と `scripts/check-identifiers.sh`。Codex の配布用 template は chezmoi の `include` で取り込む。Claude Code と prek は sh 版を使う。検査対象の変更は両実装の回帰確認が必要になる。
+
+Windows の Codex CLI 0.167.0-alpha.3.2、PowerShell 7.6.9、`workspace-write`、Windows sandbox の設定値 `mxc` で、Git 同梱の sh は起動時に `0xC0000142` になった（2026-11-11）。PowerShell 7 は起動できるため、既存の Claude・hook の実装を置き換えず Windows 版を持つ。
+
+script の場所は読み込んだ SKILL.md を基準に解決し、検査対象 repo のカレントディレクトリは維持する。公式の user scope は `~/.agents/skills` だが、この repo の `~/.codex/skills` の配布先は移行しない。専用の directory 変数や shell の tilde 展開にも依存しない。
+
+両 OS の差分取得は `--ignore-submodules=none` を明示する。Windows 版は連続した追加行の元の LF byte を復元してから decode する。UTF-16 の文字内部の LF byte を捨てないため。追加区間は削除・context・hunk の境界を越えて連結しない。終端改行なしの marker も復元へ反映する。候補は UTF-8・UTF-16 LE/BE・Latin1、UTF-16 の開始位置は 0 と 1。path は別途 UTF-8 で検査する。
+
+Windows 版は Job Object に所属させた worker へ開始指示を送り、その後に Git を起動する。Job の handle は controller だけが保持する。起動と両 stream の byte 回収を合わせて 30 秒、Job の停止確認と stream の後始末は最大 5 秒。親が先に終了しても子孫を Job ごと終了できる。初期化・所属に失敗した場合は Git を起動しない。新しい package は使わず、同梱の C# helper を Add-Type で読み込む。
+
+両 OS の診断は path の識別子を伏せる。sh 版は既存の awk で環境変数の値を固定文字列として照合し、quoted path や制御文字を含む path は <path> に倒す。正本の修正は Codex・Claude Code・prek に効く。
+
+Windows 版は path の識別子も伏せ、Git の生のエラーを出さない。検査不能も非ゼロ終了にする。実行ポリシーや sandbox を変更して通さない。回帰検査は `pwsh -NoProfile -NonInteractive -File scripts/tests/check-identifiers.tests.ps1`。一時 repo を削除し、commit は作らない。 2026-11-11 に Windows の 54 ケースが成功した。文字内部に LF byte を含む UTF-16、BOM、終端改行、親終了後の子孫による pipe 保持・子孫の終了、worker の開始前 EOF を含む。別の確認で Job 外の対照プロセスの存続と、生成した一式だけでの起動を確認した。sh の 10 ケースは追加済みだが、この環境では sh を起動できず未実行。
+
+出典: [Build skills](https://learn.chatgpt.com/docs/build-skills)、[Agent Skills Specification](https://agentskills.io/specification)、[Using scripts](https://agentskills.io/skill-creation/using-scripts)、[PowerShell CLI](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pwsh?view=powershell-7.6)、[git diff](https://git-scm.com/docs/git-diff)（2026-11-11 確認）。Windows の前版は apply 後の実行と、会話履歴を渡さない子 agent での skill 発見・本文の読み取りを確認済み。helper 一式も apply 後に正本との一致と配布先からの 54 ケース成功を確認済み。macOS の実行は未確認。
+
+Job の根拠: [Windows Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)（2026-11-11 確認）。

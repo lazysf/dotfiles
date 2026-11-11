@@ -14,7 +14,7 @@ description: "Git の変更を commit する時に使う。「commit して」�
 3. 「変更の単位」に従って commit の範囲を決める。複数の commit に分かれるなら、手順 4 の後で、1 つずつ手順 5〜8 を回す。
 4. commit する変更の全体を `lapidary` で見直す。範囲が複数でも、分けずに 1 回で通す。分けて見ると、ある範囲の変更が別の範囲の記述を古くした箇所を見落とす。ユーザーが見直しは要らないと言った時は飛ばす。`lapidary` が commit できないと判定したら、止まって報告する。見直しで直したファイルが増えたら、手順 3 に戻って範囲を決め直す。見直しの後に変更を足した時は、足した分を通し直す。
 5. 範囲の path を `git add <path>` で stage する。stage と commit は別のコマンドで打つ。同じコマンドにすると、手順 6 の確認が stage 前の状態に当たる。
-6. `git diff --staged` を読み、意図しない削除、debug 出力、無関係な整形が無いか見る。秘密情報は目視で済ませず、staged diff を検索して確かめる。
+6. `git diff --staged` を読み、意図しない削除、debug 出力、無関係な整形が無いか見る。秘密情報は目視で済ませず、staged diff を検索して確かめる。作業機の識別子は同梱 script で検査する。読み込んだ `SKILL.md` の親を基準に script の絶対 path を解決し、作業対象 repo のカレントディレクトリは変えない。Windows は `pwsh -NoProfile -NonInteractive -File "<skill directory>/scripts/check-identifiers.ps1"`、macOS は `sh "<skill directory>/scripts/check-identifiers.sh"` を実行する。exit 0 以外（script 不在、起動拒否を含む）では commit しない。自分の変更で検出された値はプレースホルダへ置き換え、stage し直して再検査する。
 7. message を heredoc で渡して commit する。
 8. `git status -sb` と `git log -1 --format='%h %s'` で結果を確かめる。
 
@@ -22,6 +22,7 @@ description: "Git の変更を commit する時に使う。「commit して」�
 
 次に当たったら commit せず、状況と人が取れる選択肢を報告する。rebase の中断、conflict の解決、branch の切り替えは人が決めることなので、自分で解消しない。
 
+- 識別子の検査が exit 0 以外で、自分では直せない。ユーザー自身の編集、誤検出に見える結果、script 不在、起動拒否、差分取得の失敗が当たる。検査を飛ばしたり、別の方法で通したりしない。実行ポリシーや sandbox は変更しない
 - detached HEAD
 - merge / rebase / cherry-pick / revert の途中
 - 未解決の conflict
@@ -78,7 +79,8 @@ EOF
 ## 出力
 
 - 作った commit の hash と title。
-- staged diff で確かめたこと（削除、debug 出力、秘密情報の検索、無関係な整形）と、hook の結果。「確認した」だけでは、何を見たかを次の人が再現できない。
+- staged diff で確かめたこと（削除、debug 出力、秘密情報の検索、識別子の検査、無関係な整形）と、hook の結果。「確認した」だけでは、何を見たかを次の人が再現できない。
 - `lapidary` が直したものと、提案した組み込みの review。ここに書かないと、提案がユーザーに届かないまま push される。見直しを飛ばした時は、その旨。
 - unstaged に残した変更と、その理由。
+- 識別子の検査は終了コードと種類・相対 path を報告し、実際の home・ユーザー名・ホスト名は伏せる。
 - 止まった時や失敗した時は、その理由の要点。git の出力は全文を貼らない。認証 URL や token が混ざることがある。

@@ -16,7 +16,7 @@ fail() {
 # --no-ext-diff、--no-textconv、--text は、repo の設定や attribute で diff の中身が変わらないようにするため。
 # --no-renames は、改名したファイルの中身も追加行として見るため。
 staged() {
-  git -c core.quotePath=false diff --cached --no-relative --no-renames --diff-filter=d "$@"
+  git -c core.quotePath=false diff --cached --no-relative --no-renames --diff-filter=d --ignore-submodules=none "$@"
 }
 patch=$(staged -U0 --no-color --no-ext-diff --no-textconv --text) || fail
 names=$(staged --name-only) || fail
@@ -46,13 +46,37 @@ hits() {
   shift 2
   [ -n "$value" ] || return 0
   printf '%s\n' "$lines" | grep "$@" -- "$value" | cut -f1 | sort -u |
-    while IFS= read -r path; do printf '  %s: %s\n' "$kind" "$path"; done
+    CHECK_IDENTIFIER_HOME="$home" CHECK_IDENTIFIER_USER="$user" CHECK_IDENTIFIER_HOST="$host" awk -v kind="$kind" '
+      BEGIN {
+        values[1] = ENVIRON["CHECK_IDENTIFIER_HOME"]; replacements[1] = "~"
+        values[2] = ENVIRON["CHECK_IDENTIFIER_USER"]; replacements[2] = "<user>"
+        values[3] = ENVIRON["CHECK_IDENTIFIER_HOST"]; replacements[3] = "<host>"
+      }
+      {
+        path = $0; safe = ""
+        # Git の quoted path は escape を解釈し直さず、値を出さない側へ倒す。
+        if (path ~ /^"/ || path ~ /[[:cntrl:]]/) { print "  " kind ": <path>"; next }
+        while (length(path)) {
+          matched = 0
+          for (i = 1; i <= 3; i++) {
+            size = length(values[i])
+            if (!size) continue
+            candidate = substr(path, 1, size)
+            if ((i == 1 && candidate == values[i]) || (i > 1 && tolower(candidate) == tolower(values[i]))) {
+              safe = safe replacements[i]; path = substr(path, size + 1); matched = 1; break
+            }
+          }
+          if (!matched) { safe = safe substr(path, 1, 1); path = substr(path, 2) }
+        }
+        print "  " kind ": " safe
+      }
+    '
 }
 report=$(
-  hits home "$home" -F
-  hits user "$user" -i -w -F
-  hits host "$host" -i -w -F
-)
+  hits home "$home" -F || exit 1
+  hits user "$user" -i -w -F || exit 1
+  hits host "$host" -i -w -F || exit 1
+) || fail
 
 [ -n "$report" ] || exit 0
 
