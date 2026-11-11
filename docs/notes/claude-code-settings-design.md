@@ -319,7 +319,7 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 
 **sub-key ごとに止める書き方では、後から増えたキーが漏れる。** `sessionUrl` がその例で、`commit` と `pr` を空文字にしても残る、default が `true` のキーだった。sub-key ごとに書いていると、こうしたキーを書き足すまで、そのキーの attribution が付く。`false` は対象を全ての attribution と定義するので、キーが増えても書き足さずに済む。
 
-`false` を受け付けない版がこのファイルを読むと、ファイル全体が読み飛ばされる。公式は v2.1.281 未満がそうなると書く。その時は permissions と sandbox の設定も効かなくなる。このファイルを読むのは、desktop app 同梱の版と、setup が winget / brew で入れる CLI。どれも v2.1.281 以上（Windows では 2026-11-12 時点で、同梱が v2.1.321、winget の CLI が v2.1.318）。同梱の `claude` を Terminal から直接起動すると、CLI が `~/.local/bin/claude` に入ることがある。2026-11-07 には、この起動の直後に stable の v2.1.311 が入っていた。入れた記録は見つけておらず、時刻と配置からの推測である。古い CLI を入れる時は、この条件を確かめる。schemastore の schema は `attribution` に object しか許していないので、editor は `false` を警告する。動作には影響しない。
+`false` を受け付けない版がこのファイルを読むと、ファイル全体が読み飛ばされる。公式は v2.1.281 未満がそうなると書く。その時は permissions と sandbox の設定も効かなくなる。setup は CLI を入れないので、このファイルを読むのは desktop app 同梱の版だけで、v2.1.281 以上（Windows では 2026-11-12 時点で v2.1.321）。同梱の `claude` を Terminal から直接起動すると、CLI が `~/.local/bin/claude` に入ることがある。2026-11-07 には、この起動の直後に stable の v2.1.311 が入っていた。入れた記録は見つけておらず、時刻と配置からの推測である。古い CLI を入れる時は、この条件を確かめる。schemastore の schema は `attribution` に object しか許していないので、editor は `false` を警告する。動作には影響しない。
 
 **CLI が settings を保存すると、ファイル全体が書き直され、`false` が object の形に変わる。** 2026-11-12 に、winget の CLI（v2.1.318）の初回起動でテーマを選ぶと、live の `attribution` が `{"commit": "", "pr": "", "sessionUrl": false}` になった。同時に `theme` が足され、キーの並びも変わった。他の値は保たれていた。2026-11-08 の `/auto-mode-setup` の後と、2026-11-11 の同梱 CLI でのログインの後にも、同じ形の `attribution` を live で見ている。書き出された object は、その版が知っている sub-key しか持たないので、取り込むと上の漏れが起きる。source は `false` のままにし、CLI が settings を保存した後は `chezmoi apply ~/.claude/settings.json` で戻す。
 
