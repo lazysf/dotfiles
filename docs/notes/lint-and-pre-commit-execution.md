@@ -1,6 +1,6 @@
 # lint / pre-commit の実行経路
 
-- Date: 2026-11-09
+- Date: 2026-11-11
 - 出典: `prek.toml` / `scripts/check-identifiers.sh` / `scripts/check-commit-msg.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Configuration Reference](https://prek.j178.dev/reference/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.rumdl.toml` / `package.json` / `.git/hooks/pre-commit` / `prek --version` / 使い捨て repo での `git commit` 実測 / [rumdl](https://github.com/rvben/rumdl) / [rumdl Global Settings](https://rumdl.dev/global-settings/) / [rumdl Stability and Compatibility](https://rumdl.dev/stability/) / [rvben/rumdl-pre-commit](https://github.com/rvben/rumdl-pre-commit)（2026-11-09 確認） / rumdl 0.3.2 での repo 全体の実測と、`rumdl config --defaults`（2026-11-09） / markdownlint 0.40.0 の API による rule 単体実測 / commit `287cc7b` `be928f2`
 
 Markdown（rumdl）と TOML（tombi）の lint は、それぞれ「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
@@ -71,6 +71,8 @@ ADR も含めて、全 file に同じ rule を当てている。ADR で守るの
 staged の差分は 1 回だけ取り、追加行の path は diff の header から読む。ファイルごとに path を指定して diff を取り直すと、git がクォートした path（`"`、`\`、tab を含む名前）がどのファイルにも当たらず、中身を検査しないまま通る。`--text` を付けるのは、`.gitattributes` で `binary` や `-diff` を付けたファイルの中身も検査するため。差分を取れない時は、検査を飛ばさずに止める。`always_run` を付けるのは、prek が file type で対象を絞ると、symlink だけの commit で hook が起動しないため。script は staged の一覧を自分で集める。
 
 git の pre-commit として動かすのは、git が commit 先の repo の、stage した後の index で hook を動かすから。Claude の commit なら、hook は sandbox の中で動く。先に Claude Code の `PreToolUse` hook で同じ検査を作り、捨てた（2026-11-08）。`PreToolUse` の hook の入力で、commit 先の repo の手がかりになるのは、command の文字列と session の cwd だけ。`cd <dir> && git commit` や `git -C <dir> commit` で別の repo を指す形と、同じ command で stage する分は、文字列を解釈して追うしかなかった。hook は sandbox の外で動くので、repo の設定に書かれた program（fsmonitor、external diff など）を起動しない保護も要った。script は 140 行まで膨らみ、直すたびに別の穴が見つかった。代わりに、この local hook は入れた repo でしか効かず、clone ごとに `prek install` が要る。入れ忘れると黙って効かない。hook の起動に関わるもののうち、`.git/hooks` と `.git/config` は、Claude Code の sandbox の中から書き込めない（2026-11-08、mac の session で `touch` が拒否された）。sandbox の中から書けるのは `prek.toml` と `scripts/` で、どちらも書き換えれば diff に出る。
+
+同じ script を、Claude Code の `git-commit` skill が chezmoi の `include` で取り込み、手順 6 で走らせる。そのため、この script を直すと、Claude Code の全 project の commit の手順が変わる。理由は [git-commit-skill-design.md](./git-commit-skill-design.md) の「識別子の検査を script で持つ理由」にある。
 
 拾わないものは、commit message、`--no-verify` を付けた commit、pattern にできない識別子（実名、メールアドレス、社内のホスト名）。`$HOME`、ユーザー名、ホスト名のうち取れなかった値は、その種類の検査を飛ばす。
 

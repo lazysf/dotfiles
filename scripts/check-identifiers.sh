@@ -1,5 +1,7 @@
 #!/bin/sh
-# prek の pre-commit hook。staged のファイルの path と追加行に、この作業機の識別子
+# prek の pre-commit hook。git-commit skill も同じファイルを使う
+# （dot_claude/skills/git-commit/scripts/ の template が include する）。
+# staged のファイルの path と追加行に、この作業機の識別子
 # （home の絶対パス、ユーザー名、ホスト名）が無いかを調べる。
 # 値は実行時に読む。値をこのファイルに書くと、このファイル自体が値を配る。
 
