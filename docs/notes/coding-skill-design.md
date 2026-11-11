@@ -34,7 +34,7 @@ description だけでは、コードを編集する session で発火しなか�
 
 path 条件付きの rule を使わない判断（[memory-surface-design.md](./memory-surface-design.md) の「`paths` を使わない」）とは対象が違う。あちらは rule の本文を注入する仕組みで、こちらは skill を一覧へ出す仕組み。
 
-発火が増えなければ外す。比べ方は上の集計と同じで、コードを編集した session のうち、この skill が発火した数を数える。
+発火が増えなければ外す。`paths` を付けた後（2026-11-10 以降）に、コードを編集した session が 10 本たまったら判断する。比べ方は上の集計と同じで、コードを編集した session のうち、この skill が発火した数を数える。
 
 ## コメント marker を `tradeoff:` にしている理由
 
