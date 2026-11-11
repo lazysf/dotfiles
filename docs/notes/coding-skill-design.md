@@ -1,6 +1,6 @@
 # coding skill の設計
 
-- Date: 2026-11-10
+- Date: 2026-11-11
 - 出典: [Best practices](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) の frontmatter の `paths`（2026-11-10 確認） / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / `dot_claude/skills/coding/` / Windows の作業機の session の記録の集計と、probe skill での `paths` の実測（2026-11-10、Claude Code 2.1.321） / この環境での実測
 
 `coding` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。各項目の直接の理由は、skill の本文がその項目の中に書いている。ここでは繰り返さない。
@@ -28,7 +28,7 @@ description だけでは、コードを編集する session で発火しなか�
 代償は 4 つある。
 
 - 一致するファイルを触るまで、skill が model から見えない。コードを一から書く時は、最初のファイルを skill なしで書く。
-- `paths` のどれにも一致しないコードでは、description でも発火しなくなる。`paths` は、作業ディレクトリ直下の `src/` と、拡張子の列挙の 2 種類を持つ。どちらかに一致すれば一覧に出る。`src/` は列挙に無い拡張子を拾い、拡張子は `src/` を持たない repo（この dotfiles など）を拾う。残るのは、`src/` の外にあって列挙に無い拡張子のコードと、拡張子の無い script。列挙は `SKILL.md` を正本とする。
+- `paths` のどれにも一致しないコードでは、description でも発火しなくなる。`paths` は、作業ディレクトリ直下の `src/` と、拡張子の列挙の 2 種類を持つ。どちらかに一致すれば一覧に出る。`src/` は列挙に無い拡張子を拾い、拡張子は `src/` を持たない repo（この dotfiles など）を拾う。残るのは、`src/` の外にあって列挙に無い拡張子のコードと、拡張子の無い script。chezmoi の template の script は、末尾が `.tmpl` で拡張子の列挙に一致しないので、この dotfiles にある形（`.sh.tmpl`、`.ps1.tmpl`、`.cmd.tmpl`）を別に列挙している。`**/*.tmpl` にしないのは、設定ファイルの template（`config.tmpl` など）まで拾うため。repo 直下の `.sh.tmpl` を Read した直後に `coding` の一覧が届くことを、apply 後の新しい session で確かめた（2026-11-11）。列挙は `SKILL.md` を正本とする。
 - `src/` は直下だけを見る。`packages/foo/src/` のような深い位置の `src/` は、拡張子でしか拾わない。`**/src/**` にしていないのは、直下で足りるというユーザー判断による（2026-11-10）。
 - `paths` は Claude Code の frontmatter なので、Codex の skill には入れていない。
 

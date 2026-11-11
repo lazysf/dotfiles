@@ -32,6 +32,9 @@ paths:
   - "**/*.cpp"
   - "**/*.hpp"
   - "**/*.sql"
+  - "**/*.sh.tmpl"
+  - "**/*.ps1.tmpl"
+  - "**/*.cmd.tmpl"
 ---
 
 # Coding
