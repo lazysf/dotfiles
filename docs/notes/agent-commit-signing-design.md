@@ -14,7 +14,7 @@
 - 鍵は `~/.ssh/agent_signing_ed25519` で、パスフレーズなし。作業機ごとに作る。`personal` では、macOS は `scripts/macos/setup.sh`、Windows は `scripts/windows/setup.ps1` が、鍵が無い時だけ作る。`chezmoi init` より前に作るので、最初の apply で allowed_signers に行が出る。GitHub への登録は手作業のまま（README の「手作業が要るもの」）。GitHub には Signing Key としてだけ登録し、Authentication Key には登録しないので、漏れても push には使えない。macOS の sandbox 内のコマンドは、sandbox の read 制限に合流する `permissions.deny` の `Read(~/.ssh/**)` で `~/.ssh` を読めない。Windows については「Windows では鍵を持ち出せる」にある。
 - `SessionStart` hook（`dot_claude/hooks/executable_signing-agent.sh`）は、`~/.config/git/start-signing-agent` を呼ぶ。このスクリプトが専用の ssh-agent（socket は `~/.local/state/agent-signing/agent.sock`）を起動して鍵を載せる。Claude Code の公式 docs によると、command hook は sandbox の外で動く。
 - hook は `CLAUDE_ENV_FILE` に、`SSH_AUTH_SOCK` と `GIT_CONFIG_COUNT` 系（`gpg.ssh.program=ssh-keygen`、`user.signingkey=key::<公開鍵>`）を書く。公式によると、この値はその session の Bash コマンドにだけ効く。人の terminal の git には届かない。Claude Code 自身も sandbox のコマンドに `GIT_CONFIG_COUNT` 系（`safe.directory` の 2 件）を入れているので（2026-11-06 に env で確認）、番号は固定せず、env file が読まれた時点の `GIT_CONFIG_COUNT` の後ろへ足す。
-- `settings.json` の `env` に書かないのは、記事によると `env` では `~` も `$HOME` も展開されず（この repo では実測していない）、home の絶対パスを repo に置くことになるため。hook は実行時に `$HOME` と公開鍵を読むので、repo には絶対パスも鍵も残らない。`settings.json` を `.tmpl` にしなくて済み、`check json` も残る。
+- `settings.json` の `env` に書かないのは、記事によると `env` では `~` も `$HOME` も展開されず（この repo では実測していない）、home の絶対パスを repo に置くことになるため。hook は実行時に `$HOME` と公開鍵を読むので、repo には絶対パスも鍵も残らない。
 - env を書く前に失敗した時は、stderr に理由を出して exit 0 で抜け、env を書かない。この場合は `~/.config/git/config` の 1Password 署名に戻る。鍵を作っていない作業機でも同じ経路になる。env を書いた後で agent が止まったり鍵が消えたりした時は 1Password に戻らず、その session の commit が署名に失敗する。`commit.gpgsign` が `true` なので、署名の無い commit にはならない。
 
 ## socket の path を sandbox から守る
@@ -69,7 +69,7 @@ Windows の Git Bash では、専用の agent の PID は `/proc/<pid>/cmdline` 
 
 macOS では、Terminal で `ps -axww -o pid=,uid=,comm=,args=` を実行する。同じユーザーの `ssh-agent` のうち、起動引数の `-a` が `~/.local/state/agent-signing/agent.sock` を指すものが 1 件だけなら、その PID に `kill -TERM <pid>` を実行する。ユーザーがこの手順を実行すると、プロセスと socket のファイルが両方消えた（2026-11-07 実測）。
 
-Claude Code の新しい session で agent を自動起動させない場合は、`dot_claude/settings.json` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
+Claude Code の新しい session で agent を自動起動させない場合は、`dot_claude/settings.json.tmpl` から `SessionStart` hook を外す。この設定は全作業機に配られ、作業機ごとに止める仕組みは用意していない。
 
 ## `~/.ssh` への書き込みを止める
 

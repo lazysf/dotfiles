@@ -92,5 +92,16 @@
         "~/.local/state/agent-signing/agent.sock"
       ]
     }
-  }
+  }{{ if eq .chezmoi.os "windows" }},
+  "extraKnownMarketplaces": {
+    "xlwright": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/lazysf/xlwright.git"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "xlwright@xlwright": true
+  }{{ end }}
 }
