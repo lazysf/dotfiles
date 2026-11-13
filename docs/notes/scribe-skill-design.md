@@ -1,7 +1,7 @@
 # scribe skill の設計
 
 - Date: 2026-11-13
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors) / [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file) / [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) / [Diátaxis](https://diataxis.fr/start-here/)
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors) / [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file) / [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) / [Diátaxis](https://diataxis.fr/start-here/) / [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) / [About issue and pull request templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates) / [ARCHITECTURE.md](https://matklad.github.io/2021/02/06/ARCHITECTURE.md.html) / [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -37,7 +37,7 @@ doc の種類は同時に書かない。1 ファイルにまとめると、ADR �
 
 SKILL.md が持つのはどの種類を選ぶかの判断で、書式は選択後にしか要らないので reference にある。
 
-reference を置くのは、scribe に固有の規則がある種類（README、DEVELOPMENT と CONTRIBUTING、ADR、notes）だけ。CONTRIBUTING は DEVELOPMENT を指すので、2 つの書式を 1 つの reference にまとめ、分担を 1 箇所で読めるようにしている。CHANGELOG、SECURITY、SUPPORT は、表の 1 行と公式の形式への指し先で足りる。Claude が既定で知っている形式を reference に写すと、[harness-design-principles.md](./harness-design-principles.md) の「削る基準」に当たる。その種類で訂正を受けたら、reference を作る。
+reference を置くのは、scribe に固有の規則がある種類（README、DEVELOPMENT と CONTRIBUTING とテンプレート、ADR、notes）だけ。CONTRIBUTING は DEVELOPMENT を指し、テンプレートは CONTRIBUTING と方針を分け合うので、3 つの書式を 1 つの reference にまとめ、分担を 1 箇所で読めるようにしている。CHANGELOG、SECURITY、SUPPORT は、表の 1 行と公式の形式への指し先で足りる。Claude が既定で知っている形式を reference に写すと、[harness-design-principles.md](./harness-design-principles.md) の「削る基準」に当たる。その種類で訂正を受けたら、reference を作る。
 
 ## doc をいつ直すかを description に持たせる理由
 
@@ -115,6 +115,29 @@ doc の種類が増えても、scribe を分けない。scribe の中心の仕�
 
 reference の数は重さにならない。reference は必要な時だけ読まれ、重さになるのは SKILL.md の本文。分けるのは、本文が [best practices](https://agentskills.io/skill-creation/best-practices) の目安（5000 tokens 未満）を超えた時、ある種類に script が要るようになった時、発火の確認で取り違えが出た時。
 
+## repo の構成を README と DEVELOPMENT.md に分ける理由
+
+repo の構成は、読み手で 2 つに分かれる。トップの階層の地図（directory やファイルが何か）は、利用者が目的の物を探すのに使う。内部の構成（module の責務と境界）は、開発者が手を入れる場所を探すのに使う。そのため地図は README の「構成」の節に、内部の構成は `DEVELOPMENT.md` の節に置く。
+
+GitHub の [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) と Standard Readme の仕様は、README の中身に構成を挙げていない。ただ実際には、トップの階層を 1 行ずつ説明する節がよく入る。この repo の README もそうしている。README の読み手を利用者に絞った時、この地図まで外れていたので、トップの階層に限って戻した。
+
+内部の構成を `ARCHITECTURE.md` という別の種類にしなかったのは、[matklad の ARCHITECTURE.md](https://matklad.github.io/2021/02/06/ARCHITECTURE.md.html) が 1 万〜20 万行ほどの project を想定しているため。それより小さな repo（この dotfiles は lockfile を除いて約 9,000 行。2026-11-13 に `git ls-files` で数えた）では、`DEVELOPMENT.md` の 1 節で足りる。`ARCHITECTURE.md` がある repo では、「同じ目的の doc がすでにあればそこに書く」が効く。
+
+## issue と PR のテンプレートを表に入れる理由
+
+テンプレートは、issue や PR を作る画面の入力欄に最初から入る下書きで、`CONTRIBUTING.md` とは別のファイル（[About issue and pull request templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates)）。中身は説明の文章ではなく、記入してほしい項目の並び。
+
+それでも表に 1 行置くのは、`CONTRIBUTING.md` との振り分けのため。受け付ける方針や受け付けない変更がテンプレートに写されると、片方だけ古くなる。書き方の規則は持たず、置き場と、方針を写さないことだけを決めている。
+
+## 表に入れていない種類
+
+次の種類は、表に行を置いていない。同じ検討を繰り返さないために、理由を残す。試験 A と C は、下の「未確認」に書いた試験を指す。
+
+- `CODE_OF_CONDUCT.md`: 中身は既存の規範（Contributor Covenant など）の本文の採用で、scribe が書き起こすものではない。試験 A では、規定が無くても本文を記憶から書かず、連絡先と本文の入手方法を質問した。
+- 移行の案内（破壊的変更の時の直し方）: `CHANGELOG.md` の破壊的変更の項目で足りる。試験 C では、戻し方を書くべきだと agent が自分で気づいた。
+- 運用の手順（runbook、deploy の手順）: 読み手に運用者の列が増える。サービスを運用する repo で踏むまで足さない。
+- `LICENSE`、`CODEOWNERS`、`FUNDING.yml`、`CITATION.cff`: 法務の文書か設定で、doc を書く skill の担当ではない。scribe が間違える場面も想定できないので、「扱わないもの」にも挙げていない。
+
 ## 確かめ方の規定を notes-format に置く理由
 
 「人からの報告と自分で確かめた事実を分ける」「1 回の観察を一般化しない」「公式 docs と実機の食い違いを両方書く」は、README の 7 件と同じ作業の中で踏んだ（これもユーザーからの報告）。docs の記述を根拠に断定した箇所が、実機と合わなかった。試した範囲を超えた言い方も、後で直している。
@@ -145,4 +168,10 @@ description を依頼語に絞らない一般則は `harness-design-principles.m
 - 関係メタデータの並び順は、書く側の規定としては決めたが、逸脱を検出する仕組みは持たせていない。
 - README の読み手を絞った効果は、2026-11-13 に 1 回ずつ比べただけ。架空の plugin repo の README を、変更前と変更後の skill で subagent に書かせた。変更前は開発の手順と版の決め方が README に入り、変更後は CONTRIBUTING.md へ分かれた（この時の規定は、開発の手順を CONTRIBUTING.md に置いていた）。道具の一般的な内容（自動更新の既定）は、どちらの版も README から外した。この規定が効いたかは、この比較では分からない。
 - 2026-11-13 に description へ「CONTRIBUTING を書いて」と「開発の手順を変えた時」を足した後の発火は、確かめていない。lint の設定を少し変えるたびに発火する広がりすぎも、まだ見ていない。
+- DEVELOPMENT と CONTRIBUTING の書式は、2026-11-13 に 1 回試しただけ。apply 済みの skill を subagent に渡し、架空の plugin repo で「開発に加わる人向けの doc を整えて」と頼んだ。結果は規定どおりで、`DEVELOPMENT.md` だけを作り、`CONTRIBUTING.md` は貢献を受け付けるかを質問に回した。`AGENTS.md` も書かず、指す 1 行を提案に留めた。この試験では skill の path を渡して読ませたので、発火は確かめていない。
+- 発火と振り分けは、2026-11-13 に 3 つの架空の repo で 1 回ずつ試しただけ。skill の path を渡さず、doc という語の無い依頼を subagent に渡した。3 つとも scribe が自分で呼ばれた。
+  - A（外部の PR を受け付け始める）: `CONTRIBUTING.md`、`DEVELOPMENT.md`、`SECURITY.md` を作り、行動規範は質問に回した。branch の規則が 2 つの doc に重なったので、`CONTRIBUTING.md` の規定を明確にした。
+  - B（lint の道具を替えた）: 既存の `HACKING.md` を直し、`DEVELOPMENT.md` は作らなかった。`AGENTS.md` は書かず、直す案を提案した。
+  - C（次の版の準備）: `CHANGELOG.md` の `[Unreleased]` に利用者に見える変更だけを入れ、版の番号は推測せず質問した。
+  - subagent の発火は、ユーザーの session の発火と同じとは限らない。
 - Diátaxis は、4 種類それぞれの個別ページを読んでいない。

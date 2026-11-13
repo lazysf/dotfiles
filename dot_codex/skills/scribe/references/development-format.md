@@ -1,6 +1,6 @@
 # DEVELOPMENT / CONTRIBUTING 形式
 
-`DEVELOPMENT.md` か `CONTRIBUTING.md` を作成・更新する時に読む。2 つは読み手が違う。`DEVELOPMENT.md` は開発に加わる人が手順を引く doc、`CONTRIBUTING.md` は外部の貢献者が出し方を確かめる doc。
+`DEVELOPMENT.md`、`CONTRIBUTING.md`、issue と PR のテンプレートを作成・更新する時に読む。読み手が違う。`DEVELOPMENT.md` は開発に加わる人が手順を引く doc、`CONTRIBUTING.md` は外部の貢献者が出し方を確かめる doc、テンプレートは外部の貢献者が issue や PR を書く時の下書き。
 
 ## 共通
 
@@ -16,20 +16,29 @@
 当てはまるものを、次の順で書く。当てはまらない節は作らない。
 
 1. 前提と環境構築: 必要な tool と版、依存の入れ方。
-2. 変更の確かめ方: lint、試験、build のコマンドと、いつ走らせるか。
-3. branch と commit: branch の切り方、commit や PR の決まり。
-4. リリース: 版の上げ方、tag、配布。
+2. 内部の構成: module の責務と境界、変えてはいけない前提、どこに何の処理があるか。repo に `ARCHITECTURE.md` があれば、そちらに書く。
+3. 変更の確かめ方: lint、試験、build のコマンドと、いつ走らせるか。
+4. branch と commit: branch の切り方、commit や PR の決まり。
+5. リリース: 版の上げ方、tag、配布。
 
 - コマンドは、repo の定義（`package.json` の scripts、Makefile、CI の設定）と合わせる。
 - 確かめ方のコマンドは、書いた形のまま一度走らせる。リリースや配布のように外へ出るコマンドは走らせず、定義と突き合わせるだけにする。
+- 内部の構成には、すぐ変わる細部（関数の一覧、行番号）を書かない。
 
 ## `CONTRIBUTING.md`
 
 外部からの貢献を受け付ける repo の時だけ作る。受け付けるかが repo から読めない時は、ユーザーに聞く。GitHub はこのファイルを issue や PR を作る画面からリンクするので、受け付けない repo に置くと、受け付けているように見える。
 
 - 書くもの: issue と PR の出し方、受け付けない変更、行動の規範への指し先。
-- 開発の手順は写さず、`DEVELOPMENT.md` へリンクする。
+- PR の出し方の中でも、branch の規則と確かめ方のコマンドは書かず、`DEVELOPMENT.md` の該当する節へリンクする。
 - GitHub は root、`docs/`、`.github/` のどこに置いても認識する。複数あると `.github/`、root、`docs/` の順で 1 つだけを使うので、2 つ置かない。
+
+## issue と PR のテンプレート
+
+`CONTRIBUTING.md` を作る repo の時だけ作る。issue は `.github/ISSUE_TEMPLATE/` に種類ごとのファイル、PR は `.github/PULL_REQUEST_TEMPLATE.md` に置く。
+
+- 書くもの: 記入してほしい項目（再現の手順、期待した動作、確かめたこと）。
+- 受け付ける方針、受け付けない変更、その理由は `CONTRIBUTING.md` に置き、テンプレートには写さない。
 
 ## `AGENTS.md` との分担
 
