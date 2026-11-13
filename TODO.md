@@ -20,7 +20,6 @@
 
 `docs/notes/gh-authentication-design.md` の「未確認」を、apply の後に確かめる。結果は同じ notes に書く。
 
-- [ ] **Windows で field 名の変更を確かめる**。item の field を `credential` から `token` に変えたので、apply の後に PowerShell と Claude Code の Bash の両方で `gh auth status` が `(GH_TOKEN)` 付きで通るか。
 - [ ] **mac のエージェントに gh を使わせるか**。sandbox の中では `op` が 1Password の app につながらない（2026-11-13 確認）。使わせるなら、`op` が使う socket を確かめてから、sandbox の `allowUnixSockets` に足すかを判断する。
 
 ## skill と契約の見直しで保留したもの
