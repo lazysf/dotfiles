@@ -234,9 +234,9 @@ push は人が手元の terminal で打つ運用を正とし、agent は commit 
 
 取り出した credential を GitHub へ送る通信には、上の表の `network.allowedDomains` の行にある proxy の制限が掛かる。同じ日に auto mode の session で、host を申告しない `curl https://api.github.com/zen` は 403 で止まった。host を申告した時に審査を通るかは確かめていない。
 
-mac では、gh の token を Keychain ではなく `~/.config/gh/hosts.yml` に置く（`gh auth login` に `--insecure-storage` を付ける）。Claude Code の sandbox は `~/.config/gh` の読み取りを拒否するので、ファイルに置けば sandbox 内から届かない。2026-11-07 にこの形でログインし直し、Keychain に gh のエントリが無いことと、sandbox 内から `hosts.yml` を開くと `PermissionError`（errno 1）になることを確かめた。代わりに token は平文でディスクに残り、sandbox の外で動く同じユーザーのプロセスは読める。Codex の sandbox から読めるかは確かめていない。
+gh の token は Keychain にも `~/.config/gh/hosts.yml` にも置かず、1Password に置いて、実行のたびに `GH_TOKEN` で渡す（`gh-authentication-design.md`）。`Read(~/.config/gh/**)` の deny は、`gh auth login` の token が残っている作業機のために置いたままにする。
 
-**Windows では、sandbox も credential もエージェントの Bash の push を止めない。** 個人の Windows の clone は、`origin` が HTTPS の URL で、`core.sshCommand` を持たない。`credential.helper` は Git for Windows の system の gitconfig が `manager`（Git Credential Manager 2.9.1）にしていて、Windows 資格情報に `git:https://github.com` の資格情報が 1 件ある。2026-11-09 の Windows の session（Claude Code 2.1.317、auto mode）で、`GCM_INTERACTIVE=never` と `GIT_TERMINAL_PROMPT=0` を付けた `git push --dry-run origin main` は、承認も確認も無く exit 0 で終わり、送る予定の ref を表示した。remote の `main` は変わらなかった。1Password の承認は出ず、push の経路に 1Password は入っていない。`gh` はログインしていない。
+**Windows では、sandbox も credential もエージェントの Bash の push を止めない。** 個人の Windows の clone は、`origin` が HTTPS の URL で、`core.sshCommand` を持たない。`credential.helper` は Git for Windows の system の gitconfig が `manager`（Git Credential Manager 2.9.1）にしていて、Windows 資格情報に `git:https://github.com` の資格情報が 1 件ある。2026-11-09 の Windows の session（Claude Code 2.1.317、auto mode）で、`GCM_INTERACTIVE=never` と `GIT_TERMINAL_PROMPT=0` を付けた `git push --dry-run origin main` は、承認も確認も無く exit 0 で終わり、送る予定の ref を表示した。remote の `main` は変わらなかった。1Password の承認は出ず、push の経路に 1Password は入っていない。
 
 auto mode の built-in も push を止めない。`allow` の Git Push Destination は、session の repo のどの branch への push も通常の操作として通す（v2.1.317 の `claude auto-mode defaults`、[Configure auto mode](https://code.claude.com/docs/en/auto-mode-config) の Common boundaries、2026-11-09 確認）。
 

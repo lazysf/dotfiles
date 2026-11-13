@@ -1,0 +1,14 @@
+# Git Bash on Windows. Claude Code sources this file for its Bash tool, so the
+# agent's gh goes through 1Password the same way as the PowerShell profile.
+
+# -----------------------------------------
+# GitHub CLI (token from 1Password)
+# -----------------------------------------
+# 1Password Shell Plugins do not support Windows, so op run resolves the
+# secret reference and passes GH_TOKEN to gh only for this call.
+# --no-masking keeps gh attached to the terminal (colors, pager, prompts).
+if command -v op >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
+	gh() {
+		GH_TOKEN='op://Personal/GitHub CLI/credential' op run --no-masking -- gh "$@"
+	}
+fi

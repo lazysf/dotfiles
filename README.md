@@ -95,27 +95,7 @@ chezmoi apply
   ssh-keygen -E sha256 -lf ~/.ssh/agent_signing_ed25519.pub
   ```
 
-  ブラウザでは、意図したアカウントの Settings > SSH and GPG keys > New SSH key を開きます。Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` を登録します。
-
-  CLI で登録する場合、未ログインなら `gh auth login --hostname github.com --skip-ssh-key` を実行します。`--skip-ssh-key` はログイン時の認証鍵のアップロードをスキップする指定です。mac では `--insecure-storage` も付けます。token が Keychain ではなく `~/.config/gh/hosts.yml` に置かれ、Claude Code の sandbox から届かなくなります（[理由](docs/notes/claude-code-settings-design.md#push-は-sandbox-内で-ssh-を通らない)）。次の出力が意図した登録先アカウントであることを確認します。[GitHub CLI のログイン手順](https://cli.github.com/manual/gh_auth_login)
-
-  ```sh
-  gh api --hostname github.com user --jq .login
-  ```
-
-  GitHub CLI の OAuth 認証には `write:ssh_signing_key` scope が必要です。権限が足りない場合はブラウザで登録できます。CLI で続ける場合は、意図したアカウントで `gh auth refresh --hostname github.com --scopes write:ssh_signing_key` を実行し、登録先アカウントを再確認します。[GitHub の署名鍵 API](https://docs.github.com/en/rest/users/ssh-signing-keys#create-a-ssh-signing-key-for-the-authenticated-user) / [GitHub CLI の権限更新](https://cli.github.com/manual/gh_auth_refresh)
-
-  fingerprint と登録先を照合できたら、次のコマンドで登録します。
-
-  ```sh
-  GH_HOST=github.com gh ssh-key add ~/.ssh/agent_signing_ed25519.pub --type signing
-  ```
-
-  `gh auth refresh` で `write:ssh_signing_key` scope を足した場合は、登録が済んだら次のコマンドで外します。残すと、同じユーザーとして動くプロセスが、その token で署名鍵を追加できます。
-
-  ```sh
-  gh auth refresh --hostname github.com --remove-scopes write:ssh_signing_key
-  ```
+  意図したアカウントでブラウザから Settings > SSH and GPG keys > New SSH key を開きます。Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` を登録します。gh の token には署名鍵を登録する権限を付けていないので、CLI では登録しません。
 
   登録後は、次の SSH 接続が `Permission denied (publickey)` で失敗することを確認します。認証に成功した場合は、GitHub からこの鍵の Authentication Key 登録を削除します。
 
@@ -123,6 +103,13 @@ chezmoi apply
   ssh -T -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/agent_signing_ed25519 git@github.com
   ```
 
+- GitHub CLI のログイン（`personal`）: `gh` は token を 1Password から受け取ります。`gh auth login` は使いません（[理由](docs/notes/gh-authentication-design.md)）。
+
+  GitHub の Settings > Developer settings > Fine-grained tokens で token を作ります。Repository access は All repositories にします。権限は Metadata と Contents を Read-only、Pull requests と Issues を Read and write にします。1Password の Personal vault に API Credential の item `GitHub CLI` を作り、credential 欄に token を入れます。
+
+  Windows では、PowerShell の profile と Git Bash の `~/.bashrc` が `gh` を `op run` で包むので、追加の設定はありません。mac では `op plugin init gh` を実行し、item に `GitHub CLI`、範囲に Use as global default on my system を選びます。`~/.config/zsh/.zshrc` は `~/.config/op/plugins.sh` を読みます。`op plugin init` が別の path を表示した場合は、`.zshrc` の path を合わせます。
+
+  新しい terminal で `gh auth status` が `(GH_TOKEN)` 付きのログインを表示することを確認します。以前の `gh auth login` のログインが残っていたら消します。保存済みのログインを消す時は、`GH_TOKEN` を渡さないように、包んでいない `gh` を呼びます。Windows の PowerShell では `gh.exe auth logout --hostname github.com`、mac では `command gh auth logout --hostname github.com` を実行します。
 - macOS の Parsec のクライアント設定（`personal`）: Parsec が設定と同じファイルに状態値を書き込むため、`~/.parsec/config.json` は配布しません。Parsec の Settings で Window Mode を Windowed、Immersive Mode を Keyboard、Swap Command and Ctrl for MacOS を Off にします。
 - Windows の VB-CABLE（`personal`）: winget に無いため、<https://vb-audio.com/Cable/> から Driver Pack の zip を取得し、展開した `VBCABLE_Setup_x64.exe` を管理者として実行します。導入後に再起動します。未導入ならセットアップスクリプトが手順を表示し、このページを開きます。
 - Windows の Parsec の仮想ディスプレイ（`personal`）: ドライバ（`Parsec.ParsecVDD`）はセットアップスクリプトが入れます。物理ディスプレイが無い時に仮想ディスプレイを使うには、Parsec の Settings > Host で Fallback To Virtual Display をオンにします。無料プランで使えるのはこの 1 枚だけです。
