@@ -9,6 +9,6 @@
 # --no-masking keeps gh attached to the terminal (colors, pager, prompts).
 if command -v op >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	gh() {
-		GH_TOKEN='op://Personal/GitHub CLI/credential' op run --no-masking -- gh "$@"
+		GH_TOKEN='op://Personal/GitHub CLI/token' op run --no-masking -- gh "$@"
 	}
 fi
