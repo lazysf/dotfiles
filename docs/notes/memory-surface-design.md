@@ -1,6 +1,6 @@
 # memory surface の設計
 
-- Date: 2026-11-11
+- Date: 2026-11-13
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [anthropics/claude-code#90450](https://github.com/anthropics/claude-code/issues/90450) / `dot_claude/CLAUDE.md` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / [Tools reference](https://code.claude.com/docs/en/tools-reference) / この環境での実測（`paths` の発火経路は 2026-09-02 の Claude Code v2.1.255 と、2026-11-08 の desktop app）
 
 配布する memory surface を `dot_claude/CLAUDE.md` 1 枚にしている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -55,7 +55,7 @@ issue の、`cat` では何も load されないという結果は、2026-11-08 
 
 ## rule でなく skill に置く基準
 
-`paths` を捨てると、置き場は常時 load される `CLAUDE.md` か、description で発火する `skills/` の 2 択になる。判断は 2 段。
+`paths` 付き rule を使わないと、置き場は常時 load される `CLAUDE.md` か、`skills/` の 2 択になる。skill を読み込むかは、model が description で決める。skill の frontmatter の `paths` は、一致するファイルを触った時に skill を一覧へ出すだけで、読み込みは起こさない（[coding-skill-design.md](./coding-skill-design.md) の「`paths` を付けている理由」）。判断は 2 段。
 
 1. **どの依頼でも要るか。** 要るなら `CLAUDE.md`。
 2. 要らないなら、**発火しなかった時の実害**を見る。security、privacy、データ損失に関わるなら確実性を取って `CLAUDE.md` に置く。skill の発火は description 依存で、外れると守られない。
