@@ -1,6 +1,6 @@
 ---
 name: lapidary
-description: 自分が加えた変更を、commit できる状態まで見直して仕上げる時に使う。commit の前（git-commit スキルの手順から呼ばれる時を含む）と、「見直して」「問題ない？」「これで大丈夫？」と頼まれた時に使う。スコープ、事実、参照の整合、過剰さを確かめ、自分の変更と、それが古くした記述を直す。agent は起動せず、必要な時だけ組み込みの /simplify、/code-review、/security-review を提案する。コードの bug を探す依頼は /code-review、commit は git-commit、doc の更新は scribe。
+description: 自分が加えた変更を、commit できる状態まで見直して仕上げる時に使う。commit の前（git-commit スキルの手順から呼ばれる時を含む）と、「見直して」「問題ない？」「これで大丈夫？」と頼まれた時に使う。スコープ、事実、参照の整合、過剰さを確かめ、自分の変更と、それが古くした記述を直す。コードの bug を探す依頼は /code-review、commit は git-commit、doc の更新は scribe。
 ---
 
 # Lapidary
