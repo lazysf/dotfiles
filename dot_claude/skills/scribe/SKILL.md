@@ -11,7 +11,7 @@ repo が独自の doc 規約（置き場、形式、作る時期）を持って�
 
 | 層 | 中身 | 置き場 |
 | --- | --- | --- |
-| 仕様・使い方 | 何を・どう使うか | `README.md` / `docs/` |
+| 仕様・使い方 | 何を・どう使うか（利用者向け）、どう開発に加わるか | `README.md` / `docs/`、開発の手順は `CONTRIBUTING.md` |
 | ADR | なぜそうしたか（比較した判断） | `docs/adr/` |
 | notes | 背景、調査、今の設計の理由 | `docs/notes/` |
 
@@ -51,6 +51,7 @@ notes に変更履歴を書かない。「旧規定は〜だった」「〜に�
 - 既存の自然な位置に差し込む。新しい doc は、既存に収まらない時だけ作る。
 - 既存の章構成、用語、粒度、文体に寄せる。1 つの概念に 1 つの語を使い、途中で言い換えない。
 - doc を追加・削除・rename したら、README、索引、相対リンクの追従を確かめる。直せないリンク切れは、場所と理由を残す。
+- doc の内容を変えたら、それを要約・引用・リンクしている箇所（notes、`AGENTS.md` など）を `rg` で探して合わせる。
 - 書く前に、対象の reference を 1 つだけ読む。記憶で書かない。
   - README / docs: [references/readme-format.md](references/readme-format.md)
   - ADR: [references/adr-format.md](references/adr-format.md)

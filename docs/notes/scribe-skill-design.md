@@ -1,7 +1,7 @@
 # scribe skill の設計
 
-- Date: 2026-11-09
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html)
+- Date: 2026-11-13
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -71,6 +71,28 @@ doc 側に修飾の規定が無いと、地の文が名詞化した造語（「�
 
 `lapidary` の「過剰さ」観点と重ならない。あちらは書いた後に変更セットを見る観点で、こちらは書く前の基準。同じ判定（判断に効くか）を書く時と見直す時の両方に置いている。
 
+## README の読み手を利用者に絞る理由
+
+`references/readme-format.md` は、root の README の読み手を「初めて使う利用者」としている。開発に加わる人は読み手に含めない。
+
+読み手を「repo を初めて触る人」と書いていた時は、利用者と開発者が区別されなかった。そのため、開発の手順や配る側の事情（版の決まり方など）が「誰のどの判断に効くか」の問いを通ってしまった。plugin を配る別 repo で README を書いた時、この形の指摘を 7 回受けて直した。これはユーザーからの報告で、この repo では再現していない。
+
+「道具の一般的な使い方を書かない」「手順を読み手の環境で通す」も、同じ 7 件から取った。plugin に固有の形ではないので、一般則として書いた。plugin 以外の repo で同じ失敗が起きるかは確かめていない。
+
+## 開発の手順を CONTRIBUTING.md に置き、層を増やさない理由
+
+開発の手順（環境構築、lint、試験、branch の運用）は、README にも notes にも置き場が無かった。置き場を `CONTRIBUTING.md` にしたのは、GitHub がこのファイルを認識するため。root、`docs/`、`.github/` のどこに置いても、issue や PR を作る画面と repo のサイドバーからリンクされる（出典の GitHub docs）。`docs/development.md` のような独自の名前には、この入口が無い。
+
+開発の手順は、4 つ目の層にせず、仕様の層の置き場に足した。層を増やすと description の「3 層」が変わり、発火の確認がやり直しになる。repo がすでに別の置き場を持っていれば、冒頭の「repo の規約に従う」が優先する。
+
+CONTRIBUTING.md の書式はまだ無い。reference を作るまで、SKILL.md の reference の一覧には足さない。
+
+## 確かめ方の規定を notes-format に置く理由
+
+「人からの報告と自分で確かめた事実を分ける」「1 回の観察を一般化しない」「公式 docs と実機の食い違いを両方書く」は、README の 7 件と同じ作業の中で踏んだ（これもユーザーからの報告）。docs の記述を根拠に断定した箇所が、実機と合わなかった。試した範囲を超えた言い方も、後で直している。
+
+これらは README ではなく notes で起きる失敗なので、`references/notes-format.md` の「ルール」に置いた。
+
 ## Gotchas に入れたものの基準
 
 この環境で実際に訂正が入った失敗だけを入れている。「推測で書かない」のような一般規定では防げず、具体的な形で書かないと再発するものに絞った。列挙は `dot_claude/skills/scribe/SKILL.md` を正本とし、ここでは繰り返さない。
@@ -93,3 +115,4 @@ description を依頼語に絞らない一般則は `harness-design-principles.m
 
 - 発火の確認は各条件 1 回ずつの手動観測にとどまる。trigger rate は測っていない。公式が model behavior は nondeterministic と明記しているため、1 回の発火と未発火では改善を断定できない。trigger eval（20 query × 3 run × 5 iteration）は未実施。失敗事例が 1 件では、eval query を実測から作れない。
 - 関係メタデータの並び順は、書く側の規定としては決めたが、逸脱を検出する仕組みは持たせていない。
+- README の読み手を絞った効果は、2026-11-13 に 1 回ずつ比べただけ。架空の plugin repo の README を、変更前と変更後の skill で subagent に書かせた。変更前は開発の手順と版の決め方が README に入り、変更後は CONTRIBUTING.md へ分かれた。道具の一般的な内容（自動更新の既定）は、どちらの版も README から外した。この規定が効いたかは、この比較では分からない。
