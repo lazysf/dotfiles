@@ -1,7 +1,7 @@
 # lapidary skill の設計
 
-- Date: 2026-11-09
-- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / 組み込みの `/code-review` と `/security-review` の instructions / この repo の review 運用の実測
+- Date: 2026-11-13
+- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / 組み込みの `/code-review` と `/security-review` の instructions / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)（2026-11-13 確認） / この repo の review 運用の実測 / skill-creator の `run_eval` による発火の比較（2026-11-13）
 
 `lapidary` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -56,6 +56,12 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 明示指定だけにすると、人が呼ばない限り見直しの工程が通らない。2026-09-03、description を明示指定へ絞った状態でこの skill 自身と関連 notes を変更する作業を回したところ、一度も発火しなかった。lint と参照検索が手で行われ、観点が通らないまま commit の手前まで進んだ。
 
 実装（`coding`）と doc（`scribe`）は自動で発火する。見直しだけが人の呼び出しに依存すると、`scribe` が書いた doc の仕上げが走らないまま commit へ進む。
+
+description には、どの依頼で使うかと、隣の skill や command との境界だけを置く。中の動き（agent を起動せず、組み込みの review を提案する）は、本文と下の「組み込みの review を提案に留める理由」が持つ。2026-11-13 に、中の動きを書いた 1 文の有無で発火を比べ、差は無かった。
+
+- 条件: Claude Code 2.1.321（desktop app 同梱の CLI）、model は Opus 5.5。skill-creator の `run_eval` で、16 本の依頼（発火すべき 8 本、隣の skill や command へ行くべき 8 本）を 3 回ずつ回した。配布済みの `lapidary` は `skillOverrides` で隠した。
+- 結果: どちらも 16 本中 15 本が期待どおりだった。落ちた 1 本は、設定キーの rename の後に commit の準備まで頼む依頼で、どちらも 3 回中 0 回だった。隣へ行くべき 8 本は、どちらも 1 回も発火しなかった。
+- `run_eval` は、並列の依頼が同じ project の `.claude/commands` に試験用の command を置く。model が他の依頼の command を選ぶと、発火しなかったと数える。並列のまま回すと発火率が低く出たので、依頼ごとに別の project で回した。
 
 `disable-model-invocation: true` は採らない。`/lapidary` と打った時しか走らず、明示指定と変わらないため。
 
