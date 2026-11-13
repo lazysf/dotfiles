@@ -148,7 +148,7 @@ if ((Get-Command ghq -ErrorAction SilentlyContinue) -and (Get-Command fzf -Error
 if ((Get-Command op -CommandType Application -ErrorAction SilentlyContinue) -and
     (Get-Command gh -CommandType Application -ErrorAction SilentlyContinue)) {
   function gh {
-    $env:GH_TOKEN = "op://Personal/GitHub CLI/credential"
+    $env:GH_TOKEN = "op://Personal/GitHub CLI/token"
     try {
       op run --no-masking -- gh.exe @args
     } finally {
