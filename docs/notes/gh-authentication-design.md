@@ -7,7 +7,7 @@
 
 ## token を 1Password に置く
 
-token は fine-grained PAT にして、1Password の item `op://Personal/GitHub CLI/token` に置く。field 名は GitHub の Shell Plugin が求める `token` に合わせる。2026-11-13 に mac で `op plugin init gh` を実行すると、item の `credential` field が `token` に rename された。ユーザーの確認では、値は変わらなかった。GitHub plugin の docs は、必要な名前の field が無ければ既存の field の rename を求めると書いている。Windows の `op run` も同じ field を参照する。`gh` を実行する時だけ、`GH_TOKEN` として渡す。gh は `GH_TOKEN` を保存済みの credential より優先する（gh environment）。
+token は fine-grained PAT にして、1Password の item `op://Personal/GitHub CLI/token` に置く。field 名は GitHub の Shell Plugin が求める `token` に合わせる。2026-11-13 に mac で `op plugin init gh` を実行すると、item の `credential` field が `token` に rename された。ユーザーの確認では、値は変わらなかった。GitHub plugin の docs は、必要な名前の field が無ければ既存の field の rename を求めると書いている。Windows の `op run` も同じ field を参照する。field を変えて apply した後の 2026-11-13 に、Windows で PowerShell の profile の `gh`（`pwsh -Command`）と、`~/.bashrc` の `gh`（`bash -ic`）の両方で、`gh auth status` が `(GH_TOKEN)` 付きのログインを表示した。`gh` を実行する時だけ、`GH_TOKEN` として渡す。gh は `GH_TOKEN` を保存済みの credential より優先する（gh environment）。
 
 `gh auth login` の token は、ディスクか OS の資格情報ストアに残り、同じユーザーのプロセスが承認なしで使える。mac の `hosts.yml` は Claude Code の sandbox の外から読める。Windows には Claude Code の sandbox が無い（tools reference）。1Password に置くと、token を使うたびに 1Password の承認を通る。
 
