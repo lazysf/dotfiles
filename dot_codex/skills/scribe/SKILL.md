@@ -17,8 +17,9 @@ repo が独自の doc 規約（置き場、名前、形式、作る時期）を�
 | 利用者 | 詳しい使い方、設定の一覧、概念の説明 | `docs/` | README に収まらない時 |
 | 利用者 | 版ごとの、利用者に見える変更 | `CHANGELOG.md`（[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) の形式） | 版を出す repo |
 | 利用者 | 脆弱性の報告先、助けの求め方 | `SECURITY.md`、`SUPPORT.md` | 窓口を開く repo |
-| 開発者 | 環境構築、変更の確かめ方、branch と commit、リリース | `DEVELOPMENT.md` | 開発の手順がある時 |
+| 開発者 | 環境構築、内部の構成、変更の確かめ方、branch と commit、リリース | `DEVELOPMENT.md` | 開発の手順がある時 |
 | 外部の貢献者 | issue と PR の出し方、受け付けない変更 | `CONTRIBUTING.md` | 外部からの貢献を受け付ける repo |
+| 外部の貢献者 | issue と PR を出す時に書いてほしい項目 | `.github/ISSUE_TEMPLATE/`、`.github/PULL_REQUEST_TEMPLATE.md` | `CONTRIBUTING.md` を作る repo |
 | 開発者 | 複数案を比べた判断 | `docs/adr/` | 「ADR を作る条件」を満たす時 |
 | 開発者 | 背景、調査、今の設計の理由 | `docs/notes/` | 事実が確定した時 |
 | 開発者 | docs 配下の案内 | `docs/README.md` | docs 配下に doc が複数ある時 |
@@ -66,7 +67,7 @@ notes に変更履歴を書かない。「旧規定は〜だった」「〜に�
 - doc の内容を変えたら、それを要約・引用・リンクしている箇所を `rg` で探して合わせる。`AGENTS.md` と `CLAUDE.md` で見つかった箇所は、直さずに提案する。
 - 書く前に、対象の reference を 1 つだけ読む。記憶で書かない。reference の無い種類は、表の形式と repo の既存の doc に寄せる。
   - README / `docs/README.md`: [references/readme-format.md](references/readme-format.md)
-  - DEVELOPMENT.md / CONTRIBUTING.md: [references/development-format.md](references/development-format.md)
+  - DEVELOPMENT.md / CONTRIBUTING.md / issue と PR のテンプレート: [references/development-format.md](references/development-format.md)
   - ADR: [references/adr-format.md](references/adr-format.md)
   - notes: [references/notes-format.md](references/notes-format.md)
 
