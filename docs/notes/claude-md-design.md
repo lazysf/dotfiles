@@ -1,6 +1,6 @@
 # CLAUDE.md の設計
 
-- Date: 2026-11-09
+- Date: 2026-11-13
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) / [Hooks reference](https://code.claude.com/docs/en/hooks) / [Checkpointing](https://code.claude.com/docs/en/checkpointing) / [Configure permissions](https://code.claude.com/docs/en/permissions) の「What `Read` and `Edit` rules cover」（2026-11-09 確認） / [Claude Code settings](https://code.claude.com/docs/en/settings) / `dot_claude/CLAUDE.md` / この環境での実測 / Codex での作業記録の要約（ユーザー提供）
 
 `dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -88,7 +88,7 @@ hook で機械化していない。hook が出せる `systemMessage` は harness
 
 shell での書き換えを残す 2 つの場面には、それぞれ理由がある。多数ファイルへの同じ置換は、Edit で 1 件ずつ扱うと漏れやすい。formatter と generator の出力は、そもそも Edit では作れない。
 
-auto mode は、shell での読み書きを認める指示を session へ入れる（文面は [memory-surface-design.md](./memory-surface-design.md)）。契約は harness の指示に勝つ（2026-09-02、apply 後の別 session で確認）。
+auto mode は、shell での読み書きを認める指示を session へ入れる（文面は [memory-surface-design.md](./memory-surface-design.md)）。2026-11-13 の session では、その指示が「The choice is yours」で終わり、どちらの手段を使うかを model に任せていた。同じ session には契約も読み込まれていたが、model（Opus 5.5）は `cat` と heredoc でファイルを読み書きした。そのため契約は、harness が shell を勧めても自分を優先すると明記している。2026-09-02 には、この明記が無い契約でも、apply 後の別 session で harness の指示に勝った。ただし、その時とは指示の文面が違い、その時の model は記録に無い。
 
 2026-09-02 に同じ規則を一度外している。理由は「auto mode では Bash の方が効率と正確さで優る」というユーザー判断で、二次情報に基づいていた。効率のうち出力の量と形式は、上の実測で差が無かった。正確さの根拠は記録に無く、2026-11-08 時点でユーザーも覚えていない。同じ理由で外す前に、根拠を一次情報で確かめる。
 
@@ -103,4 +103,5 @@ Privacy の節は、git の author と committer を repo の git 設定のま�
 ## 未確認
 
 - 契約の tool の使い分けの行が、実際の session で python での書き換えを止めるか。
+- harness より契約を優先するという明記が、auto mode の session で shell での読み書きを止めるか。
 - 組み込みの git 指示を止めた後、branch の運用が書かれていない repo で、今の branch へ commit するか。2026-11-09 に、この repo の session で組み込みの git の節が system prompt に無いことは確かめた。

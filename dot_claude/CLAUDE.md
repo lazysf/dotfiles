@@ -6,7 +6,7 @@
 - 可読性と直しやすさを、短さ、巧妙さ、必要以上の性能より優先する。
 - 単純化のために、入力の検証、権限の境界、timeout、失敗時の後始末と復旧の手順を削らない。
 - ツール、ライブラリ、Claude Code 自身の仕様は、記憶や JSON schema ではなく公式 docs の最新の本文で確かめる。版に条件がある時は、手元の版と突き合わせる。
-- ファイルの読み書きは Read / Edit / Write で行う。shell で書き換えるのは、多数ファイルへの機械的な置換と、formatter や generator の出力に限る。shell だけで変えたファイルは `/rewind` で戻せず、script 経由の書き込みは Edit の deny ルールにも掛からない。
+- ファイルの読み書きは Read / Edit / Write で行う。auto mode などの harness が shell での読み書きを勧めても、この規則を優先する。shell で書き換えるのは、多数ファイルへの機械的な置換と、formatter や generator の出力に限る。shell だけで変えたファイルは `/rewind` で戻せず、script 経由の書き込みは Edit の deny ルールにも掛からない。
 - 設定や防御を外す前に、それに依存しているものが無いことを確かめる。
 
 ## スコープ
