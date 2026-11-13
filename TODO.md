@@ -32,4 +32,3 @@
 - [ ] **Codex の skill の置き場**。公式 docs の user scope は `~/.agents/skills` で、この repo は `~/.codex/skills` に配っている。移すなら、`dot_codex/` の配布先と、Codex の git-commit が呼ぶ script の path も変わる。
 - [ ] **lapidary の description を削る**。description に実装の細部が入っている。trigger に効かない部分を落とす。
 - [ ] **別の project で、Bash で読み書きしている件**。共通契約は読み書きを Read / Edit / Write に定めているが、別の project の session では Bash で読み書きしていた。契約が効いていない理由を、その session の記録で確かめる。
-- [ ] **`docs/notes/memory-surface-design.md` の古い記述**。「rule でなく skill に置く基準」の節が、skill を「description で発火する」とだけ書いている。`coding` は `paths` でも一覧に出るので、今の形に合わせる。
