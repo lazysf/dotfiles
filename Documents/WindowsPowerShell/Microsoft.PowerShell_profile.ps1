@@ -138,3 +138,21 @@ if ((Get-Command ghq -ErrorAction SilentlyContinue) -and (Get-Command fzf -Error
     }
   }
 }
+
+# -----------------------------
+# GitHub CLI (token from 1Password)
+# -----------------------------
+# 1Password Shell Plugins do not support Windows, so op run resolves the
+# secret reference and passes GH_TOKEN to gh only for this call.
+# --no-masking keeps gh attached to the terminal (colors, pager, prompts).
+if ((Get-Command op -CommandType Application -ErrorAction SilentlyContinue) -and
+    (Get-Command gh -CommandType Application -ErrorAction SilentlyContinue)) {
+  function gh {
+    $env:GH_TOKEN = "op://Personal/GitHub CLI/credential"
+    try {
+      op run --no-masking -- gh.exe @args
+    } finally {
+      Remove-Item Env:GH_TOKEN -ErrorAction SilentlyContinue
+    }
+  }
+}

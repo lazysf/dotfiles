@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-11-11
+- Date: 2026-11-13
 
 着手を保留した項目を、記載日と見つけた時の作業が分かるように並べる。
 
@@ -13,6 +13,14 @@
 - [ ] **1Password**。未設定の状態で Developer の設定画面が開く。CLI 連携と SSH agent を設定して Enter を押すと setup が再開する。
 - [ ] **Parsec**。未導入の状態で管理者権限のない Windows PowerShell から実行すると UAC が表示される。承認するとインストールが進む。（2026-11-02 追加）
 - [ ] **VB-CABLE**。未導入の状態で手動 setup を実行すると公式ページがブラウザーで開く。（2026-11-02 追加）
+
+## gh の 1Password 連携の確認
+
+- 記載: 2026-11-13（gh の token を 1Password から渡す構成の導入）
+
+`docs/notes/gh-authentication-design.md` の「未確認」を、apply の後に確かめる。結果は同じ notes に書く。
+
+- [ ] **mac の Shell Plugin**。`op plugin init gh` が `plugins.sh` を置く path と、sandbox の中のエージェントから `gh auth status` が通るか。
 
 ## skill と契約の見直しで保留したもの
 
