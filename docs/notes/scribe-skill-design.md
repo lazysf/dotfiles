@@ -1,7 +1,7 @@
 # scribe skill の設計
 
 - Date: 2026-11-13
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors)
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors) / [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file) / [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) / [Diátaxis](https://diataxis.fr/start-here/)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -31,17 +31,19 @@ skill の内容を notes へ列挙すると、skill を直した時に notes だ
 
 `Accepted` を commit や push に連動させない。この規定の理由はどこにも記録が残っておらず、再検討もしていない。変えたくなった時、根拠は見つからないものとして扱う。
 
-## reference を 3 つに分けた理由
+## reference を種類ごとに分けた理由
 
-README / ADR / notes は同時に書かない。1 ファイルにまとめると、ADR を書く時に README の書式まで読むことになる。SKILL.md 側で「対象の reference を 1 つだけ読む」と指定し、書式の実体を 3 ファイルへ分けている。
+doc の種類は同時に書かない。1 ファイルにまとめると、ADR を書く時に README の書式まで読むことになる。SKILL.md 側で「対象の reference を 1 つだけ読む」と指定し、書式の実体を種類ごとのファイルへ分けている。
 
-SKILL.md が持つのはどの層を選ぶかの判断で、書式は選択後にしか要らないので reference にある。
+SKILL.md が持つのはどの種類を選ぶかの判断で、書式は選択後にしか要らないので reference にある。
+
+reference を置くのは、scribe に固有の規則がある種類（README、DEVELOPMENT と CONTRIBUTING、ADR、notes）だけ。CONTRIBUTING は DEVELOPMENT を指すので、2 つの書式を 1 つの reference にまとめ、分担を 1 箇所で読めるようにしている。CHANGELOG、SECURITY、SUPPORT は、表の 1 行と公式の形式への指し先で足りる。Claude が既定で知っている形式を reference に写すと、[harness-design-principles.md](./harness-design-principles.md) の「削る基準」に当たる。その種類で訂正を受けたら、reference を作る。
 
 ## doc をいつ直すかを description に持たせる理由
 
 doc を直すべき場面は、実装の区切りで訪れる。そこでは `scribe` を含めて何も起動していない。そのため、いつ直すかは skill の本文ではなく description に置いている。description は常時 context にあるので、「使い方・設定・公開挙動を変えた時」という場面で発火の手がかりになる。commit の前には `lapidary` も、新しく書く doc が要る変更なら scribe を通すよう一言添える。今ある doc が自分の変更で古くなった分は、`lapidary` が自分で直す（[lapidary-skill-design.md](./lapidary-skill-design.md) の「直す範囲を、自分の変更と、それが古くした記述にしている理由」）。
 
-いつ直すかの全部は決めていない。仕様（README / docs）をいつ更新するかと、事前の doc を作るかは、repo の運用に従う。仕様を先に書いて開発する repo もあり、全層へ一律に時期を決めると、その repo の CLAUDE.md と矛盾する。CLAUDE.md は上書きでなく連結で読まれ、矛盾があると Claude はどちらかを任意に選ぶ（[How Claude remembers your project](https://code.claude.com/docs/en/memory)）。skill の冒頭に「repo が独自の doc 規約を持っていれば、そちらに従う」を置いているのも同じ理由。
+いつ直すかの全部は決めていない。仕様（README / docs）をいつ更新するかと、事前の doc を作るかは、repo の運用に従う。仕様を先に書いて開発する repo もあり、全種類へ一律に時期を決めると、その repo の CLAUDE.md と矛盾する。CLAUDE.md は上書きでなく連結で読まれ、矛盾があると Claude はどちらかを任意に選ぶ（[How Claude remembers your project](https://code.claude.com/docs/en/memory)）。skill の冒頭に「repo が独自の doc 規約を持っていれば、そちらに従う」を置いているのも同じ理由。
 
 doc が不要と判断した時もその旨と理由を返す、という部分は skill の末尾が持つ。
 
@@ -79,13 +81,39 @@ doc 側に修飾の規定が無いと、地の文が名詞化した造語（「�
 
 「道具の一般的な使い方を書かない」「手順を読み手の環境で通す」も、同じ 7 件から取った。plugin に固有の形ではないので、一般則として書いた。plugin 以外の repo で同じ失敗が起きるかは確かめていない。
 
-## 開発の手順を CONTRIBUTING.md に置き、層を増やさない理由
+## 置き場を読み手と目的の表で選ぶ理由
 
-開発の手順（環境構築、lint、試験、branch の運用）は、README にも notes にも置き場が無かった。置き場を `CONTRIBUTING.md` にしたのは、GitHub がこのファイルを認識するため。root、`docs/`、`.github/` のどこに置いても、issue や PR を作る画面と repo のサイドバーからリンクされる（出典の GitHub docs）。`docs/development.md` のような独自の名前には、この入口が無い。
+doc の名前は repo ごとに違う（`CONTRIBUTING.md`、`DEVELOPMENT.md`、`HACKING.md` など）が、読み手と目的で分けると種類はほぼ決まる。名前ごとに規則を持つと、同じ目的の doc に別の規則ができる。そのため SKILL.md は読み手と目的の表で種類を選び、名前は repo の慣習を優先し、無い時だけ既定の名前を使う。
 
-開発の手順は、4 つ目の層にせず、仕様の層の置き場に足した。層を増やすと description の「3 層」が変わり、発火の確認がやり直しになる。repo がすでに別の置き場を持っていれば、冒頭の「repo の規約に従う」が優先する。
+README、ADR、notes 以外の行は、GitHub の community health files、Keep a Changelog、Diátaxis から取った。`docs/` の行の「詳しい使い方、設定の一覧、概念の説明」は、Diátaxis の how-to、reference、explanation に当たる。
 
-CONTRIBUTING.md の書式はまだ無い。reference を作るまで、SKILL.md の reference の一覧には足さない。
+「作る条件」の列を置いたのは、表を「全部そろえる一覧」と読ませないため。版を出さない repo の CHANGELOG や、窓口を開かない repo の SECURITY.md は、空の雛形になる。
+
+## 開発の手順を DEVELOPMENT.md に、貢献の出し方を CONTRIBUTING.md に分ける理由
+
+開発の手順（環境構築、lint、試験、branch の運用）と、貢献の出し方（issue と PR の出し方、受け付けない変更）は、読み手が違う。前者は開発に加わる人全員が引き、後者は外部の貢献者だけが確かめる。1 つの doc に 1 つの目的を持たせるため、最初から 2 つに分ける。
+
+`CONTRIBUTING.md` を外部の貢献を受け付ける repo にだけ作るのは、GitHub がこのファイルを認識するため。root、`docs/`、`.github/` のどこに置いても、issue や PR を作る画面と repo のサイドバーからリンクされる（出典の GitHub docs）。開発の手順だけを `CONTRIBUTING.md` に書くと、受け付けない repo でも受け付けているように見える。分けておけば、Contributing のリンクが出るのは本当に受け付けている repo だけになる。
+
+`CONTRIBUTING.md` を作る repo では、そこから `DEVELOPMENT.md` へリンクする。GitHub の入口から開発の手順まで辿れる。
+
+1 つにまとめる案も比べた。GitHub の入口が 1 つで済み、`AGENTS.md` からの指し先も 1 つになる。ただ、受け付けない repo で上の誤解が残り、受け付ける repo では、開発の手順を引きたい人が貢献の規範を読み飛ばすことになる。ファイルが 2 つ増えるだけなので、分ける方を採った。
+
+確かめ方のコマンドは一度走らせるが、リリースや配布のコマンドは走らせない。README の「手順を一度通す」をそのまま当てると、外への公開になる。
+
+## AGENTS.md と CLAUDE.md を書かない理由
+
+`AGENTS.md` と `CLAUDE.md` は、agent が自動で読む設定で、挙動を変える。この repo でも `AGENTS.md` の「surface を直す時」の確認を通す対象にしている。scribe が doc の追従として書き換えると、その確認を飛ばすことになる。そのため scribe は振り分けと提案に留める。
+
+`DEVELOPMENT.md` は agent が自動では読まない（[How Claude remembers your project](https://code.claude.com/docs/en/memory)、[Codex の AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md)）。Claude Code の `CLAUDE.md` は `@` で import できるが、毎 session 全文を読み込み、Codex の `AGENTS.md` には同じ仕組みが無い。両方で同じ形にするため、`AGENTS.md` からは読む時期を付けて指す形を提案する。
+
+## skill を 1 つのまま保つ理由
+
+doc の種類が増えても、scribe を分けない。scribe の中心の仕事は「この事実をどの doc に書くか」の振り分けで、skill を分けるとその判断が skill の境目をまたぐ。読み手で分ける案（利用者向けと開発の記録）は、どちらに書くかを決める前に、どちらの skill を使うかを決めることになる。
+
+この repo では、doc の入口を分けて曖昧になり、作り直した記録がある（[ADR 0019](../adr/0019-split-planning-and-docs-surface.md)、[ADR 0023](../adr/0023-add-doc-followup-skill.md)。どちらも Superseded）。
+
+reference の数は重さにならない。reference は必要な時だけ読まれ、重さになるのは SKILL.md の本文。分けるのは、本文が [best practices](https://agentskills.io/skill-creation/best-practices) の目安（5000 tokens 未満）を超えた時、ある種類に script が要るようになった時、発火の確認で取り違えが出た時。
 
 ## 確かめ方の規定を notes-format に置く理由
 
@@ -115,4 +143,6 @@ description を依頼語に絞らない一般則は `harness-design-principles.m
 
 - 発火の確認は各条件 1 回ずつの手動観測にとどまる。trigger rate は測っていない。公式が model behavior は nondeterministic と明記しているため、1 回の発火と未発火では改善を断定できない。trigger eval（20 query × 3 run × 5 iteration）は未実施。失敗事例が 1 件では、eval query を実測から作れない。
 - 関係メタデータの並び順は、書く側の規定としては決めたが、逸脱を検出する仕組みは持たせていない。
-- README の読み手を絞った効果は、2026-11-13 に 1 回ずつ比べただけ。架空の plugin repo の README を、変更前と変更後の skill で subagent に書かせた。変更前は開発の手順と版の決め方が README に入り、変更後は CONTRIBUTING.md へ分かれた。道具の一般的な内容（自動更新の既定）は、どちらの版も README から外した。この規定が効いたかは、この比較では分からない。
+- README の読み手を絞った効果は、2026-11-13 に 1 回ずつ比べただけ。架空の plugin repo の README を、変更前と変更後の skill で subagent に書かせた。変更前は開発の手順と版の決め方が README に入り、変更後は CONTRIBUTING.md へ分かれた（この時の規定は、開発の手順を CONTRIBUTING.md に置いていた）。道具の一般的な内容（自動更新の既定）は、どちらの版も README から外した。この規定が効いたかは、この比較では分からない。
+- 2026-11-13 に description へ「CONTRIBUTING を書いて」と「開発の手順を変えた時」を足した後の発火は、確かめていない。lint の設定を少し変えるたびに発火する広がりすぎも、まだ見ていない。
+- Diátaxis は、4 種類それぞれの個別ページを読んでいない。
