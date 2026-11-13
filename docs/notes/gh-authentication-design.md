@@ -33,7 +33,19 @@ mac の Claude Code の sandbox の中では、エージェントの `gh` は動
 
 ## token の権限
 
-権限は Metadata と Contents を Read-only、Pull requests と Issues を Read and write にする。Contents に write を付けると、`gh pr merge` や `gh api` での書き込みが、`git push` の 2 層の止め（`claude-code-settings-design.md` の「push は sandbox 内で SSH を通らない」）を素通りする。push と merge はユーザーが手元で行う運用に合わせる。
+権限は、エージェントに issue と PR の作成などの小さな操作を任せられる範囲にする。Repository access は All repositories にして、Repository permissions は Issues と Pull requests の Read and write だけを付ける。Metadata の Read-only は自動で付く。自分の repo はすべて public なので、repo ごとに絞っても書き込める範囲はほとんど変わらない。
+
+Issues の write には、issue の作成、コメント、ラベル付け、close に加えて、ラベルの作成と削除、コメントの削除も入る。作成だけには絞れない。Pull requests の write は、PR の作成、編集、close、review、reviewer の指定を許す。各操作に要る権限は [Permissions required for fine-grained personal access tokens](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens) で確かめた（2026-11-13）。
+
+読み取りの権限（Contents、Actions、Commit statuses）は付けない。PAT は権限が無くても public repo を読める。2026-11-13 に、この 2 つの権限だけを付けた token で `gh repo view`、`gh pr view`、`gh pr checks`、`gh issue list`、`gh run list` を cli/cli に対して実行すると、どれも成功した。fine-grained PAT は Checks API に対応していない（[Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)）が、`gh pr checks` は check の結果を表示した。private repo を作ったら、その repo を読むための Read-only を足す。
+
+ほかの権限は付けない。Contents の write は merge、release の作成、branch の作成と削除、ファイルの書き込みを許す。PR の merge は Pull requests ではなく Contents の write に載っている。Actions の write は workflow の手動起動を許し、deploy や publish を動かしうる。Workflows、Administration、Secrets、Variables、Environments、Webhooks、Pages、Deployments は、CI の定義、repo の設定、秘密情報に触れる。
+
+同じ日に lazysf/dotfiles に対して、何も変えられない要求で権限を確かめた。必須の入力を空にした issue と PR の作成は 422 で、権限の検査を通った。ファイルの書き込み、webhook の一覧、workflow の再実行は 403 で拒否された。merge は、対象にできる閉じた PR が repo に無かったので試していない。
+
+Contents に write を付けないのは、`gh pr merge` や `gh api` での書き込みが、`git push` の 2 層の止め（`claude-code-settings-design.md` の「push は sandbox 内で SSH を通らない」）を素通りするからである。push と merge はユーザーが手元で行う運用に合わせる。
+
+repo はすべて public なので、エージェントが issue や PR に書いた内容は公開される。他人が書いた issue やコメントには、エージェントへの指示が混ざりうる。1Password の承認の前に、書き込む本文に手元の path や出力が混ざっていないかを見る。
 
 `gh pr merge` などを `permissions.deny` で止めることはしない。permissions docs は、引数で絞る Bash の rule を崩れやすいとしている。たとえば `Bash(gh pr merge *)` は、同じ merge を `gh api` で呼ぶと外れる。止めるのは token の権限に任せる。
 
