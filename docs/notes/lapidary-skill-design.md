@@ -1,7 +1,7 @@
 # lapidary skill の設計
 
-- Date: 2026-11-13
-- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / 組み込みの `/code-review` と `/security-review` の instructions / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)（2026-11-13 確認） / この repo の review 運用の実測 / skill-creator の `run_eval` による発火の比較（2026-11-13）
+- Date: 2026-11-14
+- 出典: [Extend Claude Code](https://code.claude.com/docs/en/features-overview) / [Extend Claude with skills](https://code.claude.com/docs/en/skills) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)（2026-11-08 確認） / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Specification](https://agentskills.io/specification) / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / 組み込みの `/code-review` と `/security-review` の instructions / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)（2026-11-13 確認） / この repo の review 運用の実測 / skill-creator の `run_eval` による発火の比較（2026-11-13〜14）
 
 `lapidary` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -57,11 +57,18 @@ skill の目的は「変更を見直す」でなく「commit できる状態ま�
 
 実装（`coding`）と doc（`scribe`）は自動で発火する。見直しだけが人の呼び出しに依存すると、`scribe` が書いた doc の仕上げが走らないまま commit へ進む。
 
-description には、どの依頼で使うかと、隣の skill や command との境界だけを置く。中の動き（agent を起動せず、組み込みの review を提案する）は、本文と下の「組み込みの review を提案に留める理由」が持つ。2026-11-13 に、中の動きを書いた 1 文の有無で発火を比べ、差は無かった。
+description には、どの依頼で使うかと、隣の skill や command との境界を置く。中の動き（agent を起動せず、組み込みの review を提案する）は、本文と下の「組み込みの review を提案に留める理由」が持つ。
 
-- 条件: Claude Code 2.1.321（desktop app 同梱の CLI）、model は Opus 5.5。skill-creator の `run_eval` で、16 本の依頼（発火すべき 8 本、隣の skill や command へ行くべき 8 本）を 3 回ずつ回した。配布済みの `lapidary` は `skillOverrides` で隠した。
-- 結果: どちらも 16 本中 15 本が期待どおりだった。落ちた 1 本は、設定キーの rename の後に commit の準備まで頼む依頼で、どちらも 3 回中 0 回だった。隣へ行くべき 8 本は、どちらも 1 回も発火しなかった。
+2026-11-13〜14 に、description の案ごとに発火を比べた。
+
+- 条件: Claude Code 2.1.321（desktop app 同梱の CLI）、model は Opus 5.5。skill-creator の `run_eval` で、各依頼を 3 回ずつ回した。配布済みの `lapidary` は `skillOverrides` で隠した。
+- 中の動きの 1 文は、あっても無くても結果が同じだった。空の directory で、16 本の依頼（発火すべき 8 本、隣へ行くべき 8 本）を回し、どちらも 16 本中 15 本だった。
+- 「（git-commit スキルの手順から呼ばれる時を含む）」と、観点の列挙（「スコープ、事実、参照の整合、過剰さを確かめ」）も、あっても無くても結果が同じだった。こちらは、commit していない変更を持つ小さな git repo の複製で、20 本の依頼（発火すべき 10 本、隣へ行くべき 10 本）を回し、4 通りの組み合わせがどれも 20 本中 17 本だった。削っても良くならないので、2 つとも残している。
+- 落ちた 3 本は、観点を 1 つだけ頼む依頼だった（「古い名前が残ってないか」「言い過ぎてないか」「余計な抽象とか足してないよね？」）。rename の依頼では、model は 3 回とも skill を呼ばず、`git status` と `grep` から始めた。
+- 狭い依頼を拾う 1 文は採らなかった。一般的な書き方（「観点を 1 つだけ確かめるよう頼まれた時も使う」）は効かなかった。落ちた 3 本の言い回しを例に並べた書き方は、その 3 本を 3 回とも拾った。ただし、後から足した 6 本（発火すべき 3 本）では今の description と同じ結果で、同じ種類の「README とずれてないか」も拾えなかった。並べた語に合っただけと判断した。狭い依頼は、commit の前に `git-commit` の手順 4 が拾う。
+- 隣へ行くべき依頼は、どの案でも 1 回も発火しなかった。
 - `run_eval` は、並列の依頼が同じ project の `.claude/commands` に試験用の command を置く。model が他の依頼の command を選ぶと、発火しなかったと数える。並列のまま回すと発火率が低く出たので、依頼ごとに別の project で回した。
+- この比べ方は、1 回きりの依頼で最初に何を呼ぶかだけを見る。長い作業の途中で、頼まれずに発火するかは測っていない。
 
 `disable-model-invocation: true` は採らない。`/lapidary` と打った時しか走らず、明示指定と変わらないため。
 
