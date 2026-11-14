@@ -19,6 +19,7 @@
   - [memory-surface-design.md](./notes/memory-surface-design.md): 配布する memory を `CLAUDE.md` 1 枚にしている理由と、`paths` 付き rule が発火する条件の実測
   - [nodejs-version-manager-selection.md](./notes/nodejs-version-manager-selection.md): Node.js version manager に nvm を使う理由と、ほかの候補を使わない理由
   - [scribe-skill-design.md](./notes/scribe-skill-design.md): `scribe` skill が今の形になっている理由
+  - [skill-trigger-eval.md](./notes/skill-trigger-eval.md): skill-creator の `run_eval` で skill の発火を比べる時の手順と、使用量、認証、結果を歪めるものの注意
   - [usage-band-mod-rendering.md](./notes/usage-band-mod-rendering.md): `usage-band` mod が文字のバーで描く理由と、desktop app で列を揃える時の制約の実測
 - `docs/adr/`: `Accepted` / `Superseded` を含む repo-level の状態付き判断台帳を置く
   - [0001-common-codex-harness-lives-in-dot_codex.md](./adr/0001-common-codex-harness-lives-in-dot_codex.md)
