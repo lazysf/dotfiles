@@ -20,5 +20,5 @@
 
 どれも急がない。surface に触れる項目は、着手する時に `AGENTS.md` の「surface を直す時」の確認を通す。
 
-- [ ] **coding の `paths` を残すか判断する**。`paths` を付けた後（2026-11-10 以降）に、コードを編集した session が 10 本たまったら、`docs/notes/coding-skill-design.md` と同じ集計（コードを編集した session のうち、skill が発火した数）で比べる。増えていなければ外す。
-- [ ] **契約の優先の明記が効いたかを確かめる**。2026-11-13 に、harness が shell を勧めても Read / Edit / Write を優先すると契約へ明記した。apply 後の auto mode の session の記録で、`cat`、`sed -n`、heredoc でのファイルの読み書きが減ったかを数える。減っていなければ、PreToolUse hook で止めるかを判断する（`docs/notes/claude-md-design.md` の「tool の使い分けを契約に置く理由」）。
+- [ ] **coding の `paths` を残すか判断する**。`paths` を付けた後（2026-11-10 以降）に、コードを編集した session が 10 本たまったら、`docs/notes/coding-skill-design.md` と同じ集計（コードを編集した session のうち、skill が発火した数）で比べる。増えていなければ外す。2026-11-14 時点で、この repo の mac の session では、コードを編集した session が 3 本、発火は 1 本。
+- [ ] **契約の優先の明記が効いたかを確かめる**。2026-11-13 に、harness が shell を勧めても Read / Edit / Write を優先すると契約へ明記した。apply 後の auto mode の session の記録で、`cat`、`sed -n`、heredoc でのファイルの読み書きが減ったかを数える。減っていなければ、PreToolUse hook で止めるかを判断する（`docs/notes/claude-md-design.md` の「tool の使い分けを契約に置く理由」）。2026-11-14 時点で、この repo の mac の session では、契約を変えた commit `8a508ac` の前（11-08 以降の 9 本）は Bash 403 回のうち読み取り 57、書き込み 55。後（4 本）は Bash 74 回のうち読み取り 9、書き込み 1。再開した session に写った呼び出しは、最初の session でだけ数えた。

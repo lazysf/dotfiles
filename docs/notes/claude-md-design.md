@@ -100,6 +100,16 @@ shell での書き換えを残す 2 つの場面には、それぞれ理由が�
 
 auto mode は、shell での読み書きを認める指示を session へ入れる（文面は [memory-surface-design.md](./memory-surface-design.md)）。2026-11-13 の session では、その指示が「The choice is yours」で終わり、どちらの手段を使うかを model に任せていた。同じ session には契約も読み込まれていたが、model（Opus 5.5）は `cat` と heredoc でファイルを読み書きした。そのため契約は、harness が shell を勧めても自分を優先すると明記している。2026-09-02 には、この明記が無い契約でも、apply 後の別 session で harness の指示に勝った。ただし、その時とは指示の文面が違い、その時の model は記録に無い。
 
+明記の後も、効いたのは書き込みだけだった。この repo の mac の session の記録を、明記の commit `8a508ac` の前後で数えた（2026-11-14）。前の 9 本では、Bash 403 回のうち `cat`、`head`、`tail`、`sed -n` で始まる読み取りが 57、heredoc などでの書き込みが 55 だった。後の 4 本では、74 回のうち読み取りが 9、書き込みが 1 だった。書き込みの 1 は `python3 - <<'EOF'` での集計の実行で、ファイルへの書き込みではない。判定はコマンドの文字列への正規表現で、パイプの後ろの `head` などは除いた。再開した session に写った呼び出しは、最初の session でだけ数えた。後の 4 本のうち 2 本は同じ会話で、読み取りの 9 はすべてその会話から出ている。
+
+その会話の model（Opus 5.5、auto mode）は、読み取りで shell を選んだ理由を次のように挙げた（本人の振り返りで、確かめた事実ではない）。
+
+- auto mode の指示が、`cat`、`head`、`sed -n` での読み取りを名指しで勧めている。
+- 調べ物の途中で、`ls`、`grep`、`sed -n` を 1 回の Bash にまとめたくなる。Read は 1 回に 1 ファイルを読む。
+- repo の外のファイル（`~/.config/zsh/.zshrc` など）も shell で読んだ。Read でも読めた。
+
+shell で読んだ時の実害は、subdirectory の `CLAUDE.md` と `paths` 付きの rule が load されないこと（上記）。この repo は `.claude/rules/` を使わないので、ここでの実害は小さい。他の repo でも読み取りを揃えるなら、契約の文言を足すより、PreToolUse hook で止める方が確実と見ている。先頭が `cat`、`head`、`tail`、`sed -n` でファイルを読む Bash を止め、Read を使うよう返す形になる。session を重ねてから判断する（`TODO.md`）。
+
 2026-09-02 に同じ規則を一度外している。理由は「auto mode では Bash の方が効率と正確さで優る」というユーザー判断で、二次情報に基づいていた。効率のうち出力の量と形式は、上の実測で差が無かった。正確さの根拠は記録に無く、2026-11-08 時点でユーザーも覚えていない。同じ理由で外す前に、根拠を一次情報で確かめる。
 
 ## git の author を差し替えない規律を Privacy に置く理由
@@ -113,5 +123,5 @@ Privacy の節は、git の author と committer を repo の git 設定のま�
 ## 未確認
 
 - 契約の tool の使い分けの行が、実際の session で python での書き換えを止めるか。
-- harness より契約を優先するという明記が、auto mode の session で shell での読み書きを止めるか。
+- harness より契約を優先するという明記が、auto mode の session で shell での読み取りを止めるか。2026-11-14 時点の後の session は 4 本で、判断するには少ない。
 - 組み込みの git 指示を止めた後、branch の運用が書かれていない repo で、今の branch へ commit するか。2026-11-09 に、この repo の session で組み込みの git の節が system prompt に無いことは確かめた。
