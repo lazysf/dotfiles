@@ -14,14 +14,6 @@
 - [ ] **Parsec**。未導入の状態で管理者権限のない Windows PowerShell から実行すると UAC が表示される。承認するとインストールが進む。（2026-11-02 追加）
 - [ ] **VB-CABLE**。未導入の状態で手動 setup を実行すると公式ページがブラウザーで開く。（2026-11-02 追加）
 
-## gh の 1Password 連携の確認
-
-- 記載: 2026-11-13（gh の token を 1Password から渡す構成の導入）
-
-`docs/notes/gh-authentication-design.md` の「未確認」を、apply の後に確かめる。結果は同じ notes に書く。
-
-- [ ] **mac のエージェントの gh の残りの確認**。2026-11-14 に、エージェントの Bash で `gh auth status` が `(GH_TOKEN)` 付きのログインを表示し、1Password の承認も出た。残りは 2 つ。承認がエージェントの `gh` のたびに出るか。`gh pr create --head` が sandbox の外でも push を試みないか。
-
 ## skill と契約の見直しで保留したもの
 
 - 記載: 2026-11-11（Claude と Codex の設定と skill の見直し、coding の `paths`、識別子の検査の同梱）

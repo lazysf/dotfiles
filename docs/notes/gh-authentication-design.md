@@ -25,7 +25,7 @@ mac は公式の Shell Plugin を使う。`op plugin init gh` が生成する設
 
 Claude Code の Bash は、session の開始時に `~/.bashrc` などを source して、関数を各コマンドで使えるようにする（tools reference）。Windows の Bash は Git Bash なので、PowerShell の profile の関数はエージェントに効かない。そのため `dot_bashrc` に同じ関数を置き、Windows にだけ配る。2026-11-13 に apply の後に始めた Windows の Claude Code の session で、Bash の `type gh` はこの関数を表示し、`gh auth status` は `(GH_TOKEN)` 付きのログインを表示した。Claude Code の PowerShell tool は profile を読まない（tools reference）。Git Bash が無い作業機では、エージェントの `gh` は 1Password を通らない。
 
-mac の Claude Code の sandbox の中では、エージェントの `gh` は動かない。2026-11-13 に sandbox の中の Bash で `plugins.sh` を読んで `gh auth status` を実行すると、`op` が `couldn't connect to the 1Password desktop app` で止まった。同じ時刻に、ユーザーが sandbox の外の terminal で実行した `op account list` は成功した。sandbox の中から 1Password の socket に `connect` すると、`~/Library/Group Containers/2BUA8C4S2C.com.1password/t/` の `agent.sock` にはつながり、`s.sock` は `EPERM` で拒否された。`dot_claude/settings.json.tmpl` の `allowUnixSockets` は、1Password の socket のうち SSH agent の `agent.sock` だけを許している。`op` が app integration に使う socket が `s.sock` であることは確かめていない。
+mac の Claude Code の sandbox の中では、エージェントの `gh` は動かない。2026-11-13 に sandbox の中の Bash で `plugins.sh` を読んで `gh auth status` を実行すると、`op` が `couldn't connect to the 1Password desktop app` で止まった。同じ時刻に、ユーザーが sandbox の外の terminal で実行した `op account list` は成功した。sandbox の中から 1Password の socket に `connect` すると、`~/Library/Group Containers/2BUA8C4S2C.com.1password/t/` の `agent.sock` にはつながり、`s.sock` は `EPERM` で拒否された。`dot_claude/settings.json.tmpl` の `allowUnixSockets` は、1Password の socket のうち SSH agent の `agent.sock` だけを許している。mac の `op` は、app integration に Unix socket を使わない。1Password の docs によると、mac では `NSXPCConnection` の XPC で、1Password の app が立てる `1Password Browser Helper` の service につなぐ（[App integration security](https://www.1password.dev/cli/app-integration-security/)、2026-11-14 確認）。op 2.42.0 の binary にも、`2BUA8C4S2C.com.1password.browser-helper` の文字列があった。sandbox の中で `op whoami --debug` を実行しても、接続先の socket の path は出なかった（2026-11-14）。
 
 mac の Claude Code の Bash は、`~/.config/zsh/.zshrc` を読まない。tools reference によると、Claude Code は session の開始時に `~/.zshrc` を source して、alias、関数、shell の option を取り込む。この repo の zsh は `~/.zshenv` で `ZDOTDIR` を `~/.config/zsh` にしている。2026-11-14 の mac の session では、`~/.zshrc` が無く、Bash の `type gh` は `/opt/homebrew/bin/gh` を指した。`.zshrc` で定義した alias（`ll`）と関数（`y`、`g`）も無かった。そのため mac にだけ、`plugins.sh` を読むだけの `~/.zshrc`（`dot_zshrc`）を配る。人の zsh は `ZDOTDIR` の `.zshrc` を読むので、このファイルを読むのは Claude Code の Bash だけになる。
 
@@ -33,7 +33,7 @@ mac の Claude Code の Bash は、`~/.config/zsh/.zshrc` を読まない。tool
 
 mac では、`gh` のサブコマンドのうち token の権限の範囲にあるものだけを、`sandbox.excludedCommands` で sandbox の外で動かす（2026-11-14 のユーザー判断）。列挙は `dot_claude/settings.json.tmpl` を正本とする。sandboxing docs によると、一致したコマンドは sandbox の外で動き、通常の permission の確認を通る。auto mode では classifier が審査する。`allowUnsandboxedCommands: false` は `dangerouslyDisableSandbox` での再試行を止める別の仕組みで、`excludedCommands` は併用できる（[Sandboxing](https://code.claude.com/docs/en/sandboxing)、2026-11-14 確認）。
 
-`allowUnixSockets` に `op` の socket を足す形は採らない。sandbox の中のどのコマンドも 1Password の app に接続でき、`op read` で gh 以外の item も要求できるようになる。承認ダイアログは、どのコマンドがどの item を求めているかを表示しない。`excludedCommands` なら、外で動くのはコマンドの文字列が一致した `gh` だけになる。
+`allowUnixSockets` に socket を足しても、`op` は app につながらない。接続は XPC なので（上記）、`allowUnixSockets` の対象外になる。sandbox の中から app に届かせる設定が仮にあったとしても、sandbox の中のどのコマンドも app に接続でき、`op read` で gh 以外の item も要求できるようになる。承認ダイアログは、どのコマンドがどの item を求めているかを表示しない。`excludedCommands` なら、外で動くのはコマンドの文字列が一致した `gh` だけになる。
 
 列挙を絞る理由は次のとおり。
 
@@ -44,11 +44,13 @@ mac では、`gh` のサブコマンドのうち token の権限の範囲にあ�
 
 `~/.zshrc` と `excludedCommands` を apply した後の 2026-11-14 に、新しく開いた mac の Claude Code の session（auto mode）で、エージェントの Bash から単独で試した。`type gh` は shell snapshot の関数を指した。`gh auth status` は `(GH_TOKEN)` 付きのログインを表示し、`gh repo view cli/cli --json name` は成功した。sandbox の中では `op` が app につながらない（上記）ので、この `gh` は sandbox の外で動いたと読める。ユーザーの報告では、この確認の間に 1Password の承認が出た。
 
+同じ日に同じ session で、`gh auth status` を別々の Bash の呼び出しで 2 回続けると、2 回目も承認を求め、閉じられて `authorization prompt dismissed` で失敗した。mac でも、承認は次のコマンドに引き継がれない。続けて `gh pr create --head probe-nonexistent-branch-20261114 --title probe --body probe` を実行すると、GraphQL の `createPullRequest` が `Head ref must be a branch` などで拒否し、PR は作られなかった。出力に push の文言は無く、実行の前後で `git status -sb` の `ahead 3` は変わらなかった。ユーザーの報告では、承認のダイアログは 1 回だけ出て、SSH 鍵の承認は出なかった。
+
 外で動く `gh` には、sandbox の読み取り制限が掛からない。`gh issue create --body-file` などは、`~/.ssh` のような deny したファイルも読んで公開の issue に書ける。permissions docs によると、`Read` の deny が Bash に効くのは Claude Code が認識するコマンドだけである。止める層は、auto mode の classifier と 1Password の承認になる。
 
 1Password の承認ダイアログは、どのコマンドが token を使うかを表示しない。承認する前に、Claude Code の画面でエージェントのコマンドを見る。
 
-エージェントの Bash からは、`gh` を呼ぶたびに承認が出る。2026-11-13 に Windows の Claude Code の Bash から `op run --no-masking -- gh` を続けて 2 回実行すると、ユーザーの報告では 2 回とも 1Password の承認が出た。Bash のコマンドは毎回別のプロセスで動くので、承認が次のコマンドに引き継がれないと考えられる。
+エージェントの Bash からは、`gh` を呼ぶたびに承認が出る。2026-11-13 に Windows の Claude Code の Bash から `op run --no-masking -- gh` を続けて 2 回実行すると、ユーザーの報告では 2 回とも 1Password の承認が出た。Bash のコマンドは毎回別のプロセスで動くので、承認が次のコマンドに引き継がれないと考えられる。人が PowerShell で続けて `gh` を打つ時は、ユーザーの報告では、承認が一定時間使い回された（2026-11-14）。使い回される時間は確かめていない。app integration の docs にも時間の記述が無い。
 
 ## token の権限
 
@@ -69,10 +71,3 @@ repo はすべて public なので、エージェントが issue や PR に書�
 `gh pr merge` などを `permissions.deny` で止めることはしない。permissions docs は、引数で絞る Bash の rule を崩れやすいとしている。たとえば `Bash(gh pr merge *)` は、同じ merge を `gh api` で呼ぶと外れる。止めるのは token の権限に任せる。
 
 署名鍵を登録する権限も付けない。エージェント用の署名鍵は、README の手順どおりブラウザから登録する。
-
-## 未確認
-
-- 人が PowerShell で続けて `gh` を打つ時に、承認が一定時間使い回されるか。app integration の docs に時間の記述が無い。
-- mac の `op` が app integration に使う socket の名前。sandbox で許す socket を足すなら、先に確かめる。
-- mac のエージェントの Bash で、1Password の承認が `gh` を呼ぶたびに出るか。2026-11-14 の確認では承認が出たが、何回出たかは記録していない。
-- `gh pr create --head` が、sandbox の外でも push を試みないか。
