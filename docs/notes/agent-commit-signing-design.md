@@ -114,7 +114,7 @@ hook は Windows でも同じスクリプトを使う。hooks docs によると�
 - `SSH_AUTH_SOCK` は `~/.local/state/agent-signing/agent.sock` を指す。`GIT_CONFIG_COUNT` は `2` で、0 番が `gpg.ssh.program=ssh-keygen`、1 番が `user.signingkey=key::ssh-ed25519 ...` になる。mac と違い、Claude Code は `safe.directory` の 2 件を入れていない。
 - `ssh-add -l` は comment が `agent-signing` の ED25519 鍵 1 本だけを返す。
 - 使い捨ての repo で `commit.gpgsign=true` の commit は 1Password の承認を待たずに終わり、`%G?` は `G` になる。`%GK` の fingerprint は `~/.ssh/agent_signing_ed25519.pub` と一致する。
-- この鍵で署名して push した commit は、GitHub の commits API で `verification.verified` が `true`、`reason` が `valid` になった（`1246874` など、2026-11-07 確認）。1Password で署名した commit とは、`%GK` の fingerprint で見分けられる。
+- この鍵で署名して push した commit は、GitHub の commits API で `verification.verified` が `true`、`reason` が `valid` になった（2026-11-07 確認。確かめた commit は、2026-11-14 の履歴の書き換えで hash が変わった）。1Password で署名した commit とは、`%GK` の fingerprint で見分けられる。
 
 ## 未確認
 

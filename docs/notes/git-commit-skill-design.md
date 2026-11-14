@@ -156,7 +156,7 @@ description は作業を Git の履歴に残す流れなら skill を通すと�
 
 ## lapidary を手順で呼ぶ理由
 
-手順 4 で、commit する変更の全体を `lapidary` で見直す。`lapidary` は description で commit の前に発火する設計だが、それだけでは発火しない場面が多かった。`lapidary` の description を当時の形にした `5b9b39d`（2026-11-07）の後の 4 session（2026-11-07〜08）で、commit を頼む発言を数えた。
+手順 4 で、commit する変更の全体を `lapidary` で見直す。`lapidary` は description で commit の前に発火する設計だが、それだけでは発火しない場面が多かった。`lapidary` の description を当時の形にした `8cec49f`（2026-11-07）の後の 4 session（2026-11-07〜08）で、commit を頼む発言を数えた。
 
 - 「見直して commit」のように見直しの語を含む発言は 2 回で、2 回とも `lapidary` が発火した。
 - 見直しの語を含まない発言は 6 回。直前に `lapidary` が発火したのは 1 回だった。1 回は、直前の発言で `lapidary` を通した後だった。残る 4 回は、commit する変更に `lapidary` を通さないまま commit した。
