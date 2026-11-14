@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-11-13
+- Date: 2026-11-14
 
 着手を保留した項目を、記載日と見つけた時の作業が分かるように並べる。
 
@@ -20,7 +20,7 @@
 
 `docs/notes/gh-authentication-design.md` の「未確認」を、apply の後に確かめる。結果は同じ notes に書く。
 
-- [ ] **mac のエージェントに gh を使わせるか**。sandbox の中では `op` が 1Password の app につながらない（2026-11-13 確認）。使わせるなら、`op` が使う socket を確かめてから、sandbox の `allowUnixSockets` に足すかを判断する。
+- [ ] **mac のエージェントの gh の残りの確認**。2026-11-14 に、エージェントの Bash で `gh auth status` が `(GH_TOKEN)` 付きのログインを表示し、1Password の承認も出た。残りは 2 つ。承認がエージェントの `gh` のたびに出るか。`gh pr create --head` が sandbox の外でも push を試みないか。
 
 ## skill と契約の見直しで保留したもの
 

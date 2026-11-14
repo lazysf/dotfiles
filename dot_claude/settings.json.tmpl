@@ -76,6 +76,31 @@
   "sandbox": {
     "enabled": true,
     "allowUnsandboxedCommands": false,
+    "excludedCommands": [
+      "gh auth status",
+      "gh repo view *",
+      "gh issue list *",
+      "gh issue view *",
+      "gh issue create *",
+      "gh issue comment *",
+      "gh issue edit *",
+      "gh issue close *",
+      "gh issue reopen *",
+      "gh pr list *",
+      "gh pr view *",
+      "gh pr diff *",
+      "gh pr checks *",
+      "gh pr status *",
+      "gh pr create --head *",
+      "gh pr comment *",
+      "gh pr edit *",
+      "gh pr close *",
+      "gh pr reopen *",
+      "gh pr ready *",
+      "gh pr review *",
+      "gh run list *",
+      "gh run view *"
+    ],
     "filesystem": {
       "allowWrite": [
         "~/.cache/prek/"

@@ -151,7 +151,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 - sandbox の write allowlist に `/dev/disk*` が無い
 - auto mode の classifier。raw device への write を試した probe が block された（2026-09-02 観測）
 
-**sandbox の層は `excludedCommands` に載せた command には掛からない。** `allowUnsandboxedCommands: false` でも公式は「all commands must run sandboxed or be explicitly listed in `excludedCommands`」と書く。この配列は session が読む全 scope から merge される。managed settings で締める手段も無い。公式は「`excludedCommands` has no equivalent managed-only lockdown」と書く。現在は未設定なので穴は開いていないが、project scope が 1 行足せば開く。
+**sandbox の層は `excludedCommands` に載せた command には掛からない。** `allowUnsandboxedCommands: false` でも公式は「all commands must run sandboxed or be explicitly listed in `excludedCommands`」と書く。この配列は session が読む全 scope から merge される。managed settings で締める手段も無い。公式は「`excludedCommands` has no equivalent managed-only lockdown」と書く。user scope では、mac のエージェントの `gh` のために、`gh` のサブコマンドの一部を載せている（`gh-authentication-design.md` の「エージェントにも gh を使わせる」）。それ以外の command は、project scope が 1 行足せば外に出る。
 
 **protected paths は名前で決まる。** sandbox は書き込みを許した範囲の中でも、Claude Code が設定と code を load する path への書き込みを止める。対象は `.claude` の設定ファイル、`.claude/skills`、`.claude/agents`、`.claude/commands`、`.claude/hooks`、`~/.claude` の大半といった**名前**で、`allowWrite` でも `Edit` allow rule でも解除できない。この repo の `dot_claude/` は同じ内容の配布元だが、名前が違うのでこの保護に入らない。sandbox 内の command は `dot_claude/settings.json.tmpl` を書き換えられる（2026-09-02 に実際にこの経路で編集した）。cwd が home の session（auto mode）でも、sandbox 内の python から `~/.claude/settings.json` を追記モードで開くと `PermissionError: [Errno 1]` で失敗した。同じ session で、home の直下へのファイルの作成は通った（2026-11-07 実測）。
 

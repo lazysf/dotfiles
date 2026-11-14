@@ -107,7 +107,7 @@ chezmoi apply
 
   GitHub の Settings > Developer settings > Fine-grained tokens で token を作ります。Repository access は All repositories にします。Repository permissions は Issues と Pull requests を Read and write にし、ほかは付けません。public repo は権限が無くても読めます。1Password の Personal vault に API Credential の item `GitHub CLI` を作り、credential 欄に token を入れて、欄の名前を `token` に変えます。mac の Shell Plugin がこの名前を求め、Windows の `op run` も同じ名前で参照します。
 
-  Windows では、PowerShell の profile と Git Bash の `~/.bashrc` が `gh` を `op run` で包むので、追加の設定はありません。mac では `op plugin init gh` を実行し、item に `GitHub CLI`、範囲に Use as global default on my system を選びます。`~/.config/zsh/.zshrc` は `~/.config/op/plugins.sh` を読みます。`op plugin init` が別の path を表示した場合は、`.zshrc` の path を合わせます。
+  Windows では、PowerShell の profile と Git Bash の `~/.bashrc` が `gh` を `op run` で包むので、追加の設定はありません。mac では `op plugin init gh` を実行し、item に `GitHub CLI`、範囲に Use as global default on my system を選びます。`~/.config/zsh/.zshrc` と、Claude Code の Bash 向けの `~/.zshrc` は、`~/.config/op/plugins.sh` を読みます。`op plugin init` が別の path を表示した場合は、両方の `.zshrc` の path を合わせます。
 
   新しい terminal で `gh auth status` が `(GH_TOKEN)` 付きのログインを表示することを確認します。以前の `gh auth login` のログインが残っていたら消します。保存済みのログインを消す時は、`GH_TOKEN` を渡さないように、包んでいない `gh` を呼びます。Windows の PowerShell では `gh.exe auth logout --hostname github.com`、mac では `command gh auth logout --hostname github.com` を実行します。
 - macOS の Parsec のクライアント設定（`personal`）: Parsec が設定と同じファイルに状態値を書き込むため、`~/.parsec/config.json` は配布しません。Parsec の Settings で Window Mode を Windowed、Immersive Mode を Keyboard、Swap Command and Ctrl for MacOS を Off にします。

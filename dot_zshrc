@@ -1,0 +1,17 @@
+# For Claude Code's Bash tool on macOS only. Interactive zsh does not read
+# this file: ~/.zshenv sets ZDOTDIR, so zsh reads ~/.config/zsh/.zshrc.
+# Claude Code sources ~/.zshrc (not $ZDOTDIR/.zshrc) at session start and
+# applies the captured functions to every Bash command.
+#
+# Keep only what the agent needs. Aliases, shell options and hooks from the
+# interactive config (eza for ls, CORRECT, zoxide) would change the agent's
+# command output and behavior.
+
+# -----------------------------------------
+# GitHub CLI (token from 1Password)
+# -----------------------------------------
+# Same Shell Plugin as ~/.config/zsh/.zshrc. `op plugin init gh` generates
+# plugins.sh, which wraps gh with `op plugin run`.
+if [[ -f "${HOME}/.config/op/plugins.sh" ]]; then
+	. "${HOME}/.config/op/plugins.sh"
+fi
