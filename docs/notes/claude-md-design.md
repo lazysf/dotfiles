@@ -1,6 +1,6 @@
 # CLAUDE.md の設計
 
-- Date: 2026-11-13
+- Date: 2026-11-14
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) / [Hooks reference](https://code.claude.com/docs/en/hooks) / [Checkpointing](https://code.claude.com/docs/en/checkpointing) / [Configure permissions](https://code.claude.com/docs/en/permissions) の「What `Read` and `Edit` rules cover」（2026-11-09 確認） / [Claude Code settings](https://code.claude.com/docs/en/settings) / `dot_claude/CLAUDE.md` / この環境での実測 / Codex での作業記録の要約（ユーザー提供）
 
 `dot_claude/CLAUDE.md` が今の形になっている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -20,7 +20,7 @@ CLAUDE.md は全セッションの先頭で読まれる。残すのは、Claude 
 
 外す側の「設定や防御を外す前に、それに依存しているものが無いことを確かめる」は残している。`sandbox.network.allowUnixSockets` を「push に使えないので用途が無い」と判断して落とし、commit の署名を壊したことがある（[claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」）。同じ socket を署名も使うことは、Claude の既定の確認では見えなかった。
 
-公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 46 行（2026-11-09、`wc -l`）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
+公式目安は 1 ファイル 200 行。常時 load されるのはこの 1 枚だけで 47 行（2026-11-14、`wc -l`）。目安に収まっている。`rules/` を持たず 1 枚へ集約している理由は [memory-surface-design.md](./memory-surface-design.md)。
 
 ## Git の節を持つ理由
 
@@ -39,6 +39,8 @@ push を agent が実行した時の結果は、OS で違う。mac の sandbox �
 「公開インターフェースに影響する」と書くと、文字通り読めば新規関数 1 本でも確認が要る。「変える、または消す」に絞った。そのうえで「後から変えると外部を壊すもの（公開 API、永続化 schema、CLI 引数、設定キー）は、新しく定義する時も含む」を添え、判定を 1 問へ集約してある。
 
 「大きな設計変更」も主観語なので使わない。module 境界の移動、data flow の作り直し、framework や library の入れ替えという例示で閾値を示す。
+
+model を多数回呼ぶ操作を確認の対象にしているのは、Claude が既定では使用量を見積もらずに始めたため。2026-11-13〜14 に skill の発火試験で `claude -p` を Opus で約 620 回呼び、約 10 分で 5 時間の使用量の上限の約 90% を使った（使用量はユーザーの報告、経緯は [skill-trigger-eval.md](./skill-trigger-eval.md) の「使用量」）。回す前に回数も model も示さなかった。「多数回」は主観語だが、例示（`claude -p` の繰り返し、多数の subagent の起動、並列の評価）で閾値を示している。見積もりに effort を含めるのは、指定しないと何で動いたかが後から分からないため。Codex の契約にも、同じ意図の行を CLI の名前を除いて置いている。
 
 ## 手段の選び方を原則に置く理由
 

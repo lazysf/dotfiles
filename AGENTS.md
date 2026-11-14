@@ -14,7 +14,7 @@
 
 `dot_claude/**`、`dot_codex/**`、root の `AGENTS.md` / `CLAUDE.md` は、拡張子が `.md` でも agent の挙動を変える設定として扱い、この節の確認を通す。
 
-- skill を作る時と、skill の設計（description、trigger、構成、references、scripts、評価）を変える時は、判断の前に `skill-creator` スキルを使い、Agent Skills の公式情報を確かめる。発火、配置、権限、frontmatter は runtime の公式情報も確かめる。
+- skill を作る時と、skill の設計（description、trigger、構成、references、scripts、評価）を変える時は、判断の前に `skill-creator` スキルを使い、Agent Skills の公式情報を確かめる。発火、配置、権限、frontmatter は runtime の公式情報も確かめる。発火の試験を回す前は、`docs/notes/skill-trigger-eval.md` を読む。
   - [Specification](https://agentskills.io/specification)、[Best practices](https://agentskills.io/skill-creation/best-practices)、[Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)、[Evaluating skills](https://agentskills.io/skill-creation/evaluating-skills)、[Using scripts](https://agentskills.io/skill-creation/using-scripts)、[Documentation Index](https://agentskills.io/llms.txt)
 - Claude Code の設定は、判断の対象ごとに次の公式ページを確かめる。一覧に無い対象は [Docs index](https://code.claude.com/docs/llms.txt) から探す。
   - 運用方針、作業設計: [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)
