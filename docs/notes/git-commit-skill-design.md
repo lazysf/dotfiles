@@ -62,13 +62,17 @@ skill は分ける条件と並べて、分けない条件を持つ。2026-11-07 
 
 repo の `AGENTS.md` や `CLAUDE.md` が分け方を決めていればそれに従う。skill は user-global で、分け方の運用は repo ごとに違う。
 
-## surface の変更と doc を同じ commit にしない理由
+## 単位を論理的な変更に置く理由
 
-この repo では、`dot_claude/` などの surface の変更と、その理由を書いた `docs/notes/` を別 commit にする。この規定は root `AGENTS.md` の「変更後の確認」が持ち、skill は repo の規定に従うとだけ書く。
+type を 1 つに保つために、変更とその理由を書いた doc を別 commit にする案は採らない。1 commit にすると `feat` と `docs` のどちらを名乗っても片方が嘘になる、というのがその案の理由で、この repo では 2026-11-14 まで root `AGENTS.md` の規定として運用していた。
 
-同じ commit に入れる案も成立する。理由の記録は変更に従属するので、`git revert` した時に理由だけ残ると存在しない状態を説明する doc になる。それでも分けているのは、type を正確に保つ方を取ったため。1 commit にすると `feat` と `docs` のどちらを名乗っても片方が嘘になり、`git log --oneline` を type で追えなくなる。revert の齟齬は、戻す時に doc も直せば閉じる。
+- 主要な project の規定は、単位を論理的な変更に置く。Linux kernel は論理的な変更ごとに patch を分け、各 patch が単独で正当化でき、build と動作が保たれることを求める。Git は、test と doc を、それが扱う変更と一緒に入れる。Google の Small CLs は、関連する test を同じ CL に入れ、refactor は別の CL にする。
+- type は主な目的のラベルで、添えた doc や test で嘘にはならない。Conventional Commits の FAQ は、複数の type に当たる commit をできるだけ分けるよう勧めるが、これは目的が複数ある場合の話で、変更に従属する doc を外へ出す根拠にはならない。
+- 従属する doc を分けると、間の commit で記述と実態がずれ、`revert` や `cherry-pick` で片方だけが残る。surface の行を `git blame` で辿っても、理由の無い commit に行き着く。
 
-`docs/notes/` 側が実測の記録である場合は、そもそも変更に従属しない。単独で真なので分けるかどうかを判断するまでもない。
+実測の記録のように変更と関係なく成り立つ doc は、従属しないので別 commit にする。
+
+出典: [Submitting patches](https://www.kernel.org/doc/html/latest/process/submitting-patches.html)、[SubmittingPatches](https://git-scm.com/docs/SubmittingPatches)、[Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)、[Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html)（2026-11-14 確認）。
 
 ## 秘密情報の確認方法
 
@@ -162,7 +166,7 @@ description は作業を Git の履歴に残す流れなら skill を通すと�
 
 範囲が複数でも、範囲ごとには分けずに 1 回で通す。理由は 3 つある。
 
-- 見直しは変更セット全体を見る行為で、commit の分け方とは層が違う（[lapidary-skill-design.md](./lapidary-skill-design.md) の「commit の前に通す理由」）。surface と notes を別の範囲として別々に見ると、追従漏れを見つける場が消える。
+- 見直しは変更セット全体を見る行為で、commit の分け方とは層が違う（[lapidary-skill-design.md](./lapidary-skill-design.md) の「commit の前に通す理由」）。範囲ごとに別々に見ると、ある範囲の変更が別の範囲の記述を古くした箇所を見つける場が消える。
 - 範囲ごとに回すと書いていた間に観測した 2 回は、どちらも 1 回だけ通していた。2026-11-09 の session は 5 つの範囲を、2026-11-10 の session は 2 つの範囲を、まとめて 1 回通した。
 - 呼び直しても読み込まれるものが無い。公式の Extend Claude with skills によると、同じ内容の skill を呼び直した時は、本文ではなく読み込み済みを示す短い注記が足される。
 
