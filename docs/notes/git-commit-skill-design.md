@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-11-11
+- Date: 2026-11-15
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Extend Claude with skills](https://code.claude.com/docs/en/skills)（2026-11-08 と 2026-11-10 確認。`${CLAUDE_SKILL_DIR}` を含む） / [Using scripts](https://agentskills.io/skill-creation/using-scripts)（2026-11-10 確認） / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測 / Claude Code の session の記録 / 使い捨て repo での skill の版の比較
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -92,6 +92,7 @@ Windows でも同じ手順で動く。OS で分岐する設定は持たない。
 
 - Windows の Claude Code は、shell の tool が Bash（Git Bash）だけになっている（[claude-code-settings-design.md](./claude-code-settings-design.md) の「Windows の PowerShell tool は無効のまま使う」）。Claude 側の skill は PowerShell 版を使わない。Git Bash から sh 版が動くため（次の項目）。PowerShell 版は Codex のために置いている。
 - Windows の desktop app では、本文の `${CLAUDE_SKILL_DIR}` は `C:/Users/<user>/.claude/skills/git-commit` のような、ドライブ文字付きの `/` 区切りの path に置き換わった。本文の冒頭に付く base directory の行だけは `\` 区切りだった（2026-11-11、apply 後の新しい session で実測）。その session で、置き換わった path を `sh` で呼ぶと、exit は stage なしで 0、home を含むファイルで 1、存在しない script で 127 だった。`\` 区切りの絶対パスでも `sh` が script を実行できることは、別に確かめた（2026-11-11）。
+- mac の desktop app では、本文の `${CLAUDE_SKILL_DIR}` は `/Users/<user>/.claude/skills/git-commit` の絶対パスに置き換わり、base directory の行と同じ形だった。skill の引数に書いた `${CLAUDE_SKILL_DIR}` も同じ path に置き換わった（2026-11-15、apply 後の session で実測）。置き換わった path を sandbox の中の `sh` で呼ぶと、使い捨ての repo で、exit は stage なしで 0、home を含むファイルで 1（種類は `home` と `user`）、存在しない script で 127 だった。
 - script が見つからない時は、`sh` 自身のエラーが home の絶対パスを含む。報告に写す時はプレースホルダへ置き換える。
 - Git Bash の `$HOME` は `/c/Users/<user>` の形なので、home の検査は `C:\Users\<user>` と `C:/Users/<user>` の形には当たらない。どちらの形も、ユーザー名の検査が止めた（2026-11-11、使い捨ての repo で実測。exit 1、種類は `user`）。Git Bash では `USER` が空で、script は `USERNAME` を読む。
 
@@ -193,7 +194,6 @@ Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公�
 - 手順 4 が毎回効くかは未測定。2026-11-09 と 2026-11-10 の session では、commit の依頼で手順 4 から `lapidary` が起動した。この skill が load 済みのまま次の commit を頼まれた時に、手順 4 が読み直されるかは確かめていない。
 - 「出力」に足した `lapidary` の項目で、提案が報告に出るようになるか。落ちた観測は 2026-11-10 の 1 回だけ。
 - Codex で、同じ内容の skill を呼び直した時に本文が読み直されるか。Codex の skill にも同じ手順を入れているが、呼び直しの挙動と 2 回の観測は Claude Code のもの。
-- mac で、`${CLAUDE_SKILL_DIR}` が置き換わった形。
 - 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
 
 ## Codex の OS ごとの識別子検査
