@@ -1,7 +1,7 @@
 # lint / pre-commit の実行経路
 
 - Date: 2026-11-11
-- 出典: `prek.toml` / `scripts/check-identifiers.sh` / `scripts/check-commit-msg.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Configuration Reference](https://prek.j178.dev/reference/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.rumdl.toml` / `package.json` / `.git/hooks/pre-commit` / `prek --version` / 使い捨て repo での `git commit` 実測 / [rumdl](https://github.com/rvben/rumdl) / [rumdl Global Settings](https://rumdl.dev/global-settings/) / [rumdl Stability and Compatibility](https://rumdl.dev/stability/) / [rvben/rumdl-pre-commit](https://github.com/rvben/rumdl-pre-commit)（2026-11-09 確認） / rumdl 0.3.2 での repo 全体の実測と、`rumdl config --defaults`（2026-11-09） / markdownlint 0.40.0 の API による rule 単体実測 / commit `287cc7b` `be928f2`
+- 出典: `prek.toml` / `scripts/check-identifiers.sh` / `scripts/check-commit-msg.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Configuration Reference](https://prek.j178.dev/reference/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.rumdl.toml` / `package.json` / `.git/hooks/pre-commit` / `prek --version` / 使い捨て repo での `git commit` 実測 / [rumdl](https://github.com/rvben/rumdl) / [rumdl Global Settings](https://rumdl.dev/global-settings/) / [rumdl Stability and Compatibility](https://rumdl.dev/stability/) / [rvben/rumdl-pre-commit](https://github.com/rvben/rumdl-pre-commit)（2026-11-09 確認） / rumdl 0.3.2 での repo 全体の実測と、`rumdl config --defaults`（2026-11-09） / markdownlint 0.40.0 の API による rule 単体実測 / commit `bee3e4a` `e4a4b49`
 
 Markdown（rumdl）と TOML（tombi）の lint は、それぞれ「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
 
@@ -55,12 +55,12 @@ hook が file を書き換えると、prek はその commit を失敗させ、�
 
 rumdl の既定の rule に、次の 2 つの調整を加えている。
 
-- `MD013`（line-length、既定 80）を無効にしている。この repo の Markdown は日本語の段落を 1 行で書き、hard wrap しない。rule 自体が書き方と噛み合わない。markdownlint の時代の 2026-08-31 の tree で有効に戻すと 460 件出た。無効にした `287cc7b`（2026-04-21）には理由の記載が無い。
+- `MD013`（line-length、既定 80）を無効にしている。この repo の Markdown は日本語の段落を 1 行で書き、hard wrap しない。rule 自体が書き方と噛み合わない。markdownlint の時代の 2026-08-31 の tree で有効に戻すと 460 件出た。無効にした `bee3e4a`（2026-04-21）には理由の記載が無い。
 - `MD089`（cjk-spacing）を足している。日本語と英数字の間に半角の空白を入れる書き方を、自動修正で揃える。rumdl の独自の rule で、既定では無効になっている。2026-11-09 の tree で有効にすると 4 件出た。うち 3 件はリンクの直後に日本語が続く箇所で、リンクの後に空白を入れる形に揃えた。
 
 ADR も含めて、全 file に同じ rule を当てている。ADR で守るのは何を決めたかで、書式ではない。rumdl を入れた時（2026-11-09）は、ユーザーの判断で ADR の本文の書式も rule に合わせて直した。
 
-`MD024`（no-duplicate-heading）は有効にしている。rumdl の既定は `siblings-only = true` で、同じ親の下の同名の見出しだけを止める（`rumdl config --defaults`、0.3.2）。2026-11-09 の tree では 0 件だった。tracked の Markdown には repo 内の別 file の見出しを指す anchor link があり、同名の見出しは anchor を取り違える原因になる。markdownlint の時代は無効にしていた。導入時（`be928f2`）の tree で有効にすると、削除済みの `docs/requests/**/test.md` の繰り返し見出しで 164 件出たため。
+`MD024`（no-duplicate-heading）は有効にしている。rumdl の既定は `siblings-only = true` で、同じ親の下の同名の見出しだけを止める（`rumdl config --defaults`、0.3.2）。2026-11-09 の tree では 0 件だった。tracked の Markdown には repo 内の別 file の見出しを指す anchor link があり、同名の見出しは anchor を取り違える原因になる。markdownlint の時代は無効にしていた。導入時（`e4a4b49`）の tree で有効にすると、削除済みの `docs/requests/**/test.md` の繰り返し見出しで 164 件出たため。
 
 ## 作業機の識別子を検査する local hook
 

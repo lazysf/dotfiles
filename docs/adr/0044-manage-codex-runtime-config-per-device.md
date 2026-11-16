@@ -14,7 +14,7 @@ ADR 0043 は、認証情報の deny を持つ permissions profile を管理す�
 
 ## 検討した代替案
 
-- **配布を続け、Windows 向けに deny の glob を直す**: Windows で home 起点の glob を使う修正（`a91f288`）と、macOS 以外で glob の走査深さに上限を置く修正（`4dd452b`）は入れた。起動しなかった時の config にこれらが入っていたかは記録が無く、失敗の原因も記録に無い。runtime 設定は作業機ごとに管理するものと判断し、却下した。
+- **配布を続け、Windows 向けに deny の glob を直す**: Windows で home 起点の glob を使う修正（`e79a570`）と、macOS 以外で glob の走査深さに上限を置く修正（`2f285f4`）は入れた。起動しなかった時の config にこれらが入っていたかは記録が無く、失敗の原因も記録に無い。runtime 設定は作業機ごとに管理するものと判断し、却下した。
 
 ## 影響
 

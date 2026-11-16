@@ -1,7 +1,7 @@
 # Node.js version manager に nvm を使う理由
 
 - Date: 2026-10-31
-- 出典: [volta-cli/volta #2080](https://github.com/volta-cli/volta/issues/2080) / 候補を入れ替えた commit `02ae800`（nvm→volta）・`c4c4865`（fnm→nvm） / mise、fnm、nvm を使った時のユーザーの報告
+- 出典: [volta-cli/volta #2080](https://github.com/volta-cli/volta/issues/2080) / 候補を入れ替えた commit `82159fe`（nvm→volta）・`1f58fcb`（fnm→nvm） / mise、fnm、nvm を使った時のユーザーの報告
 
 macOS と Windows で共通して使う Node.js version manager に nvm を使う理由と、ほかの候補を使わない理由を残す。再検討の時に、同じ調査と試行を繰り返さないため。ADR の 3 条件のうち「覆すコストが高い」を満たさないので、ADR ではなく notes に置く。
 

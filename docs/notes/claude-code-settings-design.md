@@ -224,7 +224,7 @@ output style は main の会話にだけ効き、subagent には効かない（�
 
 `sandbox.network.allowedDomains` は HTTP(S) proxy 用の許可で、**SSH を運ばない**。`git@github.com` への push は sandbox 内で `nc: authentication method negotiation failed` で失敗する。
 
-`excludedCommands: ["git"]` を入れても解決しなかった（2026-08-05 実測、`53be6a5` → `9afdbb7` で revert）。`allowUnsandboxedCommands` を `true` へ戻す案は、失敗した全 command に sandbox 外再試行を開くので採らない。
+`excludedCommands: ["git"]` を入れても解決しなかった（2026-08-05 実測、`4a1ffc6` → `90369cf` で revert）。`allowUnsandboxedCommands` を `true` へ戻す案は、失敗した全 command に sandbox 外再試行を開くので採らない。
 
 push は人が手元の terminal で打つ運用を正とし、agent は commit までを担う。
 
@@ -314,7 +314,7 @@ system prompt が変わった場合に気づく手段は無い。ただし契約
 
 `attribution` を `false` にする。公式はこの値を、attribution を全て隠す値と定義する。
 
-**trailer が付くかは実行する harness で違う。** CLI の `-p` session では `attribution` 未設定でも付かない。desktop app の session では、system prompt に model 名を含む標準の attribution 文言を付ける指示が入る。`37ed169` から `f66fa17` まで（両端を含む 18 commit、2026-08-31 時点）の 15 件はこれによる。指示なので遵守は保証されない。残る 3 件には付いていない。うち 2 件は履歴書き換えを通っているので、指示に従わなかったと確実に言えるのは `f66fa17` の 1 件。**非決定的に付くより、付けないことを設定で決める。**
+**trailer が付くかは実行する harness で違う。** CLI の `-p` session では `attribution` 未設定でも付かない。desktop app の session では、system prompt に model 名を含む標準の attribution 文言を付ける指示が入る。`76cefca` から `0c0cc9f` まで（両端を含む 18 commit、2026-08-31 時点）の 15 件はこれによる。指示なので遵守は保証されない。残る 3 件には付いていない。うち 2 件は履歴書き換えを通っているので、指示に従わなかったと確実に言えるのは `0c0cc9f` の 1 件。**非決定的に付くより、付けないことを設定で決める。**
 
 `attribution.commit` に文字列を設定すると CLI の commit message にその文言が現れるので、キーは挙動へ届く。空文字は付けない側の明示で、CLI では未設定と同じ結果になる。desktop app では apply 後に開いた session で空 commit を作らせ、trailer が付かないことを確認した（2026-08-31）。設定前に開いた session の system prompt には指示が入っていたので、前後で挙動は変わっている。ただし同じ session 内の A/B ではなく、apply を挟んだ比較になる。
 
