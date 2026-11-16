@@ -1,8 +1,23 @@
 # 残タスク
 
-- Date: 2026-11-14
+- Date: 2026-11-16
 
 着手を保留した項目を、記載日と見つけた時の作業が分かるように並べる。
+
+## OS と harness ごとの apply 後の確認
+
+- 記載: 2026-11-15（2026-11-09〜11-14 の commit と notes の「未確認」の振り返り）
+
+結果は、括弧の notes に書く。
+
+### Windows / Claude Code
+
+- [ ] **`settings.json.tmpl` の展開**（`483c61f`、`04bcd31`）。apply 後に `~/.claude/settings.json` が JSON として正しく、xlwright の plugin が有効になっているか。mac 向けに足した `sandbox.excludedCommands` が、sandbox の無い Windows で警告や不具合を出さないか（`claude-code-settings-design.md`）。
+- [ ] **識別子の検査の sh suite**。Windows で sh の全 10 ケースが通るか。`"` を含む名前の fixture で pathspec 不一致になって止まっている（`git-commit-skill-design.md`）。
+
+### 両 OS
+
+- [ ] **git-commit の commit の単位**（`0ad11aa`）。doc や試験を、それが説明する変更と同じ commit に入れるか。Claude Code で、次に commit を頼んだ時に分け方を見る。mac の Claude Code では、2026-11-15 に apply した後の session で 1 回、記録 2 つと TODO を別の commit に分けた（`git-commit-skill-design.md`）。
 
 ## Windows の初回セットアップ
 
