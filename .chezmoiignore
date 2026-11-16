@@ -36,7 +36,6 @@ uv.lock
 
 # Windows only
 {{- if ne .chezmoi.os "windows" }}
-.bashrc
 AppData
 Documents
 {{- end }}
@@ -44,7 +43,6 @@ Documents
 # macOS only
 {{- if ne .chezmoi.os "darwin" }}
 .zshenv
-.zshrc
 .config/zsh
 .ssh/config
 .config/terminal

@@ -12,7 +12,7 @@
 
 ### Windows / Claude Code
 
-- [ ] **`settings.json.tmpl` の展開**（`483c61f`、`04bcd31`）。apply 後に `~/.claude/settings.json` が JSON として正しく、xlwright の plugin が有効になっているか。mac 向けに足した `sandbox.excludedCommands` が、sandbox の無い Windows で警告や不具合を出さないか（`claude-code-settings-design.md`）。
+- [ ] **`settings.json.tmpl` の展開**（`483c61f`）。apply 後に `~/.claude/settings.json` が JSON として正しく、xlwright の plugin が有効になっているか（`claude-code-settings-design.md`）。
 - [ ] **識別子の検査の sh suite**。Windows で sh の全 10 ケースが通るか。`"` を含む名前の fixture で pathspec 不一致になって止まっている（`git-commit-skill-design.md`）。
 
 ### 両 OS

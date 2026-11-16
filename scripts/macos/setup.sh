@@ -118,7 +118,6 @@ install_modern_cli_stack() {
 install_git_stack() {
   echo "==> git workflow"
   formula git
-  formula gh
   formula ghq
   formula lazygit
   formula prek  # pre-commit 互換 hook ランナー (Rust 製)

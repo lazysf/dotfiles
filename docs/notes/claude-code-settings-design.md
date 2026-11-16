@@ -91,8 +91,6 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 **この deny が disk 破壊を止めている層ではない。** どの層が実際に効いているかは「sandbox で効いている層と効いていない層」にある。
 
-`gh auth logout` も built-in に無いが、実害が小さいので置いていない。
-
 **Windows の command も同じ基準で足す。** Windows の Claude Code 2.1.317 の classifier にも、Windows の disk 系 command を名指しするルールは無い。Irreversible Local Destruction が名指しする Windows の command は、`Remove-Item -Recurse -Force` のようなファイル単位のものに限る。
 
 足したのは `diskpart`、`format.com`、`convert.exe`、`wbadmin` の 4 種。Git Bash は `diskpart` と `wbadmin` を拡張子なしでも拡張子付きでも解決するので、両方の形を書く。`format` は拡張子なしでは解決されない。`convert` を拡張子なしで書かないのは、mac の ImageMagick の `convert` も止まるため。`dot_claude/settings.json.tmpl` の deny は全作業機に同じものが配られる。代償として、Windows で拡張子を付けずに `convert` と打つと rule から外れる。
@@ -151,7 +149,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 - sandbox の write allowlist に `/dev/disk*` が無い
 - auto mode の classifier。raw device への write を試した probe が block された（2026-09-02 観測）
 
-**sandbox の層は `excludedCommands` に載せた command には掛からない。** `allowUnsandboxedCommands: false` でも公式は「all commands must run sandboxed or be explicitly listed in `excludedCommands`」と書く。この配列は session が読む全 scope から merge される。managed settings で締める手段も無い。公式は「`excludedCommands` has no equivalent managed-only lockdown」と書く。user scope では、mac のエージェントの `gh` のために、`gh` のサブコマンドの一部を載せている（`gh-authentication-design.md` の「エージェントにも gh を使わせる」）。それ以外の command は、project scope が 1 行足せば外に出る。
+**sandbox の層は `excludedCommands` に載せた command には掛からない。** `allowUnsandboxedCommands: false` でも公式は「all commands must run sandboxed or be explicitly listed in `excludedCommands`」と書く。この配列は session が読む全 scope から merge される。managed settings で締める手段も無い。公式は「`excludedCommands` has no equivalent managed-only lockdown」と書く。user scope には何も載せていない。どの command も、project scope が 1 行足せば外に出る。
 
 **protected paths は名前で決まる。** sandbox は書き込みを許した範囲の中でも、Claude Code が設定と code を load する path への書き込みを止める。対象は `.claude` の設定ファイル、`.claude/skills`、`.claude/agents`、`.claude/commands`、`.claude/hooks`、`~/.claude` の大半といった**名前**で、`allowWrite` でも `Edit` allow rule でも解除できない。この repo の `dot_claude/` は同じ内容の配布元だが、名前が違うのでこの保護に入らない。sandbox 内の command は `dot_claude/settings.json.tmpl` を書き換えられる（2026-09-02 に実際にこの経路で編集した）。cwd が home の session（auto mode）でも、sandbox 内の python から `~/.claude/settings.json` を追記モードで開くと `PermissionError: [Errno 1]` で失敗した。同じ session で、home の直下へのファイルの作成は通った（2026-11-07 実測）。
 
@@ -175,7 +173,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 **deny の実測は auto mode では取れない。** deny 済みの path を開く probe を、classifier が `Auto-Mode Bypass` として実行前に止めた（2026-10-16）。sandbox の deny を確かめる時は Manual mode の session で取る。
 
-副作用として `chezmoi status` が途中で止まる。`~/.config/gh` の lstat が拒否されるため、repo 全体の未 apply 差分を取れない。代わりに `chezmoi managed` の一覧と実体を突き合わせる。
+`Read(~/.config/gh/**)` を deny していた間は、副作用として `chezmoi status` が途中で止まった。`~/.config/gh` の lstat が拒否されるため、repo 全体の未 apply 差分を取れなかった。gh をやめて 2026-11-16 にこの deny を外した。repo 全体の `chezmoi status` が通るかは、apply の後に確かめる。
 
 sandbox 内から子の `claude` session を起こそうとすると `401 OAuth access token has expired` で落ちる（2026-08-31 と 2026-09-01 に再現）。うち 2026-08-31 は、同じ日に terminal から起動した `claude` が動いていたので、token が失効しているわけではないと読める。**どこで止まるかは切り分けていない。** credential は Keychain の `Claude Code-credentials` エントリにある。`~/.claude/.credentials.json` は存在しない。この Keychain は sandbox 内からも見え、`security` でエントリのメタデータまで取れる。設定を変えた A/B は sandbox 外の terminal で取る。
 
@@ -234,7 +232,7 @@ push は人が手元の terminal で打つ運用を正とし、agent は commit 
 
 取り出した credential を GitHub へ送る通信には、上の表の `network.allowedDomains` の行にある proxy の制限が掛かる。同じ日に auto mode の session で、host を申告しない `curl https://api.github.com/zen` は 403 で止まった。host を申告した時に審査を通るかは確かめていない。
 
-gh の token は Keychain にも `~/.config/gh/hosts.yml` にも置かず、1Password に置いて、実行のたびに `GH_TOKEN` で渡す（`gh-authentication-design.md`）。`Read(~/.config/gh/**)` の deny は、`gh auth login` の token が残っている作業機のために置いたままにする。
+gh は 2026-11-16 にやめた（`gh-authentication-design.md` の冒頭）。`Read(~/.config/gh/**)` の deny も外したので、`gh auth login` の token が残っている作業機では、Keychain の `gh:github.com` と `~/.config/gh` を消す。
 
 **Windows では、sandbox も credential もエージェントの Bash の push を止めない。** 個人の Windows の clone は、`origin` が HTTPS の URL で、`core.sshCommand` を持たない。`credential.helper` は Git for Windows の system の gitconfig が `manager`（Git Credential Manager 2.9.1）にしていて、Windows 資格情報に `git:https://github.com` の資格情報が 1 件ある。2026-11-09 の Windows の session（Claude Code 2.1.317、auto mode）で、`GCM_INTERACTIVE=never` と `GIT_TERMINAL_PROMPT=0` を付けた `git push --dry-run origin main` は、承認も確認も無く exit 0 で終わり、送る予定の ref を表示した。remote の `main` は変わらなかった。1Password の承認は出ず、push の経路に 1Password は入っていない。
 

@@ -48,16 +48,11 @@ git 2.55.0 で allowed_signers の 1 行を変え、直近 commit の `%G?` を�
 
 ruleset はこの repo のリモート設定で、home へ配布するものではない。`.` 始まりの path は chezmoi が配布しないので、`.chezmoiignore` に足さずに配布対象から外れる。
 
-GitHub はこのファイルを読まない。ファイルを変えただけでは設定は変わらず、`gh api` で手動で反映する。
+GitHub はこのファイルを読まない。ファイルを変えただけでは設定は変わらず、ブラウザで手動で反映する。gh は使わない（[gh の認証の設計](gh-authentication-design.md) の冒頭）。
 
-```sh
-# 新規作成
-gh api -X POST repos/lazysf/dotfiles/rulesets --input .github/rulesets/main.json
-# 更新（ID は `gh api repos/lazysf/dotfiles/rulesets` で引く）
-gh api -X PUT repos/lazysf/dotfiles/rulesets/<id> --input .github/rulesets/main.json
-# 反映の確認
-gh api repos/lazysf/dotfiles/rules/branches/main
-```
+- 新規作成: repo の Settings の左の Rulesets を開き、New ruleset の Import a ruleset から `.github/rulesets/main.json` を読み込む（[Managing rulesets for a repository](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/managing-rulesets-for-a-repository)、2026-11-16 確認）。
+- 更新: 同じ画面で既存の ruleset を開き、ファイルの内容に合わせて編集する。
+- 反映の確認: `https://api.github.com/repos/lazysf/dotfiles/rules/branches/main` を開き、`required_signatures` が返ることを見る。public repo なので認証は要らない。
 
 ルールは main へ直接 push する運用に合わせ、PR や status check を要求しない。
 

@@ -119,7 +119,6 @@ function Install-ModernCliStack {
 function Install-GitStack {
     Write-Host '==> git workflow'
     Install-WingetPackage Git.Git
-    Install-WingetPackage GitHub.cli
     Install-WingetPackage x-motemen.ghq
     Install-WingetPackage JesseDuffield.lazygit
     Install-WingetPackage j178.Prek      # pre-commit 互換 hook ランナー (Rust 製)
