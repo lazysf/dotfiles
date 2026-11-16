@@ -16,7 +16,9 @@
 4. GitHub の Settings > SSH and GPG keys から、エージェント用の Signing Key を消す。
 5. 新しい Claude Code の session を開き、`env` の `SSH_AUTH_SOCK` が 1Password の socket を指すこと、使い捨ての repo の commit が 1Password の承認を経て `%G? = G` になり、`%GK` が 1Password の鍵になることを確かめる。
 
-mac は 2026-11-16 に 1〜5 を終えた。5 では `%GK` が `allowed_signers` の 1 行目と一致した。Windows は未実施。
+mac は 2026-11-16 に 1〜5 を終えた。5 では `%GK` が `allowed_signers` の 1 行目と一致した。
+
+Windows は 2026-11-16 に 1〜3 と 5 を確かめた。`chezmoi status ~/.claude ~/.config/git` は空で、3 の path はどれも無く、署名 agent のプロセスも無かった。`allowed_signers` は 1 行だけだった。Claude Code の Bash から使い捨ての repo で commit すると、1Password の承認を経て `%G? = G` になり、`%GK` は `allowed_signers` の鍵と一致した。その session では `SSH_AUTH_SOCK` は未設定で、署名は `gpg.ssh.program` に設定した `op-ssh-sign.exe` が行った。Windows の 4 は、同じ日にユーザーが済ませた（ユーザーの報告）。
 
 ## 過去の commit の署名し直し
 
@@ -27,7 +29,7 @@ mac は 2026-11-16 に 1〜5 を終えた。5 では `%GK` が `allowed_signers`
 3. hash が変わるので、docs と TODO にある commit hash を新しい hash に引き直す commit を足す。旧 hash と新 hash の対応は、rebase の前後の `git log --format='%H %s'` から作る。
 4. xlwright も `git log --format='%G? %GK'` で確かめ、専用の鍵の署名が残っていれば同じ手順で直す。
 
-dotfiles は 2026-11-16 に 1〜3 を終えた。710 commit を署名し直し、author と committer の日時と tree が元と一致した。hash を引き直した commit は `264f4b9` と `8de31a9` で、force push の後に GitHub 上でも Verified になった。xlwright は Windows 側で開発しているので、そちらで確かめる。
+dotfiles は 2026-11-16 に 1〜3 を終えた。710 commit を署名し直し、author と committer の日時と tree が元と一致した。hash を引き直した commit は `264f4b9` と `8de31a9` で、force push の後に GitHub 上でも Verified になった。xlwright は 2026-11-16 に Windows で 4 を確かめた。`main` の 20 commit は、すべて 1Password の鍵で `G` だった。`mcp` branch の 148 commit のうち、先頭の 4 commit（`f0fd525` から `8bd4783`）は専用の鍵の署名のままで、`%G? = U` だった。この 4 commit を、ユーザーが同じ日に `mcp` の worktree で署名し直し、force push した。`--exec` の amend は committer の日時を実行時刻に変えるので、`GIT_COMMITTER_DATE=$(git log -1 --format=%aI)` を付けて元の日時に戻した（元の 4 commit は author と committer の日時が同じだった）。署名し直した後の `mcp` と `origin/mcp` は 148 commit すべてが 1Password の鍵で `G` になった。4 commit の author と committer の日時は元と一致し、先頭の tree も元と一致した。最初に `GIT_COMMITTER_DATE="$(...)"` と `"` で囲んで渡した時は、`git rebase` が `unknown switch` で止まった。ユーザーの terminal（PowerShell と見ている）が、single quote の中の `"` を崩して引数を分けたと考えている。代入の右辺の `$(...)` は sh が空白で分けないので、`"` を外して通した。
 
 以下は、この構成を使っていた時の理由と実測の記録。
 

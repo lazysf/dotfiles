@@ -1,6 +1,6 @@
 # git-commit skill の設計
 
-- Date: 2026-11-15
+- Date: 2026-11-16
 - 出典: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) の `skills/caveman-commit/SKILL.md` / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Extend Claude with skills](https://code.claude.com/docs/en/skills)（2026-11-08 と 2026-11-10 確認。`${CLAUDE_SKILL_DIR}` を含む） / [Using scripts](https://agentskills.io/skill-creation/using-scripts)（2026-11-10 確認） / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / この repo の commit 履歴の実測 / 使い捨て repo での prek の実測 / Claude Code の session の記録 / 使い捨て repo での skill の版の比較
 
 `git-commit` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と実測に絞る。
@@ -238,6 +238,8 @@ Job の根拠: [Windows Job Objects](https://learn.microsoft.com/en-us/windows/w
 
 2026-11-11 に Windows、PowerShell 7.6.9、Git 2.56.0.windows.4 で、通常のテキスト 30 ファイルを stage した同じ使い捨て repo の検査を測定した。各実装でウォームアップ 1 回の後、別プロセスで 3 回実行した。ファイルごとの diff 取得では 16.203・16.099・16.378 秒（中央値 16.203 秒）、全体 diff 取得では 1.810・1.833・1.831 秒（中央値 1.831 秒）だった。全実行が exit 0。中央値で約 8.8 倍の速度になった。
 
-同日の Windows での sh suite は、sandbox 内では sh の起動が `0xC0000142` で失敗した。正式な承認経路で実行した場合は、`"` を含む名前の fixture を stage する時に pathspec 不一致で終了した。Windows 上での既存 sh 全 10 ケースの成功は未確認。WSL は未導入で、sh の検査コードと suite は変更していない。
+2026-11-11 の Windows での sh suite は、sandbox 内では sh の起動が `0xC0000142` で失敗した。
+
+Windows では、sh suite の 10 ケースのうち、`"` を含む名前の fixture の 1 ケースを実行できない。NTFS はファイル名に `"` を持てない。Git Bash は `"` を U+F022 に置き換えた名前でファイルを作るので、`git add` が pathspec 不一致で終わる。作業ファイルを作らずに `git update-index --add --cacheinfo` で index へ直接入れる方法も、Git for Windows の既定の `core.protectNTFS` が `Invalid path` で拒否した。このケースを除いた 9 ケースは成功した（2026-11-16、Git for Windows 2.56.0.windows.4、Claude Code の Bash）。`core.protectNTFS` を外して通すことはせず、suite も変えない（2026-11-16 のユーザー判断）。Windows の Claude Code の git-commit は、この sh 版で検査する（Windows の Codex は PowerShell 版）。`"` を含む path は Windows では作業ツリーにも index にも入らないので、このケースが実行できなくても、Windows で stage されうる path の検査は欠けない。
 
 JSON の根拠: [ConvertFrom-Json](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json?view=powershell-7.6)、[JsonElement.GetString](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.jsonelement.getstring)（2026-11-11 確認）。
