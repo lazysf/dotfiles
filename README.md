@@ -4,7 +4,7 @@
 
 ## セットアップ
 
-セットアップスクリプトでパッケージを入れてから、chezmoi で dotfiles を展開します。スクリプトは machine profile（`personal` か `work`）を聞きます。`personal` では 1Password を入れ、サインインと CLI 連携、SSH agent の設定が済むまで待ちます。Claude Code のエージェントが commit の署名に使う鍵（`~/.ssh/agent_signing_ed25519`）も作ります。
+セットアップスクリプトでパッケージを入れてから、chezmoi で dotfiles を展開します。スクリプトは machine profile（`personal` か `work`）を聞きます。`personal` では 1Password を入れ、サインインと CLI 連携、SSH agent の設定が済むまで待ちます。
 
 ### macOS（Apple Silicon）
 
@@ -87,22 +87,6 @@ chezmoi apply
 ## 手作業が要るもの
 
 - macOS の Terminal プロファイル: [`dot_config/terminal/Main.terminal`](dot_config/terminal/Main.terminal) は配布されますが、Terminal への import は手で行います。
-- エージェント用の署名鍵の GitHub への登録（`personal`）は、作業機で新しい鍵を使い始めるときに行います。GitHub 上でエージェントの commit を Verified にするために必要です。
-
-  新しい鍵の fingerprint は生成時の表示を控え、登録前に次のコマンドの結果と照合します。Windows ではコマンドを Git Bash で実行します。
-
-  ```sh
-  ssh-keygen -E sha256 -lf ~/.ssh/agent_signing_ed25519.pub
-  ```
-
-  意図したアカウントでブラウザから Settings > SSH and GPG keys > New SSH key を開きます。Key type を Signing Key にして `~/.ssh/agent_signing_ed25519.pub` を登録します。gh の token には署名鍵を登録する権限を付けていないので、CLI では登録しません。
-
-  登録後は、次の SSH 接続が `Permission denied (publickey)` で失敗することを確認します。認証に成功した場合は、GitHub からこの鍵の Authentication Key 登録を削除します。
-
-  ```sh
-  ssh -T -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/agent_signing_ed25519 git@github.com
-  ```
-
 - macOS の Parsec のクライアント設定（`personal`）: Parsec が設定と同じファイルに状態値を書き込むため、`~/.parsec/config.json` は配布しません。Parsec の Settings で Window Mode を Windowed、Immersive Mode を Keyboard、Swap Command and Ctrl for MacOS を Off にします。
 - Windows の VB-CABLE（`personal`）: winget に無いため、<https://vb-audio.com/Cable/> から Driver Pack の zip を取得し、展開した `VBCABLE_Setup_x64.exe` を管理者として実行します。導入後に再起動します。未導入ならセットアップスクリプトが手順を表示し、このページを開きます。
 - Windows の Parsec の仮想ディスプレイ（`personal`）: ドライバ（`Parsec.ParsecVDD`）はセットアップスクリプトが入れます。物理ディスプレイが無い時に仮想ディスプレイを使うには、Parsec の Settings > Host で Fallback To Virtual Display をオンにします。無料プランで使えるのはこの 1 枚だけです。

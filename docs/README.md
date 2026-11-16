@@ -3,7 +3,7 @@
 この `docs/` は、この dotfiles repo を保守するときに参照する知見の置き場。
 
 - `docs/notes/`: repo-level の通常知見を置く
-  - [agent-commit-signing-design.md](./notes/agent-commit-signing-design.md): エージェントの commit を専用の鍵で署名する構成の理由と、sandbox からの保護、失効の手順、Windows での実測
+  - [agent-commit-signing-design.md](./notes/agent-commit-signing-design.md): 廃止。エージェントの commit を専用の鍵で署名するのをやめた理由と、使っていた時の構成、失効の手順、Windows での実測
   - [claude-code-settings-design.md](./notes/claude-code-settings-design.md): `settings.json` が default との差分だけで組まれている理由と、sandbox / permissions / output style の実測記録
   - [claude-desktop-multi-account.md](./notes/claude-desktop-multi-account.md): Claude Desktop の 2 つ目のアカウントを `--user-data-dir` で起動する構成と、`~/.claude/` を共有する時の注意
   - [claude-md-design.md](./notes/claude-md-design.md): `CLAUDE.md` が今の形になっている理由

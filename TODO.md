@@ -17,6 +17,10 @@
 
 ### 両 OS
 
+- [ ] **エージェント署名の廃止の片付け**。作業機ごとに、署名 agent を止め、鍵と残ったファイルを消し、GitHub の Signing Key を外す。その後の新しい session で、エージェントの commit が 1Password の承認で署名されるか（`agent-commit-signing-design.md` の「廃止の後の片付け」）。
+- [ ] **gh の撤去の片付け**。作業機ごとに `gh` を uninstall し、`~/.zshrc`（mac）、`~/.bashrc`（Windows）、`~/.config/gh`、`~/.config/op/plugins.sh` と `plugins/` を消す。GitHub の fine-grained PAT を revoke し、1Password の item `GitHub CLI` と、Keychain の `gh:github.com` を消す（`gh-authentication-design.md`、`claude-code-settings-design.md`）。
+- [ ] **過去の commit の署名し直し**。片付けの後に dotfiles の全 commit を 1Password の鍵で署名し直し、force push し、docs と TODO の commit hash を引き直す。xlwright も確かめる（`agent-commit-signing-design.md` の「過去の commit の署名し直し」）。
+- [ ] **`chezmoi status` を repo 全体に打てるか**（mac）。`Read(~/.config/gh/**)` の deny を外した後の session で、repo 全体の `chezmoi status` が止まらなければ、root の `AGENTS.md` の path を絞る指示を外す（`claude-code-settings-design.md`）。
 - [ ] **git-commit の commit の単位**（`0ad11aa`）。doc や試験を、それが説明する変更と同じ commit に入れるか。Claude Code で、次に commit を頼んだ時に分け方を見る。mac の Claude Code では、2026-11-15 に apply した後の session で 1 回、記録 2 つと TODO を別の commit に分けた（`git-commit-skill-design.md`）。
 
 ## Windows の初回セットアップ

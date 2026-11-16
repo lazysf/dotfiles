@@ -10,19 +10,6 @@
   },
   "attribution": false,
   "includeGitInstructions": false,
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$HOME/.claude/hooks/signing-agent.sh\"",
-            "timeout": 15
-          }
-        ]
-      }
-    ]
-  },
   "permissions": {
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable",
@@ -32,7 +19,6 @@
       "Read(//**/secrets/**)",
       "Read(~/.ssh/**)",
       "Edit(~/.ssh/**)",
-      "Edit(~/.config/git/start-signing-agent)",
       "Read(~/.aws/**)",
       "Read(~/.gnupg/**)",
       "Read(~/.kube/**)",
@@ -80,15 +66,12 @@
         "~/.cache/prek/"
       ],
       "denyWrite": [
-        "~/.ssh",
-        "~/.local/state/agent-signing",
-        "~/.config/git/start-signing-agent"
+        "~/.ssh"
       ]
     },
     "network": {
       "allowUnixSockets": [
-        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock",
-        "~/.local/state/agent-signing/agent.sock"
+        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
       ]
     }
   }{{ if eq .chezmoi.os "windows" }},

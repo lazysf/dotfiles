@@ -264,7 +264,7 @@ auto mode の built-in も push を止めない。`allow` の Git Push Destinati
 
 ## エージェントの commit の署名
 
-エージェントの commit を専用の鍵で署名する構成と、その理由と実測は [agent-commit-signing-design.md](./agent-commit-signing-design.md) にある。
+エージェントの commit も、人の commit と同じく 1Password の `op-ssh-sign` で署名し、承認は人が出す。sandbox の中から署名できるのは、上の `allowUnixSockets` で 1Password の `agent.sock` を通しているため。専用の鍵で署名していた構成は 2026-11-16 に廃止した（[agent-commit-signing-design.md](./agent-commit-signing-design.md)）。
 
 ## Windows では sandbox の防御が効かない
 
@@ -272,9 +272,9 @@ auto mode の built-in も push を止めない。`allow` の Git Push Destinati
 
 大文字で書いた `~/.SSH/...` も、`Read(~/.ssh/**)` の rule を外れない。2026-11-09 の Windows の session（desktop app、Claude Code 2.1.317、auto mode）で、存在しない `~/.SSH/claude-probe-missing` を Read ツールで読むと、`\` 区切りと `/` 区切りのどちらも permission の設定で拒否された。Bash の `ls ~/.SSH/claude-probe-missing` も拒否された。
 
-protected paths も sandbox の層なので、Windows では効かない。同じ session で、Bash の `cat <控え> > ~/.claude/settings.json` は確認なしで通った。`~/.claude/hooks/signing-agent.sh` への同じ形の上書きも通った。どちらも控えと同じ内容で上書きし、前後の SHA-256 は一致した。エージェントの Bash は、Windows では Claude Code の設定と hook を書き換えられる。
+protected paths も sandbox の層なので、Windows では効かない。同じ session で、Bash の `cat <控え> > ~/.claude/settings.json` は確認なしで通った。当時あった `~/.claude/hooks/signing-agent.sh` への同じ形の上書きも通った。どちらも控えと同じ内容で上書きし、前後の SHA-256 は一致した。エージェントの Bash は、Windows では Claude Code の設定と hook を書き換えられる。
 
-この結果、Windows ではエージェント用の署名鍵を持ち出せる。それを受け入れている理由は [agent-commit-signing-design.md](./agent-commit-signing-design.md) の「Windows では鍵を持ち出せる」にある。
+この結果、Windows ではエージェント用の署名鍵を持ち出せた。受け入れていた理由は [agent-commit-signing-design.md](./agent-commit-signing-design.md) の「Windows では鍵を持ち出せる」にある。鍵は 2026-11-16 に廃止した。
 
 ### Windows の PowerShell tool は無効のまま使う
 
@@ -282,7 +282,6 @@ Windows の session では PowerShell tool が無効になっている。公式�
 
 無効のままにするのは、エージェントのコマンドを Bash に寄せた方が、ここまでの仕組みが効くため。
 
-- 署名の hook（[agent-commit-signing-design.md](./agent-commit-signing-design.md)）が書く設定は、PowerShell のコマンドに渡らない。hooks docs によると、PowerShell のコマンドが `CLAUDE_ENV_FILE` の値を受け取るのは、全ての行が単純な代入の時だけ。hook が書く行には `$((...))` の計算があるので、この条件を満たさない。加えて Windows では、`/` か `\` を含む値が PowerShell に渡らない。`SSH_AUTH_SOCK` がこれに当たる。PowerShell で commit すると 1Password の署名に戻り、承認を待って止まる。PowerShell tool が無効なので、ここは実測していない。
 - `Read(~/.ssh/**)` の deny は、Windows の Bash の `ls` にも効く（「Windows では sandbox の防御が効かない」の冒頭の段落）。PowerShell の `Get-Content` などに `Read` deny rule が効くとは、公式の permissions docs に書かれていない。
 
 PowerShell tool を有効にする方法は 2 つある。`CLAUDE_CODE_USE_POWERSHELL_TOOL=1` を設定するか、`PowerShell(...)` の deny rule を足す。どちらでも上の 2 点を失う。
@@ -356,7 +355,7 @@ classifier が `autoMode` を読むのは、user settings、managed settings、`
 | `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | **permission mode を `default` に強制し、auto mode を黙って無効化する**（v2.1.221 で対照実験）。mac の terminal で `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` を付けて v2.1.317 を起動しても、Manual mode で始まった（2026-11-07、ユーザーが画面で確認した）。`--permission-mode auto` を明示すると Claude Code 自身が警告を出す。公式の environment variables docs は値の `1` と、subprocess の env から credential を除く効果を載せているが、permission mode への影響には触れていない（2026-11-07 確認） |
 | `sandbox.autoAllowBashIfSandboxed` | default の `true` に任せる。`false` にすると sandbox 済み Bash も 1 本ごとに classifier 往復が入って遅く、block が fallback カウンタに積まれる |
 | `sandbox.failIfUnavailable` | 公式は managed deployment 向けと説明。macOS の Seatbelt は組み込みで、sandbox が使えないことは稀 |
-| `sandbox.filesystem.denyWrite`（`dot_claude/` への適用） | 署名 agent の state ディレクトリには入れている（[agent-commit-signing-design.md](./agent-commit-signing-design.md) の「socket の path を sandbox から守る」）。default で cwd 外は書けない。cwd 内の `dot_claude/` は protected paths に入らないが、そこはこの repo の編集対象そのもの。塞ぐと Bash からの編集と、そのファイルを置き換える `git checkout` / `merge` が落ちる。live 側は protected paths に入っており、source の変更は人の `chezmoi apply` を経ないと効かないので、そこを gate として持つ |
+| `sandbox.filesystem.denyWrite`（`dot_claude/` への適用） | `~/.ssh` には入れている。default で cwd 外は書けない。cwd 内の `dot_claude/` は protected paths に入らないが、そこはこの repo の編集対象そのもの。塞ぐと Bash からの編集と、そのファイルを置き換える `git checkout` / `merge` が落ちる。live 側は protected paths に入っており、source の変更は人の `chezmoi apply` を経ないと効かないので、そこを gate として持つ |
 | `includeCoAuthoredBy` | 公式で deprecated。同じ制御は後継の `attribution` で書く（「attribution を止める理由」） |
 | `sandbox.network.allowedDomains` + `strictAllowlist` | 2 つ揃えば Bash の HTTP(S) 接続を許可リストへ縛れる（v2.1.219+、sandboxed command のみ、user / managed settings のみ。SSH は proxy を通らないので対象外）。入れないのは、`permissions.deny` の `Read` rule が credential の read を止めており repo の中身も公開 dotfiles で、守る対象が薄いため。加えて許可リストには `github.com` が要るが、exfiltration の主要経路（gist、private repo）もそこで、塞ぎたい口を自分で開けることになる。再検討は untrusted な依存を増やす時、または秘密を含む repo で作業する時 |
 | `autoMode`（push の `hard_deny` 以外の classifier への宣言） | 4 配列（`environment` / `allow` / `soft_deny` / `hard_deny`）のいずれにも `"$defaults"` を含めないと、その配列の built-in が丸ごと置き換わる。誤 block が実際に観測されてから検討する。push の `hard_deny` は「push は sandbox 内で SSH を通らない」にある。`/auto-mode-setup` の結果も取り込まない（「`/auto-mode-setup` の結果を取り込まない」） |

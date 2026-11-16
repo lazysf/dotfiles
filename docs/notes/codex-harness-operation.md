@@ -1,7 +1,7 @@
 # Codex harness の運用
 
-- Date: 2026-11-14
-- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows と mac の Codex session での署名の実測（2026-11-09）
+- Date: 2026-11-16
+- 出典: [Permissions](https://learn.chatgpt.com/docs/permissions) / [Auto-review](https://learn.chatgpt.com/docs/sandboxing/auto-review) / [Rules](https://learn.chatgpt.com/docs/agent-configuration/rules)（2026-11-16 確認） / [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) / [Build skills](https://learn.chatgpt.com/docs/build-skills) / [Config basics](https://learn.chatgpt.com/docs/config-file/config-basic) / [Hooks](https://learn.chatgpt.com/docs/hooks) / [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) / [Code review](https://learn.chatgpt.com/docs/code-review) / [Personalize](https://learn.chatgpt.com/docs/personalize) / [Security review of code changes](https://learn.chatgpt.com/docs/security/plugin/code-changes)（2026-11-09 確認） / 作業機の `~/.codex/skills/.system/review-agent/SKILL.md`（2026-11-09） / 一時領域への chezmoi 展開と Codex CLI 0.162.0-alpha.2 での設定読み込みの確認（2026-10-08） / 移植時の Codex CLI 0.160.0 でのスキル発見の確認 / Windows と mac の Codex session での署名の実測（2026-11-09）
 
 `dot_codex/` は chezmoi で `~/.codex/` へ配布する Claude 設定の移植版。運用契約は [`dot_codex/AGENTS.md`](../../dot_codex/AGENTS.md) にある。`config.toml` 全体はこの repo から配布せず、決めたキーだけを上書きする。再導入の判断は [ADR 0043](../adr/0043-reintroduce-codex-from-current-claude.md)、`config.toml` を作業機ごとに管理する判断は [ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、一部のキーだけを上書きする判断は [ADR 0049](../adr/0049-manage-selected-codex-config-keys.md)、エージェント用の鍵で署名しない判断は [ADR 0047](../adr/0047-stop-codex-agent-signing.md)、commit を sandbox の外で都度承認する判断は [ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md) にある。
 
@@ -57,7 +57,7 @@ MCP、plugin、通知、権限などの、管理するキー以外は、アプ�
 
 Codex はエージェント用の鍵で署名しない（[ADR 0047](../adr/0047-stop-codex-agent-signing.md)）。commit の署名は global の Git 設定に任せる。`chezmoi apply` は Codex の署名設定を足さない。
 
-mac の Codex の commit は、承認を受けて sandbox の外で実行する（[ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md)）。sandbox の中からは 1Password に届かないため。
+mac の Codex の commit は、承認を受けて sandbox の外で実行する（[ADR 0048](../adr/0048-approve-codex-commits-outside-sandbox.md)）。sandbox の中からは 1Password に届かないため。作業機は `approvals_reviewer = "auto_review"` なので、承認するのは reviewer agent になる（[Auto-review](https://learn.chatgpt.com/docs/sandboxing/auto-review)、2026-11-16 確認）。人の承認は commit の依頼そのものと、1Password の署名の承認になる。
 
 2026-11-09 に、mac の Codex CLI 0.167.0-alpha.3.2 の環境で、profile と hook を外した新しい session を使って確かめた。session の実効の設定は、sandbox が `workspace-write`、permission profile が `managed`、filesystem が `restricted` だった。
 
@@ -106,6 +106,8 @@ Windows と macOS の `workspace-write` では、sandbox 内の外向き通信�
 
 **代償として、Codex の sandbox 内のコマンドは、読めた credential を外へ送れる。受け入れている（2026-11-10 のユーザー判断）。** 読み取りの deny を持つ permission profile は repo から配らない（[ADR 0044](../adr/0044-manage-codex-runtime-config-per-device.md)、[ADR 0049](../adr/0049-manage-selected-codex-config-keys.md)）。Windows の実測では、sandbox 内から `~/.ssh` の検証用ファイルを読めた（[読み取りの deny](#読み取りの-deny)）。歯止めは `AGENTS.md` の「権限」の契約だけで、強制ではない。Claude Code も Windows では同じ状態を受け入れている（[Windows では鍵を持ち出せる](agent-commit-signing-design.md#windows-では鍵を持ち出せる)）。見直すのは、秘密を含む repo で Codex を使い始める時。その時は作業機の config に読み取りの deny を入れるか、このキーを管理から外す。
 
+2026-11-15 に mac の Codex session で、sandbox の中から Claude Code のエージェント用署名鍵を読み取り用に開けた（[mac の Codex session での確認](#mac-の-codex-session-での確認)）。エージェント用の署名鍵は 2026-11-16 に廃止した（[エージェントの commit 署名の設計](agent-commit-signing-design.md)）。読み取りの deny を permission profile で入れる時は、`sandbox_mode` と併用できない点に注意する。profile は `sandbox_mode` があると無視される（[Permissions](https://learn.chatgpt.com/docs/permissions)、2026-11-16 確認）。`modify_private_config.toml` は `sandbox_mode` を管理している。
+
 この節の下の実測と、[macOS のエージェント用署名](#macos-のエージェント用署名) の `curl` の実測は、このキーを管理に入れる前のもの。
 
 2026-11-09 に Windows の Codex session（`workspace-write`、permission profile は `managed`）で、PowerShell 7.6.9 から `curl.exe` で `https://example.com/` に HTTPS GET を送った。接続 timeout は 5 秒、全体の timeout は 10 秒にした。承認を受けた sandbox 外の対照では HTTP 200 だった。sandbox 内では名前解決に失敗し、curl の終了コードは 6 で HTTP 応答は無かった。
@@ -120,7 +122,7 @@ Windows と macOS の `workspace-write` では、sandbox 内の外向き通信�
 
 ### 自動署名を入れなかった理由
 
-Claude Code は Windows で、Git Bash から Git for Windows の `ssh-keygen` と専用の `ssh-agent` を使う（[Windows の hook](agent-commit-signing-design.md#windows-の-hook)）。同じ経路は、Codex の sandbox の中では通らなかった。検証にはすべて使い捨ての鍵と repo を使い、実在のセットアップ鍵には触れていない。
+Claude Code は Windows で、Git Bash から Git for Windows の `ssh-keygen` と専用の `ssh-agent` を使っていた（[Windows の hook](agent-commit-signing-design.md#windows-の-hook)、2026-11-16 に廃止）。同じ経路は、Codex の sandbox の中では通らなかった。検証にはすべて使い捨ての鍵と repo を使い、実在のセットアップ鍵には触れていない。
 
 - Git for Windows の同梱ツールの起動: 通常の Codex session の `ssh-add -l`、`bash --version`、`ssh-agent -V`、`cygpath -u .` は `0xC0000142`（`STATUS_DLL_INIT_FAILED`）で終了した。この session の sandbox の実効実装は未確認。CLI に `-c windows.sandbox=mxc` を渡すと `bash --version` は同じエラーになり、`-c windows.sandbox=elevated -c features.prefer_mxc=false` を渡すと成功した。
 - 専用 agent への接続: `elevated` の sandbox の中の `ssh-add -l` は `communication with agent failed` で終了し、agent は `uid mismatch` を記録した。ローカルの TCP には接続できた。OpenSSH は、接続元の実効 UID が root でも自分でもない時に接続を閉じる。`elevated` は専用ユーザーで動くので、socket の path や権限の調整では通らない。[OpenSSH 10.6p1 の `ssh-agent`](https://github.com/openssh/openssh-portable/blob/V_10_6_P1/ssh-agent.c#L1902-L1917)
@@ -137,11 +139,21 @@ Claude Code は Windows で、Git Bash から Git for Windows の `ssh-keygen` �
 
 sandbox 内で同じ `git log` を実行すると、Git が `op-ssh-sign.exe` を起動できず、`Function not implemented` が出た。署名の判定は sandbox 外での検証結果を使う。
 
+## mac の Codex session での確認
+
+2026-11-15 に mac の Codex session で確認した。session に渡された環境情報では、sandbox mode は `workspace-write`、permission profile は `managed`、filesystem は `restricted`、network は許可、`approvals_reviewer` は `auto_review` だった。`approval_policy` 自体の値、model の正確な識別子、reasoning effort は提示されていなかった。
+
+- sandbox 内の `curl -sS -o /dev/null -w '%{http_code}\n' --connect-timeout 5 --max-time 10 https://example.com/` は HTTP 200、終了コード 0 だった。
+- `ls -1 ~/.ssh` では、`.pub`、`config`、`known_hosts*` 以外のファイルは `agent_signing_ed25519` の 1 つだった。sandbox 内の `( : < ~/.ssh/agent_signing_ed25519 ) && echo readable` は `readable` を出し、終了コード 0 だった。ファイルを開いただけで、中身の読み取り、表示、コピー、hash の計算はしていない。
+
+どちらも sandbox 外の実行と承認経路は使っていない。
+
+2026-11-16 に、ユーザーが mac の terminal で Codex CLI 0.169.0 の `codex sandbox -- op whoami` を実行した（`config.toml` は `workspace-write`、network は許可）。`op` は `$TMPDIR` の下の `op-daemon.pid` を開けずに `couldn't start daemon` を出し、続けて `1Password CLI couldn't connect to the 1Password desktop app` で失敗した。Claude Code の sandbox と同じく、Codex の sandbox の中から `op` は 1Password の app に届かない。
+
 ## 未確認
 
-- `sandbox_workspace_write.network_access` を `true` にした後、sandbox 内の外向き通信が実際に通るか。この Windows 機の `config.toml` の値が `true` であることは、`chezmoi diff ~/.codex` が空であることで確かめた（2026-11-10）。
-- mac の Codex が `~/.ssh` の秘密鍵を実際に読めるか。`~/.ssh/config` までしか確かめていない。
-- `dot_config/zsh/dot_zshenv` の署名用 socket の条件は、Codex の署名のために足した。Claude Code に要るかは確かめていないので残している。
+- Windows で `sandbox_workspace_write.network_access` を `true` にした後、sandbox 内の外向き通信が実際に通るか。この Windows 機の `config.toml` の値が `true` であることは、`chezmoi diff ~/.codex` が空であることで確かめた（2026-11-10）。mac では通った（[mac の Codex session での確認](#mac-の-codex-session-での確認)）。
+- rules が、sandbox の中で動くコマンドにも効くか。Rules の docs は、sandbox の外での実行についてだけ書いている（2026-11-16 確認）。
 
 ## git-commit の識別子検査
 

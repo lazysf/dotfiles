@@ -11,11 +11,9 @@
 
 principal（email）は `config.tmpl` の `user.email` と同じ `op://Personal/GitHub/noreply` から読む。repo に literal で書くと、GitHub アカウントを作り直した時に、repo 内の 2 箇所の ID を差し替えることになる。1Password を正本にすれば、差し替えずに済む。
 
-## エージェント用の鍵の行
+## エージェント用の鍵の行を消した理由
 
-Claude Code の commit は、作業機ごとに作る専用の鍵で署名する（構成は [エージェントの commit 署名の設計](agent-commit-signing-design.md)）。この鍵は 1Password に無いので、`allowed_signers.tmpl` は作業機の `~/.ssh/agent_signing_ed25519.pub` を `include` で読み、同じ principal でもう 1 行出す。ファイルが無い作業機ではこの行を出さない。鍵を作った後の `chezmoi apply` で行が増える。chezmoi の `include` が絶対パスを読めることは v2.74.0 で確かめた（2026-11-06）。
-
-GitHub 上で Verified にするには、この鍵も GitHub に Signing Key として登録する。登録した後、この鍵で署名した 4 commit を `main` へ push すると、ruleset に拒否されずに通り、GitHub 上で署名済みと表示された（2026-11-06）。登録していない鍵で署名した commit が push で拒否されるかは、まだ実測していない。
+エージェントの commit を専用の鍵で署名していた間は、`allowed_signers.tmpl` が作業機の `~/.ssh/agent_signing_ed25519.pub` を読み、同じ principal でもう 1 行出していた。この構成は 2026-11-16 に廃止し（[エージェントの commit 署名の設計](agent-commit-signing-design.md)）、行も消した。専用の鍵で署名した過去の commit は 1Password の鍵で署名し直すので、手元で検証するための行は残さない。
 
 ## 署名を設定するマシン
 

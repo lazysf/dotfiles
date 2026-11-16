@@ -1,7 +1,31 @@
 # エージェントの commit 署名の設計
 
-- Date: 2026-11-09
+- Date: 2026-11-16
+- Status: 廃止（2026-11-16）
 - 出典: [hamakou108.com の記事](https://hamakou108.com/posts/coding-agent-credentials-for-claude-code) / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / hooks docs の Windows の shell、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Claude Code 2.1.317 の binary にある sandbox profile の生成コード（2026-11-06） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07） / cwd が home の mac の session での `~/.ssh` への `mv` と `ssh-keygen -f` の実測（2026-11-07、v2.1.311） / cwd が home の mac の session での `denyWrite` の path への書き込みの実測、mac の session での Write ツールの `~/.ssh` の拒否の実測、Edit ツールでの `start-signing-agent` の拒否の実測（2026-11-07） / Windows の session での `~/.ssh` への書き込みの実測（2026-11-07、Claude Code 2.1.317） / GitHub の commits API の `verification`（2026-11-07） / [GitHub の署名検証記録](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#persistent-commit-signature-verification)
+
+**エージェントの commit を専用の鍵で署名する構成は廃止した。** エージェントの commit は頻繁でなく、1Password の承認を人が出す手間は小さい。一方で、専用の鍵、署名 agent、SessionStart hook、setup の鍵の生成、allowed_signers の 2 行目、Windows の別経路を保ち、Claude Code と Codex の扱いの差を管理する手間が大きくなった（2026-11-16 のユーザー判断）。エージェントの commit も、人の commit と同じく 1Password の `op-ssh-sign` で署名し、承認は人が出す。鍵、hook、署名 agent、setup の処理を消し、GitHub の Signing Key の登録も外す。専用の鍵で署名した過去の commit は、1Password の鍵で署名し直す。
+
+## 廃止の後の片付け
+
+作業機ごとに（mac と Windows）、ユーザーが手で行う。`chezmoi apply` は source から消したファイルを target から消さない。
+
+1. 廃止を反映した source を `chezmoi apply` する。
+2. 署名 agent を止める。手順は下の「代償と失効」の、macOS と Windows の PID の見分け方。
+3. `~/.local/state/agent-signing`、`~/.ssh/agent_signing_ed25519*`、`~/.config/git/start-signing-agent`、`~/.claude/hooks/signing-agent.sh` を消す。
+4. GitHub の Settings > SSH and GPG keys から、エージェント用の Signing Key を消す。
+5. 新しい Claude Code の session を開き、`env` の `SSH_AUTH_SOCK` が 1Password の socket を指すこと、使い捨ての repo の commit が 1Password の承認を経て `%G? = G` になり、`%GK` が 1Password の鍵になることを確かめる。
+
+## 過去の commit の署名し直し
+
+2026-11-16 時点で、この repo の `main` の 708 commit は、すべて専用の鍵で署名されていた（`git log --format='%G? %GK'`、片付けの前の手元の `allowed_signers` で集計）。片付けの後、ユーザーの terminal で 1Password の鍵で署名し直す。
+
+1. 片付けの 5 で、署名が 1Password に戻ったことを確かめた terminal で、`git rebase --root --committer-date-is-author-date --exec 'git commit --amend --no-edit -S'` を実行する。1Password の承認が commit ごとに出るか、まとめて 1 回で済むかは確かめていない。
+2. `git log --format='%G? %GK' | sort | uniq -c` で、全件が `G` で 1Password の鍵になったことを確かめてから、force push する。`main` の ruleset は署名だけを求める（[git-signature-verification-design.md](git-signature-verification-design.md)）。
+3. hash が変わるので、docs と TODO にある commit hash を新しい hash に引き直す commit を足す。旧 hash と新 hash の対応は、rebase の前後の `git log --format='%H %s'` から作る。
+4. xlwright も `git log --format='%G? %GK'` で確かめ、専用の鍵の署名が残っていれば同じ手順で直す。
+
+以下は、この構成を使っていた時の理由と実測の記録。
 
 エージェントの commit を、人の 1Password とは別の専用の鍵で署名する構成の理由と実測を残す。人の commit の署名を sandbox 内で通す設定は [claude-code-settings-design.md](./claude-code-settings-design.md) の「署名 agent の socket を通す理由」にある。手元での署名の検証は [git-signature-verification-design.md](./git-signature-verification-design.md) にある。Codex はこの鍵で署名しない（[ADR 0047](../adr/0047-stop-codex-agent-signing.md)）。
 
