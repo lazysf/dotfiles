@@ -16,6 +16,8 @@
 4. GitHub の Settings > SSH and GPG keys から、エージェント用の Signing Key を消す。
 5. 新しい Claude Code の session を開き、`env` の `SSH_AUTH_SOCK` が 1Password の socket を指すこと、使い捨ての repo の commit が 1Password の承認を経て `%G? = G` になり、`%GK` が 1Password の鍵になることを確かめる。
 
+mac は 2026-11-16 に 1〜5 を終えた。5 では `%GK` が `allowed_signers` の 1 行目と一致した。Windows は未実施。
+
 ## 過去の commit の署名し直し
 
 2026-11-16 時点で、この repo の `main` の 708 commit は、すべて専用の鍵で署名されていた（`git log --format='%G? %GK'`、片付けの前の手元の `allowed_signers` で集計）。片付けの後、ユーザーの terminal で 1Password の鍵で署名し直す。
@@ -24,6 +26,8 @@
 2. `git log --format='%G? %GK' | sort | uniq -c` で、全件が `G` で 1Password の鍵になったことを確かめてから、force push する。`main` の ruleset は署名だけを求める（[git-signature-verification-design.md](git-signature-verification-design.md)）。
 3. hash が変わるので、docs と TODO にある commit hash を新しい hash に引き直す commit を足す。旧 hash と新 hash の対応は、rebase の前後の `git log --format='%H %s'` から作る。
 4. xlwright も `git log --format='%G? %GK'` で確かめ、専用の鍵の署名が残っていれば同じ手順で直す。
+
+dotfiles は 2026-11-16 に 1〜3 を終えた。710 commit を署名し直し、author と committer の日時と tree が元と一致した。hash を引き直した commit は `264f4b9` と `8de31a9` で、force push の後に GitHub 上でも Verified になった。xlwright は Windows 側で開発しているので、そちらで確かめる。
 
 以下は、この構成を使っていた時の理由と実測の記録。
 

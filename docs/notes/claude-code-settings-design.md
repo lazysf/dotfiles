@@ -173,7 +173,7 @@ reviewer は `tmutil` の期待損失が disk の format より大きい可能�
 
 **deny の実測は auto mode では取れない。** deny 済みの path を開く probe を、classifier が `Auto-Mode Bypass` として実行前に止めた（2026-10-16）。sandbox の deny を確かめる時は Manual mode の session で取る。
 
-`Read(~/.config/gh/**)` を deny していた間は、副作用として `chezmoi status` が途中で止まった。`~/.config/gh` の lstat が拒否されるため、repo 全体の未 apply 差分を取れなかった。gh をやめて 2026-11-16 にこの deny を外した。repo 全体の `chezmoi status` が通るかは、apply の後に確かめる。
+`Read(~/.config/gh/**)` を deny していた間は、副作用として `chezmoi status` が途中で止まった。`~/.config/gh` の lstat が拒否されるため、repo 全体の未 apply 差分を取れなかった。gh をやめて 2026-11-16 にこの deny を外した。2026-11-16 に mac の session で打つと、`~/.config/gh` では止まらなくなったが、`allowed_signers.tmpl` の `onepasswordRead` が 1Password の app に届かずに止まった。sandbox の中から `op` が app に届かないのは `codex sandbox` の実測と同じなので、root の `AGENTS.md` の path を絞る指示は、理由を書き換えて残した。
 
 sandbox 内から子の `claude` session を起こそうとすると `401 OAuth access token has expired` で落ちる（2026-08-31 と 2026-09-01 に再現）。うち 2026-08-31 は、同じ日に terminal から起動した `claude` が動いていたので、token が失効しているわけではないと読める。**どこで止まるかは切り分けていない。** credential は Keychain の `Claude Code-credentials` エントリにある。`~/.claude/.credentials.json` は存在しない。この Keychain は sandbox 内からも見え、`security` でエントリのメタデータまで取れる。設定を変えた A/B は sandbox 外の terminal で取る。
 

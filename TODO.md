@@ -17,10 +17,10 @@
 
 ### 両 OS
 
-- [ ] **エージェント署名の廃止の片付け**。作業機ごとに、署名 agent を止め、鍵と残ったファイルを消し、GitHub の Signing Key を外す。その後の新しい session で、エージェントの commit が 1Password の承認で署名されるか（`agent-commit-signing-design.md` の「廃止の後の片付け」）。
-- [ ] **gh の撤去の片付け**。作業機ごとに `gh` を uninstall し、`~/.zshrc`（mac）、`~/.bashrc`（Windows）、`~/.config/gh`、`~/.config/op/plugins.sh` と `plugins/` を消す。GitHub の fine-grained PAT を revoke し、1Password の item `GitHub CLI` と、Keychain の `gh:github.com` を消す（`gh-authentication-design.md`、`claude-code-settings-design.md`）。
-- [ ] **過去の commit の署名し直し**。片付けの後に dotfiles の全 commit を 1Password の鍵で署名し直し、force push し、docs と TODO の commit hash を引き直す。xlwright も確かめる（`agent-commit-signing-design.md` の「過去の commit の署名し直し」）。
-- [ ] **`chezmoi status` を repo 全体に打てるか**（mac）。`Read(~/.config/gh/**)` の deny を外した後の session で、repo 全体の `chezmoi status` が止まらなければ、root の `AGENTS.md` の path を絞る指示を外す（`claude-code-settings-design.md`）。
+- [ ] **エージェント署名の廃止の片付け**。作業機ごとに、署名 agent を止め、鍵と残ったファイルを消し、GitHub の Signing Key を外す。その後の新しい session で、エージェントの commit が 1Password の承認で署名されるか（`agent-commit-signing-design.md` の「廃止の後の片付け」）。mac は 2026-11-16 に完了した。署名 agent を止め、`~/.local/state/agent-signing`、`~/.ssh/agent_signing_ed25519*`、`~/.config/git/start-signing-agent`、`~/.claude/hooks/signing-agent.sh` を消し、GitHub の Signing Key を外した。新しい session で `SSH_AUTH_SOCK` が 1Password の socket を指し、使い捨ての repo の commit が 1Password の承認を経て `%G? = G` になり、`%GK` が `allowed_signers` の 1 行目と一致した。残りは Windows。
+- [ ] **gh の撤去の片付け**。作業機ごとに `gh` を uninstall し、`~/.zshrc`（mac）、`~/.bashrc`（Windows）、`~/.config/gh`、`~/.config/op/plugins.sh` と `plugins/` を消す。GitHub の fine-grained PAT を revoke し、1Password の item `GitHub CLI` と、Keychain の `gh:github.com` を消す（`gh-authentication-design.md`、`claude-code-settings-design.md`）。mac は 2026-11-16 に完了した。`brew uninstall gh` し、`~/.zshrc`、`~/.config/gh`、`~/.config/op/plugins.sh` と `plugins/` を消した。Keychain に `gh:github.com` は無かった。PAT の revoke と 1Password の item `GitHub CLI` の削除も済んだ。残りは Windows（`winget uninstall GitHub.cli`、`~/.bashrc`）。
+- [ ] **過去の commit の署名し直し**。片付けの後に dotfiles の全 commit を 1Password の鍵で署名し直し、force push し、docs と TODO の commit hash を引き直す。xlwright も確かめる（`agent-commit-signing-design.md` の「過去の commit の署名し直し」）。dotfiles は 2026-11-16 に完了した。root から rebase して 710 commit を署名し直し、author と committer の日時と tree が元と一致した。commit hash を引き直し（`264f4b9`、`8de31a9`）、force push し、GitHub 上でも Verified になった。残りは xlwright で、Windows 側で開発しているのでそちらで確かめる。
+- [x] **`chezmoi status` を repo 全体に打てるか**（mac）。2026-11-16 に、`~/.config/gh` の読み取り拒否では止まらなくなったことを確かめた。ただし sandbox の中では、`allowed_signers.tmpl` の `onepasswordRead` が 1Password の app に届かずに止まる。root の `AGENTS.md` の path を絞る指示は残し、理由を書き換えた（`claude-code-settings-design.md`）。
 - [ ] **git-commit の commit の単位**（`12cf37b`）。doc や試験を、それが説明する変更と同じ commit に入れるか。Claude Code で、次に commit を頼んだ時に分け方を見る。mac の Claude Code では、2026-11-15 に apply した後の session で 1 回、記録 2 つと TODO を別の commit に分けた（`git-commit-skill-design.md`）。
 
 ## Windows の初回セットアップ

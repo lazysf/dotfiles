@@ -8,7 +8,7 @@
 
 - 今の session を動かしているのは、配布済みの設定（Claude Code は `~/.claude`、Codex は `~/.codex`）。source の `dot_claude/` と `dot_codex/` を直しても、今の session には効かない。効くのはユーザーが `chezmoi apply` した後から。Claude Code の `CLAUDE.md` は次の session から効く（反映の違いは `docs/notes/harness-design-principles.md`）。Codex の `AGENTS.md` は、公式 docs によると起動時に 1 回読まれるので、次に起動した session から効く。
 - `chezmoi apply` はユーザーが手元の terminal で行う。Claude Code の sandbox が書けるのは作業ディレクトリなどに限られ、apply の書き込み先の大半はその外にある。
-- Claude Code の sandbox では、`chezmoi status` を repo 全体に打たず、`chezmoi status ~/.claude` のように path を絞る。全体に打つと `~/.config/gh` の読み取り拒否で止まる。
+- Claude Code の sandbox では、`chezmoi status` を repo 全体に打たず、`chezmoi status ~/.claude` のように path を絞る。全体に打つと、1Password を読む template の展開で止まる。
 
 ## surface を直す時
 
