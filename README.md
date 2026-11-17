@@ -64,6 +64,8 @@ git の identity は `~/.config/git/config.local` に書きます。1Password �
 
 選んだ profile は chezmoi の設定ファイル（`~/.config/chezmoi/chezmoi.toml`）に保存され、`chezmoi init` やスクリプトの再実行では聞かれません。引数（`personal` / `work`）でも渡せます。スクリプトが変わると、次の `chezmoi apply` で、そのマシンの profile で実行し直されます。
 
+Windows では .NET SDK と、Native AOT の publish に要る C++ のビルドツール（Visual Studio Build Tools の C++ workload）が入ります。Build Tools の導入では UAC の確認が出ます。C++ workload を含む Visual Studio が既にあれば Build Tools は入れません。workload の無い Build Tools が既にある時は、Visual Studio Installer で Desktop development with C++ を追加します。
+
 ## 更新
 
 リモートの変更を取り込んで適用する:

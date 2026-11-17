@@ -75,7 +75,9 @@ function Install-WingetPackage {
         [string]$Source = 'winget',
         # 省略時は winget の選択に任せる。
         [ValidateSet('machine', 'user')]
-        [string]$Scope
+        [string]$Scope,
+        # installer へそのまま渡す引数。manifest の既定の引数を置き換える。
+        [string]$Override
     )
     if ($installedList -match "(?<!\S)$([regex]::Escape($Id))(?!\S)") {
         Write-Host "  - $Id (skip)"
@@ -86,7 +88,11 @@ function Install-WingetPackage {
     if ($Scope) {
         $scopeArgs = @('--scope', $Scope)
     }
-    winget install --id $Id --source $Source --exact @scopeArgs --accept-package-agreements --accept-source-agreements --silent
+    $overrideArgs = @()
+    if ($Override) {
+        $overrideArgs = @('--override', $Override)
+    }
+    winget install --id $Id --source $Source --exact @scopeArgs @overrideArgs --accept-package-agreements --accept-source-agreements --silent
     # $ErrorActionPreference='Stop' は native command (winget.exe) の非ゼロ exit を例外化しないため、明示確認する。
     if ($LASTEXITCODE -ne 0) {
         Write-Warning "    winget install '$Id' が exit code $LASTEXITCODE で終了しました"
@@ -150,6 +156,38 @@ function Install-LanguageRuntimesStack {
     Write-Host '==> 言語ランタイム/版管理'
     Install-WingetPackage AuthorSoftware.NVMWindows    # Node.js
     Install-WingetPackage astral-sh.uv  # Python
+}
+
+function Install-DotnetStack {
+    Write-Host '==> .NET'
+    Install-WingetPackage Microsoft.DotNet.SDK.10
+    Install-VcBuildTools
+}
+
+# winget list の ID では workload の有無が分からないので、vswhere で C++ のツールがあるかを見る。
+# C++ workload 入りの Visual Studio が既にあれば、それで足りるので Build Tools は入れない。
+function Install-VcBuildTools {
+    $id = 'Microsoft.VisualStudio.BuildTools'
+    $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+    if (Test-Path $vswhere) {
+        $found = & $vswhere -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        if ($found) {
+            Write-Host '  - C++ build tools (skip)'
+            return
+        }
+    }
+    # 入っている Build Tools に workload を足す処理は持たないので、手順を示す。
+    if ($installedList -match "(?<!\S)$([regex]::Escape($id))(?!\S)") {
+        Write-Warning "  $id はありますが C++ workload がありません。Visual Studio Installer で Desktop development with C++ を追加してください"
+        return
+    }
+    # Native AOT の dotnet publish は、Windows では MSVC と Windows SDK でリンクするので、Build Tools が要る。
+    # 引数:
+    # - --add: Build Tools は workload を指定しないと C++ のツールが入らないので、C++ workload を足す。
+    # - --includeRecommended: Native AOT は workload の既定の component (MSVC と Windows SDK) を求める。
+    # - --wait --passive --norestart: --override は manifest の既定の引数を置き換えるので、ここで渡す。
+    #   --passive は進み具合を出すだけで操作を求めない。--wait が無いと winget が終了を待てない。
+    Install-WingetPackage $id -Override '--wait --passive --norestart --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended'
 }
 
 function Install-DotfilesStack {
@@ -327,6 +365,7 @@ Install-GitStack
 Install-NeovimStack
 Install-YaziStack
 Install-LanguageRuntimesStack
+Install-DotnetStack
 Install-DotfilesStack
 if ($MachineProfile -eq 'personal') {
     Install-PasswordStack
