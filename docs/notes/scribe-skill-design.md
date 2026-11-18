@@ -1,6 +1,6 @@
 # scribe skill の設計
 
-- Date: 2026-11-13
+- Date: 2026-11-18
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors) / [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file) / [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) / [Diátaxis](https://diataxis.fr/start-here/) / [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) / [About issue and pull request templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates) / [ARCHITECTURE.md](https://matklad.github.io/2021/02/06/ARCHITECTURE.md.html) / [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
@@ -37,7 +37,11 @@ doc の種類は同時に書かない。1 ファイルにまとめると、ADR �
 
 SKILL.md が持つのはどの種類を選ぶかの判断で、書式は選択後にしか要らないので reference にある。
 
-reference を置くのは、scribe に固有の規則がある種類（README、DEVELOPMENT と CONTRIBUTING とテンプレート、ADR、notes）だけ。CONTRIBUTING は DEVELOPMENT を指し、テンプレートは CONTRIBUTING と方針を分け合うので、3 つの書式を 1 つの reference にまとめ、分担を 1 箇所で読めるようにしている。CHANGELOG、SECURITY、SUPPORT は、表の 1 行と公式の形式への指し先で足りる。Claude が既定で知っている形式を reference に写すと、[harness-design-principles.md](./harness-design-principles.md) の「削る基準」に当たる。その種類で訂正を受けたら、reference を作る。
+表の種類にはすべて reference を置く。reference が無い種類は、表の 1 行と記憶で書くことになり、書く前に確かめる先が無い。
+
+reference の中身は、scribe に固有の規則だけにする。Keep a Changelog や Diátaxis のような公式の形式は、リンクを 1 つ置くだけで写さない。Claude が既定で知っている形式を写すと、[harness-design-principles.md](./harness-design-principles.md) の「削る基準」に当たる（[Best practices](https://agentskills.io/skill-creation/best-practices) の「agent に欠けているものを足し、知っているものは省く」も同じ）。固有の規則は、推測で書くと実害が出る点に絞っている。版の番号、窓口、対応する版の範囲は、推測すると利用者を誤らせる。
+
+CONTRIBUTING は DEVELOPMENT を指し、テンプレートは CONTRIBUTING と方針を分け合う。そのため、この 3 つの書式は 1 つの reference にまとめ、分担を 1 箇所で読めるようにしている。SECURITY と SUPPORT も、窓口の扱いという同じ規則を持つので 1 つにまとめている。
 
 ## doc をいつ直すかを description に持たせる理由
 
@@ -129,6 +133,12 @@ GitHub の [About READMEs](https://docs.github.com/en/repositories/managing-your
 
 それでも表に 1 行置くのは、`CONTRIBUTING.md` との振り分けのため。受け付ける方針や受け付けない変更がテンプレートに写されると、片方だけ古くなる。書き方の規則は持たず、置き場と、方針を写さないことだけを決めている。
 
+## TODO を表に入れる理由
+
+保留の作業を doc に置く時の書き方には、CHANGELOG の Keep a Changelog に当たる公開の形式が見つからなかった。指し先が無いので、記載日や完了の条件を書くかが、書くたびの判断に任される。この repo の root `TODO.md` は、記載日、見つけた時の作業、結果の指し先を持つ形に落ち着いている。`references/todo-format.md` はこの形を一般化したもので、`TODO.md` の中身は写していない。
+
+置き場の判断は repo に残す。保留の作業を doc と issue のどちらに置くかは repo の運用で、契約も「ユーザーへ伝える」までしか持たない（[claude-md-design.md](./claude-md-design.md)）。そのため表の作る条件を「repo が保留の作業を doc に置くと決めている時」にし、決まっていなければ聞くようにしている。
+
 ## 表に入れていない種類
 
 次の種類は、表に行を置いていない。同じ検討を繰り返さないために、理由を残す。試験 A と C は、下の「未確認」に書いた試験を指す。
@@ -174,4 +184,9 @@ description を依頼語に絞らない一般則は `harness-design-principles.m
   - B（lint の道具を替えた）: 既存の `HACKING.md` を直し、`DEVELOPMENT.md` は作らなかった。`AGENTS.md` は書かず、直す案を提案した。
   - C（次の版の準備）: `CHANGELOG.md` の `[Unreleased]` に利用者に見える変更だけを入れ、版の番号は推測せず質問した。
   - subagent の発火は、ユーザーの session の発火と同じとは限らない。
-- Diátaxis は、4 種類それぞれの個別ページを読んでいない。
+- Diátaxis は、4 種類それぞれの個別ページを読んでいない。`references/user-docs-format.md` は tutorial を除く 3 種類を使っている。tutorial を外したのは、学習の教材を書く repo を踏んでいないため。
+- 2026-11-18 に足した 4 つの reference（CHANGELOG、`docs/`、SECURITY と SUPPORT、TODO）は、同じ日に 1 回ずつ試しただけ。架空の repo で、ユーザーの依頼文に doc という語を入れずに subagent に渡した。skill の path を渡して読ませたので、発火は確かめていない。description に「TODO に残して」を足した後の発火も確かめていない。
+  - CHANGELOG（設定キーの改名と、内部の parser の書き直し）: `[Unreleased]` に改名だけを書き、直し方を添えた。parser の書き直しは書かなかった。版の番号は推測せず質問した。
+  - `docs/`（設定を調べられるようにしたい）: `docs/configuration.md` を reference の種類で作り、schema と突き合わせたことを doc に書いた。README には 1 行のリンクだけを足した。reference は、doc と README の 2 つの対象に 1 つずつ読んだ。
+  - SECURITY と SUPPORT（脆弱性の報告と、質問の置き場）: 窓口が repo から読めないので、どちらも作らずに質問した。
+  - TODO（CI の node の版のずれを後で見る）: 既存の `TODO.md` の形に合わせて章を足し、記載日、見つけた時の作業、完了の条件を書いた。どちらに揃えるかは推測せず質問した。

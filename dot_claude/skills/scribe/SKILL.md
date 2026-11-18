@@ -1,6 +1,6 @@
 ---
 name: scribe
-description: 確定した事実を doc に残す時に使う。「README を更新して」「CONTRIBUTING を書いて」「ADR を書いて」「notes に残して」のような依頼に加え、調査や実測の結果が出た時、設計判断が固まった時、使い方・設定・公開挙動・開発の手順（lint、試験、リリースのコマンド）を変えた時、既存の doc が実態と合っているかを点検する時にも使う。作業の流れで doc を直す場面が主で、ユーザーが doc という語を出さないことの方が多い。読み手と目的から doc の種類と置き場を選び、必要な情報を必要な分だけ書く。commit message は git-commit。
+description: 確定した事実を doc に残す時に使う。「README を更新して」「CONTRIBUTING を書いて」「ADR を書いて」「notes に残して」「TODO に残して」のような依頼に加え、調査や実測の結果が出た時、設計判断が固まった時、使い方・設定・公開挙動・開発の手順（lint、試験、リリースのコマンド）を変えた時、既存の doc が実態と合っているかを点検する時にも使う。作業の流れで doc を直す場面が主で、ユーザーが doc という語を出さないことの方が多い。読み手と目的から doc の種類と置き場を選び、必要な情報を必要な分だけ書く。commit message は git-commit。
 ---
 
 # Scribe
@@ -22,6 +22,7 @@ repo が独自の doc 規約（置き場、名前、形式、作る時期）を�
 | 外部の貢献者 | issue と PR を出す時に書いてほしい項目 | `.github/ISSUE_TEMPLATE/`、`.github/PULL_REQUEST_TEMPLATE.md` | `CONTRIBUTING.md` を作る repo |
 | 開発者 | 複数案を比べた判断 | `docs/adr/` | 「ADR を作る条件」を満たす時 |
 | 開発者 | 背景、調査、今の設計の理由 | `docs/notes/` | 事実が確定した時 |
+| 開発者 | 着手を保留した作業 | `TODO.md` | repo が保留の作業を doc に置くと決めている時 |
 | 開発者 | docs 配下の案内 | `docs/README.md` | docs 配下に doc が複数ある時 |
 
 作る条件を満たさない種類は作らない。空の節や雛形だけの doc は、読み手に何も渡さない。
@@ -65,11 +66,15 @@ notes に変更履歴を書かない。「旧規定は〜だった」「〜に�
 - 既存の章構成、用語、粒度、文体に寄せる。1 つの概念に 1 つの語を使い、途中で言い換えない。
 - doc を追加・削除・rename したら、README、索引、相対リンクの追従を確かめる。直せないリンク切れは、場所と理由を残す。
 - doc の内容を変えたら、それを要約・引用・リンクしている箇所を `rg` で探して合わせる。`AGENTS.md` と `CLAUDE.md` で見つかった箇所は、直さずに提案する。
-- 書く前に、対象の reference を 1 つだけ読む。記憶で書かない。reference の無い種類は、表の形式と repo の既存の doc に寄せる。
+- 書く前に、対象の reference を 1 つだけ読む。記憶で書かない。
   - README / `docs/README.md`: [references/readme-format.md](references/readme-format.md)
+  - `docs/` 配下の利用者向けの doc: [references/user-docs-format.md](references/user-docs-format.md)
+  - CHANGELOG.md: [references/changelog-format.md](references/changelog-format.md)
+  - SECURITY.md / SUPPORT.md: [references/community-files-format.md](references/community-files-format.md)
   - DEVELOPMENT.md / CONTRIBUTING.md / issue と PR のテンプレート: [references/development-format.md](references/development-format.md)
   - ADR: [references/adr-format.md](references/adr-format.md)
   - notes: [references/notes-format.md](references/notes-format.md)
+  - TODO: [references/todo-format.md](references/todo-format.md)
 
 ## 文体と分量
 
@@ -90,7 +95,7 @@ notes に変更履歴を書かない。「旧規定は〜だった」「〜に�
 ## 扱わないもの
 
 - commit message（git-commit が扱う）。
-- requirements / design / tasks のような事前の doc を作るか、仕様 doc をいつ更新するか。保留の作業（`TODO.md`、issue）の置き場。どれも repo の運用に従う。
+- requirements / design / tasks のような事前の doc を作るか、仕様 doc をいつ更新するか。保留の作業を TODO と issue のどちらに置くか。どれも repo の運用に従う。
 - 一次情報が無い内容を事実として書くこと。秘密情報、認証情報、private config、本番設定、未公開の個人情報。必要なら止まって確認する。
 - 小さな変更のための doc 全体の書き直し。
 
