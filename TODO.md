@@ -1,6 +1,6 @@
 # 残タスク
 
-- Date: 2026-11-16
+- Date: 2026-11-18
 
 着手を保留した項目を、記載日と見つけた時の作業が分かるように並べる。
 
@@ -10,18 +10,8 @@
 
 結果は、括弧の notes に書く。
 
-### Windows / Claude Code
-
-- [x] **`settings.json.tmpl` の展開**（`eb2779a`）。2026-11-16 に、JSON として正しく、`chezmoi diff` が空で、xlwright の plugin が有効なことを確かめた（`claude-code-settings-design.md`）。
-- [x] **識別子の検査の sh suite**。2026-11-16 に、`"` を含む名前の 1 ケースを除く 9 ケースが通った。その 1 ケースは NTFS と `core.protectNTFS` のため Windows では実行できず、suite は変えない（`git-commit-skill-design.md`）。
-
-### 両 OS
-
-- [x] **エージェント署名の廃止の片付け**。2026-11-16 に mac と Windows で終え、エージェントの commit が 1Password の承認で署名されることを確かめた（`agent-commit-signing-design.md` の「廃止の後の片付け」）。
-- [x] **gh の撤去の片付け**。2026-11-16 に mac と Windows で終えた（`gh-authentication-design.md` の「廃止の後の片付け」）。
-- [x] **過去の commit の署名し直し**。2026-11-16 に、dotfiles の全 commit と xlwright の `mcp` branch の 4 commit を 1Password の鍵で署名し直した（`agent-commit-signing-design.md` の「過去の commit の署名し直し」）。
-- [x] **`chezmoi status` を repo 全体に打てるか**（mac）。2026-11-16 に、`~/.config/gh` の読み取り拒否では止まらなくなったことを確かめた。ただし sandbox の中では、`allowed_signers.tmpl` の `onepasswordRead` が 1Password の app に届かずに止まる。root の `AGENTS.md` の path を絞る指示は残し、理由を書き換えた（`claude-code-settings-design.md`）。
 - [ ] **git-commit の commit の単位**（`12cf37b`）。doc や試験を、それが説明する変更と同じ commit に入れるか。Claude Code で、次に commit を頼んだ時に分け方を見る。mac の Claude Code では、2026-11-15 に apply した後の session で 1 回、記録 2 つと TODO を別の commit に分けた（`git-commit-skill-design.md`）。
+  - 完了の条件: doc を、それが説明する変更と同じ commit に入れた例を 1 回確かめる。
 
 ## Windows の初回セットアップ
 
