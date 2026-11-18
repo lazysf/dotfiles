@@ -14,8 +14,8 @@ repo が独自の doc 規約（置き場、名前、形式、作る時期）を�
 | 読み手 | 目的 | 既定の置き場 | 作る条件 |
 | --- | --- | --- | --- |
 | 利用者 | 何であるか、前提、導入、最小の使い方 | `README.md` | 常に |
-| 利用者 | 詳しい使い方、設定の一覧、概念の説明 | `docs/` | README に収まらない時 |
-| 利用者 | 版ごとの、利用者に見える変更 | `CHANGELOG.md`（[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) の形式） | 版を出す repo |
+| 利用者 | 入門、詳しい使い方、設定の一覧、概念の説明 | `docs/` | README に収まらない時 |
+| 利用者 | 版ごとの、利用者に見える変更 | `CHANGELOG.md` | 版を出す repo |
 | 利用者 | 脆弱性の報告先、助けの求め方 | `SECURITY.md`、`SUPPORT.md` | 窓口を開く repo |
 | 開発者 | 環境構築、内部の構成、変更の確かめ方、branch と commit、リリース | `DEVELOPMENT.md` | 開発の手順がある時 |
 | 外部の貢献者 | issue と PR の出し方、受け付けない変更 | `CONTRIBUTING.md` | 外部からの貢献を受け付ける repo |
@@ -26,6 +26,8 @@ repo が独自の doc 規約（置き場、名前、形式、作る時期）を�
 | 開発者 | docs 配下の案内 | `docs/README.md` | docs 配下に doc が複数ある時 |
 
 作る条件を満たさない種類は作らない。空の節や雛形だけの doc は、読み手に何も渡さない。
+
+GitHub は `CONTRIBUTING.md`、`SECURITY.md`、`SUPPORT.md` を、root、`docs/`、`.github/` のどこに置いても認識する。複数あると `.github/`、root、`docs/` の順で 1 つだけを使うので、1 箇所に置く。owner の `.github` repo に同じ種類の既定のファイルがあっても、repo に置いた方が使われる。
 
 `AGENTS.md` と `CLAUDE.md` は agent の挙動を変える設定なので、この skill では書かない。agent にだけ効く制約（sandbox、skill の使い方）はそちらの領分だと伝える。他の doc を指す 1 行が要る時も、提案して確認を取る。
 
@@ -66,7 +68,8 @@ notes に変更履歴を書かない。「旧規定は〜だった」「〜に�
 - 既存の章構成、用語、粒度、文体に寄せる。1 つの概念に 1 つの語を使い、途中で言い換えない。
 - doc を追加・削除・rename したら、README、索引、相対リンクの追従を確かめる。直せないリンク切れは、場所と理由を残す。
 - doc の内容を変えたら、それを要約・引用・リンクしている箇所を `rg` で探して合わせる。`AGENTS.md` と `CLAUDE.md` で見つかった箇所は、直さずに提案する。
-- 書く前に、対象の reference を 1 つだけ読む。記憶で書かない。
+- 手順やコマンドを書いたら、読み手と同じ環境で、書いた形のまま一度通す。外へ出る操作（公開、配布、リリース、課金）は通さず、repo の定義と突き合わせるだけにする。
+- 書く前に、書く doc の種類ごとに、対応する reference を読む。関係の無い種類の reference は読まない。記憶で書かない。
   - README / `docs/README.md`: [references/readme-format.md](references/readme-format.md)
   - `docs/` 配下の利用者向けの doc: [references/user-docs-format.md](references/user-docs-format.md)
   - CHANGELOG.md: [references/changelog-format.md](references/changelog-format.md)

@@ -1,7 +1,7 @@
 # scribe skill の設計
 
 - Date: 2026-11-18
-- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors) / [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file) / [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) / [Diátaxis](https://diataxis.fr/start-here/) / [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) / [About issue and pull request templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates) / [ARCHITECTURE.md](https://matklad.github.io/2021/02/06/ARCHITECTURE.md.html) / [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md)
+- 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [ADR 0021](../adr/0021-allow-direct-adr-updates-from-user-agreement.md) / [ADR 0022](../adr/0022-preserve-adr-body-history.md) / `docs/adr/` 全件の実測 / [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices) / [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) / [ISO 24495-1:2023](https://www.iso.org/standard/78907.html) / [Setting guidelines for repository contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors) / [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file) / [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) / [Diátaxis](https://diataxis.fr/start-here/) / [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) / [About issue and pull request templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates) / [ARCHITECTURE.md](https://matklad.github.io/2021/02/06/ARCHITECTURE.md.html) / [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) / [Nygard の ADR](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) / [MADR](https://adr.github.io/madr/) / [Common Changelog](https://common-changelog.org/) / [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html) / [Open Source Guide](https://opensource.guide/starting-a-project/) / [Adding a security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) / [Adding support resources](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-support-resources-to-your-project) / [Configuring issue templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository) / Diátaxis の [tutorials](https://diataxis.fr/tutorials/)、[how-to guides](https://diataxis.fr/how-to-guides/)、[reference](https://diataxis.fr/reference/)、[explanation](https://diataxis.fr/explanation/)
 
 `scribe` skill が今の形になっている理由を残す。skill 本体を読んでも分からない前提と判断に絞る。
 
@@ -16,6 +16,22 @@ ADR 0022 が「ADR は最新仕様への上書き先ではなく、採用時点�
 関係メタデータのキーの綴りと並び順は `dot_claude/skills/scribe/references/adr-format.md` を正本とする。ここに残すのは、並び順を既存 ADR の書き方の多数決で決めなかった理由。
 
 多数決で決めると、なぜその順なのかを読み手へ説明できない。意味で決めておけば、キーが増えた時も同じ規則で位置が決まる。綴りの方は git trailer の仕様が決めるので選択の余地がない。
+
+## ADR の 4 つの節を必ず書く理由
+
+`references/adr-format.md` は、背景、決定、検討した代替案、影響の 4 つの節を必ず書く形にしている。Nygard の 5 つの部分（題、Context、Decision、Status、Consequences）と、MADR の必須の節（Context and Problem Statement、Considered Options、Decision Outcome）を合わせた範囲に当たる。
+
+検討した代替案を必ず書くのは、SKILL.md の「ADR を作る条件」と揃えるため。条件の 1（実在する代替案を比べた）と 3（捨てた案に再検討の価値がある）を満たす判断なら、捨てた案とその理由は必ず書ける。書けないなら、ADR を作る条件を満たしていない。代替案を任意の節にしていた時は、この食い違いがあった。
+
+影響に悪い面も書くのは、Nygard が「良い影響だけでなく全部を書く」とし、MADR が Good と Bad を並べるため。判断を見直す読み手に要るのは、悪い影響と制約の方。
+
+## ADR に Date を置き、Deprecated を置かない理由
+
+`Date` は MADR の front matter に倣った。git の履歴が無い所（配布物、別の repo への写し）でも、いつの判断かが分かる。値は作った日で、`Status` を変えても書き換えない。MADR の date は最後に更新した日だが、この repo の ADR は本文を書き換えないので、作った日の方が意味が揃う。
+
+`Date` を持たない既存の ADR に、後から足すことは許していない。[ADR 0022](../adr/0022-preserve-adr-body-history.md) は、直接直してよいものを状態と関係のメタデータと、判断の内容を変えない修正に限っている。`Date` の追記はどちらにも当たらない。既存の ADR を揃えるなら、ADR 0022 を補正する ADR が先に要る。
+
+`Deprecated`（Nygard と MADR にある、置き換え先の無い退役）は置かない。ADR の本文は書き換えられないので、退役の理由を残せる先は、退役させる新しい ADR しか無い。`Deprecated` を付けるだけの退役では、理由が commit にしか残らない。退役は、理由を書いた新しい ADR が `Supersedes` で置き換える形で表す。
 
 ## notes に変更履歴を書かない理由
 
@@ -33,15 +49,36 @@ skill の内容を notes へ列挙すると、skill を直した時に notes だ
 
 ## reference を種類ごとに分けた理由
 
-doc の種類は同時に書かない。1 ファイルにまとめると、ADR を書く時に README の書式まで読むことになる。SKILL.md 側で「対象の reference を 1 つだけ読む」と指定し、書式の実体を種類ごとのファイルへ分けている。
+1 ファイルにまとめると、ADR を書く時に README の書式まで読むことになる。SKILL.md 側で「書く doc の種類ごとに、対応する reference を読む。関係の無い種類の reference は読まない」と指定し、書式の実体を種類ごとのファイルへ分けている。1 つの作業で 2 つの種類に触れる時（`docs/` に doc を足し、README から指す）は、2 つ読む。「対象の reference を 1 つだけ読む」と書いていた時、試験の subagent はこの場面で「対象ごとに 1 つ」と読み替えていた。
 
 SKILL.md が持つのはどの種類を選ぶかの判断で、書式は選択後にしか要らないので reference にある。
 
 表の種類にはすべて reference を置く。reference が無い種類は、表の 1 行と記憶で書くことになり、書く前に確かめる先が無い。
 
-reference の中身は、scribe に固有の規則だけにする。Keep a Changelog や Diátaxis のような公式の形式は、リンクを 1 つ置くだけで写さない。Claude が既定で知っている形式を写すと、[harness-design-principles.md](./harness-design-principles.md) の「削る基準」に当たる（[Best practices](https://agentskills.io/skill-creation/best-practices) の「agent に欠けているものを足し、知っているものは省く」も同じ）。固有の規則は、推測で書くと実害が出る点に絞っている。版の番号、窓口、対応する版の範囲は、推測すると利用者を誤らせる。
+reference が持つのは、標準が求める骨格（必ず書く節、節の順、テンプレート）と、scribe に固有の規則の 2 つ。標準の本文は写さず、リンクで指す。Claude が既定で知っている説明を写すと、[harness-design-principles.md](./harness-design-principles.md) の「削る基準」に当たる（[Best practices](https://agentskills.io/skill-creation/best-practices) の「agent に欠けているものを足し、知っているものは省く」も同じ）。骨格を持たせるのは、同じ Best practices が、出力の形は文章で説明するよりテンプレートで示す方が確実だとしているため。固有の規則は、推測で書くと実害が出る点に絞っている。版の番号、窓口、対応する版の範囲は、推測すると利用者を誤らせる。
 
 CONTRIBUTING は DEVELOPMENT を指し、テンプレートは CONTRIBUTING と方針を分け合う。そのため、この 3 つの書式は 1 つの reference にまとめ、分担を 1 箇所で読めるようにしている。SECURITY と SUPPORT も、窓口の扱いという同じ規則を持つので 1 つにまとめている。
+
+複数の種類に共通する規則は、reference ではなく SKILL.md に 1 箇所で持つ。「手順を書いた形のまま一度通し、外へ出る操作は通さない」と、GitHub が `CONTRIBUTING.md`、`SECURITY.md`、`SUPPORT.md` を認識する置き場と優先の順がこれに当たる。reference ごとに持っていた時は、言い方がずれていた。README の版にだけ外へ出る操作の例外が無く、優先の順は CONTRIBUTING の版にしか無かった。優先の順は、GitHub の [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file) が、複数の置き場を持てるファイルの全部に当てはめている。
+
+## reference の章立てを揃える理由
+
+1 種類の reference は、冒頭の 1 文、置き場と命名、構成、書く規則、更新と退役の順に揃えている。複数の種類を扱う reference は、共通の節と種類ごとの節に分け、各種類の中を同じ順にしている。当てはまらない見出しは置かない。
+
+揃えておくと、どの種類を書く時も、同じ位置で同じ問いに答えが見つかる。どこに置くか、どんな形か、何を書くか、いつ直すかの 4 つ。揃っていなかった時は、テンプレートを持つ種類と持たない種類、置き場の節がある種類と無い種類が混ざっていた。どの種類で骨格が欠けているかも、見ただけでは分からなかった。
+
+## 標準の選び方
+
+種類ごとに、どの標準から何を取ったかを残す。取らなかったものも、同じ検討を繰り返さないために書く。
+
+- ADR: Nygard と MADR。理由は「ADR の 4 つの節を必ず書く理由」と「ADR に Date を置き、Deprecated を置かない理由」にある。
+- README: Standard Readme、GitHub の About READMEs、Open Source Guide が共通して求める範囲を、必ず書く要素にした。Standard Readme の節の名前の固定、badge、目次は取らない。見出しの言語を repo に合わせられなくなるうえ、GitHub は見出しから目次を自動で出す。
+- `docs/`: Diátaxis の 4 種類をすべて使う。tutorial と how-to を Diátaxis は別のものとして分けている。tutorial を外していた時は、入門を頼まれた時に当てはまる種類が無かった。
+- CHANGELOG: 形は Keep a Changelog、破壊的変更の印 `**Breaking:**` は Common Changelog、上げる桁の案は SemVer から取った。Common Changelog の「Unreleased を置かない」と「リファクタリングも書く」は取らない。前者は、版が決まるまで項目を置く場所が無くなる。後者は、利用者に見える変更だけを書く方針と合わない。
+- CONTRIBUTING とテンプレート: GitHub の docs と Open Source Guide。issue form は GitHub が public preview としているので、既定は Markdown のテンプレートにした。
+- SECURITY と SUPPORT: GitHub の docs。
+- DEVELOPMENT の内部の構成: matklad の ARCHITECTURE.md の順（全体像、コードの地図、前提、境界、横断する関心事）。
+- notes と TODO: 公開の標準が無い。TODO の項目は GitHub の task list で書く。
 
 ## doc をいつ直すかを description に持たせる理由
 
@@ -85,11 +122,17 @@ doc 側に修飾の規定が無いと、地の文が名詞化した造語（「�
 
 「道具の一般的な使い方を書かない」「手順を読み手の環境で通す」も、同じ 7 件から取った。plugin に固有の形ではないので、一般則として書いた。plugin 以外の repo で同じ失敗が起きるかは確かめていない。
 
+## README に既定の構成を置く理由
+
+README の無い repo で書く時のために、既定の構成を置いている。必ず書く要素は、1 文の説明、導入、使い方、助けと貢献、ライセンス。Standard Readme、GitHub、Open Source Guide の 3 つが共通して求める範囲に当たる（「標準の選び方」）。既存の README があれば、その章立てが優先する。
+
+「助けと貢献」は、読み手を利用者に絞ったことと矛盾しない。質問をどこでするか、貢献を受け付けるかは、利用者が次に何をするかを決める情報で、開発の手順ではない。中身は `SUPPORT.md` と `CONTRIBUTING.md` を指すだけに留める。
+
 ## 置き場を読み手と目的の表で選ぶ理由
 
 doc の名前は repo ごとに違う（`CONTRIBUTING.md`、`DEVELOPMENT.md`、`HACKING.md` など）が、読み手と目的で分けると種類はほぼ決まる。名前ごとに規則を持つと、同じ目的の doc に別の規則ができる。そのため SKILL.md は読み手と目的の表で種類を選び、名前は repo の慣習を優先し、無い時だけ既定の名前を使う。
 
-README、ADR、notes 以外の行は、GitHub の community health files、Keep a Changelog、Diátaxis から取った。`docs/` の行の「詳しい使い方、設定の一覧、概念の説明」は、Diátaxis の how-to、reference、explanation に当たる。
+README、ADR、notes 以外の行は、GitHub の community health files、Keep a Changelog、Diátaxis から取った。`docs/` の行の「入門、詳しい使い方、設定の一覧、概念の説明」は、Diátaxis の tutorial、how-to、reference、explanation に当たる。
 
 「作る条件」の列を置いたのは、表を「全部そろえる一覧」と読ませないため。版を出さない repo の CHANGELOG や、窓口を開かない repo の SECURITY.md は、空の雛形になる。
 
@@ -103,7 +146,7 @@ README、ADR、notes 以外の行は、GitHub の community health files、Keep 
 
 1 つにまとめる案も比べた。GitHub の入口が 1 つで済み、`AGENTS.md` からの指し先も 1 つになる。ただ、受け付けない repo で上の誤解が残り、受け付ける repo では、開発の手順を引きたい人が貢献の規範を読み飛ばすことになる。ファイルが 2 つ増えるだけなので、分ける方を採った。
 
-確かめ方のコマンドは一度走らせるが、リリースや配布のコマンドは走らせない。README の「手順を一度通す」をそのまま当てると、外への公開になる。
+確かめ方のコマンドは一度走らせるが、リリースや配布のコマンドは走らせない。「手順を一度通す」をそのまま当てると、外への公開になる。そのため SKILL.md の「進め方」は、この規則を外へ出る操作の例外と一緒に 1 箇所で持っている。
 
 ## AGENTS.md と CLAUDE.md を書かない理由
 
@@ -131,11 +174,13 @@ GitHub の [About READMEs](https://docs.github.com/en/repositories/managing-your
 
 テンプレートは、issue や PR を作る画面の入力欄に最初から入る下書きで、`CONTRIBUTING.md` とは別のファイル（[About issue and pull request templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates)）。中身は説明の文章ではなく、記入してほしい項目の並び。
 
-それでも表に 1 行置くのは、`CONTRIBUTING.md` との振り分けのため。受け付ける方針や受け付けない変更がテンプレートに写されると、片方だけ古くなる。書き方の規則は持たず、置き場と、方針を写さないことだけを決めている。
+それでも表に 1 行置くのは、`CONTRIBUTING.md` との振り分けのため。受け付ける方針や受け付けない変更がテンプレートに写されると、片方だけ古くなる。
+
+書式は、GitHub が読み取るのに要る部分だけを持つ。front matter のキー、`config.yml` の `blank_issues_enabled` と `contact_links`、default branch に置くこと。これらが欠けると、テンプレートが一覧に出ないか、質問を issue から外せない。質問が bug の issue に混ざる問題には、GitHub の標準の手段が `contact_links` なので、`SUPPORT.md` の書式からもここを指している。
 
 ## TODO を表に入れる理由
 
-保留の作業を doc に置く時の書き方には、CHANGELOG の Keep a Changelog に当たる公開の形式が見つからなかった。指し先が無いので、記載日や完了の条件を書くかが、書くたびの判断に任される。この repo の root `TODO.md` は、記載日、見つけた時の作業、結果の指し先を持つ形に落ち着いている。`references/todo-format.md` はこの形を一般化したもので、`TODO.md` の中身は写していない。
+保留の作業を doc に置く時の書き方には、CHANGELOG の Keep a Changelog に当たる公開の形式が見つからなかった。指し先が無いので、記載日や完了の条件を書くかが、書くたびの判断に任される。そのため `references/todo-format.md` は最小のテンプレートを持つ。項目は GitHub の task list（`- [ ]`）で書き、1 項目に、何をするか、記載日と見つけた時の作業、完了の条件、関連への指し先を持たせる。形は特定の repo の TODO から取らず、後で項目を閉じる人に要る要素から決めた。
 
 置き場の判断は repo に残す。保留の作業を doc と issue のどちらに置くかは repo の運用で、契約も「ユーザーへ伝える」までしか持たない（[claude-md-design.md](./claude-md-design.md)）。そのため表の作る条件を「repo が保留の作業を doc に置くと決めている時」にし、決まっていなければ聞くようにしている。
 
@@ -152,7 +197,7 @@ GitHub の [About READMEs](https://docs.github.com/en/repositories/managing-your
 
 「人からの報告と自分で確かめた事実を分ける」「1 回の観察を一般化しない」「公式 docs と実機の食い違いを両方書く」は、README の 7 件と同じ作業の中で踏んだ（これもユーザーからの報告）。docs の記述を根拠に断定した箇所が、実機と合わなかった。試した範囲を超えた言い方も、後で直している。
 
-これらは README ではなく notes で起きる失敗なので、`references/notes-format.md` の「ルール」に置いた。
+これらは README ではなく notes で起きる失敗なので、`references/notes-format.md` の「書く規則」に置いた。
 
 ## Gotchas に入れたものの基準
 
@@ -184,7 +229,14 @@ description を依頼語に絞らない一般則は `harness-design-principles.m
   - B（lint の道具を替えた）: 既存の `HACKING.md` を直し、`DEVELOPMENT.md` は作らなかった。`AGENTS.md` は書かず、直す案を提案した。
   - C（次の版の準備）: `CHANGELOG.md` の `[Unreleased]` に利用者に見える変更だけを入れ、版の番号は推測せず質問した。
   - subagent の発火は、ユーザーの session の発火と同じとは限らない。
-- Diátaxis は、4 種類それぞれの個別ページを読んでいない。`references/user-docs-format.md` は tutorial を除く 3 種類を使っている。tutorial を外したのは、学習の教材を書く repo を踏んでいないため。
+- 書式の骨格を足した後の試験も、2026-11-18 に 6 つの架空の repo で 1 回ずつ試しただけ。skill の path を渡して読ませたので、発火は確かめていない。
+  - ADR（TOML へ変える判断。YAML と JSON のままを比べた）: 4 つの節と `Date` を持つ ADR を作り、代替案ごとに捨てた理由を書いた。影響には、利用者の移行の負担を書いた。`Date` の無い既存の ADR には触れなかった。
+  - README（README の無い CLI）: 既定の構成の順で書き、開発の手順は書かず、ライセンスを最後に置いた。「助けと貢献」は repo から読めないので、節を置かずに質問した。この振る舞いは、試験の後で書式に書き足した。
+  - テンプレート（質問が bug の issue に混ざる）: `SUPPORT.md` にある実在の URL で `config.yml` の `contact_links` を作った。`blank_issues_enabled: false` は今の方針を変えるので、質問に回した。
+  - CHANGELOG（設定キーの改名、option の追加、挙動を変えない parser の書き直し）: 改名に `**Breaking:**` と直し方を付け、option を `Added` に置いた。parser の書き直しは書かなかった。SemVer の major を案として質問した。
+  - `docs/`（初めての人向けの入門）: tutorial を選んだ。実装が無く手順を通せないので、doc を置かずに下書きと質問を返した。tutorial が README の導入の手順を含むことと、「同じ手順を README と `docs/` の両方に書かない」が食い違った。この食い違いは、試験の後で tutorial を例外として書式に書き足した。
+  - TODO（`TODO.md` がまだ無い）: テンプレートの形で `TODO.md` を作った。
+- 2026-11-18 に、公開の標準と突き合わせて書式の骨格を足した（「標準の選び方」）。各標準は、その日に公開されていたページだけを読んだ。MADR は開発版のテンプレートを読んでいて、4.0.0 の完全版のファイルは読んでいない。GitHub の PR テンプレートの作り方と、issue form の構文のページも読んでいない。
 - 2026-11-18 に足した 4 つの reference（CHANGELOG、`docs/`、SECURITY と SUPPORT、TODO）は、同じ日に 1 回ずつ試しただけ。架空の repo で、ユーザーの依頼文に doc という語を入れずに subagent に渡した。skill の path を渡して読ませたので、発火は確かめていない。description に「TODO に残して」を足した後の発火も確かめていない。
   - CHANGELOG（設定キーの改名と、内部の parser の書き直し）: `[Unreleased]` に改名だけを書き、直し方を添えた。parser の書き直しは書かなかった。版の番号は推測せず質問した。
   - `docs/`（設定を調べられるようにしたい）: `docs/configuration.md` を reference の種類で作り、schema と突き合わせたことを doc に書いた。README には 1 行のリンクだけを足した。reference は、doc と README の 2 つの対象に 1 つずつ読んだ。
