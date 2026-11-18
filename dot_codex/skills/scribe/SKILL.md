@@ -78,6 +78,7 @@ notes に変更履歴を書かない。「旧規定は〜だった」「〜に�
   - ADR: [references/adr-format.md](references/adr-format.md)
   - notes: [references/notes-format.md](references/notes-format.md)
   - TODO: [references/todo-format.md](references/todo-format.md)
+- 引数 `refine` で呼ばれた時と、既存の doc 群を点検して整える時は、[references/refine.md](references/refine.md) の手順に従う。
 
 ## 文体と分量
 

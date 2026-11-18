@@ -1,6 +1,7 @@
 ---
 name: scribe
 description: 確定した事実を doc に残す時に使う。「README を更新して」「CONTRIBUTING を書いて」「ADR を書いて」「notes に残して」「TODO に残して」のような依頼に加え、調査や実測の結果が出た時、設計判断が固まった時、使い方・設定・公開挙動・開発の手順（lint、試験、リリースのコマンド）を変えた時、既存の doc が実態と合っているかを点検する時にも使う。作業の流れで doc を直す場面が主で、ユーザーが doc という語を出さないことの方が多い。読み手と目的から doc の種類と置き場を選び、必要な情報を必要な分だけ書く。commit message は git-commit。
+argument-hint: "[refine [path]]"
 ---
 
 # Scribe
@@ -78,6 +79,7 @@ notes に変更履歴を書かない。「旧規定は〜だった」「〜に�
   - ADR: [references/adr-format.md](references/adr-format.md)
   - notes: [references/notes-format.md](references/notes-format.md)
   - TODO: [references/todo-format.md](references/todo-format.md)
+- 引数 `refine` で呼ばれた時と、既存の doc 群を点検して整える時は、[references/refine.md](references/refine.md) の手順に従う。
 
 ## 文体と分量
 
