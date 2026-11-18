@@ -1,5 +1,6 @@
 # 0039: docs/requests 配下の既存 artifact を整理して廃止する
 
+- Date: 2026-06-06
 - Status: Accepted
 - Amends: 0036
 

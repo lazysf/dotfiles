@@ -1,5 +1,6 @@
 # 0036: Codex surface を軽量化し両 surface を対称（軽量）に戻す
 
+- Date: 2026-06-06
 - Status: Superseded
 - Superseded-By: 0042
 - Supersedes: 0025, 0026, 0029, 0030, 0032, 0035

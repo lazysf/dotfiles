@@ -1,5 +1,6 @@
 # 0044: Codex の runtime 設定を作業機ごとに管理する
 
+- Date: 2026-10-16
 - Status: Accepted
 - Amended-By: 0046, 0049
 - Amends: 0043

@@ -1,5 +1,6 @@
 # 0035: Claude surface を軽量 LLM-native workflow へ再設計する
 
+- Date: 2026-06-05
 - Status: Superseded
 - Superseded-By: 0036
 - Amended-By: 0038

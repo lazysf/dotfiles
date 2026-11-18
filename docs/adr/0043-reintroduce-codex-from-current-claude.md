@@ -1,5 +1,6 @@
 # 0043: 現行 Claude 設定から Codex surface を再導入する
 
+- Date: 2026-10-06
 - Status: Accepted
 - Supersedes: 0042
 - Amended-By: 0044
@@ -12,9 +13,13 @@ Claude 設定の Codex 向け移植が必要になった。ユーザーは repo 
 
 現行 `dot_claude/` の契約、skills、reviewer、Caveman を Codex 向けに移植する。Claude 固有の tool と frontmatter は Codex の機能に合わせる。認証情報の deny を持つ permissions profile と、sandbox 外のディスク操作を禁止する rules を管理する。
 
-実機の `config.toml` を丸ごと取り込む案は採らない。通知、MCP、plugin、アプリ設定に作業機固有の値が含まれるため、移植設定と分けて扱う。実機へ適用する際は既存設定の統合を必要とする。
+## 検討した代替案
+
+実機の `config.toml` を丸ごと取り込む案は採らない。通知、MCP、plugin、アプリ設定に作業機固有の値が含まれるため、移植設定と分けて扱う。
 
 ## 影響
+
+実機へ適用する際は既存設定の統合を必要とする。
 
 Claude 単独という 0042 の方針を置き換える。0042 が退役させた過去の ADR は退役状態を維持する。旧 Codex の skills / agent 構成や厳密な両 surface 対称性は復活させない。共通の意図を保ち、runtime 固有の差を各 surface に残す。
 

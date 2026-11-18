@@ -1,13 +1,24 @@
 # 0019: planning と docs surface を grill / scribe に分割する
 
+- Date: 2026-05-21
 - Status: Superseded
 - Superseded-By: 0042
 - Supersedes: 0017
 - Amended-By: 0020, 0023
 
-`planning` に問い詰め、durable knowledge 反映、成果物 format、既存 docs 更新を統合した結果、共有理解を詰める責務と文書を整える責務が再び重なった。共有理解へ到達するまで一問ずつ問い詰める入口を `grill`、README、既存 docs、PRD、要件定義、設計、実装計画、CONTEXT、ADR などの doc / artifact 作成・更新・整形を `scribe` として分ける。
+## 背景
 
-## Consequences
+`planning` に問い詰め、durable knowledge 反映、成果物 format、既存 docs 更新を統合した結果、共有理解を詰める責務と文書を整える責務が再び重なった。
+
+## 決定
+
+共有理解へ到達するまで一問ずつ問い詰める入口を `grill`、README、既存 docs、PRD、要件定義、設計、実装計画、CONTEXT、ADR などの doc / artifact 作成・更新・整形を `scribe` として分ける。
+
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - `planning` と `docs-update` は廃止する。
 - `grill` は実装前の問い詰め、確定事項の最小反映、scope、成功条件、制約、検証入口、実装 readiness を扱う。

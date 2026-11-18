@@ -1,22 +1,27 @@
 # 0003: ハーネス知見は runtime surface ごとに昇格先を分ける
 
+- Date: 2026-04-21
 - Status: Superseded
 - Superseded-By: 0004
 
-## Context
+## 背景
 
 ハーネスエンジニアリングの知見は、repo-level の通常知見、判断記録、再利用する作業手順、機械的なガード、専門化した補助役が混ざりやすい。
 これらを同じ置き場に集めると、`dot_codex/` に repo-level の履歴が混入したり、逆に実運用物が `docs/` へ散らばったりして責務が崩れる。
 
 現行の共通ハーネスは `core-*` を正式入口とし、旧 `entry-*` / `phase-*` を互換 wrapper として残す構成へ移行している。repo-level knowledge の置き場もその runtime surface に合わせて明確にしておきたい。
 
-## Decision
+## 決定
 
 ハーネス知見は、次の順で昇格先を判断する。
 
 `repo-level の通常知見 -> root docs/notes/ -> 判断記録は root docs/adr/ -> 繰り返し手順は skills/ -> 機械的ガードは rules/ -> 専門化した補助役は agents/`
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - `docs/notes/` には、この repo を保守するための通常知見を置く
 - `docs/adr/` には、選択理由ごと残す判断記録を置く

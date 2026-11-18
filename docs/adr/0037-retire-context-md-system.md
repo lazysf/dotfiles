@@ -1,5 +1,6 @@
 # 0037: CONTEXT.md 体系を撤去する
 
+- Date: 2026-06-06
 - Status: Accepted
 - Amends: 0011
 

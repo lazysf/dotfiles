@@ -1,10 +1,11 @@
 # 0006: `AGENTS.md` は薄い surface 案内に留める
 
+- Date: 2026-04-22
 - Status: Superseded
 - Superseded-By: 0042
 - Amended-By: 0020, 0024
 
-## Context
+## 背景
 
 `dot_codex/AGENTS.md` は共通ハーネスの運用契約を置く source file だが、代表導線や開発フローの列挙まで抱えると、実際の運用とずれやすい。
 
@@ -13,7 +14,7 @@
 
 また、詳細な導線列挙を `AGENTS.md`、`docs/notes/runtime-surface-guidance.md`、手動回帰チェックの複数箇所で持つと、surface 更新時に正本がぶれやすい。
 
-## Decision
+## 決定
 
 - `dot_codex/AGENTS.md` は、全体契約と薄い runtime surface 案内に留める
 - `dot_codex/AGENTS.md` には固定の開発フローや代表導線の列挙を置かない
@@ -21,7 +22,11 @@
 - 詳細な使い分けや発火条件は、各 `SKILL.md`、agent 定義、`docs/notes/runtime-surface-guidance.md` などの関連知識で管理する
 - `docs/README.md` は index、`docs/notes/harness-regression-checks.md` は手動回帰シナリオとして役割を分ける
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - `AGENTS.md` は実運用より強い線形フローを示唆せず、現在の逐次チャット運用に沿った薄い案内になる
 - surface の背景説明、手動回帰、index の責務が分かれ、更新時の二重管理が減る

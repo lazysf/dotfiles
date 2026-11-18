@@ -1,10 +1,11 @@
 # 0008: Git 操作 surface を最小に保つ
 
+- Date: 2026-04-24
 - Status: Superseded
 - Superseded-By: 0042
 - Amended-By: 0018
 
-## Context
+## 背景
 
 Codex の Git 導線には、正式な操作 skill と機械的な rule がある。
 commit と push は手順、停止条件、結果報告が必要なので `git-commit` と `git-push` を正式入口として持っている。
@@ -15,7 +16,7 @@ commit と push は手順、停止条件、結果報告が必要なので `git-c
 知見整理は Git 操作そのものではなく、push の有無に依存しない作業締めの導線として扱う。
 そのため、`git-push` は知見整理を呼び出さず、push 実行と upstream 判定だけに責務を絞る。
 
-## Decision
+## 決定
 
 - Git 操作の正式 skill は `git-commit` と `git-push` だけにする。
 - `git-push` は push 実行と upstream 判定だけを扱い、知見整理や ADR 状態更新の導線を持たない。
@@ -28,7 +29,11 @@ commit と push は手順、停止条件、結果報告が必要なので `git-c
 - `git-push` の手順で使う通常 push は共有先へ影響するため、未定義コマンドとして既定 prompt に任せる。
 - 強制 push、広域 push、削除 push、hard reset、ignored file を含む clean なども個別 rule を置かず、既定 prompt と skill 停止線に任せる。
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - Git 操作用 skill の入口が commit / push に絞られ、依頼時の routing が単純になる。
 - `git-push` が知見整理を始めないため、リモートリポジトリを使わない作業でも知見整理導線を別に保てる。

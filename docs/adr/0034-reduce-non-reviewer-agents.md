@@ -1,5 +1,6 @@
 # 0034: non-reviewer agent を researcher / inspector のみへ集約する
 
+- Date: 2026-06-03
 - Status: Superseded
 - Superseded-By: 0040
 - Supersedes: 0024, 0028
@@ -21,6 +22,10 @@ reviewer 4 種 (`requirements-reviewer` / `design-reviewer` / `security-reviewer
 - repository maintenance 工程は廃止し、Gate 3 前 docs / 参照ずれ確認は lead が `doc-followup` skill を必要時に使う。確認結果と残リスクは `request.md` または `implementation.md` の自然な節へ短くまとめる。
 - handoff schema から `Repository Maintenance Impact` block と `verifier_return_required` field を完全廃止する。Engineering Agent Output の対象は `researcher` / `inspector` のみへ縮約する。
 - ADR 0024 / 0028 の Status を `Superseded` に変更し、`Superseded-By: 0034` を追加する。ADR 本文は履歴として保持する (ADR 0022)。
+
+## 検討した代替案
+
+記録に残っていない。
 
 ## 影響
 

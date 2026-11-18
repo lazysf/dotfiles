@@ -1,15 +1,16 @@
 # 0031: Gate pass 後のユーザー承認 checkpoint を明示する
 
+- Date: 2026-06-02
 - Status: Superseded
 - Superseded-By: 0032
 
-## Context
+## 背景
 
 ADR 0029 は、停止線接触、Gate fail の同じ blocking 繰り返し、ユーザー入力必須の決定を除き、`orchestrate` が tier に応じた最終 Gate pass まで自走する方針を採用した。
 
 一方で、ここでの「自走」は無人完走ではない。各 Phase 内の調査、artifact 作成、agent 起動、handoff 統合、差戻し準備は lead が進めるが、Gate reviewer の pass はユーザー承認を代替しない。要所では、ユーザーが次フェーズへ進むか、リスクを受け入れるか、完了扱いにするかを判断する必要がある。
 
-## Decision
+## 決定
 
 - `orchestrate` の自走は「次の checkpoint まで進む」ことを意味する。
 - 追加情報が必要な質問、停止線接触、scope / risk 受容判断、Gate fail の同じ blocking 繰り返し、ユーザー指示待ちは checkpoint として扱う。
@@ -20,7 +21,11 @@ ADR 0029 は、停止線接触、Gate fail の同じ blocking 繰り返し、ユ
 - Phase / Gate 進行中の中途報告は引き続き最小化する。承認 checkpoint と完了報告は中途報告とは別に扱う。
 - commit / push は ADR 0029 と同じく自走対象外で、ユーザー指示がある場合だけ該当 skill で扱う。
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - ADR 0029 の「最終 Gate pass まで自走」は、「ユーザー確認不要な範囲では次 checkpoint まで自走する」と解釈する。
 - Gate reviewer pass、lead 判断、ユーザー承認の責務が分かれる。

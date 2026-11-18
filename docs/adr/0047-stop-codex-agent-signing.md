@@ -1,5 +1,6 @@
 # 0047: Codex のエージェント用の鍵での署名をやめる
 
+- Date: 2026-11-09
 - Status: Accepted
 - Supersedes: 0046
 - Amended-By: 0048

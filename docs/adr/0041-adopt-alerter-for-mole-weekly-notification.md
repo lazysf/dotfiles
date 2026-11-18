@@ -1,5 +1,6 @@
 # 0041: mole 週次チェック通知に alerter を採用
 
+- Date: 2026-06-21
 - Status: Accepted
 
 ## 背景

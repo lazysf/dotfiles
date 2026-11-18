@@ -1,5 +1,6 @@
 # 0045: Claude Code の mod を CLAUDE_CODE_PLUGIN_DIRS で配布する
 
+- Date: 2026-10-16
 - Status: Accepted
 
 ## 背景

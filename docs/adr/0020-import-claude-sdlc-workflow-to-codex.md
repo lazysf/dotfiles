@@ -1,10 +1,13 @@
 # 0020: Claude Code SDLC workflow を Codex に逆輸入する
 
+- Date: 2026-06-01
 - Status: Superseded
 - Superseded-By: 0040
 - Supersedes: 0016
 - Amended-By: 0023, 0024, 0025, 0027, 0028, 0033
 - Amends: 0006, 0011, 0019
+
+## 背景
 
 `dot_claude/` で育てた Agent Teams 型の SDLC workflow は、要求、要件、設計、task、実装、検証、review の責務を artifact と agent で分離できる。Codex でも custom subagent と multi-agent feature が公式に提供されており、`dot_codex/private_config.toml.tmpl` には `[agents] max_threads / max_depth` と、multi-agent tools を有効にする既存の `[features] multi_agent = true` がある。
 
@@ -12,7 +15,7 @@
 
 Claude Code 側の workflow の考え方を Codex にも取り込み、main セッションを lead、`orchestrate` skill を進行入口、`dot_codex/agents/` を工程 agent / reviewer の定義場所として扱う。ただし Codex では agent 間の直接通信を前提にせず、handoff、差戻し、再 review、追加調査依頼は main セッションの lead が仲介する。
 
-## Decision
+## 決定
 
 - Codex に `orchestrate` skill を追加し、Phase 0〜3、Gate 1〜3、request folder、handoff、自律修正ループ、ユーザー確認を管理する入口にする。
 - agent 同士は直接やり取りせず、agent 出力は lead が受け取り、次 agent への入力を lead が明示的に構成する。
@@ -22,7 +25,11 @@ Claude Code 側の workflow の考え方を Codex にも取り込み、main セ�
 - 小さい修正や単一 skill で閉じる作業は引き続き main セッションが直接処理してよく、agent workflow を常時必須にはしない。
 - request folder artifact の format は `scribe` skill の references に追加し、通常 docs / PRD / ADR の format と併存させる。
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - ADR 0016 の「Codex reviewer agent は 2 個」という制約は退役する。
 - `dot_codex/AGENTS.md` は固定の細かい作業手順ではなく、lead / workflow / request folder の薄い入口案内を持つ。

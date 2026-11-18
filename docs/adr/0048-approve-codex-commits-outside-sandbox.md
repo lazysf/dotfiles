@@ -1,5 +1,6 @@
 # 0048: Codex の commit は sandbox の外で都度承認する
 
+- Date: 2026-11-09
 - Status: Accepted
 - Amends: 0047
 

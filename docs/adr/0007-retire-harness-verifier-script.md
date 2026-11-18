@@ -1,9 +1,10 @@
 # 0007: ハーネス検証専用スクリプトを廃止する
 
+- Date: 2026-04-23
 - Status: Accepted
 - Supersedes: 0005
 
-## Context
+## 背景
 
 `scripts/verify-codex-harness.py` は、repo 固有契約の軽量な自動検知として `agent metadata`、`rule metadata`、Markdown 相対リンク、project-local `.codex` 推奨禁止を見ていた。
 
@@ -11,14 +12,18 @@
 
 repo 固有契約のうち汎用 lint で拾えない観点も、少人数での更新と review discipline を前提にすれば、手動回帰チェックへ寄せて十分に扱える。
 
-## Decision
+## 決定
 
 - `scripts/verify-codex-harness.py` は repo から削除する
 - `mise.toml` の `test:harness` と pre-commit の `verify codex harness` hook は削除する
 - repo 固有契約の軽い確認は `docs/notes/harness-regression-checks.md` の手動回帰観点へ移す
 - 既存の lint / format / test と review で拾える内容は専用スクリプトへ戻さない
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - repo 保守対象が 1 つ減り、ハーネス整理時の追従コストを下げられる
 - `mise run test` と pre-commit はより汎用的な確認だけを行う

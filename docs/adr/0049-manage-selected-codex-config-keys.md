@@ -1,5 +1,6 @@
 # 0049: Codex の config.toml の一部のキーだけを chezmoi で上書きする
 
+- Date: 2026-11-10
 - Status: Accepted
 - Amends: 0044
 

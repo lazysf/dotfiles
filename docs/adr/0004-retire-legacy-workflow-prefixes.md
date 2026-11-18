@@ -1,17 +1,18 @@
 # 0004: legacy workflow skill prefix を廃止する
 
+- Date: 2026-04-21
 - Status: Superseded
 - Superseded-By: 0042
 - Supersedes: 0003
 
-## Context
+## 背景
 
 共通ハーネスの skill surface には、実行手順として使う `core-*` と、旧導線互換のために残した `entry-classify` / `phase-*` が混在していた。
 この構成は移行期の橋渡しとしては有効だったが、現行の導線説明、skill 選択、検証のすべてで prefix の意味を読み解く負担を残していた。
 
 現在の運用では、主目的に近い skill をそのまま選ぶ導線が定着しており、prefix と wrapper を残す価値よりも、surface を単純に保つ価値の方が大きい。
 
-## Decision
+## 決定
 
 - 公開する workflow skill 名は prefix なしの kebab-case に統一する
 - 旧 `core-*` は bare 名へ改名し、ディレクトリ名、frontmatter `name:`, 見出し、本文参照も同じ名前にそろえる
@@ -19,7 +20,11 @@
 - 旧 prefix ベースの名称は履歴として `docs/adr/` にのみ残し、現行 docs や skill surface には持ち込まない
 - 検証スクリプトで旧 prefix や wrapper surface の再混入を失敗扱いにする
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - `dot_codex/skills/` は prefix なし skill だけを置く単純な surface になる
 - `dot_codex/AGENTS.md` と `docs/notes/` は、prefix の意味を説明せずに現行導線だけを案内できる

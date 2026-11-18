@@ -72,3 +72,4 @@
   - [0047-stop-codex-agent-signing.md](./adr/0047-stop-codex-agent-signing.md)
   - [0048-approve-codex-commits-outside-sandbox.md](./adr/0048-approve-codex-commits-outside-sandbox.md)
   - [0049-manage-selected-codex-config-keys.md](./adr/0049-manage-selected-codex-config-keys.md)
+  - [0050-normalize-existing-adrs-once.md](./adr/0050-normalize-existing-adrs-once.md)

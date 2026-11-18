@@ -1,20 +1,25 @@
 # 0014: RTK を Codex shell proxy として採用する
 
+- Date: 2026-05-19
 - Status: Superseded
 - Superseded-By: 0015
 
-## Context
+## 背景
 
 `rtk init -g --codex` は live 側の `~/.codex/AGENTS.md` に `~/.codex/RTK.md` への参照を追加し、shell command を `rtk` 経由で実行する指示を導入する。
 この指示は Codex の runtime behavior に影響するため、live 環境だけに置くと `chezmoi apply` や別端末展開で再現されない。
 
-## Decision
+## 決定
 
 RTK を共通 Codex ハーネスの deployable runtime surface として採用する。
 `dot_codex/RTK.md` を deployable artifact として管理し、`dot_codex/AGENTS.md` から展開先 home directory に合わせた薄い参照だけを置く。
 `dot_codex/RTK.md` の本文は `rtk init -g --codex` が生成した内容を維持し、repo 固有の運用境界は ADR と既存の rule 設計で扱う。
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - shell command の既定導線は `rtk` 経由になり、出力圧縮による runtime context cost 削減を狙える。
 - `AGENTS.md` 本文へ RTK の詳細を展開せず、ADR 0006 の「薄い surface 案内」を維持する。

@@ -1,15 +1,18 @@
 # 0027: Codex 側の workflow skill 名を Claude 基準に揃える
 
+- Date: 2026-06-01
 - Status: Superseded
 - Superseded-By: 0040
 - Amended-By: 0028
 - Amends: 0020, 0024
 
+## 背景
+
 ADR 0020 で Claude SDLC workflow を Codex に import し、各工程 skill を Codex に設置した。当時 Codex 側は名詞形 (`implementation` / `verification`) を採用し、Claude 側の動詞形 (`implement` / `inspect`) と意図的に別名で運用してきた。両 surface に同等の責務を持つ skill が存在するにもかかわらず名前が違うため、`docs/notes/runtime-surface-guidance.md` に「Codex では `implementation`、Claude Code では `implement`」と毎回但し書きが必要で、両 surface 横断の説明、agent 定義、references の表現が複雑化していた。`caveman` のように runtime 機能差（output-style の有無）に由来する差は意図的だが、`implementation` / `verification` は単なる命名差で機能差ではない。
 
 両 surface の対応 skill 名を Claude 基準に揃える。Codex 側 `implementation` skill を `implement` に、`verification` skill を `inspect` に rename し、両 surface で同名で参照できるようにする。`caveman` は runtime 機能差由来の意図的な差として維持する。ADR 本文は履歴として保持し（ADR 0022）、現行運用の説明は新名に揃える。
 
-## Decision
+## 決定
 
 - Codex 側 skill dir を rename する。
   - `dot_codex/skills/implementation/` -> `dot_codex/skills/implement/`
@@ -27,7 +30,11 @@ ADR 0020 で Claude SDLC workflow を Codex に import し、各工程 skill を
   - 一般単語としての "implementation" / "verification"（例: interface vs implementation の用語）。
   - ADR 本文内の引用 (`docs/adr/`)。
 
-## Consequences
+## 検討した代替案
+
+記録に残っていない。
+
+## 影響
 
 - 両 surface で工程 skill 名が一致するため、横断説明、agent 定義、references の記述が単純化する。
 - runtime trigger は skill 名と description を主軸にするため、rename によって Codex 側で `implementation` / `verification` 名指定の自動発火は失われる。skill 名指定で呼ぶワークフローや user prompt が存在する場合は新名 `implement` / `inspect` に追従する必要がある。
