@@ -1,7 +1,7 @@
 # エージェントの commit 署名の設計
 
 - Date: 2026-11-16
-- Status: 廃止（2026-11-16）
+- Outdated: 2026-11-16 にエージェント専用の鍵での署名をやめた。使っていた時の構成、失効の手順、実測の記録として残す。
 - 出典: [hamakou108.com の記事](https://hamakou108.com/posts/coding-agent-credentials-for-claude-code) / [Hooks reference](https://code.claude.com/docs/en/hooks) の `CLAUDE_ENV_FILE` と shell form、sandboxing docs の「What runs outside the sandbox」（2026-11-06 確認） / hooks docs の Windows の shell、permissions docs の「What `Read` and `Edit` rules cover」（2026-11-07 確認） / Claude Code 2.1.317 の binary にある sandbox profile の生成コード（2026-11-06） / 使い捨ての HOME での署名 hook の実測と、apply 後の実際の session での実測（2026-11-06） / Windows の Git Bash で使い捨ての HOME を使った署名 hook の実測（2026-11-07） / cwd が home の mac の session での `~/.ssh` への `mv` と `ssh-keygen -f` の実測（2026-11-07、v2.1.311） / cwd が home の mac の session での `denyWrite` の path への書き込みの実測、mac の session での Write ツールの `~/.ssh` の拒否の実測、Edit ツールでの `start-signing-agent` の拒否の実測（2026-11-07） / Windows の session での `~/.ssh` への書き込みの実測（2026-11-07、Claude Code 2.1.317） / GitHub の commits API の `verification`（2026-11-07） / [GitHub の署名検証記録](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#persistent-commit-signature-verification)
 
 **エージェントの commit を専用の鍵で署名する構成は廃止した。** エージェントの commit は頻繁でなく、1Password の承認を人が出す手間は小さい。一方で、専用の鍵、署名 agent、SessionStart hook、setup の鍵の生成、allowed_signers の 2 行目、Windows の別経路を保ち、Claude Code と Codex の扱いの差を管理する手間が大きくなった（2026-11-16 のユーザー判断）。エージェントの commit も、人の commit と同じく 1Password の `op-ssh-sign` で署名し、承認は人が出す。鍵、hook、署名 agent、setup の処理を消し、GitHub の Signing Key の登録も外す。専用の鍵で署名した過去の commit は、1Password の鍵で署名し直す。

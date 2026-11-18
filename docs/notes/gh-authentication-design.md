@@ -1,10 +1,23 @@
 # gh の認証の設計
 
 - Date: 2026-11-16
-- Status: 廃止（2026-11-16）
+- Outdated: 2026-11-16 に gh をやめた。使っていた時の構成と実測の記録として残す。
 - 出典: [1Password Shell Plugins](https://www.1password.dev/cli/shell-plugins/) / [GitHub shell plugin](https://www.1password.dev/cli/shell-plugins/github/) / [1Password app integration](https://www.1password.dev/cli/app-integration/) / [gh environment](https://cli.github.com/manual/gh_help_environment) / [Claude Code tools reference](https://code.claude.com/docs/en/tools-reference) / [Configure permissions](https://code.claude.com/docs/en/permissions)（いずれも 2026-11-13 確認）、Windows 11 での実行（op 2.42.0、gh 2.104.0）
 
 **gh は人の分も含めて使わなくなった。** lazysf の repo は issue、PR、CI を使わず、main へ直接 commit している。エージェントの gh は、この構成を作った時の確認でしか使われていなかった。Claude Code と Codex のそれぞれで、外へ出す gh を絞って保つ手間が見合わなくなった（2026-11-16 のユーザー判断）。gh の本体、shell の関数、`excludedCommands` の列挙、README の手順を消した。ruleset の反映はブラウザで行う（[git-signature-verification-design.md](git-signature-verification-design.md#github-側で署名を必須にする-ruleset)）。
+
+## 廃止の後の片付け
+
+作業機ごとに（mac と Windows）、ユーザーが手で行う。`chezmoi apply` は source から消したファイルを target から消さない。
+
+1. `gh` を uninstall する。
+2. `~/.zshrc`（mac）、`~/.bashrc`（Windows）、`~/.config/gh`、`~/.config/op/plugins.sh` と `plugins/` を消す。
+3. GitHub の fine-grained PAT を revoke し、1Password の item `GitHub CLI` を消す。
+4. Keychain（mac）と Windows 資格情報の `gh:github.com` を消す。
+
+mac は 2026-11-16 に 1〜4 を終えた。`brew uninstall gh` し、2 の path を消した。Keychain に `gh:github.com` は無かった。
+
+Windows は 2026-11-16 に、`gh` が winget にも PATH にも無いこと、2 の path と資格情報の `gh:github.com` が無いことを確かめた。
 
 以下は、gh を使っていた時の構成と実測の記録。gh を戻す時の材料として残す。
 
