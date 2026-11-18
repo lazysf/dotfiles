@@ -118,23 +118,12 @@ launchctl bootout "gui/$(id -u)/local.mole.weekly-check"
 - [`dot_codex/`](dot_codex/): `~/.codex/` へ配布する Codex の設定。`config.toml` はファイルごとには配布せず、決めたキーだけを上書きします。
 - [`scripts/`](scripts/): セットアップスクリプトと、commit 時の hook が呼ぶスクリプト。chezmoi は配布しません。
 - [`docs/`](docs/): 設計の理由（notes）と判断の記録（ADR）。一覧は [`docs/README.md`](docs/README.md)。
+- [`DEVELOPMENT.md`](DEVELOPMENT.md): source を直す時の環境構築と、変更の確かめ方。
 
-## 開発
+## 助けと貢献
 
-commit 時に lint、作業機の識別子（home の絶対パス、ユーザー名、ホスト名）の検査、commit message の title が `<type>: <description>` の形かの検査を走らせる。commit-msg の hook を足す前に入れた clone でも、もう一度打つ:
+個人の dotfiles のため、issue と pull request は受け付けていません。
 
-```sh
-prek install
-```
+## ライセンス
 
-手で lint する時は、先に入れてから使う。Markdown は `npm run lint` / `npm run lint:fix`、TOML は `npm run lint:toml` / `npm run lint:toml:fix`:
-
-```sh
-npm install
-```
-
-repo の保守用 Python を用意する:
-
-```sh
-uv sync
-```
+MIT。[`LICENSE`](LICENSE) を参照してください。
