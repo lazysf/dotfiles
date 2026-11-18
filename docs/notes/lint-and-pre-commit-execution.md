@@ -1,6 +1,6 @@
 # lint / pre-commit の実行経路
 
-- Date: 2026-11-11
+- Date: 2026-11-18
 - 出典: `prek.toml` / `scripts/check-identifiers.sh` / `scripts/check-commit-msg.sh` / [prek Configuration](https://prek.j178.dev/configuration/) / [prek Configuration Reference](https://prek.j178.dev/reference/configuration/) / [prek Local Hooks](https://prek.j178.dev/local-hooks/) / [tombi-toml/tombi-pre-commit](https://github.com/tombi-toml/tombi-pre-commit) / `node_modules/.bin/tombi --help` / `.rumdl.toml` / `package.json` / `.git/hooks/pre-commit` / `prek --version` / 使い捨て repo での `git commit` 実測 / [rumdl](https://github.com/rvben/rumdl) / [rumdl Global Settings](https://rumdl.dev/global-settings/) / [rumdl Stability and Compatibility](https://rumdl.dev/stability/) / [rvben/rumdl-pre-commit](https://github.com/rvben/rumdl-pre-commit)（2026-11-09 確認） / rumdl 0.3.2 での repo 全体の実測と、`rumdl config --defaults`（2026-11-09） / markdownlint 0.40.0 の API による rule 単体実測 / commit `bee3e4a` `e4a4b49`
 
 Markdown（rumdl）と TOML（tombi）の lint は、それぞれ「手で走らせる経路」と「commit 時に走る経路」の 2 本ある。同じ設定ファイルを読むが、実行する binary は別。設定を触る前にどちらが動くかを取り違えないための記録。
@@ -25,7 +25,7 @@ hook の一覧と設定値は `prek.toml` と `.rumdl.toml` を正本とし、�
 | 手動 | `npm run lint:toml` / `npm run lint:toml:fix` | repo の `node_modules/tombi` |
 | commit 時 | `git commit` → `.git/hooks/pre-commit` | prek が `tombi-toml/tombi-pre-commit` から用意した hook 環境の `tombi` |
 
-どちらも `.tombi.toml` を読む。VS Code の tombi 拡張も同梱の tombi で判定する。2026-11-08 時点で 3 つとも 1.10.0。version を上げる時は、`package.json`、`prek.toml` の `rev`、VS Code 拡張の 3 つを揃える。
+どちらも `.tombi.toml` を読む。VS Code の tombi 拡張も同梱の tombi で判定する。2026-11-18 時点で、`package-lock.json` と `prek.toml` の `rev` はどちらも 1.11.1。VS Code 拡張の版は確かめていない。version を上げる時は、`package.json`、`prek.toml` の `rev`、VS Code 拡張の 3 つを揃える。
 
 hook は `uv.lock` を対象から外している。prek は `uv.lock` を `toml` と判定するので、外さないと tombi-format が uv の生成物を書き換える（2026-11-08 に `--all-files` で発生）。手動の経路は `.tombi.toml` の `**/*.toml` だけを見るので、外すと 2 経路の対象が揃う。
 

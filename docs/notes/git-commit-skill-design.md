@@ -187,15 +187,6 @@ Codex の `workspace-write` は、書き込み可能な root 内でも `.git` �
 
 Claude 側の配布設定は `allowUnsandboxedCommands: false` を持つ。公式仕様では sandbox 外への再試行を禁止する設定であり、Codex の承認経路を機械的に移植しない（[Claude Code sandboxing](https://code.claude.com/docs/en/sandboxing)）。Claude 側の skill は、署名の失敗で迂回せず止まることと、再実行を 1 回に限ることを Gotchas に持つ。作業指示と実行権限を分け、deny を迂回しない意図は共通にする。
 
-## 未確認
-
-- description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
-- 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。
-- 手順 4 が毎回効くかは未測定。2026-11-09 と 2026-11-10 の session では、commit の依頼で手順 4 から `lapidary` が起動した。この skill が load 済みのまま次の commit を頼まれた時に、手順 4 が読み直されるかは確かめていない。
-- 「出力」に足した `lapidary` の項目で、提案が報告に出るようになるか。落ちた観測は 2026-11-10 の 1 回だけ。
-- Codex で、同じ内容の skill を呼び直した時に本文が読み直されるか。Codex の skill にも同じ手順を入れているが、呼び直しの挙動と 2 回の観測は Claude Code のもの。
-- 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
-
 ## Codex の OS ごとの識別子検査
 
 Codex は Windows で PowerShell 7 版、macOS で既存の sh 版を使う。正本は `scripts/check-identifiers.ps1` と `scripts/check-identifiers.sh`。Codex の配布用 template は chezmoi の `include` で取り込む。Claude Code と prek は sh 版を使う。検査対象の変更は両実装の回帰確認が必要になる。
@@ -226,7 +217,7 @@ PowerShell 版は制御文字か `"` を含む path を `<path>` と表示する
 
 2026-11-11 に PowerShell の全 82 ケースが成功した。subdirectory からの起動、日付形式の path と引数、ESC を含む path の診断、全体 patch の不正な header・hunk・path の拒否を含む。指定の 3 回帰ケースは修正前の実装でそれぞれ失敗し、修正後に成功した。
 
-Windows 版は path の識別子も伏せ、Git の生のエラーを出さない。検査不能も非ゼロ終了にする。実行ポリシーや sandbox を変更して通さない。回帰検査は `pwsh -NoProfile -NonInteractive -File scripts/tests/check-identifiers.tests.ps1`。一時 repo を削除し、commit は作らない。 2026-11-11 に Windows の 54 ケースが成功した。文字内部に LF byte を含む UTF-16、BOM、終端改行、親終了後の子孫による pipe 保持・子孫の終了、worker の開始前 EOF を含む。別の確認で Job 外の対照プロセスの存続と、生成した一式だけでの起動を確認した。
+Windows 版は path の識別子も伏せ、Git の生のエラーを出さない。検査不能も非ゼロ終了にする。実行ポリシーや sandbox を変更して通さない。回帰検査は `pwsh -NoProfile -NonInteractive -File scripts/tests/check-identifiers.tests.ps1`。一時 repo を削除し、commit は作らない。2026-11-11 に Windows の 54 ケースが成功した。文字内部に LF byte を含む UTF-16、BOM、終端改行、親終了後の子孫による pipe 保持・子孫の終了、worker の開始前 EOF を含む。別の確認で Job 外の対照プロセスの存続と、生成した一式だけでの起動を確認した。
 
 2026-11-11 に macOS の Codex `workspace-write` sandbox 内で、`sh scripts/tests/check-identifiers.tests.sh` の 10 ケースが成功した。同じ suite の検査対象だけを配布済み `~/.codex/skills/git-commit/scripts/check-identifiers.sh` に差し替えた実行も成功した。診断の識別子漏えい防止と、`diff.ignoreSubmodules=all` 下の staged gitlink の path 検査を含む。別の一時 repo では、配布済み sh が stage なし・識別子なしで exit 0、実行環境の home を追加した場合に exit 1 を返した。診断に実際の home・user・host が含まれないことも確認した。存在しない script path は exit 127 になった。
 
@@ -243,3 +234,12 @@ Job の根拠: [Windows Job Objects](https://learn.microsoft.com/en-us/windows/w
 Windows では、sh suite の 10 ケースのうち、`"` を含む名前の fixture の 1 ケースを実行できない。NTFS はファイル名に `"` を持てない。Git Bash は `"` を U+F022 に置き換えた名前でファイルを作るので、`git add` が pathspec 不一致で終わる。作業ファイルを作らずに `git update-index --add --cacheinfo` で index へ直接入れる方法も、Git for Windows の既定の `core.protectNTFS` が `Invalid path` で拒否した。このケースを除いた 9 ケースは成功した（2026-11-16、Git for Windows 2.56.0.windows.4、Claude Code の Bash）。`core.protectNTFS` を外して通すことはせず、suite も変えない（2026-11-16 のユーザー判断）。Windows の Claude Code の git-commit は、この sh 版で検査する（Windows の Codex は PowerShell 版）。`"` を含む path は Windows では作業ツリーにも index にも入らないので、このケースが実行できなくても、Windows で stage されうる path の検査は欠けない。
 
 JSON の根拠: [ConvertFrom-Json](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json?view=powershell-7.6)、[JsonElement.GetString](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.jsonelement.getstring)（2026-11-11 確認）。
+
+## 未確認
+
+- description の trigger eval は未実施。公式の手順は 20 query × 3 run × 5 iteration の自動ループを想定しており、実行コストが大きい。現状は公式の記述指針（命令形、user intent への焦点、near-miss の明示、1024 文字以内）に照らした手動点検のみ。
+- 「進めて」の流れで commit に向かう場面で skill が通るかは未測定。
+- 手順 4 が毎回効くかは未測定。2026-11-09 と 2026-11-10 の session では、commit の依頼で手順 4 から `lapidary` が起動した。この skill が load 済みのまま次の commit を頼まれた時に、手順 4 が読み直されるかは確かめていない。
+- 「出力」に足した `lapidary` の項目で、提案が報告に出るようになるか。落ちた観測は 2026-11-10 の 1 回だけ。
+- Codex で、同じ内容の skill を呼び直した時に本文が読み直されるか。Codex の skill にも同じ手順を入れているが、呼び直しの挙動と 2 回の観測は Claude Code のもの。
+- 2026-11-07 の 16:48〜16:59 にある close と renumber の組が、どの session でどう分けられたかは未確認。Claude Code と Codex の session の記録には、log を表示した出力しか残っていない。
