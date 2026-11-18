@@ -250,9 +250,10 @@ description を依頼語に絞らない一般則は `harness-design-principles.m
   - CHANGELOG（設定キーの改名、option の追加、挙動を変えない parser の書き直し）: 改名に `**Breaking:**` と直し方を付け、option を `Added` に置いた。parser の書き直しは書かなかった。SemVer の major を案として質問した。
   - `docs/`（初めての人向けの入門）: tutorial を選んだ。実装が無く手順を通せないので、doc を置かずに下書きと質問を返した。tutorial が README の導入の手順を含むことと、「同じ手順を README と `docs/` の両方に書かない」が食い違った。この食い違いは、試験の後で tutorial を例外として書式に書き足した。
   - TODO（`TODO.md` がまだ無い）: テンプレートの形で `TODO.md` を作った。
-- refine の手順は、2026-11-18 に架空の repo で 1 回試しただけ。skill の path を渡し、本文の末尾に `ARGUMENTS: refine` が付いた形で読ませた。そのため、実際の `/scribe refine` で引数が渡るか、Codex の `$scribe refine` で切り替わるか、点検の依頼で発火するかは確かめていない。
+- refine の手順は、2026-11-18 に架空の repo で 1 回試しただけ。skill の path を渡し、本文の末尾に `ARGUMENTS: refine` が付いた形で読ませた。そのため、Codex の `$scribe refine` で切り替わるか、点検の依頼で発火するかは確かめていない。
   - 仕込んだずれは、リンク切れ、索引の漏れ、`Date` の無い英語見出しの ADR、実在しない path を書いた notes、README に混ざった開発の手順。
   - 直したのはリンクと索引の 2 件だけだった。ADR は本文も `Date` も触らず、寄せるなら例外の ADR が要ると聞いた。notes の path と README の開発の手順は、案を付けて一覧に挙げて止まった。
+  - Claude Code で引数が渡ることは、apply の後に確かめた（2026-11-18、Windows）。Skill の呼び出しに `refine TODO.md` を渡すと、本文の末尾に `ARGUMENTS: refine TODO.md` が付いた。refine.md の手順に切り替わり、範囲は `TODO.md` に絞られた。点検したのは refine.md を書いた session なので、手順を知らない agent の試験にはなっていない。
 - 2026-11-18 に、公開の標準と突き合わせて書式の骨格を足した（「標準の選び方」）。各標準は、その日に公開されていたページだけを読んだ。MADR は開発版のテンプレートを読んでいて、4.0.0 の完全版のファイルは読んでいない。GitHub の PR テンプレートの作り方と、issue form の構文のページも読んでいない。
 - 2026-11-18 に足した 4 つの reference（CHANGELOG、`docs/`、SECURITY と SUPPORT、TODO）は、同じ日に 1 回ずつ試しただけ。架空の repo で、ユーザーの依頼文に doc という語を入れずに subagent に渡した。skill の path を渡して読ませたので、発火は確かめていない。description に「TODO に残して」を足した後の発火も確かめていない。
   - CHANGELOG（設定キーの改名と、内部の parser の書き直し）: `[Unreleased]` に改名だけを書き、直し方を添えた。parser の書き直しは書かなかった。版の番号は推測せず質問した。
