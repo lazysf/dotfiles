@@ -1,6 +1,6 @@
 # memory surface の設計
 
-- Date: 2026-11-13
+- Date: 2026-11-19
 - 出典: [How Claude remembers your project](https://code.claude.com/docs/en/memory) / [Choose a permission mode](https://code.claude.com/docs/en/permission-modes) / [anthropics/claude-code#90450](https://github.com/anthropics/claude-code/issues/90450) / `dot_claude/CLAUDE.md` / [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) v4.9.0 / [Tools reference](https://code.claude.com/docs/en/tools-reference) / この環境での実測（`paths` の発火経路は 2026-09-02 の Claude Code v2.1.255 と、2026-11-08 の desktop app）
 
 配布する memory surface を `dot_claude/CLAUDE.md` 1 枚にしている理由を残す。本体を読んでも分からない前提と判断に絞る。
@@ -51,7 +51,17 @@ path 条件付き rule が発火するのは、match するファイルを Read 
 
 issue の、`cat` では何も load されないという結果は、2026-11-08 の実測と合わない。
 
-**この dotfiles 自身は、`rules/` の廃止でこの issue の影響範囲から外れる。** `paths` 付き rule も nested `CLAUDE.md` も持たず、残るのは launch 時に無条件 load される user-scope の `CLAUDE.md` 1 枚だけになる。ただし、契約を配る先の作業対象 repo は `paths` 付き rule や nested `CLAUDE.md` を持ちうる。共通契約が読み取りを Read に定めているのは、その repo で issue の影響を避けるため（[claude-md-design.md](./claude-md-design.md) の「tool の使い分けを契約に置く理由」）。issue が解決した場合は `paths` を再検討する余地があるが、その時はこの note で判断し直す。
+**この dotfiles 自身は、`rules/` の廃止でこの issue の影響範囲から外れる。** `paths` 付き rule を持たない。nested `CLAUDE.md` に当たる source の `dot_claude/CLAUDE.md` は、読み込みから外している（下の「source の `dot_claude/CLAUDE.md` を読み込みから外す」）。残るのは、launch 時に無条件 load される user-scope の `CLAUDE.md` 1 枚だけになる。ただし、契約を配る先の作業対象 repo は `paths` 付き rule や nested `CLAUDE.md` を持ちうる。共通契約が読み取りを Read に定めているのは、その repo で issue の影響を避けるため（[claude-md-design.md](./claude-md-design.md) の「tool の使い分けを契約に置く理由」）。issue が解決した場合は `paths` を再検討する余地があるが、その時はこの note で判断し直す。
+
+## source の `dot_claude/CLAUDE.md` を読み込みから外す
+
+Claude Code は、subdirectory の `CLAUDE.md` を、その directory の別のファイルを読み書きした時に読み込む（[How Claude remembers your project](https://code.claude.com/docs/en/memory) の「How CLAUDE.md files load」）。この repo では、配布前の source の `dot_claude/CLAUDE.md` がこれに当たる。`dot_claude/skills/` の下を Read すると、全文が context に入った（2026-11-18 の session で観測）。
+
+同じ内容は、配布済みの `~/.claude/CLAUDE.md` として launch 時にも入っている。普段は token が二重になるだけだが、source を直してから apply するまでの間は、旧版と書きかけの新版が同時に入る。公式は、矛盾する指示があると Claude が任意に片方を選びうると書いている。
+
+そのため、project の `.claude/settings.json` の `claudeMdExcludes` に `**/dot_claude/CLAUDE.md` を置いている。この repo にだけ要る設定なので user の settings には置かず、git で他のマシンにも届くよう local の settings にも置かない。`.` 始まりなので chezmoi は配布しない（`chezmoi managed` に出ないことを 2026-11-19 に確認）。`~/.claude/CLAUDE.md` は directory の名前が違うので、この pattern に当たらない。
+
+Codex 側の `dot_codex/AGENTS.md` は、この repo の Claude の session では読み込まれない。既定の設定では、作業 directory かその上に `CLAUDE.md` がある時、Claude Code は `AGENTS.md` を直接は読まない（同じページの「AGENTS.md」）。2026-11-19 の session でも、`dot_codex/skills/` の下を Read して注入されないことを見た。
 
 ## rule でなく skill に置く基準
 
@@ -85,4 +95,5 @@ doc の書き方と、doc をいつ直すかは `skills/scribe` が正本にす�
 ## 未確認
 
 - compaction 後に user-scope の `CLAUDE.md` が再注入されるかは、公式に記載が無い。公式が compaction について書いているのは、project-root `CLAUDE.md` と `paths` 付き rule だけ。user-scope には触れていない。統合前後で条件は変わらないため、`rules/` 廃止の根拠には数えていない。
+- `claudeMdExcludes` が subdirectory の `CLAUDE.md` に効くことは、公式に明記が無い。2026-11-19 に、設定を足した後に開いた Windows の session で 1 回だけ確かめた。`dot_claude/skills/coding/SKILL.md` を Read しても、`dot_claude/CLAUDE.md` は注入されなかった。設定を足す前の対照は、2026-11-18 の session の観測だけで、同じ版で設定の有無を切り替えて比べてはいない。mac では確かめていない。
 - 2026-09-02 と 2026-11-08 で `cat` の結果が違う理由。command の形か Claude Code の version の差かは、2026-09-02 の記録に無い。2026-11-08 の desktop app の version も、`claude` が PATH に無く取れていない。
